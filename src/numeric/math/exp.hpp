@@ -32,50 +32,6 @@
 #include <cmath>
 
 namespace numeric{
-/* c++ 11 not supported on BGQ
-    constexpr std::size_t quotient_factorial (std::size_t n, std::size_t m) {
-        return n > m ? n * quotient_factorial(n - 1, m) : 1;
-    }
-*/
-    /*! \class template<std::size_t m, std::size_t n> helper_quotient_factorial  
-        \brief This class helps the quotient_factorial function for partial spercialization, as partial specialization is not allowed on a "basic" template function
-        template parameter must respect m < n
-    */
-    template<std::size_t m, std::size_t n>
-    struct helper_quotient_factorial{
-       /**  fn static inline std::size_t quotient_factorial()
-       \brief calculate the quotient of two factorial n!/m! with m < n 
-       \param none
-       */
-       static inline std::size_t quotient_factorial(){
-           return n*helper_quotient_factorial<m,n-1>::quotient_factorial();
-       }
-    };
-
-    /* \cond I do not need this part in the doc*/
-    template<std::size_t m>
-    struct helper_quotient_factorial<m,m>{
-       static inline std::size_t quotient_factorial(){
-           return 1;
-       }
-    };
-    /* \endcond */
-
-    /** fn template<std::size_t> inline std::size_t factorial()
-    \brief Calculate the factorial of n 
-    \param none
-    */
-    template<std::size_t n>
-    inline std::size_t factorial(){
-        return n*factorial<n-1>();
-    }
-
-    /* \cond I do not need this part in the doc*/
-    template<>
-    inline std::size_t factorial<0>(){
-        return 1; 
-    }
-    /* \endcond */
 
     /*! \class template<std::size_t T, std::size_t n> helper_pow  
         \brief This class helps the calculation of the pow function 
@@ -95,7 +51,7 @@ namespace numeric{
     template<class T>
     struct helper_pow<T,0>{
         inline static T pow(T const& a){
-            return 1;
+            return T(1); //1 for basic type, xmm registers set up to 1 for SIMD
         }
     };
     /* \endcond */
@@ -115,7 +71,7 @@ namespace numeric{
     template<class T, std::size_t n>
     struct helper_exp{
         inline static T exp(T const& a){
-            return pow<T,n>(a)/(T)factorial<n>()+helper_exp<T,n-1>::exp(a);
+            return pow<T,n>(a)/factorial<n>()+helper_exp<T,n-1>::exp(a);
         }
     };
 
@@ -123,7 +79,7 @@ namespace numeric{
     template<class T>
     struct helper_exp<T,0>{
         inline static T exp(T const& a){
-            return 1;
+            return T(1); //1 for basic type, xmm registers set up to 1 for SIMD
         }
     };
     /* \endcond */
@@ -148,7 +104,7 @@ namespace numeric{
     template<class T, std::size_t p, std::size_t q>
     struct helper_Pade_numerator<T,p,q,0>{
          inline static T Pade_numerator( T const& a){
-             return 1;
+             return T(1);
          }
     };
     /* \endcond */
@@ -175,7 +131,7 @@ namespace numeric{
     template<class T, std::size_t p, std::size_t q>
     struct helper_Pade_denominator<T,p,q,0>{
          inline static T Pade_denominator(T const& a){
-             return 1;
+             return T(1);
          }
     };
 

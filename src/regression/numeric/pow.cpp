@@ -32,6 +32,20 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_pow_comparison, T, floating_point_test_types) 
     }
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_vec_pow_comparison, T, floating_point_test_types) {
+    TYPE a[2],b[2];
+    TYPE b = TYPE(); // 0
+    TYPE b_std = TYPE(); // 0
+   
+    for(int i=0; i<MAX; ++i){
+        TYPE a[0] = GetRandom<TYPE>();
+        TYPE a[1] = GetRandom<TYPE>();
+        b = numeric::pow<TYPE,N>(a);
+        b_std = pow(a,N);
+        BOOST_CHECK_CLOSE( b, b_std, 0.0001); 
+    }
+}
+
 #undef TYPE
 #undef N
 #undef MAX
