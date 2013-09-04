@@ -30,8 +30,6 @@
 #ifndef COREBLURON_SIMD_VEC_HPP
 #define COREBLURON_SIMD_VEC_HPP
 
-#include <cmath>
-
 namespace numeric{
 
     template<class T>
@@ -41,13 +39,13 @@ namespace numeric{
         typedef typename simd_trait<T>::register_type register_type;
       
         explicit vec(const value_type a){ xmm = _mm_load1<value_type>(xmm,a);}
-        vec(const value_type* a){ xmm = _mm_load<value_type>(xmm,a);} 
+        vec(const pointer a){ xmm = _mm_load<value_type>(xmm,a);} 
 
-        pointer operator pointer(){
+        operator pointer() const{
             pointer nrv = NULL;  
             return _mm_store<value_type>(xmm,nrv);
         } 
-        
+
         vec& operator *=(const vec& rhs){
             xmm = _mm_mul<value_type>(xmm,rhs.xmm);
             return *this;

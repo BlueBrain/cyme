@@ -40,7 +40,7 @@ namespace numeric{
     inline typename simd_trait<T>::register_type _mm_load(typename simd_trait<T>::register_type xmm0, typename simd_trait<T>::const_pointer a);
    
     template<class T>
-    inline void _mm_store(typename simd_trait<T>::register_type xmm0, typename simd_trait<T>::pointer a);
+    inline  typename simd_trait<T>::pointer _mm_store(typename simd_trait<T>::register_type xmm0, typename simd_trait<T>::pointer a);
 
     template<class T>
     inline typename simd_trait<T>::register_type _mm_mul(typename simd_trait<T>::register_type xmm0, typename simd_trait<T>::register_type xmm1);
@@ -93,7 +93,7 @@ namespace numeric{
     }
 
     template<>
-    inline typename simd_trait<float>::pointer _mm_store<double>(typename simd_trait<float>::register_type xmm0, typename simd_trait<float>::pointer a){
+    inline typename simd_trait<float>::pointer _mm_store<float>(typename simd_trait<float>::register_type xmm0, typename simd_trait<float>::pointer a){
         _mm_store_ps(a,xmm0); 
         return a;
     }

@@ -34,8 +34,9 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <numeric/math/fac.hpp>
-#include <numeric/math/exp.hpp>
+#include "numeric/math/fac.hpp"
+#include "numeric/math/exp.hpp"
+#include "numeric/math/math.hpp"
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp> 
 #include <boost/test/unit_test.hpp>
