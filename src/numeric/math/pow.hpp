@@ -29,6 +29,8 @@
 #ifndef COREBLURON_POW_HPP
 #define COREBLURON_POW_HPP
 
+#include <type_traits>
+
 namespace numeric{
     /*! \class template<std::size_t T, std::size_t n> helper_pow  
         \brief This class helps the calculation of the pow function 
@@ -60,6 +62,27 @@ namespace numeric{
     inline T pow(T const& a){
         return helper_pow<T,n>::pow(a);
     };
+
+    /**  fn inline T pow(T const& a)
+    \brief calculate the pow of T, generic  
+    \param T const& a 
+    */
+    template<class T, std::size_t n>
+    inline void pow(T& a, T const& b){
+        a = pow<T,n>(b); 
+    };
+
+    /**  fn inline T pow(T const a)
+    \brief calculate the pow of T, privilege this version.  
+    \param T const& a 
+    */
+    template<class T, std::size_t n>
+    inline void pow(T* a, T const* b){
+        vec<T> v(b); // init register one cycle 
+        vec<T> nrv = pow<numeric::vec<T>,n>(v); // copy register one cycle
+        nrv.store(a); //push register to memory
+    };
+
 } //end namespace 
 
 #endif 

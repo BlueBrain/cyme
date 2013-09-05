@@ -36,15 +36,11 @@ namespace numeric{
     struct vec{
         typedef typename simd_trait<T>::value_type value_type;
         typedef typename simd_trait<T>::pointer pointer;
+        typedef typename simd_trait<T>::const_pointer const_pointer;
         typedef typename simd_trait<T>::register_type register_type;
       
         explicit vec(const value_type a){ xmm = _mm_load1<value_type>(xmm,a);}
-        vec(const pointer a){ xmm = _mm_load<value_type>(xmm,a);} 
-
-        operator pointer() const{
-            pointer nrv = NULL;  
-            return _mm_store<value_type>(xmm,nrv);
-        } 
+        vec(const_pointer a){ xmm = _mm_load<value_type>(xmm,a);} 
 
         vec& operator *=(const vec& rhs){
             xmm = _mm_mul<value_type>(xmm,rhs.xmm);
@@ -60,6 +56,10 @@ namespace numeric{
             xmm = _mm_add<value_type>(xmm,rhs.xmm);
             return *this;
         }
+
+        inline void store(pointer a) const{
+            _mm_store<value_type>(xmm,a);
+        } 
 
         register_type xmm;
     };

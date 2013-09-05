@@ -40,7 +40,7 @@ namespace numeric{
     inline typename simd_trait<T>::register_type _mm_load(typename simd_trait<T>::register_type xmm0, typename simd_trait<T>::const_pointer a);
    
     template<class T>
-    inline  typename simd_trait<T>::pointer _mm_store(typename simd_trait<T>::register_type xmm0, typename simd_trait<T>::pointer a);
+    void _mm_store(typename simd_trait<T>::register_type xmm0, typename simd_trait<T>::pointer a);
 
     template<class T>
     inline typename simd_trait<T>::register_type _mm_mul(typename simd_trait<T>::register_type xmm0, typename simd_trait<T>::register_type xmm1);
@@ -58,13 +58,12 @@ namespace numeric{
    
     template<>
     inline typename simd_trait<double>::register_type _mm_load<double>(typename simd_trait<double>::register_type xmm0, typename simd_trait<double>::const_pointer a){
-        return (xmm0 =_mm_load_pd(a)); 
+        return (xmm0 =_mm_loadu_pd(a)); 
     }
 
     template<>
-    inline typename simd_trait<double>::pointer  _mm_store<double>(typename simd_trait<double>::register_type xmm0, typename simd_trait<double>::pointer a){
-        _mm_store_pd(a,xmm0); 
-        return a;
+    void _mm_store<double>(typename simd_trait<double>::register_type xmm0, typename simd_trait<double>::pointer a){
+        _mm_storeu_pd(a,xmm0); 
     }
    
     template<>
@@ -89,18 +88,17 @@ namespace numeric{
    
     template<>
     typename simd_trait<float>::register_type _mm_load<float>(typename simd_trait<float>::register_type xmm0, typename simd_trait<float>::const_pointer a){
-        return (xmm0 =_mm_load_ps(a)); 
+        return (xmm0 =_mm_loadu_ps(a)); 
     }
 
     template<>
-    inline typename simd_trait<float>::pointer _mm_store<float>(typename simd_trait<float>::register_type xmm0, typename simd_trait<float>::pointer a){
-        _mm_store_ps(a,xmm0); 
-        return a;
+    void _mm_store<float>(typename simd_trait<float>::register_type xmm0, typename simd_trait<float>::pointer a){
+        _mm_storeu_ps(a,xmm0); 
     }
    
     template<>
     inline typename simd_trait<float>::register_type _mm_mul<float>(typename simd_trait<float>::register_type xmm0, typename simd_trait<float>::register_type xmm1){
-        return (xmm0 = _mm_mul_ss(xmm0, xmm1));
+        return (xmm0 = _mm_mul_ps(xmm0, xmm1));
     };
    
     template<>

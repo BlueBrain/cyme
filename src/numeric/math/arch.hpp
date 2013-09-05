@@ -26,42 +26,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_TRAIT_HPP
-#define COREBLURON_TRAIT_HPP
-
-#include <cmath>
+#ifndef COREBLURON_ARCH_HPP
+#define COREBLURON_ARCH_HPP
 
 namespace numeric{
 
     enum class structure : std::int8_t {AoS, SoA};
 
-    /*! \class template<typename T> simd_trait  
-        \brief This trait class associates basic type (float and double) to corresponding SIMD register (__m128, __m128d - 128-bit), to allow a generic vectorial exponential
-    */
-    template <typename T> struct simd_trait{};
+} //end namespace 
 
-    /*! \class template<float> simd_trait  
-        \brief Specialization for float 
-    */
-    template <>
-    struct simd_trait<float>{
-        typedef float  value_type; 
-        typedef float*  pointer; 
-        typedef const float*  const_pointer; 
-        typedef __m128 register_type;
-    };
-   
-    /*! \class template<double> simd_trait  
-        \brief Specialization for float 
-    */
-    template <>
-    struct simd_trait<double>{
-        typedef double value_type; 
-        typedef double*  pointer; 
-        typedef const double* const_pointer; 
-        typedef __m128d register_type;
-    };
-}
-
-#endif
-
+#endif 

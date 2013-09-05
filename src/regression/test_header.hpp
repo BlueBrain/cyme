@@ -34,9 +34,8 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "numeric/math/fac.hpp"
-#include "numeric/math/exp.hpp"
 #include "numeric/math/math.hpp"
+#include "numeric/math/exp.hpp"
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp> 
 #include <boost/test/unit_test.hpp>
@@ -72,6 +71,7 @@ namespace corebluron {
     struct data{
         typedef T value_type;
         static const std::size_t n = m;
+        static const std::size_t size = 16/sizeof(T); // for SIMD SSE
     };
 
     typedef boost::mpl::list<boost::int32_t,boost::int64_t,float,double> full_test_types;

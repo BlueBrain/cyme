@@ -3,6 +3,7 @@
 using namespace corebluron::test;
 
 #define TYPE typename T::value_type
+#define SIZE T::size
 #define N T::n
 #define MAX 1000 
 
@@ -32,20 +33,27 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_pow_comparison, T, floating_point_test_types) 
     }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_vec_pow_comparison, T, floating_point_test_types) {
-    TYPE a[2]={TYPE(),TYPE()};
-    TYPE b[2]={TYPE(),TYPE()};
-   
-    for(int i=0; i<MAX; ++i){
-        a[0] = GetRandom<TYPE>();
-        a[1] = GetRandom<TYPE>();
-        b = numeric::pow<numeric::vec<double>,N>(a);
-      //  double c = numeric::pow<double,N>(a[0]);
 
-      //  BOOST_CHECK_CLOSE( b, b_std, 0.0001); 
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_vec_pow_comparison, T, floating_point_test_types) {
+    TYPE a[SIZE];
+    TYPE b[SIZE];
+    TYPE c[SIZE];
+    // To change to something more generic
+    for(int i=0; i<MAX; ++i){
+        for(int j=0; j<SIZE; ++j)
+            b[j] = GetRandom<TYPE>();
+       
+        numeric::pow<TYPE,3>(&a[0],&b[0]); //vectorial version
+       
+        for(int j=0; j<SIZE; ++j)
+            numeric::pow<TYPE,3>(c[j],b[j]); //serial
+       
+        for(int j=0; j<SIZE; ++j)
+            BOOST_CHECK_CLOSE( a[j], c[j], 0.0001); 
     }
 }
 
+#undef SIZE
 #undef TYPE
 #undef N
 #undef MAX

@@ -52,7 +52,7 @@ option (COREBLURON_TESTS "Build the COREBLURONE regression tests" ON)
 #this depends of the associated module
 set(BOOST_DIR $ENV{BOOST_DIR} CACHE PATH "Path to the Boost installation (or to the Boost source)")
 set(BOOST_ROOT ${BOOST_DIR})
-find_package (Boost COMPONENTS unit_test_framework)
+find_package (Boost COMPONENTS unit_test_framework system)
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
 else()
@@ -67,6 +67,7 @@ endif()
 ########################################################################
 include_directories ("${PROJECT_BINARY_DIR}")
 include_directories ("${PROJECT_SOURCE_DIR}")
+add_subdirectory( main/ )
 #include_directories ("${PROJECT_SOURCE_DIR}/memory/")
 
 ########################################################################

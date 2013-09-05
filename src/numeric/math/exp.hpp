@@ -36,33 +36,7 @@ namespace numeric{
     /*! \class template<std::size_t T, std::size_t n> helper_pow  
         \brief This class helps the calculation of the pow function 
     */
-    template<class T, std::size_t n>
-    struct helper_pow{
-        /**  fn static inline T pow(T const& a)
-        \brief calculate the pow of T 
-        \param T const& a 
-        */
-        inline static T pow(T const& a){
-            return a*helper_pow<T,n-1>::pow(a);
-        }
-    };
 
-    /* \cond I do not need this part in the doc*/
-    template<class T>
-    struct helper_pow<T,0>{
-        inline static T pow(T const& a){
-            return T(1); //1 for basic type, xmm registers set up to 1 for SIMD
-        }
-    };
-    /* \endcond */
-
-    /*! \class template<std::size_t T, std::size_t n> pow  
-        \brief clean wrapper of the pow function 
-    */
-    template<class T, std::size_t n>
-    inline T pow(T const& a){
-        return helper_pow<T,n>::pow(a);
-    };
 
     /*! \class template<std::size_t T, std::size_t n> helper_exp  
         \brief This class implements the exp function based on the definition of the mathematical series, the template parameter n
@@ -168,7 +142,7 @@ namespace numeric{
     */
     template<class T, std::size_t n>
     T exp(T const& x){
-          return Helper_exp<T,n>::exp(x);
+        return Helper_exp<T,n>::exp(x);
     }
 } //end namespace 
 
