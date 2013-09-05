@@ -10,20 +10,23 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/chrono.hpp>
+#include <boost/chrono/chrono.hpp>
+#include <boost/type_traits.hpp>
+
+
 
 //my files
 #include "numeric/math/math.hpp"
 
 //using namespace utils;
 
-#define SIZE 1000000
+#define SIZE 0xffff
 
 //encapsulate the solver_exp for boost::mpl
 template<class T, std::size_t n>
 struct solver_exp{
    typedef T value_type;
-   static  T exp( T const& a){ 
+   static  T Series_exp( T const& a){ 
        return numeric::Series_exp<T,n>::exp(a);
    }   
    static  T Pade_exp( T const& a){ 
@@ -72,33 +75,29 @@ struct test_case{
     //redefine the operator() for boost mpl
     template<typename Solver>
     void operator()(Solver const&){
-        typedef boost::chrono::milliseconds ms;
-
-        boost::chrono::nanoseconds start_std_exp;
-        for(long int i(-SIZE); i < SIZE; ++i){
-             typename Solver::value_type a = (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
+      //  srand();
+        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
+        for(long long int i(-SIZE); i < SIZE; ++i){
+             typename Solver::value_type a = rand(); // (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
              std::exp(a);
         }
-        boost::chrono::nanoseconds end_std_exp;
-        ms ms_std_exp = boost::chrono::duration_cast<ms>(start_std_exp - end_std_exp);
+        boost::chrono::nanoseconds ns1 = boost::chrono::high_resolution_clock::now() - start1;
 
-        boost::chrono::nanoseconds start_series_exp;
-        for(long int i(-SIZE); i < SIZE; ++i){
-             typename Solver::value_type a = (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
-             Solver::exp(a);
+        boost::chrono::high_resolution_clock::time_point start2 = boost::chrono::high_resolution_clock::now();
+        for(long long int i(-SIZE); i < SIZE; ++i){
+             typename Solver::value_type a = rand(); // (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
+             Solver::Series_exp(a);
         }
-        boost::chrono::nanoseconds end_series_exp;
-        ms ms_series_exp = boost::chrono::duration_cast<ms>(start_series_exp - end_series_exp);
+        boost::chrono::nanoseconds ns2 = boost::chrono::high_resolution_clock::now() - start2;
 
-        boost::chrono::nanoseconds start_pade_exp;
-        for(long int i(-SIZE); i < SIZE; ++i){
-             typename Solver::value_type a = (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
+        boost::chrono::high_resolution_clock::time_point start3 = boost::chrono::high_resolution_clock::now();
+        for(long long int i(-SIZE); i < SIZE; ++i){
+             typename Solver::value_type a = rand();// (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
              Solver::Pade_exp(a);
         }
-        boost::chrono::nanoseconds end_pade_exp;
-        ms ms_pade_exp  = boost::chrono::duration_cast<ms>(start_pade_exp - end_pade_exp);
+        boost::chrono::nanoseconds ns3 = boost::chrono::high_resolution_clock::now() - start3;
 
-        std::cout << " numeric::exp<double,"<< Solver::n_ <<  ">  " << ms_pade_exp.count()  << " [s], tim::pade_exp "  << ms_series_exp.count() << " [s], tim::series_exp "  << ms_std_exp.count() << " [s], std::exp " << std::endl;
+        std::cout << " numeric::exp<double,"<< Solver::n_ <<  ">  pade_exp " << ns3.count()  << " [s], series_exp "  << ns2.count() << " [s], std::exp "  << ns1.count() << " [s] " << std::endl;
     }
 };
 

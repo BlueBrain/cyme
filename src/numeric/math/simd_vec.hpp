@@ -80,6 +80,15 @@ namespace numeric{
         nrv /= rhs;
         return nrv;
     }
+
+    template<class T>
+    vec<T> operator/ (const vec<T>& lhs, const std::size_t rhs){
+        // named return value optimization
+        vec<T> nrv(lhs);
+        vec<T> nv_rhs(rhs);
+        nrv /= nv_rhs;
+        return nrv;
+    }
    
     template<class T>
     vec<T> operator+ (const vec<T>& lhs, const vec<T>& rhs){

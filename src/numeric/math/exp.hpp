@@ -33,11 +33,6 @@
 
 namespace numeric{
 
-    /*! \class template<std::size_t T, std::size_t n> helper_pow  
-        \brief This class helps the calculation of the pow function 
-    */
-
-
     /*! \class template<std::size_t T, std::size_t n> helper_exp  
         \brief This class implements the exp function based on the definition of the mathematical series, the template parameter n
         fixes the limit of the development, in practice n=20 is a maximum. For larger n, overflow accurs when we calculate the factorial.
@@ -132,10 +127,11 @@ namespace numeric{
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
         \brief final wrapper for the exp, pade approximant by default if -5 < x < 5 with n = 14, determinated experimentaly 
     */
-    template<class T, std::size_t n = 14, int limit = 5,  class Solver = Pade_exp<T,n> >
+    template<class T, std::size_t n = 14, int limit = 5,  class Solver = Series_exp<T,n> >
     struct Helper_exp{
         static inline T exp(T const& a){
-           return ((a > -limit) && (a < limit)) ? Solver::exp(a) : std::exp(a);
+           return  Solver::exp(a);
+         //  return ((a > -limit) && (a < limit)) ? Solver::exp(a) : std::exp(a);
         }
     };
     /** fn final wrapper
@@ -144,6 +140,26 @@ namespace numeric{
     T exp(T const& x){
         return Helper_exp<T,n>::exp(x);
     }
+
+    /**  fn inline T pow(T const& a)
+    \brief calculate the pow of T, generic  
+    \param T const& a 
+    */
+    template<class T, std::size_t n>
+    inline void exp(T& a, T const& b){
+        a = exp<T,n>(b); 
+    };
+
+    /**  fn inline T pow(T const a)
+    \brief calculate the pow of T, privilege this version.  
+    \param T const& a 
+    */
+    template<class T, std::size_t n>
+    inline void exp(T* a, T const* b){
+        vec<T> v(b); // init register one cycle 
+        vec<T> nrv = exp<numeric::vec<T>,n>(v); // copy register one cycle
+        nrv.store(a); //push register to memory
+    };
 } //end namespace 
 
 #endif 
