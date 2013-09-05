@@ -29,8 +29,6 @@
 #ifndef COREBLURON_SIMD_WRAPPER_HPP
 #define COREBLURON_SIMD_WRAPPER_HPP
 
-#include "numeric/math/trait.hpp"
-
 namespace numeric{
 
     template<class T>

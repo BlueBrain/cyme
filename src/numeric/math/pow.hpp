@@ -29,7 +29,6 @@
 #ifndef COREBLURON_POW_HPP
 #define COREBLURON_POW_HPP
 
-#include <type_traits>
 
 namespace numeric{
     /*! \class template<std::size_t T, std::size_t n> helper_pow  

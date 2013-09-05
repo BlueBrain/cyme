@@ -33,7 +33,7 @@
 
 namespace numeric{
 
-    enum class structure : std::int8_t {AoS, SoA};
+//    enum class structure : std::int8_t {AoS, SoA};
 
     /*! \class template<typename T> simd_trait  
         \brief This trait class associates basic type (float and double) to corresponding SIMD register (__m128, __m128d - 128-bit), to allow a generic vectorial exponential
