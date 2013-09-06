@@ -76,17 +76,7 @@ namespace corebluron {
 
     typedef boost::mpl::list<boost::int32_t,boost::int64_t,float,double> full_test_types;
     typedef boost::mpl::list<
-                                data<float,5>,
-                                data<float,6>,
-                                data<float,8>,
-                                data<float,10>,
-                                data<float,12>,
                                 data<float,14>,
-                                data<double,5>,
-                                data<double,6>,
-                                data<double,8>,
-                                data<double,10>,
-                                data<double,12>,
                                 data<double,14>
                             > floating_point_test_types;
 

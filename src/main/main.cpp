@@ -13,6 +13,9 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/type_traits.hpp>
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random/uniform_real_distribution.hpp>
 
 
 //my files
@@ -20,7 +23,25 @@
 
 //using namespace utils;
 
-#define SIZE 0xffff
+#define SIZE 1024*1024
+
+//random generator
+static boost::random::uniform_real_distribution<float>    RandomDouble = boost::random::uniform_real_distribution<float>(-5,5);
+static boost::random::uniform_real_distribution<double>   Randomfloat  = boost::random::uniform_real_distribution<double>(-5,5);
+static boost::random::mt19937    rng;
+
+template<class T>
+T GetRandom();
+
+template<>
+float GetRandom<float>(){
+    return Randomfloat(rng);
+}
+
+template<>
+double GetRandom<double>(){
+    return RandomDouble(rng);
+}
 
 //encapsulate the solver_exp for boost::mpl
 template<class T, std::size_t n>
@@ -36,68 +57,53 @@ struct solver_exp{
 };
 
 //define different solver_exp for the boost::mpl::vector
-typedef solver_exp<double, 2> exp_d2;
-typedef solver_exp<double, 4> exp_d4;
-typedef solver_exp<double, 6> exp_d6;
-typedef solver_exp<double, 8> exp_d8;
-typedef solver_exp<double, 10> exp_d10;
-typedef solver_exp<double, 12> exp_d12;
+typedef solver_exp<float, 14>  exp_f14;
 typedef solver_exp<double, 14> exp_d14;
-typedef solver_exp<double, 16> exp_d16;
-typedef solver_exp<double, 18> exp_d18;
-typedef solver_exp<double, 20> exp_d20;
-typedef solver_exp<double, 22> exp_d22;
-typedef solver_exp<double, 24> exp_d24;
-typedef solver_exp<double, 26> exp_d26;
-typedef solver_exp<double, 28> exp_d28;
-typedef solver_exp<double, 30> exp_d30;
-typedef solver_exp<double, 32> exp_d32;
 
-typedef boost::mpl::vector<
-                              exp_d2,
-                              exp_d4,
-                              exp_d6,
-                              exp_d8,
-                              exp_d10,
-                              exp_d12,
-                              exp_d14,
-                              exp_d16,
-                              exp_d18,
-                              exp_d20,
-                              exp_d22,
-                              exp_d24,
-                              exp_d26,
-                              exp_d28,  
-                              exp_d30,
-                              exp_d32 > solver_exp_list;
+typedef boost::mpl::vector<exp_f14, exp_d14 > solver_exp_list;
 
 struct test_case{
     //redefine the operator() for boost mpl
     template<typename Solver>
     void operator()(Solver const&){
-      //  srand();
-        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
-        for(long long int i(-SIZE); i < SIZE; ++i){
-             typename Solver::value_type a = rand(); // (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
-             std::exp(a);
+
+        typename Solver::value_type* input             = new typename Solver::value_type[SIZE]; 
+        typename Solver::value_type* output_serial_std = new typename Solver::value_type[SIZE]; 
+        typename Solver::value_type* output_serial     = new typename Solver::value_type[SIZE]; 
+        typename Solver::value_type* output_vec        = new typename Solver::value_type[SIZE]; 
+/*
+        typename Solver::value_type input[SIZE]; 
+        typename Solver::value_type output_serial_std[SIZE]; 
+        typename Solver::value_type output_serial[SIZE]; 
+        typename Solver::value_type output_vec[SIZE]; 
+*/
+        for(long long int i(0); i < SIZE; ++i){
+            input[i] = GetRandom<typename Solver::value_type>(); 
         }
+        
+        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
+        for(long long int i(0); i < SIZE; ++i)
+              output_serial_std[i] = std::exp(input[i]);
         boost::chrono::nanoseconds ns1 = boost::chrono::high_resolution_clock::now() - start1;
 
         boost::chrono::high_resolution_clock::time_point start2 = boost::chrono::high_resolution_clock::now();
-        for(long long int i(-SIZE); i < SIZE; ++i){
-             typename Solver::value_type a = rand(); // (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
-             Solver::Series_exp(a);
-        }
+        for(long long int i(0); i < SIZE; ++i) 
+              numeric::exp<typename Solver::value_type, Solver::n_>(output_serial[i], input[i]);
         boost::chrono::nanoseconds ns2 = boost::chrono::high_resolution_clock::now() - start2;
 
         boost::chrono::high_resolution_clock::time_point start3 = boost::chrono::high_resolution_clock::now();
-        for(long long int i(-SIZE); i < SIZE; ++i){
-             typename Solver::value_type a = rand();// (typename Solver::value_type)i*(typename Solver::value_type)1/SIZE*100;
-             Solver::Pade_exp(a);
+        for(long long int i(0); i < SIZE; i+=16/sizeof(typename Solver::value_type)){
+              numeric::exp<typename Solver::value_type, Solver::n_>(&output_vec[i], &input[i]);
         }
         boost::chrono::nanoseconds ns3 = boost::chrono::high_resolution_clock::now() - start3;
 
-        std::cout << " numeric::exp<double,"<< Solver::n_ <<  ">  pade_exp " << ns3.count()  << " [s], series_exp "  << ns2.count() << " [s], std::exp "  << ns1.count() << " [s] " << std::endl;
+        std::cout << " numeric::exp<sizeof(T)"<<sizeof(typename Solver::value_type)<<", "<< Solver::n_ <<  ">  vec_exp " << ns3.count()  << " [s], serial_exp "  << ns2.count() << " [s], std::exp "  << ns1.count() << " [s] " << std::endl;
+         
+        delete[] input;
+        delete[] output_serial_std;
+        delete[] output_serial;
+        delete[] output_vec;
+
     }
 };
 

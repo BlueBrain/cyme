@@ -72,7 +72,14 @@ namespace numeric{
         nrv *= rhs;
         return nrv;
     }
-   
+
+    template<class T>
+    vec<T> operator* (int lhs, const vec<T>& rhs){
+        vec<T> nrv(lhs);
+        nrv *= rhs;
+        return nrv;
+    }
+
     template<class T>
     vec<T> operator/ (const vec<T>& lhs, const vec<T>& rhs){
         // named return value optimization

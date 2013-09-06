@@ -59,13 +59,13 @@ namespace numeric{
     template<class T, std::size_t p, std::size_t q, std::size_t i>
     struct helper_Pade_numerator{
          /**  fn inline static T Pade_numerateur( T const& a
-         \brief calculate the numerator ofthe Pade Aipproximant, when I multiply factorial together, I may have an overflow thus I cast to T i.e. a double,
+         \brief calculate the numerator ofthe Pade Aipproximant, when I multiply factorial together, I may have an overflow thus I cast to T i.e. a double, or a SIMD register,
          I get more precision, and I expand until 14
          \param T const& a
          */
          inline static T Pade_numerator( T const& a){
              // -> this is the original version limited until n = 8, return (factorial<p>()*factorial<p+q-i>()*pow<T,i>(a))/(factorial<p-i>()*factorial<p+q>()*factorial<i>())+helper_Pade_numerateur<T,p,q,i-1>::Pade_numerateur(a);
-             return  ((T)helper_quotient_factorial<q-i,p+q-i>::quotient_factorial()*pow<T,i>(a))/((T)helper_quotient_factorial<p,p+q>::quotient_factorial())*1.0/factorial<i>()+helper_Pade_numerator<T,p,q,i-1>::Pade_numerator(a);
+             return  ((T)helper_quotient_factorial<q-i,p+q-i>::quotient_factorial()*pow<T,i>(a))/((T)helper_quotient_factorial<p,p+q>::quotient_factorial())*(T)1.0/factorial<i>()+helper_Pade_numerator<T,p,q,i-1>::Pade_numerator(a);
          }
     };
 
@@ -90,7 +90,7 @@ namespace numeric{
          */
          inline static T Pade_denominator( T const& a){
              // -> this is the original version limited until n = 8, return pow<int,j>(-1)*(factorial<q>()*factorial<p+q-j>()*pow<T,j>(a))/(factorial<q-j>()*factorial<p+q>()*factorial<j>())+helper_Pade_denominateur<T,p,q,j-1>::Pade_denominateur(a);
-             return pow<int,j>(-1)*((T)helper_quotient_factorial<q-j,p+q-j>::quotient_factorial()*pow<T,j>(a))/((T)helper_quotient_factorial<p,p+q>::quotient_factorial())*1.0/factorial<j>()+helper_Pade_denominator<T,p,q,j-1>::Pade_denominator(a);
+             return pow<int,j>(-1)*((T)helper_quotient_factorial<q-j,p+q-j>::quotient_factorial()*pow<T,j>(a))/((T)helper_quotient_factorial<p,p+q>::quotient_factorial())*(T)1.0/factorial<j>()+helper_Pade_denominator<T,p,q,j-1>::Pade_denominator(a);
 
          }
     };
@@ -127,11 +127,12 @@ namespace numeric{
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
         \brief final wrapper for the exp, pade approximant by default if -5 < x < 5 with n = 14, determinated experimentaly 
     */
-    template<class T, std::size_t n = 14, int limit = 5,  class Solver = Series_exp<T,n> >
+    template<class T, std::size_t n = 14, int limit = 5,  class Solver = Pade_exp<T,n> >
     struct Helper_exp{
         static inline T exp(T const& a){
-           return  Solver::exp(a);
-         //  return ((a > -limit) && (a < limit)) ? Solver::exp(a) : std::exp(a);
+             return Solver::exp(a);
+
+//           return ((a > -limit) && (a < limit)) ? Solver::exp(a) : std::exp(a);
         }
     };
     /** fn final wrapper
@@ -142,7 +143,7 @@ namespace numeric{
     }
 
     /**  fn inline T pow(T const& a)
-    \brief calculate the pow of T, generic  
+    \brief calculate the exp of T, generic  
     \param T const& a 
     */
     template<class T, std::size_t n>
@@ -151,7 +152,7 @@ namespace numeric{
     };
 
     /**  fn inline T pow(T const a)
-    \brief calculate the pow of T, privilege this version.  
+    \brief calculate the exp of T, privilege this version for array.  
     \param T const& a 
     */
     template<class T, std::size_t n>
