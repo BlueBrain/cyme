@@ -3,7 +3,6 @@
 #include <iomanip>  
 #include <limits>  
 #include <math.h>
-#include <array>
 #include <vector>
 #include <random>
 
@@ -21,9 +20,7 @@
 //my files
 #include "numeric/math/math.hpp"
 
-//using namespace utils;
-
-#define SIZE 1024*1024
+#define SIZE 65536
 
 //random generator
 static boost::random::uniform_real_distribution<float>    RandomDouble = boost::random::uniform_real_distribution<float>(-5,5);
@@ -47,12 +44,6 @@ double GetRandom<double>(){
 template<class T, std::size_t n>
 struct solver_exp{
    typedef T value_type;
-   static  T Series_exp( T const& a){ 
-       return numeric::Series_exp<T,n>::exp(a);
-   }   
-   static  T Pade_exp( T const& a){ 
-       return numeric::Pade_exp<T,n>::exp(a);
-   }   
    static const std::size_t n_ = n; // keep trace of n for the evaluation
 };
 
@@ -92,7 +83,7 @@ struct test_case{
         boost::chrono::nanoseconds ns2 = boost::chrono::high_resolution_clock::now() - start2;
 
         boost::chrono::high_resolution_clock::time_point start3 = boost::chrono::high_resolution_clock::now();
-        for(long long int i(0); i < SIZE; i+=16/sizeof(typename Solver::value_type)){
+        for(long long int i(0); i < SIZE; i=i+16/sizeof(typename Solver::value_type)){
               numeric::exp<typename Solver::value_type, Solver::n_>(&output_vec[i], &input[i]);
         }
         boost::chrono::nanoseconds ns3 = boost::chrono::high_resolution_clock::now() - start3;
