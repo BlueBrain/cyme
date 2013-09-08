@@ -51,6 +51,6 @@ namespace numeric{
 
 } //end namespace 
 
-#include "numeric/math/detail/simd_wrapper.ipp"
+#include "numeric/math/detail/x86/simd_wrapper.ipp"
 
 #endif 
