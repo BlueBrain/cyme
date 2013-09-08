@@ -29,39 +29,32 @@
 #ifndef COREBLURON_TRAIT_HPP
 #define COREBLURON_TRAIT_HPP
 
-#include <cmath>
+#include <type_traits>
 
 namespace numeric{
 
-//    enum class structure : std::int8_t {AoS, SoA};
+    enum simd {sse = 16, avx = 32, qpx = 32};
+
+    /*! \class template<typename T> trait  
+        \brief Basic trait to avoid dupliation into simd_trait
+    */
+    template <typename T>
+    struct trait{
+        typedef T  value_type; 
+        typedef T*  pointer; 
+        typedef const T*  const_pointer; 
+    };
 
     /*! \class template<typename T> simd_trait  
         \brief This trait class associates basic type (float and double) to corresponding SIMD register (__m128, __m128d - 128-bit), to allow a generic vectorial exponential
     */
-    template <typename T> struct simd_trait{};
-
-    /*! \class template<float> simd_trait  
-        \brief Specialization for float 
-    */
-    template <>
-    struct simd_trait<float>{
-        typedef float  value_type; 
-        typedef float*  pointer; 
-        typedef const float*  const_pointer; 
-        typedef __m128 register_type;
-    };
-   
-    /*! \class template<double> simd_trait  
-        \brief Specialization for float 
-    */
-    template <>
-    struct simd_trait<double>{
-        typedef double value_type; 
-        typedef double*  pointer; 
-        typedef const double* const_pointer; 
-        typedef __m128d register_type;
-    };
+    template <typename T, int SIMD>
+    struct simd_trait : public trait<T>{};
 }
+
+#ifdef __x86_64__
+#include "numeric/math/detail/x86/trait_x86.ipp"
+#endif
 
 #endif
 

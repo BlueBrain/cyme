@@ -30,77 +30,78 @@
 #ifndef COREBLURON_SIMD_VEC_HPP
 #define COREBLURON_SIMD_VEC_HPP
 
+#include "numeric/math/detail/trait.hpp"
+#include "numeric/math/detail/simd_wrapper.hpp"
+
 namespace numeric{
 
-    template<class T>
+    template<class T, int SIMD>
     struct vec{
-        typedef typename simd_trait<T>::value_type value_type;
-        typedef typename simd_trait<T>::pointer pointer;
-        typedef typename simd_trait<T>::const_pointer const_pointer;
-        typedef typename simd_trait<T>::register_type register_type;
+        typedef typename simd_trait<T,SIMD>::value_type value_type;
+        typedef typename simd_trait<T,SIMD>::pointer pointer;
+        typedef typename simd_trait<T,SIMD>::const_pointer const_pointer;
+        typedef typename simd_trait<T,SIMD>::register_type register_type;
       
-        explicit vec(const value_type a){ xmm = _mm_load1<value_type>(xmm,a);}
-        vec(const_pointer a){ xmm = _mm_load<value_type>(xmm,a);} 
+        explicit vec(const value_type a){ xmm = _mm_load1<value_type,SIMD>(xmm,a);}
+        vec(const_pointer a){ xmm = _mm_load<value_type,SIMD>(xmm,a);} 
 
         vec& operator *=(const vec& rhs){
-            xmm = _mm_mul<value_type>(xmm,rhs.xmm);
+            xmm = _mm_mul<value_type,SIMD>(xmm,rhs.xmm);
             return *this;
         }
         
         vec& operator /=(const vec& rhs){
-            xmm = _mm_div<value_type>(xmm,rhs.xmm);
+            xmm = _mm_div<value_type,SIMD>(xmm,rhs.xmm);
             return *this;
         }
         
         vec& operator +=(const vec& rhs){
-            xmm = _mm_add<value_type>(xmm,rhs.xmm);
+            xmm = _mm_add<value_type,SIMD>(xmm,rhs.xmm);
             return *this;
         }
 
         inline void store(pointer a) const{
-            _mm_store<value_type>(xmm,a);
+            _mm_store<value_type,SIMD>(xmm,a);
         } 
 
         register_type xmm;
     };
 
-
-    template<class T>
-    vec<T> operator* (const vec<T>& lhs, const vec<T>& rhs){
+    template<class T, int SIMD>
+    vec<T,SIMD> operator* (const vec<T,SIMD>& lhs, const vec<T,SIMD>& rhs){
         // named return value optimization
-        vec<T> nrv(lhs);
+        vec<T,SIMD> nrv(lhs);
         nrv *= rhs;
         return nrv;
     }
 
-    template<class T>
-    vec<T> operator* (int lhs, const vec<T>& rhs){
-        vec<T> nrv(lhs);
+    template<class T, int SIMD>
+    vec<T,SIMD> operator* (int lhs, const vec<T,SIMD>& rhs){
+        vec<T,SIMD> nrv(lhs);
         nrv *= rhs;
         return nrv;
     }
 
-    template<class T>
-    vec<T> operator/ (const vec<T>& lhs, const vec<T>& rhs){
+    template<class T, int SIMD>
+    vec<T,SIMD> operator/ (const vec<T,SIMD>& lhs, const vec<T,SIMD>& rhs){
         // named return value optimization
-        vec<T> nrv(lhs);
+        vec<T,SIMD> nrv(lhs);
         nrv /= rhs;
         return nrv;
     }
 
-    template<class T>
-    vec<T> operator/ (const vec<T>& lhs, const std::size_t rhs){
+    template<class T, int SIMD>
+    vec<T,SIMD> operator/ (const vec<T,SIMD>& lhs, const std::size_t rhs){
         // named return value optimization
-        vec<T> nrv(lhs);
-        vec<T> nv_rhs(rhs);
+        vec<T,SIMD> nrv(lhs);
+        vec<T,SIMD> nv_rhs(rhs);
         nrv /= nv_rhs;
         return nrv;
     }
-   
-    template<class T>
-    vec<T> operator+ (const vec<T>& lhs, const vec<T>& rhs){
+    template<class T, int SIMD>
+    vec<T,SIMD> operator+ (const vec<T,SIMD>& lhs, const vec<T,SIMD>& rhs){
         // named return value optimization
-        vec<T> nrv(lhs);
+        vec<T,SIMD> nrv(lhs);
         nrv += rhs;
         return nrv;
     }

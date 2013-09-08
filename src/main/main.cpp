@@ -20,7 +20,7 @@
 //my files
 #include "numeric/math/math.hpp"
 
-#define SIZE 65536
+#define SIZE 512*512
 
 //random generator
 static boost::random::uniform_real_distribution<float>    RandomDouble = boost::random::uniform_real_distribution<float>(-5,5);

@@ -26,13 +26,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_ARCH_HPP
-#define COREBLURON_ARCH_HPP
+#ifndef COREBLURON_SIMD_HPP
+#define COREBLURON_SIMD_HPP
+
+#include <immintrin.h>
 
 namespace numeric{
-
-    enum class structure : std::int8_t {AoS, SoA};
-
+    enum simd {sse = 16, avx = 32, qpx = 32};
 } //end namespace 
 
 #endif 
