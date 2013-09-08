@@ -46,7 +46,7 @@ namespace numeric{
     */
     template <>
     struct simd_trait<double, simd::sse> : trait<double>{
-        typedef __m128 register_type;
+        typedef __m128d register_type;
     };
 
 #ifdef __AVX__ 

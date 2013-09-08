@@ -33,12 +33,12 @@ namespace numeric{
 
     template<>
     inline typename simd_trait<double,simd::avx>::register_type _mm_load1<double,simd::avx>(typename simd_trait<double,simd::avx>::register_type xmm0, const typename simd_trait<double,simd::avx>::value_type a){
-        return (xmm0 =_mm256_load1_pd(&a)); 
+        return (xmm0 = _mm256_broadcast_ss(&a)); 
     }
    
     template<>
     inline typename simd_trait<double,simd::avx>::register_type _mm_load<double,simd::avx>(typename simd_trait<double,simd::avx>::register_type xmm0, typename simd_trait<double,simd::avx>::const_pointer a){
-        return (xmm0 =_mm256_loadu_pd(a)); 
+        return (xmm0 = _mm256_loadu_pd(a)); 
     }
 
     template<>
@@ -63,12 +63,12 @@ namespace numeric{
    
     template<>
     typename simd_trait<float,simd::avx>::register_type _mm_load1<float,simd::avx>(typename simd_trait<float,simd::avx>::register_type xmm0, const typename simd_trait<float,simd::avx>::value_type a){
-        return (xmm0 =_mm256_load1_ps(&a)); 
+        return (xmm0 = _mm256_broadcast_sd(&a)); 
     }
    
     template<>
     typename simd_trait<float,simd::avx>::register_type _mm_load<float,simd::avx>(typename simd_trait<float,simd::avx>::register_type xmm0, typename simd_trait<float,simd::avx>::const_pointer a){
-        return (xmm0 =_mm256_loadu_ps(a)); 
+        return (xmm0 = _mm256_loadu_ps(a)); 
     }
 
     template<>
