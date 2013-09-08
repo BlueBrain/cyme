@@ -38,7 +38,7 @@ namespace numeric{
     /*! \class template<typename T> trait  
         \brief Basic trait to avoid dupliation into simd_trait
     */
-    template <typename T>
+    template <typename T> // TO DO add a safety on the type float and double only
     struct trait{
         typedef T  value_type; 
         typedef T*  pointer; 

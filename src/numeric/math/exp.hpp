@@ -29,8 +29,6 @@
 #ifndef COREBLURON_EXP_HPP
 #define COREBLURON_EXP_HPP
 
-#include <cmath>
-
 namespace numeric{
 
     /*! \class template<std::size_t T, std::size_t n> helper_exp  

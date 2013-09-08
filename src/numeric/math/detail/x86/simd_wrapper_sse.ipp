@@ -1,6 +1,8 @@
 /*
  * CoreBluron, License
  * 
+ * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
+ * 
  * Permission is hereby granted, free of charge, to any person or organization
  * obtaining a copy of the software and accompanying documentation covered by
  * this license (the "Software") to use, reproduce, display, distribute,
@@ -24,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_SIMD_WRAPPER_HPP
-#define COREBLURON_SIMD_WRAPPER_HPP
+#ifndef COREBLURON_SIMD_WRAPPER_SSE_HPP
+#define COREBLURON_SIMD_WRAPPER_SSE_HPP
 
 namespace numeric{
 
@@ -88,6 +90,7 @@ namespace numeric{
     inline typename simd_trait<float,simd::sse>::register_type _mm_add<float,simd::sse>(typename simd_trait<float,simd::sse>::register_type xmm0, typename simd_trait<float,simd::sse>::register_type xmm1){
         return (xmm0 = _mm_add_ps(xmm0, xmm1));
     };
+
 
 } //end namespace 
 

@@ -51,6 +51,12 @@ namespace numeric{
 
 } //end namespace 
 
-#include "numeric/math/detail/x86/simd_wrapper.ipp"
+#ifdef __SSE2__ 
+    #include "numeric/math/detail/x86/simd_wrapper_sse.ipp"
+#endif 
+
+#ifdef __AVX__ 
+    #include "numeric/math/detail/x86/simd_wrapper_avx.ipp"
+#endif 
 
 #endif 

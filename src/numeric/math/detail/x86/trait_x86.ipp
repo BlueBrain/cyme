@@ -29,7 +29,7 @@
 #ifndef COREBLURON_TRAIT_X86_IPP
 #define COREBLURON_TRAIT_X86_IPP
 
-#include <immintrin.h> //type SIMD
+#include <immintrin.h> //type SIMD, sse and avx
 
 namespace numeric{
 
