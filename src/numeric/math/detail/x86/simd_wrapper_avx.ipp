@@ -33,7 +33,7 @@ namespace numeric{
 
     template<>
     inline typename simd_trait<double,simd::avx>::register_type _mm_load1<double,simd::avx>(typename simd_trait<double,simd::avx>::register_type xmm0, const typename simd_trait<double,simd::avx>::value_type a){
-        return (xmm0 = _mm256_broadcast_ss(&a)); 
+        return (xmm0 = _mm256_broadcast_sd(&a)); 
     }
    
     template<>
@@ -63,7 +63,7 @@ namespace numeric{
    
     template<>
     typename simd_trait<float,simd::avx>::register_type _mm_load1<float,simd::avx>(typename simd_trait<float,simd::avx>::register_type xmm0, const typename simd_trait<float,simd::avx>::value_type a){
-        return (xmm0 = _mm256_broadcast_sd(&a)); 
+        return (xmm0 = _mm256_broadcast_ss(&a)); 
     }
    
     template<>
