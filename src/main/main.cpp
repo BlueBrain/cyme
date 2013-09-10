@@ -2,9 +2,6 @@
 #include <fstream>
 #include <iomanip>  
 #include <limits>  
-#include <math.h>
-#include <vector>
-#include <random>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/mpl/for_each.hpp>

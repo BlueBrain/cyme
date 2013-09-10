@@ -49,7 +49,7 @@ namespace numeric{
     template<class T>
     struct helper_pow<T,0>{
         inline static T pow(T const& a){
-            return T(1); //1 for basic type, xmm registers set up to 1 for SIMD
+            return T(1); //1 for basic type, xmm registers set up to 1 for simd
         }
     };
     /* \endcond */
@@ -75,10 +75,10 @@ namespace numeric{
     \brief calculate the pow of T, privilege this version.  
     \param T const& a 
     */
-    template<class T, std::size_t n, int SIMD = simd::avx>
+    template<class T, std::size_t n, simd O = avx>
     inline void pow(T* a, T const* b){
-        vec<T,SIMD> v(b); // init register one cycle 
-        vec<T,SIMD> nrv = pow<numeric::vec<T,SIMD>,n>(v); // copy register one cycle
+        vec<T,O> v(b); // init register one cycle 
+        vec<T,O> nrv = pow<numeric::vec<T,O>,n>(v); // copy register one cycle
         nrv.store(a); //push register to memory
     };
 

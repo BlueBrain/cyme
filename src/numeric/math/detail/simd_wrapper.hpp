@@ -26,37 +26,37 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_SIMD_WRAPPER_H
-#define COREBLURON_SIMD_WRAPPER_H
+#ifndef COREBLURON_O_WRAPPER_H
+#define COREBLURON_O_WRAPPER_H
 
 namespace numeric{
 
-    template<class T, int SIMD>
-    inline typename simd_trait<T,SIMD>::register_type _mm_load1(typename simd_trait<T,SIMD>::register_type xmm0, const typename simd_trait<T,SIMD>::value_type a);
+    template<class T, simd O>
+    inline typename simd_trait<T,O>::register_type _mm_load1(typename simd_trait<T,O>::register_type xmm0, const typename simd_trait<T,O>::value_type a);
    
-    template<class T, int SIMD>
-    inline typename simd_trait<T,SIMD>::register_type _mm_load(typename simd_trait<T,SIMD>::register_type xmm0, typename simd_trait<T,SIMD>::const_pointer a);
+    template<class T, simd O>
+    inline typename simd_trait<T,O>::register_type _mm_load(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::const_pointer a);
    
-    template<class T, int SIMD>
-    void _mm_store(typename simd_trait<T,SIMD>::register_type xmm0, typename simd_trait<T,SIMD>::pointer a);
+    template<class T, simd O>
+    void _mm_store(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::pointer a);
 
-    template<class T, int SIMD>
-    inline typename simd_trait<T,SIMD>::register_type _mm_mul(typename simd_trait<T,SIMD>::register_type xmm0, typename simd_trait<T,SIMD>::register_type xmm1);
+    template<class T, simd O>
+    inline typename simd_trait<T,O>::register_type _mm_mul(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
    
-    template<class T, int SIMD>
-    inline typename simd_trait<T,SIMD>::register_type _mm_div(typename simd_trait<T,SIMD>::register_type xmm0, typename simd_trait<T,SIMD>::register_type xmm1);
+    template<class T, simd O>
+    inline typename simd_trait<T,O>::register_type _mm_div(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
    
-    template<class T, int SIMD>
-    inline typename simd_trait<T,SIMD>::register_type _mm_add(typename simd_trait<T,SIMD>::register_type xmm0, typename simd_trait<T,SIMD>::register_type xmm1);
+    template<class T, simd O>
+    inline typename simd_trait<T,O>::register_type _mm_add(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
 
 } //end namespace 
 
-#ifdef __SSE2__ 
+//#ifdef __SSE2__ 
     #include "numeric/math/detail/x86/simd_wrapper_sse.ipp"
-#endif 
+//#endif 
 
-#ifdef __AVX__ 
+//#ifdef __AVX__ 
     #include "numeric/math/detail/x86/simd_wrapper_avx.ipp"
-#endif 
+//#endif 
 
 #endif 

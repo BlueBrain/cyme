@@ -37,7 +37,7 @@ namespace numeric{
         \brief Specialization for float with SSE SIMD 
     */
     template <>
-    struct simd_trait<float, simd::sse> : trait<float>{
+    struct simd_trait<float, sse> : trait<float>{
         typedef __m128 register_type;
     };
    
@@ -45,16 +45,15 @@ namespace numeric{
         \brief Specialization for float with SSE SIMD
     */
     template <>
-    struct simd_trait<double, simd::sse> : trait<double>{
+    struct simd_trait<double, sse> : trait<double>{
         typedef __m128d register_type;
     };
 
-#ifdef __AVX__ 
     /*! \class template<float> simd_trait  
         \brief Specialization for float with AVX SIMD 
     */
     template <>
-    struct simd_trait<float,simd::avx> : trait<float>{
+    struct simd_trait<float,avx> : trait<float>{
         typedef __m256 register_type;
     };
    
@@ -62,9 +61,8 @@ namespace numeric{
         \brief Specialization for float with AVX SIMD
     */
     template <>
-    struct simd_trait<double,simd::avx> : trait<double>{
+    struct simd_trait<double,avx> : trait<double>{
         typedef __m256d register_type;
     };
-#endif
 }
 #endif

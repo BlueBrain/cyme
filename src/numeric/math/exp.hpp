@@ -46,7 +46,7 @@ namespace numeric{
     template<class T>
     struct helper_exp<T,0>{
         inline static T exp(T const& a){
-            return T(1); //1 for basic type, xmm registers set up to 1 for SIMD
+            return T(1); //1 for basic type, xmm registers set up to 1 for simd
         }
     };
     /* \endcond */
@@ -57,7 +57,7 @@ namespace numeric{
     template<class T, std::size_t p, std::size_t q, std::size_t i>
     struct helper_Pade_numerator{
          /**  fn inline static T Pade_numerateur( T const& a
-         \brief calculate the numerator ofthe Pade Aipproximant, when I multiply factorial together, I may have an overflow thus I cast to T i.e. a double, or a SIMD register,
+         \brief calculate the numerator ofthe Pade Aipproximant, when I multiply factorial together, I may have an overflow thus I cast to T i.e. a double, or a simd register,
          I get more precision, and I expand until 14
          \param T const& a
          */
@@ -153,10 +153,10 @@ namespace numeric{
     \brief calculate the exp of T, privilege this version for array.  
     \param T const& a 
     */
-    template<class T, std::size_t n, int SIMD = simd::avx>
+    template<class T, std::size_t n, simd O = avx>
     inline void exp(T* a, T const* b){
-        vec<T,SIMD> v(b); // init register one cycle 
-        vec<T,SIMD> nrv = exp<numeric::vec<T,SIMD>,n>(v); // copy register one cycle
+        vec<T,O> v(b); // init register one cycle 
+        vec<T,O> nrv = exp<numeric::vec<T,O>,n>(v); // copy register one cycle
         nrv.store(a); //push register to memory
     };
 } //end namespace 

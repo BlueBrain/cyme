@@ -29,8 +29,6 @@
 #ifndef COREBLURON_TRAIT_HPP
 #define COREBLURON_TRAIT_HPP
 
-#include <type_traits>
-
 namespace numeric{
 
     enum simd {sse = 16, avx = 32, qpx = 32};
@@ -48,7 +46,7 @@ namespace numeric{
     /*! \class template<typename T> simd_trait  
         \brief This trait class associates basic type (float and double) to corresponding SIMD register (__m128, __m128d - 128-bit), to allow a generic vectorial exponential
     */
-    template <typename T, int SIMD>
+    template <typename T, simd O>
     struct simd_trait : public trait<T>{};
 }
 
