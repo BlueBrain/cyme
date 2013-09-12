@@ -22,7 +22,7 @@
 
 #include "memory/block.hpp"
 
-#define SIZE 16*16
+#define SIZE 64*64
 
 //random generator
 static boost::random::uniform_real_distribution<float>    RandomDouble = boost::random::uniform_real_distribution<float>(-5,5);
@@ -90,7 +90,7 @@ struct test_case{
 
         boost::chrono::high_resolution_clock::time_point start3 = boost::chrono::high_resolution_clock::now();
         for(long long int i(0); i < size_vector; ++i)
-            for(int j=0; j < SIZE; j+=(sizeof(typename Solver::value_type)/2))
+            for(int j=0; j < SIZE; j+=(16/sizeof(typename Solver::value_type)))
                 numeric::exp<typename Solver::value_type, Solver::n_>(&vec_output_vec[i].data[j], &vec_input[i].data[j]);
         boost::chrono::nanoseconds ns3 = boost::chrono::high_resolution_clock::now() - start3;
 
