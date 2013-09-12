@@ -3,6 +3,8 @@
 #include <iomanip>  
 #include <limits>  
 
+#include <vector>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/vector.hpp>
@@ -20,7 +22,7 @@
 
 #include "memory/block.hpp"
 
-#define SIZE 512*512
+#define SIZE 16*16
 
 //random generator
 static boost::random::uniform_real_distribution<float>    RandomDouble = boost::random::uniform_real_distribution<float>(-5,5);
@@ -53,46 +55,46 @@ typedef solver_exp<double, 14> exp_d14;
 
 typedef boost::mpl::vector<exp_f14, exp_d14 > solver_exp_list;
 
+template<class T>
+struct block{
+    T data[SIZE];
+};
+
 struct test_case{
     //redefine the operator() for boost mpl
     template<typename Solver>
     void operator()(Solver const&){
+        int size_vector = 1024;
 
-        typename Solver::value_type* input             = new typename Solver::value_type[SIZE]; 
-        typename Solver::value_type* output_serial_std = new typename Solver::value_type[SIZE]; 
-        typename Solver::value_type* output_serial     = new typename Solver::value_type[SIZE]; 
-        typename Solver::value_type* output_vec        = new typename Solver::value_type[SIZE]; 
-/*
-        typename Solver::value_type input[SIZE]; 
-        typename Solver::value_type output_serial_std[SIZE]; 
-        typename Solver::value_type output_serial[SIZE]; 
-        typename Solver::value_type output_vec[SIZE]; 
-*/
-        for(long long int i(0); i < SIZE; ++i){
-            input[i] = GetRandom<typename Solver::value_type>(); 
-        }
-        
-        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
-        for(long long int i(0); i < SIZE; ++i)
-              output_serial_std[i] = std::exp(input[i]);
-        boost::chrono::nanoseconds ns1 = boost::chrono::high_resolution_clock::now() - start1;
+        std::vector<block<typename Solver::value_type> > vec_input(size_vector);
+        std::vector<block<typename Solver::value_type> > vec_output_serial(size_vector);
+        std::vector<block<typename Solver::value_type> > vec_output_serial_std(size_vector);
+        std::vector<block<typename Solver::value_type> > vec_output_vec(size_vector);
+
+        for(long long int i(0); i < size_vector; ++i)
+            for(int j=0; j < SIZE; j++)
+                vec_input[i].data[j] = GetRandom<typename Solver::value_type>(); 
 
         boost::chrono::high_resolution_clock::time_point start2 = boost::chrono::high_resolution_clock::now();
-        for(long long int i(0); i < SIZE; ++i) 
-              numeric::exp<typename Solver::value_type, Solver::n_>(output_serial[i], input[i]);
+        for(long long int i(0); i < size_vector; ++i)
+            for(int j=0; j < SIZE; j++)
+              numeric::exp<typename Solver::value_type, Solver::n_>(vec_output_serial[i].data[j], vec_input[i].data[j]);
         boost::chrono::nanoseconds ns2 = boost::chrono::high_resolution_clock::now() - start2;
 
+        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
+        for(long long int i(0); i < size_vector; ++i)
+            for(int j=0; j < SIZE; j++)
+              vec_output_serial_std[i].data[j] = std::exp(vec_input[i].data[j]);
+        boost::chrono::nanoseconds ns1 = boost::chrono::high_resolution_clock::now() - start1;
+
+
         boost::chrono::high_resolution_clock::time_point start3 = boost::chrono::high_resolution_clock::now();
-        for(long long int i(0); i < SIZE; i=i+16/sizeof(typename Solver::value_type))
-              numeric::exp<typename Solver::value_type, Solver::n_>(&output_vec[i], &input[i]);
+        for(long long int i(0); i < size_vector; ++i)
+            for(int j=0; j < SIZE; j+=(sizeof(typename Solver::value_type)/2))
+                numeric::exp<typename Solver::value_type, Solver::n_>(&vec_output_vec[i].data[j], &vec_input[i].data[j]);
         boost::chrono::nanoseconds ns3 = boost::chrono::high_resolution_clock::now() - start3;
 
         std::cout << " numeric::exp<sizeof(T)"<<sizeof(typename Solver::value_type)<<", "<< Solver::n_ <<  ">  vec_exp " << ns3.count()  << " [s], serial_exp "  << ns2.count() << " [s], std::exp "  << ns1.count() << " [s] " << std::endl;
-         
-        delete[] input;
-        delete[] output_serial_std;
-        delete[] output_serial;
-        delete[] output_vec;
 
     }
 };
