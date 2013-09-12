@@ -34,7 +34,7 @@
 
 namespace numeric{
 
-    template<class T, simd O>
+    template<class T,memory::simd O>
     struct vec{
         typedef typename simd_trait<T,O>::value_type value_type;
         typedef typename simd_trait<T,O>::pointer pointer;
@@ -66,7 +66,7 @@ namespace numeric{
         register_type xmm;
     };
 
-    template<class T, simd O>
+    template<class T,memory::simd O>
     vec<T,O> operator* (const vec<T,O>& lhs, const vec<T,O>& rhs){
         // named return value optimization
         vec<T,O> nrv(lhs);
@@ -74,14 +74,14 @@ namespace numeric{
         return nrv;
     }
 
-    template<class T, simd O>
+    template<class T,memory::simd O>
     vec<T,O> operator* (int lhs, const vec<T,O>& rhs){
         vec<T,O> nrv(lhs);
         nrv *= rhs;
         return nrv;
     }
 
-    template<class T, simd O>
+    template<class T,memory::simd O>
     vec<T,O> operator/ (const vec<T,O>& lhs, const vec<T,O>& rhs){
         // named return value optimization
         vec<T,O> nrv(lhs);
@@ -89,7 +89,7 @@ namespace numeric{
         return nrv;
     }
 
-    template<class T, simd O>
+    template<class T,memory::simd O>
     vec<T,O> operator/ (const vec<T,O>& lhs, const std::size_t rhs){
         // named return value optimization
         vec<T,O> nrv(lhs);
@@ -97,7 +97,7 @@ namespace numeric{
         nrv /= nv_rhs;
         return nrv;
     }
-    template<class T, simd O>
+    template<class T,memory::simd O>
     vec<T,O> operator+ (const vec<T,O>& lhs, const vec<T,O>& rhs){
         // named return value optimization
         vec<T,O> nrv(lhs);

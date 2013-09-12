@@ -31,42 +31,24 @@
 
 #include <assert.h> 
 #include <stdlib.h> // POSIX, size_t is inside
+#include "memory/detail/simd.h"
 
 namespace memory{
-    struct NORMAL {
-        static const size_t value = sizeof(void*); // mystery machine
-    };
-   
-    struct SSE {
-        static const size_t value = 16; // machine support SSE?, 128 bit register (x86 machine)
-    };
-   
-    struct AVX {
-        static const size_t value = 32; // 256 bit register (intel, x86 machine)
-    };
-   
-    struct QPXF {
-        static const size_t value = 16; // BGQ float 
-    };
-   
-    struct QPXD {
-        static const size_t value = 32; // BGQ double
-    };
 
-    template<class align>
+    template<memory::simd O>
     class Align_POSIX{
     public:
         typedef std::size_t        size_type;
     protected:
         void* allocate_policy(size_type size) {
-            assert(get_alignement_value() >= sizeof(void*));
-            assert(get_alignement_value()%2);
+           assert(O>=sizeof(void*));
+           assert(O%2);
         
             if (size == 0) 
                 return NULL;
            
             void* ptr = NULL;
-            int rc = posix_memalign(&ptr, align::value, size);
+            int rc = posix_memalign(&ptr, O, size);
            
             if (rc != 0) 
                 return NULL;
@@ -79,7 +61,7 @@ namespace memory{
         }
     };
 
-    template<class T, class Policy = Align_POSIX<NORMAL> >
+    template<class T, class Policy = Align_POSIX<memory::getsimd()> >
     class Allocator : private Policy {
         using Policy::allocate_policy;
         using Policy::deallocate_policy;

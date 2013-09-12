@@ -153,7 +153,7 @@ namespace numeric{
     \brief calculate the exp of T, privilege this version for array.  
     \param T const& a 
     */
-    template<class T, std::size_t n, simd O = avx>
+    template<class T, std::size_t n, memory::simd O = memory::getsimd()>
     inline void exp(T* a, T const* b){
         vec<T,O> v(b); // init register one cycle 
         vec<T,O> nrv = exp<numeric::vec<T,O>,n>(v); // copy register one cycle

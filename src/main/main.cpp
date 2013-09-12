@@ -17,6 +17,9 @@
 //my files
 #include "numeric/math/math.hpp"
 
+
+#include "memory/block.hpp"
+
 #define SIZE 512*512
 
 //random generator
@@ -80,9 +83,8 @@ struct test_case{
         boost::chrono::nanoseconds ns2 = boost::chrono::high_resolution_clock::now() - start2;
 
         boost::chrono::high_resolution_clock::time_point start3 = boost::chrono::high_resolution_clock::now();
-        for(long long int i(0); i < SIZE; i=i+16/sizeof(typename Solver::value_type)){
+        for(long long int i(0); i < SIZE; i=i+16/sizeof(typename Solver::value_type))
               numeric::exp<typename Solver::value_type, Solver::n_>(&output_vec[i], &input[i]);
-        }
         boost::chrono::nanoseconds ns3 = boost::chrono::high_resolution_clock::now() - start3;
 
         std::cout << " numeric::exp<sizeof(T)"<<sizeof(typename Solver::value_type)<<", "<< Solver::n_ <<  ">  vec_exp " << ns3.count()  << " [s], serial_exp "  << ns2.count() << " [s], std::exp "  << ns1.count() << " [s] " << std::endl;

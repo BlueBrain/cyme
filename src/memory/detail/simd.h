@@ -26,45 +26,14 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_TRAIT_X86_IPP
-#define COREBLURON_TRAIT_X86_IPP
+#ifndef COREBLURON_SIMD_H
+#define COREBLURON_SIMD_H
 
-#include <immintrin.h> //type SIMD, memory::sse and memory::avx
+namespace memory{
+    enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpxf = 16, qpxd = 32}; //sizeof(void*) = 8 on 64 bits machine 
+     
+    inline constexpr simd getsimd() {return sse;} //default value, should  be passed by PP e.g. -Dsse
+} //end namespace
 
-namespace numeric{
 
-    /*! \class template<float> simd_trait  
-        \brief Specialization for float with SSE SIMD 
-    */
-    template <>
-    struct simd_trait<float, memory::sse> : trait<float>{
-        typedef __m128 register_type;
-    };
-   
-    /*! \class template<double> simd_trait  
-        \brief Specialization for float with SSE SIMD
-    */
-    template <>
-    struct simd_trait<double, memory::sse> : trait<double>{
-        typedef __m128d register_type;
-    };
-#ifdef __AVX__
-    /*! \class template<float> simd_trait  
-        \brief Specialization for float with AVX SIMD 
-    */
-    template <>
-    struct simd_trait<float,memory::avx> : trait<float>{
-        typedef __m256 register_type;
-    };
-   
-    /*! \class template<double> simd_trait  
-        \brief Specialization for float with AVX SIMD
-    */
-    template <>
-    struct simd_trait<double,memory::avx> : trait<double>{
-        typedef __m256d register_type;
-    };
-#endif
-
-}
 #endif

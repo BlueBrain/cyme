@@ -26,34 +26,57 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_TRAIT_HPP
-#define COREBLURON_TRAIT_HPP
+#ifndef COREBLURON_BLOCK_HPP 
+#define COREBLURON_BLOCK_HPP
 
 #include "memory/detail/simd.h"
 
-namespace numeric{
-    /*! \class template<typename T> trait  
-        \brief Basic trait to avoid dupliation into simd_trait
-    */
-    template <typename T> // TO DO add a safety on the type float and double only
-    struct trait{
-        typedef T                  value_type; 
-        typedef value_type*        pointer; 
-        typedef const value_type*  const_pointer; 
-        typedef value_type&        reference;
-        typedef const value_type&  const_reference;
-    };
+namespace memory{
 
-    /*! \class template<typename T> simd_trait  
-        \brief This trait class associates basic type (float and double) to corresponding SIMD register (__m128, __m128d - 128-bit), to allow a generic vectorial exponential
-    */
-    template <typename T, memory::simd O>
-    struct simd_trait : public trait<T>{};
-}
+     /*! \class block
+         \brief This class mode a block of memory, where the data are interleaved when the stride != 1 
+     */
+     template <class T, std::size_t Size, memory::simd stride = memory::getsimd()/sizeof(T)>
+     class block{
+         public:
+         /**
+         \brief typedef we are working with std notation
+         */       
+         typedef std::size_t       size_type;
+         typedef T                 value_type; 
+         typedef value_type&       reference;
+         typedef const value_type& const_reference;
 
-#ifdef __x86_64__
-#include "numeric/math/detail/x86/trait_x86.ipp"
+         /**
+         \brief Default constructor, the block is set up to 0
+         */       
+         block();
+
+         /**
+         \brief Constructor, the block is set up to the given value
+         \param num value_type 
+         */       
+         explicit block(value_type value);
+ 
+         /**
+         \fn reference operator[](size_type i)
+         \brief Give write acces to the block of memory 
+         \param i unsigned 64-bit int
+         */ 
+         reference operator[](size_type i);
+
+         /**
+         \fn const_reference operator[](size_type i)
+         \brief Give read acces to the block of memory 
+         \param i unsigned 64-bit int
+         */ 
+         const_reference operator[](size_type i) const;
+             
+         private:
+         value_type data[Size];       
+     };
+} //end namespace
+
+#include "memory/block.ipp"
+
 #endif
-
-#endif
-
