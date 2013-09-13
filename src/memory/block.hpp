@@ -53,7 +53,7 @@ namespace memory{
 
         explicit block(){
             for(size_type i(0); i<N; ++i)
-                base_type::operator[](i) = storage_type();
+                base_type::operator[](i) = storage_type(); // fill up to 0
         }
 
         reference operator()(size_type i, size_type j){
@@ -80,19 +80,17 @@ namespace memory{
 
         explicit block(){
             for(size_type i(0); i<N; ++i)
-                base_type::operator[](i) = storage_type();
+                base_type::operator[](i) = storage_type(); // fill up to 0
         }
 
         reference operator()(size_type i, size_type j){
-            int MM =M;
-            int ii = (i*M+j)/(M*getsimd()/sizeof(T));
-            int jj = 4*(i+j%M);
-            int jjj =(i*M+j)%4;
-            return base_type::operator[]((i*M+j)/(M*getsimd()/sizeof(T)))(j*getsimd()/sizeof(T));
+            return base_type::operator[]((i*M+j)/(M*getsimd()/sizeof(T)))                     //(i)
+                                        (j*(getsimd()/sizeof(T)) + i%(getsimd()/sizeof(T)));  //(j)
         };
 
         const_reference operator()(size_type i, size_type j) const{
-            return base_type::operator[]((i*M+j)/(M*getsimd()/sizeof(T)))(j*getsimd()/sizeof(T));
+            return base_type::operator[]((i*M+j)/(M*getsimd()/sizeof(T))) //(i)
+                                        (j*M + i%(getsimd()/sizeof(T)));  //(j)
         };
     };
 }
