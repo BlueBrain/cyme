@@ -39,7 +39,7 @@ set (COREBLURON_VERSION_MINOR 1)
 # Look for modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-option (COREBLURON_TESTS "Build the COREBLURONE regression tests" ON)
+option (COREBLURON_TESTS "Build the COREBLURONE regression tests" OFF)
 
 ########################################################################
 #

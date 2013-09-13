@@ -25,58 +25,76 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-
 #ifndef COREBLURON_BLOCK_HPP 
 #define COREBLURON_BLOCK_HPP
 
+#include <array>
+
 #include "memory/detail/simd.h"
+#include "memory/detail/storage.hpp"
 
 namespace memory{
+    // M = #element into the mechanism, N = #number of synapse, Order SoA or SoAoS
 
-     /*! \class block
-         \brief This class mode a block of memory, where the data are interleaved when the stride != 1 
-     */
-     template <class T, std::size_t Size, memory::simd stride = memory::getsimd()/sizeof(T)>
-     class block{
-         public:
-         /**
-         \brief typedef we are working with std notation
-         */       
-         typedef std::size_t       size_type;
-         typedef T                 value_type; 
-         typedef value_type&       reference;
-         typedef const value_type& const_reference;
+    template<class T, std::size_t M, std::size_t N, memory::order O>
+    class block{
+    };
 
-         /**
-         \brief Default constructor, the block is set up to 0
-         */       
-         block();
+    template<class T, std::size_t M, std::size_t N>
+    class block<T,M,N,AoS> : public std::array<storage<T,M>,N> {
+    public:
+        typedef std::size_t                    size_type;
+        typedef T                              value_type; 
+        typedef value_type&                    reference;
+        typedef const value_type&              const_reference;
+        typedef storage<T,M>                   storage_type;
+        typedef std::array<storage_type,N>     base_type; //default template seems impossible on partial specialization
+        typedef typename  base_type::iterator  iterator;
 
-         /**
-         \brief Constructor, the block is set up to the given value
-         \param num value_type 
-         */       
-         explicit block(value_type value);
- 
-         /**
-         \fn reference operator[](size_type i)
-         \brief Give write acces to the block of memory 
-         \param i unsigned 64-bit int
-         */ 
-         reference operator[](size_type i);
+        explicit block(){
+            for(size_type i(0); i<N; ++i)
+                base_type::operator[](i) = storage_type();
+        }
 
-         /**
-         \fn const_reference operator[](size_type i)
-         \brief Give read acces to the block of memory 
-         \param i unsigned 64-bit int
-         */ 
-         const_reference operator[](size_type i) const;
-             
-         private:
-         value_type data[Size];       
-     };
-} //end namespace
+        reference operator()(size_type i, size_type j){
+            return base_type::operator[](i)(j);
+        }
 
-#include "memory/block.ipp"
+        const_reference operator()(size_type i, size_type j) const{
+            return base_type::operator[](i)(j);
+        }
+    };
+
+    // N nombre de case, M nombre d element dans la case
+    template<class T, std::size_t M, std::size_t N>
+    class block<T,M,N,AoSoA> : public std::array<storage<T,getsimd()/sizeof(T)*M>, N/(getsimd()/sizeof(T))+1>{
+    public:
+        typedef std::size_t                                         size_type;
+        typedef T                                                   value_type; 
+        typedef value_type&                                         reference;
+        typedef const value_type&                                   const_reference;
+        typedef storage<T,getsimd()/sizeof(T)*M>                    storage_type;
+        typedef std::array<storage_type,N/(getsimd()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
+
+        typedef typename  base_type::iterator                       iterator;
+
+        explicit block(){
+            for(size_type i(0); i<N; ++i)
+                base_type::operator[](i) = storage_type();
+        }
+
+        reference operator()(size_type i, size_type j){
+            int MM =M;
+            int ii = (i*M+j)/(M*getsimd()/sizeof(T));
+            int jj = 4*(i+j%M);
+            int jjj =(i*M+j)%4;
+            return base_type::operator[]((i*M+j)/(M*getsimd()/sizeof(T)))(j*getsimd()/sizeof(T));
+        };
+
+        const_reference operator()(size_type i, size_type j) const{
+            return base_type::operator[]((i*M+j)/(M*getsimd()/sizeof(T)))(j*getsimd()/sizeof(T));
+        };
+    };
+}
 
 #endif

@@ -26,16 +26,54 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_SIMD_H
-#define COREBLURON_SIMD_H
+#ifndef COREBLURON_STORAGE_HPP 
+#define COREBLURON_STORAGE_HPP
 
 namespace memory{
-    enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpxf = 16, qpxd = 32}; //sizeof(void*) = 8 on 64 bits machine 
+     /*! \class storage
+         \brief This class modeles the basic storage, where the data are interleaved when the stride != 1 
+     */
+     template <class T, std::size_t Size>
+     class storage{
+         public:
+         /**
+         \brief typedef we are working with std notation
+         */       
+         typedef std::size_t       size_type;
+         typedef T                 value_type; 
+         typedef value_type&       reference;
+         typedef const value_type& const_reference;
 
-    enum order {AoS, AoSoA};
-     
-    inline constexpr simd getsimd() {return avx;} //default value, should  be passed by PP e.g. -Dsse
+         /**
+         \brief Default constructor, the storage is set up to 0
+         */       
+         storage();
+
+         /**
+         \brief Constructor, the storage is set up to the given value
+         \param num value_type 
+         */       
+         explicit storage(value_type value);
+ 
+         /**
+         \fn reference operator[](size_type i)
+         \brief Give write acces to the storage of memory 
+         \param i unsigned 64-bit int
+         */ 
+         reference operator()(size_type i);
+
+         /**
+         \fn const_reference operator[](size_type i)
+         \brief Give read acces to the storage of memory 
+         \param i unsigned 64-bit int
+         */ 
+         const_reference operator()(size_type i) const;
+             
+         private:
+         value_type data[Size];       
+     };
 } //end namespace
 
+#include "memory/detail/storage.ipp"
 
 #endif

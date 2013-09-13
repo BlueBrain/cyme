@@ -26,29 +26,28 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_BLOCK_IPP 
-#define COREBLURON_BLOCK_IPP
+#ifndef COREBLURON_STORAGE_IPP 
+#define COREBLURON_STORAGE_IPP
 namespace memory{
-
-    template <class T, std::size_t Size, memory::simd stride>
-    block<T, Size, stride>::block(){
+    template <class T, std::size_t Size>
+    storage<T, Size>::storage(){
         memset((void*)&this->data[0],T(),Size*sizeof(T)); // memset works only for char, T() return 0 so ok
     }
 
-    template <class T, std::size_t Size, memory::simd stride>
-    block<T, Size, stride>::block(value_type value){
+    template <class T, std::size_t Size>
+    storage<T, Size>::storage(value_type value){
         for(size_type i=0; i<Size; ++i) 
             this->data[i] = value;
     }
 
-    template <class T, std::size_t Size, memory::simd stride>
-    typename block<T, Size, stride>::reference block<T, Size, stride>::operator[](size_type i){
-        return data[i*stride];
+    template <class T, std::size_t Size>
+    typename storage<T, Size>::reference storage<T, Size>::operator()(size_type i){
+        return data[i];
     }
 
-    template <class T, std::size_t Size, memory::simd stride>
-    typename block<T, Size, stride>::const_reference block<T, Size, stride>::operator[](size_type i) const{
-        return data[i*stride];
+    template <class T, std::size_t Size>
+    typename storage<T, Size>::const_reference storage<T, Size>::operator()(size_type i) const{
+        return data[i];
     }
 } //end namespace
 #endif 
