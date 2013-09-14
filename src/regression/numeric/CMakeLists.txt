@@ -1,8 +1,6 @@
 add_definitions (-DBOOST_TEST_DYN_LINK -Wno-unused-variable)
 
-set(COREBLURON_FUZZ_TEST_ITERATIONS "10" CACHE STRING "Number of fuzz iterations for the fuzz tests")
-
-set(tests factorial pow exp)
+set(tests factorial pow exp vec)
 
 foreach(test ${tests})
         add_executable(${test}_test ${test}.cpp)

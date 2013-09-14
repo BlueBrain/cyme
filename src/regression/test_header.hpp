@@ -35,7 +35,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "numeric/math/math.hpp"
-#include "numeric/math/exp.hpp"
+#include "memory/block.hpp"
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp> 
 #include <boost/test/unit_test.hpp>
@@ -67,18 +67,44 @@ namespace corebluron {
         return RandomDouble(rng);
     }
 
-    template<class T, std::size_t m>
+    template<class T, std::size_t m, memory::order o>
     struct data{
         typedef T value_type;
         static const std::size_t n = m;
         static const std::size_t size = 16/sizeof(T); // for SIMD SSE
+        static const memory::order order = o; 
+    };
+
+    template<class T, std::size_t M, std::size_t N, memory::order O>
+    struct data_block{
+        typedef T value_type;
+        static const std::size_t m = M;
+        static const std::size_t n = N;
+        static const memory::order order = O; 
     };
 
     typedef boost::mpl::list<boost::int32_t,boost::int64_t,float,double> full_test_types;
     typedef boost::mpl::list<
-                                data<float,14>,
-                                data<double,14>
+                                data<float,14,memory::AoS>,
+                                data<float,14,memory::AoSoA>,
+                                data<double,14,memory::AoS>,
+                                data<double,14,memory::AoSoA>
                             > floating_point_test_types;
+
+    typedef boost::mpl::list<
+                                data_block<float,3,2,memory::AoS>,
+                                data_block<float,3,2,memory::AoSoA>,
+                                data_block<float,4,4,memory::AoS>,
+                                data_block<float,4,4,memory::AoSoA>,
+                                data_block<float,4,6,memory::AoS>,
+                                data_block<float,4,6,memory::AoSoA>,
+                                data_block<double,3,2,memory::AoS>,
+                                data_block<double,3,2,memory::AoSoA>,
+                                data_block<double,4,4,memory::AoS>,
+                                data_block<double,4,4,memory::AoSoA>,
+                                data_block<double,4,6,memory::AoS>,
+                                data_block<double,4,6,memory::AoSoA>
+                            > floating_point_block_types;
 
     } // end namespace test
 } // end namespace corebluron  

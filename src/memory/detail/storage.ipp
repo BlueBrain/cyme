@@ -30,24 +30,65 @@
 #define COREBLURON_STORAGE_IPP
 namespace memory{
     template <class T, std::size_t Size>
-    storage<T, Size>::storage(){
+    storage<T, Size, AoS>::storage(){
         memset((void*)&this->data[0],T(),Size*sizeof(T)); // memset works only for char, T() return 0 so ok
     }
 
     template <class T, std::size_t Size>
-    storage<T, Size>::storage(value_type value){
+    storage<T, Size, AoS>::storage(value_type value){
         for(size_type i=0; i<Size; ++i) 
             this->data[i] = value;
     }
 
     template <class T, std::size_t Size>
-    typename storage<T, Size>::reference storage<T, Size>::operator()(size_type i){
+    typename storage<T, Size, AoS>::reference storage<T, Size, AoS>::operator()(size_type i){
         return data[i];
     }
 
     template <class T, std::size_t Size>
-    typename storage<T, Size>::const_reference storage<T, Size>::operator()(size_type i) const{
+    typename storage<T, Size, AoS>::const_reference storage<T, Size, AoS>::operator()(size_type i) const{
+          return data[i];
+    }
+
+    template <class T, std::size_t Size>
+    typename storage<T, Size, AoS>::reference storage<T, Size, AoS>::operator[](size_type i){
+             return operator()(i);
+    }
+
+    template <class T, std::size_t Size>
+    typename storage<T, Size, AoS>::const_reference storage<T, Size, AoS>::operator[](size_type i) const{
+             return operator()(i);
+    }
+    
+    template <class T, std::size_t Size>
+    storage<T, Size, AoSoA>::storage(){
+        memset((void*)&this->data[0],T(),Size*sizeof(T)); // memset works only for char, T() return 0 so ok
+    }
+
+    template <class T, std::size_t Size>
+    storage<T, Size, AoSoA>::storage(value_type value){
+        for(size_type i=0; i<Size; ++i) 
+            this->data[i] = value;
+    }
+
+    template <class T, std::size_t Size>
+    typename storage<T, Size, AoSoA>::reference storage<T, Size, AoSoA>::operator()(size_type i){
         return data[i];
+    }
+
+    template <class T, std::size_t Size>
+    typename storage<T, Size, AoSoA>::const_reference storage<T, Size, AoSoA>::operator()(size_type i) const{
+        return data[i];
+    }
+    
+    template <class T, std::size_t Size>
+    typename storage<T, Size, AoSoA>::pointer storage<T, Size, AoSoA>::operator[](size_type i){
+        return &data[i*stride<T,AoSoA>::helper_stride()];   
+    }
+
+    template <class T, std::size_t Size>
+    typename storage<T, Size, AoSoA>::const_pointer storage<T, Size, AoSoA>::operator[](size_type i) const{
+        return  &data[i*stride<T,AoSoA>::helper_stride()];   
     }
 } //end namespace
 #endif 

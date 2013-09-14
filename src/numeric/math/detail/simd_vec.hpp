@@ -41,20 +41,20 @@ namespace numeric{
         typedef typename simd_trait<T,O>::const_pointer const_pointer;
         typedef typename simd_trait<T,O>::register_type register_type;
       
-        explicit vec(const value_type a){ xmm = _mm_load1<value_type,O>(xmm,a);}
-        vec(const_pointer a){ xmm = _mm_load<value_type,O>(xmm,a);} 
+        inline explicit vec(const value_type a = value_type()){ xmm = _mm_load1<value_type,O>(xmm,a);}
+        inline vec(const_pointer a){ xmm = _mm_load<value_type,O>(xmm,a);} 
 
-        vec& operator *=(const vec& rhs){
+        inline vec& operator *=(const vec& rhs){
             xmm = _mm_mul<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
         
-        vec& operator /=(const vec& rhs){
+        inline vec& operator /=(const vec& rhs){
             xmm = _mm_div<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
         
-        vec& operator +=(const vec& rhs){
+        inline vec& operator +=(const vec& rhs){
             xmm = _mm_add<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
@@ -67,39 +67,36 @@ namespace numeric{
     };
 
     template<class T,memory::simd O>
-    vec<T,O> operator* (const vec<T,O>& lhs, const vec<T,O>& rhs){
-        // named return value optimization
+    inline vec<T,O> operator* (const vec<T,O>& lhs, const vec<T,O>& rhs){
+        vec<T,O> nrv(lhs);   // named return value optimization
+        nrv *= rhs;
+        return nrv;
+    }
+
+    template<class T,memory::simd O>
+    inline vec<T,O> operator* (int lhs, const vec<T,O>& rhs){
         vec<T,O> nrv(lhs);
         nrv *= rhs;
         return nrv;
     }
 
     template<class T,memory::simd O>
-    vec<T,O> operator* (int lhs, const vec<T,O>& rhs){
-        vec<T,O> nrv(lhs);
-        nrv *= rhs;
-        return nrv;
-    }
-
-    template<class T,memory::simd O>
-    vec<T,O> operator/ (const vec<T,O>& lhs, const vec<T,O>& rhs){
-        // named return value optimization
+    inline vec<T,O> operator/ (const vec<T,O>& lhs, const vec<T,O>& rhs){
         vec<T,O> nrv(lhs);
         nrv /= rhs;
         return nrv;
     }
 
     template<class T,memory::simd O>
-    vec<T,O> operator/ (const vec<T,O>& lhs, const std::size_t rhs){
-        // named return value optimization
+    inline vec<T,O> operator/ (const vec<T,O>& lhs, const std::size_t rhs){
         vec<T,O> nrv(lhs);
         vec<T,O> nv_rhs(rhs);
         nrv /= nv_rhs;
         return nrv;
     }
+    
     template<class T,memory::simd O>
-    vec<T,O> operator+ (const vec<T,O>& lhs, const vec<T,O>& rhs){
-        // named return value optimization
+    inline vec<T,O> operator+ (const vec<T,O>& lhs, const vec<T,O>& rhs){
         vec<T,O> nrv(lhs);
         nrv += rhs;
         return nrv;

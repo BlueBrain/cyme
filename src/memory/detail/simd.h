@@ -32,9 +32,24 @@
 namespace memory{
     enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpxf = 16, qpxd = 32}; //sizeof(void*) = 8 on 64 bits machine 
 
+    inline constexpr simd getsimd() {return sse;} //default value, should  be passed by PP e.g. -Dsse
+
     enum order {AoS, AoSoA};
-     
-    inline constexpr simd getsimd() {return avx;} //default value, should  be passed by PP e.g. -Dsse
+    
+    template<class T, order O>
+    struct stride;
+    
+    template<class T>
+    struct stride<T,AoS>{
+        static inline std::size_t helper_stride(){return 1;}
+    };
+
+    template<class T>
+    struct stride<T,AoSoA>{
+        static inline std::size_t helper_stride(){return getsimd()/sizeof(T);}
+    };
+
+    
 } //end namespace
 
 

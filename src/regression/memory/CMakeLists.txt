@@ -11,3 +11,14 @@ foreach(test ${tests})
         add_test(${test}_${simd}_test ${test}_${simd}_test) 
     endforeach(simd)
 endforeach(test)
+
+set(tests_memory storage block)
+foreach(test ${tests_memory})
+    add_executable(${test}_test ${test}.cpp)
+    target_link_libraries(${test}_test ${Boost_LIBRARIES})
+    add_test(${test}_test ${test}_test) 
+endforeach(test)
+
+
+
+

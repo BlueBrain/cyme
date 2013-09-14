@@ -26,13 +26,49 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_MATH_HPP
-#define COREBLURON_MATH_HPP
+#ifndef COREBLURON_OPS_HPP
+#define COREBLURON_OPS_HPP
 
-#include "numeric/math/detail/simd_vec.hpp"
-#include "numeric/math/pow.hpp"
-#include "numeric/math/fac.hpp"
-#include "numeric/math/exp.hpp"
-#include "numeric/math/ops.hpp"
+namespace numeric{
+     template <class T>
+     inline void add(T& a, T const& b){
+         a += b;
+     };
+    
+     template <class T>
+     inline void add(T* a, T const* b){
+        numeric::vec<T,memory::getsimd()> va(a);
+        numeric::vec<T,memory::getsimd()> vb(b);
+        va+=vb;
+        va.store(a);
+    };
+    
+    template <class T>
+    inline void mul(T& a, T const& b){
+         a *= b;
+    };
+    
+    template <class T>
+    inline void mul(T* a, T const* b){
+        numeric::vec<T,memory::getsimd()> va(a);
+        numeric::vec<T,memory::getsimd()> vb(b);
+        va*=vb;
+        va.store(a);
+    };
+        
+    template <class T>
+    inline void div(T& a, T const& b){
+         a *= b;
+    };
+    
+    template <class T>
+    inline void div(T* a, T const* b){
+        numeric::vec<T,memory::getsimd()> va(a);
+        numeric::vec<T,memory::getsimd()> vb(b);
+        va/=vb;
+        va.store(a);
+    };
+} //end namespace
 
-#endif
+#endif 
+

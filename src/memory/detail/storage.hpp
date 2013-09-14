@@ -29,49 +29,56 @@
 #ifndef COREBLURON_STORAGE_HPP 
 #define COREBLURON_STORAGE_HPP
 
+#include "numeric/math/detail/simd_vec.hpp"
+
 namespace memory{
-     /*! \class storage
-         \brief This class modeles the basic storage, where the data are interleaved when the stride != 1 
-     */
+
+     template <class T, std::size_t Size, order O>
+     class storage;
+    
      template <class T, std::size_t Size>
-     class storage{
+     class storage<T,Size,AoS>{
          public:
-         /**
-         \brief typedef we are working with std notation
-         */       
+         
          typedef std::size_t       size_type;
-         typedef T                 value_type; 
+         typedef T                 value_type;
+         typedef value_type*       pointer;
+         typedef const pointer*    const_pointer;
          typedef value_type&       reference;
          typedef const value_type& const_reference;
-
-         /**
-         \brief Default constructor, the storage is set up to 0
-         */       
          storage();
-
-         /**
-         \brief Constructor, the storage is set up to the given value
-         \param num value_type 
-         */       
          explicit storage(value_type value);
- 
-         /**
-         \fn reference operator[](size_type i)
-         \brief Give write acces to the storage of memory 
-         \param i unsigned 64-bit int
-         */ 
-         reference operator()(size_type i);
-
-         /**
-         \fn const_reference operator[](size_type i)
-         \brief Give read acces to the storage of memory 
-         \param i unsigned 64-bit int
-         */ 
-         const_reference operator()(size_type i) const;
-             
+         inline reference operator()(size_type i);
+         inline const_reference operator()(size_type i) const;
+         inline reference operator[](size_type i);
+         inline const_reference operator[](size_type i) const;
+         
          private:
+         
          value_type data[Size];       
      };
+    
+     template <class T, std::size_t Size>
+     class storage<T,Size,AoSoA>{
+         public:
+         
+         typedef std::size_t       size_type;
+         typedef T                 value_type;
+         typedef value_type*       pointer;
+         typedef const pointer*    const_pointer;
+         typedef value_type&       reference;
+         typedef const value_type& const_reference;
+         storage();
+         explicit storage(value_type value);
+         inline reference operator()(size_type i);
+         inline const_reference operator()(size_type i) const;         
+         inline pointer operator[](size_type i);
+         inline const_pointer operator[](size_type i) const;
+
+         private:
+         
+         value_type data[Size];       
+     };    
 } //end namespace
 
 #include "memory/detail/storage.ipp"
