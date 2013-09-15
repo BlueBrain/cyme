@@ -5,50 +5,103 @@
 
 #include <stdlib.h>
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random/uniform_real_distribution.hpp>
+
+static boost::random::uniform_real_distribution<float>    RandomDouble = boost::random::uniform_real_distribution<float>(-5,5);
+static boost::random::uniform_real_distribution<double>   Randomfloat  = boost::random::uniform_real_distribution<double>(-5,5);
+static boost::random::mt19937    rng;
+
+template<class T>
+T GetRandom();
+
+template<>
+float GetRandom<float>(){
+    return Randomfloat(rng);
+}
+
+template<>
+double GetRandom<double>(){
+    return RandomDouble(rng);
+}
 
 #define TYPE float
-#define N 3
-#define M 2
-#define ORDER T::order
+
+
+static __inline__ unsigned long long rdtsc(void) {
+  unsigned hi, lo;
+  __asm__ __volatile__ ("rdtsc" : "=a"(lo), "=d"(hi));
+  return ( (unsigned long long)lo)|( ((unsigned long long)hi)<<32 );
+}
 
 
 int main(){
-   srand(-1);
-     memory::block<TYPE,M,N,memory::AoS> block_a;
-     memory::block<TYPE,M,N,memory::AoSoA> block_b;
+    
+    
+      
+    memory::block<TYPE,16,1024,memory::AoS> block_a;
+    memory::block<TYPE,16,1024,memory::AoSoA> block_b;
 
-     TYPE test_a[M][N], res_a[M][N];
-     TYPE test_b[M][N], res_b[M][N];
+    typename memory::block<TYPE,16,1024,memory::AoS>::iterator it_AoS = block_a.begin();
+    for(; it_AoS != block_a.end(); ++it_AoS){
+        for(int i=0  ; i<16 ; ++i)
+            (*it_AoS)[0] = GetRandom<TYPE>();
+    }
 
-     for(int i=0; i<N; ++i)
-         for(int j=0; j<M; ++j){
-            long random = rand()%100;
-            block_a(i,j) = random;
-            block_b(i,j) = random;
-     //       test_a[i][j] = random;
-     //       test_b[i][j] = random;
-         }
-    std::cout << " hello " << std::endl;
+    typename memory::block<TYPE,16,1024,memory::AoSoA>::iterator it_AoSoA = block_b.begin();
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA){
+        for(int i=0  ; i<16 ; ++i)
+            *(*it_AoSoA)[0] = GetRandom<TYPE>();
+    }
 
-    typename memory::block<TYPE,M,N,memory::AoS>::iterator it_AoS = block_a.begin();
-    for(; it_AoS != block_a.end(); ++it_AoS)
-         numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[1]);
 
-    typename memory::block<TYPE,M,N,memory::AoSoA>::iterator it_AoSoA = block_b.begin();
-    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
-         numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[1]);
-   
-    for(int i=0; i<N ; ++i)
-        for(int j=0; j<M; ++j){
-           test_a[0][j] += test_b[1][j];
- std::cout <<   block_a(i,j)  << " " << block_b(i,j) << std::endl;
-//           res_a[i][j] = block_a(i,j);
-//           res_b[i][j] = block_b(i,j);
-        }
+  unsigned long long a,b,c,d;
 
-    int block_b_bool = memcmp((void*)res_a, (void*)res_b, M*N*sizeof(TYPE));
-    int block_a_bool = memcmp((void*)res_b, (void*)test_a, M*N*sizeof(TYPE));
 
-    std::cout << block_b_bool << " " << block_a_bool << std::endl;
+
+
+  a = rdtsc();
+    for(it_AoS = block_a.begin(); it_AoS != block_a.end(); ++it_AoS){
+           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[1]);
+           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[2]);
+           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[3]);
+           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[4]);
+           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[5]);
+           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[6]);
+           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[7]);
+           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[8]);
+           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[9]);
+           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[11]);
+           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[12]);
+           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[13]);
+           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[14]);
+           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[15]);
+    }
+  b = rdtsc();
+
+ printf("%llu\n", b-a);
+
+  c = rdtsc();
+    for(it_AoSoA = block_b.begin(); it_AoSoA != block_b.end(); ++it_AoSoA){
+           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[1]);
+           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[2]);
+           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[3]);
+           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[4]);
+           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[5]);
+           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[6]);
+           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[7]);
+           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[8]);
+           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[9]);
+           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[11]);
+           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[12]);
+           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[13]);
+           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[14]);
+           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[15]);
+    }
+  d = rdtsc();
+
+ printf("%llu\n", d-c);
+
 
 }
