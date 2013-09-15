@@ -30,7 +30,7 @@
 #define COREBLURON_TEST_HEADER_HPP
 
 #define BOOST_TEST_MODULE math
-#define BOOST_TEST_MAIN  
+//#define BOOST_TEST_MAIN  
 
 #include <iostream>
 #include <stdexcept>

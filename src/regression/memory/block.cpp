@@ -32,11 +32,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_operator_bracket, T, floating_point_blo
      memory::block<TYPE,M,N,memory::AoS> block_a;
      memory::block<TYPE,M,N,memory::AoSoA> block_b;
 
-     TYPE res_a[M][N];
-     TYPE res_b[M][N];
+     TYPE res_a[N][M];
+     TYPE res_b[N][M];
 
-     for(int i=0; i<M; ++i)
-         for(int j=0; j<N; ++j){
+     for(int i=0; i<N; ++i)
+         for(int j=0; j<M; ++j){
             random = GetRandom<TYPE>(); 
             block_a(i,j) = random; 
             block_b(i,j) = random; 
@@ -45,7 +45,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_operator_bracket, T, floating_point_blo
          }
 
      int b_bool = memcmp((void*)res_a, (void*)res_b, M*N*sizeof(TYPE));
-     std::cout << b_bool << std::endl;
      BOOST_CHECK_EQUAL(b_bool,0); 
 }
 
@@ -54,18 +53,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_add, T, floating_point_block_types)
      memory::block<TYPE,M,N,memory::AoS> block_a;
      memory::block<TYPE,M,N,memory::AoSoA> block_b;
 
-     TYPE test_a[M][N], res_a[M][N];
-     TYPE test_b[M][N], res_b[M][N];
+     TYPE  res_a[N][M];
+     TYPE  res_b[N][M];
 
-     for(int i=0; i<M; ++i)
-         for(int j=0; j<N; ++j){
+     for(int i=0; i<N; ++i)
+         for(int j=0; j<M; ++j){
             random = GetRandom<TYPE>(); 
             block_a(i,j) = random; 
             block_b(i,j) = random; 
-            test_a[i][j] = random;
-            test_b[i][j] = random;
          }
-    std::cout << " hello " << std::endl;
 
     typename memory::block<TYPE,M,N,memory::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
@@ -75,17 +71,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_add, T, floating_point_block_types)
     for(; it_AoSoA != block_b.end(); ++it_AoSoA)
          numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[1]);
     
-    for(int i=0; i<M; ++i)
-        for(int j=0; j<N; ++j){
-           test_a[0][j] += test_b[1][j];
+    for(int i=0; i<N; ++i)
+        for(int j=0; j<M; ++j){
            res_a[i][j] = block_a(i,j);
            res_b[i][j] = block_b(i,j);
         }
-    
-    int block_b_bool = memcmp((void*)res_a, (void*)res_b, M*N*sizeof(TYPE));
-    int block_a_bool = memcmp((void*)res_b, (void*)test_a, M*N*sizeof(TYPE));
 
-    std::cout << block_b_bool << " " << block_a_bool << std::endl;
+   int block_b_bool = memcmp((void*)res_a, (void*)res_b, M*N*sizeof(TYPE));
+
+    BOOST_CHECK_EQUAL(block_b_bool,0); 
 
 }
 

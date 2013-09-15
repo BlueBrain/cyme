@@ -127,7 +127,7 @@ namespace numeric{
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
         \brief final wrapper for the exp, pade approximant by default if -5 < x < 5 with n = 14, determinated experimentaly 
     */
-    template<class T, std::size_t n = 14, int limit = 5,  class Solver = Series_exp<T,n> >
+    template<class T, std::size_t n = 14, int limit = 5,  class Solver = Pade_exp<T,n> >
     struct Helper_exp{
         static inline T exp(T const& a){
              return Solver::exp(a);
