@@ -59,47 +59,54 @@ int main(){
   unsigned long long a,b,c,d;
 
 
-
-
   a = rdtsc();
     for(it_AoS = block_a.begin(); it_AoS != block_a.end(); ++it_AoS){
-           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[1]);
-           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[2]);
-           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[3]);
-           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[4]);
-           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[5]);
-           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[6]);
-           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[7]);
-           numeric::add<TYPE>((*it_AoS)[0],(*it_AoS)[8]);
-           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[9]);
-           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[11]);
-           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[12]);
-           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[13]);
-           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[14]);
-           numeric::mul<TYPE>((*it_AoS)[0],(*it_AoS)[15]);
-    }
+           numeric::add<TYPE>((*it_AoS)[15],(*it_AoS)[1]);
+           numeric::mul<TYPE>((*it_AoS)[14],(*it_AoS)[2]);
+           numeric::add<TYPE>((*it_AoS)[13],(*it_AoS)[3]);
+           numeric::exp<TYPE,14>((*it_AoS)[12],(*it_AoS)[9]);
+           numeric::add<TYPE>((*it_AoS)[12],(*it_AoS)[4]);
+           numeric::add<TYPE>((*it_AoS)[11],(*it_AoS)[5]);
+           numeric::add<TYPE>((*it_AoS)[10],(*it_AoS)[6]);
+           numeric::add<TYPE>((*it_AoS)[9],(*it_AoS)[7]);
+           numeric::add<TYPE>((*it_AoS)[8],(*it_AoS)[8]);
+           numeric::mul<TYPE>((*it_AoS)[7],(*it_AoS)[9]);
+           numeric::exp<TYPE,14>((*it_AoS)[12],(*it_AoS)[8]);
+           numeric::mul<TYPE>((*it_AoS)[6],(*it_AoS)[11]);
+           numeric::mul<TYPE>((*it_AoS)[5],(*it_AoS)[12]);
+           numeric::mul<TYPE>((*it_AoS)[4],(*it_AoS)[13]);
+           numeric::mul<TYPE>((*it_AoS)[3],(*it_AoS)[14]);
+           numeric::exp<TYPE,14>((*it_AoS)[12],(*it_AoS)[7]);
+           numeric::mul<TYPE>((*it_AoS)[2],(*it_AoS)[15]);
+           numeric::exp<TYPE,14>((*it_AoS)[2],(*it_AoS)[15]);
+    }   
   b = rdtsc();
 
  printf("%llu\n", b-a);
 
   c = rdtsc();
     for(it_AoSoA = block_b.begin(); it_AoSoA != block_b.end(); ++it_AoSoA){
-           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[1]);
-           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[2]);
-           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[3]);
-           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[4]);
-           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[5]);
-           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[6]);
-           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[7]);
-           numeric::add<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[8]);
-           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[9]);
-           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[11]);
-           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[12]);
-           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[13]);
-           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[14]);
-           numeric::mul<TYPE>((*it_AoSoA)[0],(*it_AoSoA)[15]);
-    }
+           numeric::add<TYPE>((*it_AoSoA)[15],(*it_AoSoA)[1]);
+           numeric::mul<TYPE>((*it_AoSoA)[14],(*it_AoSoA)[2]);
+           numeric::add<TYPE>((*it_AoSoA)[13],(*it_AoSoA)[3]);
+           numeric::exp<TYPE,14>((*it_AoSoA)[12],(*it_AoSoA)[9]);
+           numeric::add<TYPE>((*it_AoSoA)[12],(*it_AoSoA)[4]);
+           numeric::add<TYPE>((*it_AoSoA)[11],(*it_AoSoA)[5]);
+           numeric::add<TYPE>((*it_AoSoA)[1],(*it_AoSoA)[6]);
+           numeric::add<TYPE>((*it_AoSoA)[9],(*it_AoSoA)[7]);
+           numeric::add<TYPE>((*it_AoSoA)[8],(*it_AoSoA)[8]);
+           numeric::mul<TYPE>((*it_AoSoA)[7],(*it_AoSoA)[9]);
+           numeric::exp<TYPE,14>((*it_AoSoA)[12],(*it_AoSoA)[8]);
+           numeric::mul<TYPE>((*it_AoSoA)[6],(*it_AoSoA)[11]);
+           numeric::mul<TYPE>((*it_AoSoA)[5],(*it_AoSoA)[12]);
+           numeric::mul<TYPE>((*it_AoSoA)[4],(*it_AoSoA)[13]);
+           numeric::mul<TYPE>((*it_AoSoA)[3],(*it_AoSoA)[14]);
+           numeric::exp<TYPE,14>((*it_AoSoA)[12],(*it_AoSoA)[7]);
+           numeric::mul<TYPE>((*it_AoSoA)[2],(*it_AoSoA)[15]);
+           numeric::exp<TYPE,14>((*it_AoSoA)[2],(*it_AoSoA)[15]);
+    }   
   d = rdtsc();
+
 
  printf("%llu\n", d-c);
 
