@@ -78,9 +78,8 @@ namespace memory{
         typedef T                                                   value_type; 
         typedef value_type&                                         reference;
         typedef const value_type&                                   const_reference;
-        typedef storage<T,getsimd()/sizeof(T)*M,AoSoA>                    storage_type;
+        typedef storage<T,getsimd()/sizeof(T)*M,AoSoA>              storage_type;
         typedef std::array<storage_type,N/(getsimd()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
-
         typedef typename  base_type::iterator                       iterator;
 
         explicit block(){
