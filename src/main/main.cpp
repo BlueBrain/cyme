@@ -20,7 +20,7 @@
 #include "utils/timer.h"
 #include "helper.h"
 
-#define SIZE 512*16384
+#define SIZE 16384
 
 struct test_case{
     //redefine the operator() for boost mpl
@@ -31,9 +31,9 @@ struct test_case{
        std::vector<typename Solver::value_type > vec_input(size_vector);
        std::vector<typename Solver::value_type > vec_output_serial(size_vector);
        std::vector<typename Solver::value_type > vec_output_vec(size_vector);
-
+ 
        for(long long int i(0); i < size_vector; ++i)
-                vec_input[i] = GetRandom<typename Solver::value_type>(); 
+                vec_input[i] = i/3.14; //GetRandom<typename Solver::value_type>();
 
        timer t;
        t.start();

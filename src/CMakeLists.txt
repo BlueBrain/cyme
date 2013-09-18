@@ -16,8 +16,8 @@ endif(MACHINE_CONFIG)
 set(CMAKE_INSTALL_PREFIX "/opt/corebluron" CACHE STRING "Install path prefix, prepended onto install directories.")
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.")
 if(NOT MACHINE_CONFIG)
-    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3  -std=c++11  " CACHE STRING "Compiler flags for Release compiles.")
-    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64   -std=c++11  " CACHE STRING "Compiler flags for Debug compiles.")
+    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3  -std=c++11 -stdlib=libc++  " CACHE STRING "Compiler flags for Release compiles.")
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64   -std=c++11 -stdlib=libc++  " CACHE STRING "Compiler flags for Debug compiles.")
 endif(NOT MACHINE_CONFIG)
 
 ########################################################################

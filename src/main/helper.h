@@ -92,23 +92,25 @@ struct Solver_exp_ibm<T, memory::AoS>{
 typedef Solver_add<float,memory::AoS>    fadd_s;
 typedef Solver_add<float,memory::AoSoA>  fadd_v;
 typedef Solver_exp_tim<float,memory::AoS>  fexp_s_tim;
-typedef Solver_exp_tim<float,memory::AoS>  fexp_v_tim;
+typedef Solver_exp_tim<float,memory::AoSoA>  fexp_v_tim;
 typedef Solver_exp_ibm<float,memory::AoS>  fexp_s_ibm;
 
 typedef Solver_add<double,memory::AoS>  dadd_s;
 typedef Solver_add<double,memory::AoSoA>  dadd_v;
 typedef Solver_exp_tim<double,memory::AoS>  dexp_s_tim;
-typedef Solver_exp_tim<double,memory::AoS>  dexp_v_tim;
+typedef Solver_exp_tim<double,memory::AoSoA>  dexp_v_tim;
 typedef Solver_exp_ibm<double,memory::AoS>  dexp_s_ibm;
    
 typedef boost::mpl::vector<
                            fadd_s,
                            fadd_v,
                            fexp_s_tim,
+                           fexp_v_tim,
                            fexp_s_ibm,
                            dadd_s,
                            dadd_v,
                            dexp_s_tim,
+                           dexp_v_tim,
                            dexp_s_ibm
                            > Solver_op_list;
 

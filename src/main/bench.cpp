@@ -22,7 +22,7 @@
 #include "utils/timer.h"
 #include "helper.h"
 
-#define SIZE 1024
+#define SIZE 16384
 #define M 16
 
 struct test_case{
