@@ -39,9 +39,10 @@ struct test_case{
        t.start();
 
        for(long long int i(0); i < size_vector; i += memory::stride<typename Solver::value_type, Solver::O>::helper_stride())
-          Solver::op(    helper_pointer<typename Solver::value_type, Solver::O>::get(vec_output_serial[i]),
-                         helper_pointer<typename Solver::value_type, Solver::O>::get(vec_input[i]);
-
+          Solver::op( 
+                         helper_pointer<typename Solver::value_type, Solver::O>::get(vec_output_serial[i]),
+                         helper_pointer<typename Solver::value_type, Solver::O>::get(vec_input[i])
+                    );
        t.stop();
        std::cout << Solver::name() << ", " << t.get() << " [s] " <<  std::endl;
     }

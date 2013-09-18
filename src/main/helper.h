@@ -67,10 +67,10 @@ struct Solver_exp_tim<T, memory::AoS>{
 };      
         
 template<class T>
-struct Solver_exp_tim<T, memory::AoS>{
+struct Solver_exp_tim<T, memory::AoSoA>{
    typedef T value_type;
    static const memory::order O = memory::AoSoA;
-   static inline void op(value_typei* a, const value_type* b){
+   static inline void op(value_type* a, const value_type* b){
        numeric::exp<T,14>(a,b);
    };   
    static const std::string name(){ return "exp AoSoA"; };
