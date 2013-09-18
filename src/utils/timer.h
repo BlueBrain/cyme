@@ -28,10 +28,10 @@
 #ifndef COREBLURON_TIMER_H 
 #define COREBLURON_TIMER_H
 
-#include <time>
-#include <A2_inline.h>
+#include <time.h>
 
 #ifdef __powerpc64__
+#include "utils/A2_inlines.h"
 
 class timer {
   public:
