@@ -73,25 +73,25 @@ struct test_case{
                 vec_input[i].data[j] = GetRandom<typename Solver::value_type>(); 
 
 
-        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
+//        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
         for(long long int i(0); i < size_vector; ++i)
             for(int j=0; j < SIZE; j++)
               vec_output_serial_std[i].data[j] = std::exp(vec_input[i].data[j]);
-        boost::chrono::nanoseconds ns1 = boost::chrono::high_resolution_clock::now() - start1;
+//        boost::chrono::nanoseconds ns1 = boost::chrono::high_resolution_clock::now() - start1;
 
-        boost::chrono::high_resolution_clock::time_point start3 = boost::chrono::high_resolution_clock::now();
+//        boost::chrono::high_resolution_clock::time_point start3 = boost::chrono::high_resolution_clock::now();
         for(long long int i(0); i < size_vector; ++i)
             for(int j=0; j < SIZE; j+=(memory::getsimd()/sizeof(typename Solver::value_type)))
                 numeric::exp<typename Solver::value_type, Solver::n_>(&vec_output_vec[i].data[j], &vec_input[i].data[j]);
-        boost::chrono::nanoseconds ns3 = boost::chrono::high_resolution_clock::now() - start3;
+//        boost::chrono::nanoseconds ns3 = boost::chrono::high_resolution_clock::now() - start3;
 
-        boost::chrono::high_resolution_clock::time_point start2 = boost::chrono::high_resolution_clock::now();
+//        boost::chrono::high_resolution_clock::time_point start2 = boost::chrono::high_resolution_clock::now();
         for(long long int i(0); i < size_vector; ++i)
             for(int j=0; j < SIZE; j++)
               numeric::exp<typename Solver::value_type, Solver::n_>(vec_output_serial[i].data[j], vec_input[i].data[j]);
-        boost::chrono::nanoseconds ns2 = boost::chrono::high_resolution_clock::now() - start2;
+//        boost::chrono::nanoseconds ns2 = boost::chrono::high_resolution_clock::now() - start2;
 
-        std::cout << " numeric::exp<sizeof(T)"<<sizeof(typename Solver::value_type)<<", "<< Solver::n_ <<  ">  vec_exp " << ns3.count()  << " [s], serial_exp "  << ns2.count() << " [s], std::exp "  << ns1.count() << " [s] " << std::endl;
+//        std::cout << " numeric::exp<sizeof(T)"<<sizeof(typename Solver::value_type)<<", "<< Solver::n_ <<  ">  vec_exp " << ns3.count()  << " [s], serial_exp "  << ns2.count() << " [s], std::exp "  << ns1.count() << " [s] " << std::endl;
 
     }
 };

@@ -155,10 +155,10 @@ namespace numeric{
     \brief calculate the exp of T, privilege this version for array.  
     \param T const& a 
     */
-    template<class T, std::size_t n, memory::simd O = memory::getsimd()>
+    template<class T, std::size_t n>
     inline void exp(T* a, T const* b){
-        vec<T,O> v(b); // init register one cycle 
-        vec<T,O> nrv = exp<numeric::vec<T,O>,n>(v); // copy register one cycle
+        vec<T,memory::getsimd()> v(b); // init register one cycle 
+        vec<T,memory::getsimd()> nrv = exp<numeric::vec<T,memory::getsimd()>,n>(v); // copy register one cycle
         nrv.store(a); //push register to memory
     };
 } //end namespace 

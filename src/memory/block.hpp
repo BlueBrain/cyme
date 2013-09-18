@@ -28,7 +28,7 @@
 #ifndef COREBLURON_BLOCK_HPP 
 #define COREBLURON_BLOCK_HPP
 
-#include <array>
+#include <boost/array.hpp>
 
 #include "memory/detail/simd.h"
 #include "memory/detail/storage.hpp"
@@ -41,14 +41,14 @@ namespace memory{
     };
 
     template<class T, std::size_t M, std::size_t N>
-    class block<T,M,N,AoS> : public std::array<storage<T,M,AoS>,N> {
+    class block<T,M,N,AoS> : public boost::array<storage<T,M,AoS>,N> {
     public:
         typedef std::size_t                    size_type;
         typedef T                              value_type; 
         typedef value_type&                    reference;
         typedef const value_type&              const_reference;
         typedef storage<T,M,AoS>               storage_type;
-        typedef std::array<storage_type,N>     base_type; //default template seems impossible on partial specialization
+        typedef boost::array<storage_type,N>     base_type; //default template seems impossible on partial specialization
         typedef typename  base_type::iterator  iterator;
        
         explicit block(){
@@ -72,14 +72,14 @@ namespace memory{
 
     // N nombre de case, M nombre d element dans la case
     template<class T, std::size_t M, std::size_t N>
-    class block<T,M,N,AoSoA> : public std::array<storage<T,getsimd()/sizeof(T)*M,AoSoA>, N/(getsimd()/sizeof(T))+1>{
+    class block<T,M,N,AoSoA> : public boost::array<storage<T,getsimd()/sizeof(T)*M,AoSoA>, N/(getsimd()/sizeof(T))+1>{
     public:
         typedef std::size_t                                         size_type;
         typedef T                                                   value_type; 
         typedef value_type&                                         reference;
         typedef const value_type&                                   const_reference;
         typedef storage<T,getsimd()/sizeof(T)*M,AoSoA>              storage_type;
-        typedef std::array<storage_type,N/(getsimd()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
+        typedef boost::array<storage_type,N/(getsimd()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
         typedef typename  base_type::iterator                       iterator;
 
         explicit block(){

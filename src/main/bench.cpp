@@ -8,7 +8,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/chrono/chrono.hpp>
 #include <boost/type_traits.hpp>
 
 #include <boost/random/mersenne_twister.hpp>
@@ -74,7 +73,7 @@ struct test_case{
 
         typename memory::block<typename Solver::value_type,16,1024,memory::AoS>::iterator it = block.begin();
 
-        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
+//        boost::chrono::high_resolution_clock::time_point start1 = boost::chrono::high_resolution_clock::now();
             for(it = block.begin(); it != block.end(); ++it){
                 //Solver::add<typename Solver::value_type, memory::AoS>((*it)[15],(*it)[0]);
                 Solver::add((*it)[15],(*it)[0]);
@@ -96,10 +95,10 @@ struct test_case{
                 Solver::add((*it)[0],(*it)[15]);
 */
             }   
-        boost::chrono::nanoseconds ns1 = boost::chrono::high_resolution_clock::now() - start1;
+//        boost::chrono::nanoseconds ns1 = boost::chrono::high_resolution_clock::now() - start1;
 
 
-        std::cout << ns1.count() << " [s] " << std::endl;
+//        std::cout << ns1.count() << " [s] " << std::endl;
 
     }
 };

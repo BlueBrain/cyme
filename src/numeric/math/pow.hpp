@@ -75,10 +75,10 @@ namespace numeric{
     \brief calculate the pow of T, privilege this version.  
     \param T const& a 
     */
-    template<class T, std::size_t n, memory::simd O = memory::getsimd()>
+    template<class T, std::size_t n>
     inline void pow(T* a, T const* b){
-        vec<T,O> v(b); // init register one cycle 
-        vec<T,O> nrv = pow<numeric::vec<T,O>,n>(v); // copy register one cycle
+        vec<T, memory::getsimd()> v(b); // init register one cycle 
+        vec<T, memory::getsimd()> nrv = pow<numeric::vec<T, memory::getsimd()>,n>(v); // copy register one cycle
         nrv.store(a); //push register to memory
     };
 

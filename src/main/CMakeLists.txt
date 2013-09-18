@@ -9,4 +9,4 @@
 #target_link_libraries(mul  ${Boost_SYSTEM_LIBRARY_RELEASE} ${Boost_CHRONO_LIBRARY_RELEASE})
 
 add_executable(bench bench.cpp)
-target_link_libraries(bench  ${Boost_SYSTEM_LIBRARY_RELEASE} ${Boost_CHRONO_LIBRARY_RELEASE})
+target_link_libraries(bench )
