@@ -32,7 +32,13 @@
 namespace memory{
     enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpxf = 16, qpxd = 32}; //sizeof(void*) = 8 on 64 bits machine 
 
-    inline const static simd getsimd() {return sse;} //default value, should  be passed by PP e.g. -Dsse
+#ifdef __powerpc64__
+    inline  const static simd getsimd() {return sse;} //default value, should  be passed by PP e.g. -Dsse
+#endif
+
+#ifdef __x86_64__
+    constexpr simd getsimd() {return sse;} //default value, should  be passed by PP e.g. -Dsse
+#endif
 
     enum order {AoS, AoSoA};
     
