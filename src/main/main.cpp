@@ -20,8 +20,7 @@
 #include "utils/timer.h"
 #include "helper.h"
 
-#define SIZE 512*16384
-
+#define SIZE 16384
 struct test_case{
     //redefine the operator() for boost mpl
     template<typename Solver>
@@ -30,19 +29,21 @@ struct test_case{
 
        std::vector<typename Solver::value_type > vec_input(size_vector);
        std::vector<typename Solver::value_type > vec_output_serial(size_vector);
-       std::vector<typename Solver::value_type > vec_output_vec(size_vector);
 
-       for(long long int i(0); i < size_vector; ++i)
-                vec_input[i] = GetRandom<typename Solver::value_type>(); 
+        for(long long int i(0); i < size_vector; ++i){
+                vec_input[i] = GetRandom<typename Solver::value_type>();
+                vec_output_serial[i] = GetRandom<typename Solver::value_type>();
+        }
 
        timer t;
        t.start();
 
-       for(long long int i(0); i < size_vector; i += memory::stride<typename Solver::value_type, Solver::O>::helper_stride())
+        for(long long int i(0); i < size_vector; i += memory::stride<typename Solver::value_type, Solver::O>::helper_stride()){
           Solver::op( 
-                         helper_pointer<typename Solver::value_type, Solver::O>::get(vec_output_serial[i]),
-                         helper_pointer<typename Solver::value_type, Solver::O>::get(vec_input[i])
+                        vec_output_serial[i],
+                        vec_input[i]
                     );
+        }
        t.stop();
        std::cout << Solver::name() << ", " << t.get() << " [s] " <<  std::endl;
     }
