@@ -22,8 +22,8 @@
 #include "utils/timer.h"
 #include "helper.h"
 
-#define SIZE 16
-#define M 16384
+#define SIZE 1024
+#define M 16
 
 struct test_case{
     //redefine the operator() for boost mpl
