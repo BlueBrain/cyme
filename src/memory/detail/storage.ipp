@@ -80,15 +80,18 @@ namespace memory{
     typename storage<T, Size, AoSoA>::const_reference storage<T, Size, AoSoA>::operator()(size_type i) const{
         return data[i];
     }
-    
+
     template <class T, std::size_t Size>
-    typename storage<T, Size, AoSoA>::pointer storage<T, Size, AoSoA>::operator[](size_type i){
-        return &data[i*stride<T,AoSoA>::helper_stride()];   
+    numeric::Vec<T,memory::getsimd()> storage<T, Size, AoSoA>::operator[](size_type i){
+        std::cout << " write " << std::endl;
+        return numeric::Vec<T,memory::getsimd()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 
     template <class T, std::size_t Size>
-    typename storage<T, Size, AoSoA>::const_pointer storage<T, Size, AoSoA>::operator[](size_type i) const{
-        return  &data[i*stride<T,AoSoA>::helper_stride()];   
+    const numeric::Vec<T,memory::getsimd()> storage<T, Size, AoSoA>::operator[](size_type i) const{
+        std::cout << " read " << std::endl;
+        return numeric::Vec<T,memory::getsimd()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
+
 } //end namespace
 #endif 

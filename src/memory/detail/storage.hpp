@@ -30,6 +30,8 @@
 #define COREBLURON_STORAGE_HPP
 
 #include "numeric/math/detail/simd_vec.hpp"
+#include "numeric/math/detail/simd_expr.hpp"
+
 
 namespace memory{
 
@@ -72,8 +74,11 @@ namespace memory{
          explicit storage(value_type value);
          inline reference operator()(size_type i);
          inline const_reference operator()(size_type i) const;         
-         inline pointer operator[](size_type i);
-         inline const_pointer operator[](size_type i) const;
+
+         inline numeric::Vec<T,memory::getsimd()> operator[](size_type i);
+         inline const numeric::Vec<T,memory::getsimd()> operator[](size_type i) const;
+
+
 
          private:
          

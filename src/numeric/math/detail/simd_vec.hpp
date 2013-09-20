@@ -41,8 +41,25 @@ namespace numeric{
         typedef typename simd_trait<T,O>::const_pointer const_pointer;
         typedef typename simd_trait<T,O>::register_type register_type;
       
-        inline explicit vec(const value_type a = value_type()){ xmm = _mm_load1<value_type,O>(xmm,a);}
-        inline vec(const_pointer a){ xmm = _mm_load<value_type,O>(xmm,a);} 
+        inline explicit vec(const value_type a = value_type()){
+            xmm = _mm_load1<value_type,O>(xmm,a);
+        }
+
+        inline vec(vec const& a){
+            xmm = a.xmm;
+        }
+
+        inline vec(const_pointer a){
+            xmm = _mm_load<value_type,O>(xmm,a);
+        }
+
+        inline vec& operator()(){
+            return *this;
+        }
+
+        inline const vec& operator()() const{
+            return *this;
+        }
 
         inline vec& operator *=(const vec& rhs){
             xmm = _mm_mul<value_type,O>(xmm,rhs.xmm);

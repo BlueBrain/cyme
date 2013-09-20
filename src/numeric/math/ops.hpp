@@ -30,6 +30,8 @@
 #define COREBLURON_OPS_HPP
 
 namespace numeric{
+
+    /*
      template <class T>
      inline void add(T& a, T const& b){
          a += b;
@@ -68,6 +70,7 @@ namespace numeric{
         va/=vb;
         va.store(a);
     };
+     */
 } //end namespace
 
 #endif 
