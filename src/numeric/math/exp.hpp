@@ -157,8 +157,8 @@ namespace numeric{
     */
     template<class T, std::size_t n>
     inline void exp(T* a, T const* b){
-        vec<T,memory::getsimd()> v(b); // init register one cycle 
-        vec<T,memory::getsimd()> nrv = exp<numeric::vec<T,memory::getsimd()>,n>(v); // copy register one cycle
+        vec<T,memory::__GETSIMD__()> v(b); // init register one cycle 
+        vec<T,memory::__GETSIMD__()> nrv = exp<numeric::vec<T,memory::__GETSIMD__()>,n>(v); // copy register one cycle
         nrv.store(a); //push register to memory
     };
 } //end namespace 

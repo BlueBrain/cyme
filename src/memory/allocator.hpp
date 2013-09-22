@@ -61,7 +61,7 @@ namespace memory{
         }
     };
 
-    template<class T, class Policy = Align_POSIX<memory::getsimd()> >
+    template<class T, class Policy = Align_POSIX<memory::__GETSIMD__()> >
     class Allocator : private Policy {
         using Policy::allocate_policy;
         using Policy::deallocate_policy;

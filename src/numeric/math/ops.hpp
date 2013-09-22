@@ -39,8 +39,8 @@ namespace numeric{
     
      template <class T>
      inline void add(T* a, T const* b){
-        numeric::vec<T,memory::getsimd()> va(a);
-        numeric::vec<T,memory::getsimd()> vb(b);
+        numeric::vec<T,memory::__GETSIMD__()> va(a);
+        numeric::vec<T,memory::__GETSIMD__()> vb(b);
         va+=vb;
         va.store(a);
     };
@@ -52,8 +52,8 @@ namespace numeric{
     
     template <class T>
     inline void mul(T* a, T const* b){
-        numeric::vec<T,memory::getsimd()> va(a);
-        numeric::vec<T,memory::getsimd()> vb(b);
+        numeric::vec<T,memory::__GETSIMD__()> va(a);
+        numeric::vec<T,memory::__GETSIMD__()> vb(b);
         va*=vb;
         va.store(a);
     };
@@ -65,8 +65,8 @@ namespace numeric{
     
     template <class T>
     inline void div(T* a, T const* b){
-        numeric::vec<T,memory::getsimd()> va(a);
-        numeric::vec<T,memory::getsimd()> vb(b);
+        numeric::vec<T,memory::__GETSIMD__()> va(a);
+        numeric::vec<T,memory::__GETSIMD__()> vb(b);
         va/=vb;
         va.store(a);
     };

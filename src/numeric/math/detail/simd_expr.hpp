@@ -31,16 +31,14 @@
 
 namespace numeric{
 
-/* 
- *  this works modelizes template expression method to parse a series of basic operations into a three (during compile time). Therefore I limited
- *  the number of local copy to the minimum. Directly inspired (copy/past ^_^) from C++ template the complete guide, chapter XVIII, Have no fear O_6 !
- */
+    /*
+     *  this works modelizes template expression method to parse a series of basic operations into a three (during compile time). Therefore I limited
+     *  the number of local copy to the minimum. Directly inspired (copy/past and modify ^_^) from C++ template the complete guide, chapter XVIII
+     */
 
     /* helper traits class to select how to refer to an ''expression template node'' * - in general: by reference
      * - for scalars: by value
      */
-
-
     template<class T, memory::simd O>
     class vec_scalar;
 
@@ -81,6 +79,20 @@ namespace numeric{
         }
 
         inline vec_mul(OP1 const& a, OP2 const& b):op1(a), op2(b){
+        }
+    };
+
+    template<class T, memory::simd O, class OP1, class OP2>
+    class vec_div{
+        typename vec_traits<OP1,O>::exp_ref op1; // I made distinction between operands it can be scalar or vector
+        typename vec_traits<OP2,O>::exp_ref op2;
+    public:
+
+        inline vec<T,O> operator()() const{ // <------------------------------ WELL DO NOT RESPECT THE PATTERN, MAYBE PB
+            return op1() / op2();
+        }
+
+        inline vec_div(OP1 const& a, OP2 const& b):op1(a), op2(b){
         }
     };
 
@@ -152,16 +164,139 @@ namespace numeric{
     inline operator *(Vec<T,O,R1> const& a, Vec<T,O,R2> const& b){
         return Vec<T,O,vec_mul<T,O,R1,R2> >(vec_mul<T,O,R1,R2>(a.rep(),b.rep()));
     }
+    
+    //division of two vectors v/w
+    template<class T, memory::simd O, class R1, class R2>
+    Vec<T,O, vec_div<T,O,R1,R2> >
+    inline operator /(Vec<T,O,R1> const& a, Vec<T,O,R2> const& b){
+        return Vec<T,O,vec_div<T,O,R1,R2> >(vec_div<T,O,R1,R2>(a.rep(),b.rep()));
+    }
 
-    //multiplication of scalar/vector, lambda*v
+    //addition of scalar/vector, lambda+v for double, partial specialization are impossible on a single function
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_add<T,O,vec_scalar<T,O>,R2> >
+    operator +(double const& s, Vec<T,O,R2> const& b){
+        return Vec<T,O,vec_add<T,O,vec_scalar<T,O>, R2> >(vec_add<T,O,vec_scalar<T,O>,R2>(vec_scalar<T,O>(s),b.rep()));
+    }
+
+    //addition of scalar/vector, lambda+v for float
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_add<T,O,vec_scalar<T,O>,R2> >
+    operator +(float const& s, Vec<T,O,R2> const& b){
+        return operator+(static_cast<T>(s),b);/* CHECK IF NO COPY */
+    }
+
+    //addition of scalar/vector, lambda+v for int
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_add<T,O,vec_scalar<T,O>,R2> >
+    operator +(int const& s, Vec<T,O,R2> const& b){
+        return operator+(static_cast<T>(s),b);/* CHECK IF NO COPY */
+    }
+    
+    //v + lambda(double)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_add<T,O,vec_scalar<T,O>,R2> >
+    operator +(Vec<T,O,R2> const& b, double const& s){
+        return operator+(s,b);/* CHECK IF NO COPY */
+    }
+
+    //v + lambda(float)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_add<T,O,vec_scalar<T,O>,R2> >
+    operator +(Vec<T,O,R2> const& b, float const& s){
+        return operator+(static_cast<T>(s),b);/* CHECK IF NO COPY */
+    }
+
+    //v + lambda(int)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_add<T,O,vec_scalar<T,O>,R2> >
+    operator +(Vec<T,O,R2> const& b, int const& s){
+        return operator+(static_cast<T>(s),b);/* CHECK IF NO COPY */
+    }
+
+    //multiplication of scalar/vector, lambda*v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, class R2>
     inline Vec<T,O, vec_mul<T,O,vec_scalar<T,O>,R2> >
-    operator *(T const& s, Vec<T,O,R2> const& b){
+    operator *(double const& s, Vec<T,O,R2> const& b){
         return Vec<T,O,vec_mul<T,O,vec_scalar<T,O>, R2> >(vec_mul<T,O,vec_scalar<T,O>,R2>(vec_scalar<T,O>(s),b.rep()));
     }
 
+    //multiplication of scalar/vector, lambda*v for float
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_mul<T,O,vec_scalar<T,O>,R2> >
+    operator *(float const& s, Vec<T,O,R2> const& b){
+        return operator*(static_cast<T>(s),b); /* CHECK IF NO COPY */
+    }
 
+    //multiplication of scalar/vector, lambda*v for int
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_mul<T,O,vec_scalar<T,O>,R2> >
+    operator *(int const& s, Vec<T,O,R2> const& b){
+        return operator*(static_cast<T>(s),b); /* CHECK IF NO COPY */
+    }
+    
+    //v * lambda(double)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_mul<T,O,vec_scalar<T,O>,R2> >
+    operator *(Vec<T,O,R2> const& b, double const& s){
+        return operator*(s,b);/* CHECK IF NO COPY */
+    }
 
+    //v * lambda(float)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_mul<T,O,vec_scalar<T,O>,R2> >
+    operator *(Vec<T,O,R2> const& b, float const& s){
+        return operator*(static_cast<T>(s),b);/* CHECK IF NO COPY */
+    }
+
+    //v * lambda(int)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_mul<T,O,vec_scalar<T,O>,R2> >
+    operator *(Vec<T,O,R2> const& b, int const& s){
+        return operator*(static_cast<T>(s),b);/* CHECK IF NO COPY */
+    }
+    
+    //division of scalar/vector, lambda*v for double, partial specialization are impossible on a single function
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
+    operator /(double const& s, Vec<T,O,R2> const& b){
+        return Vec<T,O,vec_div<T,O,vec_scalar<T,O>, R2> >(vec_div<T,O,vec_scalar<T,O>,R2>(vec_scalar<T,O>(s),b.rep()));
+    }
+
+    //division of scalar/vector, lambda*v for float
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
+    operator /(float const& s, Vec<T,O,R2> const& b){
+        return operator/(static_cast<T>(s),b); /* CHECK IF NO COPY */
+    }
+
+    //division of scalar/vector, lambda*v for int
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
+    operator /(int const& s, Vec<T,O,R2> const& b){
+        return operator/(static_cast<T>(s),b); /* CHECK IF NO COPY */
+    }
+    
+    //v * lambda(double)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
+    operator /(Vec<T,O,R2> const& b, double const& s){
+        return operator*(s,b);/* CHECK IF NO COPY */
+    }
+
+    //v * lambda(float)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
+    operator /(Vec<T,O,R2> const& b, float const& s){
+        return operator*(static_cast<T>(s),b);/* CHECK IF NO COPY */
+    }
+
+    //v * lambda(int)
+    template<class T, memory::simd O, class R2>
+    inline Vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
+    operator /(Vec<T,O,R2> const& b, int const& s){
+        return operator*(static_cast<T>(s),b);/* CHECK IF NO COPY */
+    }
 }
 
 #endif

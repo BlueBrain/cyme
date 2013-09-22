@@ -6,8 +6,8 @@
 #include "memory/block.hpp"
 #include "utils/timer.h"
 
-#define TYPE float
-#define SIZE 1024
+#define TYPE double
+#define SIZE 1
 #define M 16
 #define ORDER AoS
 
@@ -27,20 +27,23 @@ int main(int argc, char* argv[]){
             block_aosoa(i,j) = drand48();
         }
 
-    typename memory::block<TYPE,M,SIZE, memory::AoS>::iterator it_aos = block_aos.begin();
-    typename memory::block<TYPE,M,SIZE, memory::AoSoA>::iterator it_aosoa = block_aosoa.begin();
+    memory::block<TYPE,M,SIZE, memory::AoS>::iterator it_aos = block_aos.begin();
+    memory::block<TYPE,M,SIZE, memory::AoSoA>::iterator it_aosoa = block_aosoa.begin();
+
     long long int t1 = rdtsc();
-    for(it_aos = block_aos.begin(); it_aos != block_aos.end(); ++it_aos){
-            P_aos[0] = P_aos[15]*(P_aos[2]*(P_aos[1]+P_aos[3]) + P_aos[12]*(P_aos[9]+P_aos[6]));
-    }
+
+    for(it_aos = block_aos.begin(); it_aos != block_aos.end(); ++it_aos)
+            P_aos[0] = (2.1*P_aos[15]*(P_aos[2]*(P_aos[1]+P_aos[3]) + P_aos[12]*(P_aos[9]+P_aos[6])) + 8)/P_aos[12];
+
     long long int t2 = rdtsc();
     std::cout << " cycle aos " << t2 - t1 << std::endl;
 
 
     t1 = rdtsc();
-    for(it_aosoa = block_aosoa.begin(); it_aosoa != block_aosoa.end(); ++it_aosoa){
-            P_aosoa[0] = P_aosoa[15]*(P_aosoa[2]*(P_aosoa[1]+P_aosoa[3]) + P_aosoa[12]*(P_aosoa[9]+P_aosoa[6]));
-    }
+    for(it_aosoa = block_aosoa.begin(); it_aosoa != block_aosoa.end(); ++it_aosoa)
+            P_aosoa[0] = (2.1*P_aosoa[15]*(P_aosoa[2]*(P_aosoa[1]+P_aosoa[3]) + P_aosoa[12]*(P_aosoa[9]+P_aosoa[6])) + 8)/P_aosoa[12];
+
+    
     t2 = rdtsc();
     std::cout << " cycle aosoa " << t2 - t1 << std::endl;
 

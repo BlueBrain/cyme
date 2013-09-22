@@ -72,36 +72,36 @@ namespace memory{
 
     // N nombre de case, M nombre d element dans la case
     template<class T, std::size_t M, std::size_t N>
-    class block<T,M,N,AoSoA> : public boost::array<storage<T,getsimd()/sizeof(T)*M,AoSoA>, N/(getsimd()/sizeof(T))+1>{
+    class block<T,M,N,AoSoA> : public boost::array<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>, N/(__GETSIMD__()/sizeof(T))+1>{
     public:
         typedef std::size_t                                         size_type;
         typedef T                                                   value_type; 
         typedef value_type&                                         reference;
         typedef const value_type&                                   const_reference;
-        typedef storage<T,getsimd()/sizeof(T)*M,AoSoA>              storage_type;
-        typedef boost::array<storage_type,N/(getsimd()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
+        typedef storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>              storage_type;
+        typedef boost::array<storage_type,N/(__GETSIMD__()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
         typedef typename  base_type::iterator                       iterator;
 
         explicit block(){
-            for(size_type i(0); i<N/(getsimd()/sizeof(T))+1; ++i)
+            for(size_type i(0); i<N/(__GETSIMD__()/sizeof(T))+1; ++i)
                 base_type::operator[](i) = storage_type(); // fill up to 0
         }
 
         block(value_type value){
-            for(size_type i(0); i<N/(getsimd()/sizeof(T))+1; ++i)
+            for(size_type i(0); i<N/(__GETSIMD__()/sizeof(T))+1; ++i)
                 base_type::operator[](i) = storage_type(value); // fill up to value
         }
 
         // Please tune me ! (does it exist a alternative to this ?)
         inline reference operator()(size_type i, size_type j){
-            return base_type::operator[]((i*M+j)/(M*getsimd()/sizeof(T)))                     //(i)
-                                        (j*(getsimd()/sizeof(T)) + i%(getsimd()/sizeof(T)));  //(j)
+            return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T)))                     //(i)
+                                        (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
         };
 
         // Please tune me ! (does it exist a alternative to this ?)
         inline const_reference operator()(size_type i, size_type j) const{
-            return base_type::operator[]((i*M+j)/(M*getsimd()/sizeof(T))) //(i)
-                                        (j*M + i%(getsimd()/sizeof(T)));  //(j)
+            return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
+                                        (j*M + i%(__GETSIMD__()/sizeof(T)));  //(j)
         };
     };
 }
