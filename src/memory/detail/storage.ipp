@@ -83,7 +83,6 @@ namespace memory{
 
     template <class T, std::size_t Size>
     numeric::Vec<T,memory::getsimd()> storage<T, Size, AoSoA>::operator[](size_type i){
-        std::cout << " write " << std::endl;
         return numeric::Vec<T,memory::getsimd()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 

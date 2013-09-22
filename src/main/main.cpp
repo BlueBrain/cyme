@@ -7,46 +7,43 @@
 #include "utils/timer.h"
 
 #define TYPE double
-#define SIZE 1
+#define SIZE 1024
 #define M 16
+#define ORDER AoS
 
-#define P (*it)
+#define P_aos (*it_aos)
+#define P_aosoa (*it_aosoa)
 
 int main(int argc, char* argv[]){
 
     srand(-1);
 
-    memory::block<TYPE,M,SIZE, memory::AoSoA> block;
+    memory::block<TYPE,M,SIZE, memory::AoS> block_aos;
+    memory::block<TYPE,M,SIZE, memory::AoSoA> block_aosoa;
 
     for(int i=0; i <SIZE; ++i)
         for(int j=0; j <M; ++j){
-            block(i,j) = drand48();
+            block_aos(i,j) = drand48();
+            block_aosoa(i,j) = drand48();
         }
 
-    typename memory::block<TYPE,M,SIZE, memory::AoSoA>::iterator it = block.begin();
-
-    timer t;
-    t.start();
+    typename memory::block<TYPE,M,SIZE, memory::AoS>::iterator it_aos = block_aos.begin();
+    typename memory::block<TYPE,M,SIZE, memory::AoSoA>::iterator it_aosoa = block_aosoa.begin();
 
     long long int t1 = rdtsc();
-
-    for(it = block.begin(); it != block.end(); ++it){
-//        for(int i = 0; i<0xfff; ++i)
-//            P[0] = 3.14*P[15]*(12.2*P[2]*(P[1]+P[3]) + 23.1*P[12]*(P[9]+P[6]));
-        P[0] = P[1]*P[2];
-
+    for(it_aos = block_aos.begin(); it_aos != block_aos.end(); ++it_aos){
+            P_aos[0] = 3.14*P_aos[15]*(12.2*P_aos[2]*(P_aos[1]+P_aos[3]) + 23.1*P_aos[12]*(P_aos[9]+P_aos[6]));
     }
-    std::cout << " dlsaubhludsghvab " << std::endl;
-//    double a[2];
-//    P[0].rep().store(a);
-
-
     long long int t2 = rdtsc();
+    std::cout << " cycle aos " << t2 - t1 << std::endl;
 
 
-    t.stop();
-
-
+    t1 = rdtsc();
+    for(it_aosoa = block_aosoa.begin(); it_aosoa != block_aosoa.end(); ++it_aosoa){
+            P_aosoa[0] = 3.14*P_aosoa[15]*(12.2*P_aosoa[2]*(P_aosoa[1]+P_aosoa[3]) + 23.1*P_aosoa[12]*(P_aosoa[9]+P_aosoa[6]));
+    }
+    t2 = rdtsc();
+    std::cout << " cycle aosoa " << t2 - t1 << std::endl;
 
 
 

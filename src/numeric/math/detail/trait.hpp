@@ -39,9 +39,9 @@ namespace numeric{
     struct trait{
         typedef T                  value_type; 
         typedef value_type*        pointer; 
-        typedef const value_type*  const_pointer; 
+        typedef const pointer      const_pointer; 
         typedef value_type&        reference;
-        typedef const value_type&  const_reference;
+        typedef const reference    const_reference;
     };
 
     /*! \class template<typename T> simd_trait  

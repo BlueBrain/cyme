@@ -101,13 +101,17 @@ namespace numeric{
     template<class T, memory::simd O, class Rep = vec<T,O> >
     class Vec{ // TO DO UNIFY NAME<------------------ TO DO 
     public:
+        typedef T value_type;
+        typedef value_type* pointer; 
+        typedef const pointer const_pointer; 
+
         inline explicit Vec():expr_rep(){
         }
 
-        inline Vec (Rep const& rb):expr_rep(rb){
+        inline Vec (Rep const& rb):data_pointer(NULL),expr_rep(rb){
         }
 
-        inline Vec (T const* rb):expr_rep(rb){
+        inline Vec (const_pointer rb):data_pointer(rb),expr_rep(rb){
         }
 
         inline Vec& operator= (Vec const& rhs){
@@ -117,7 +121,8 @@ namespace numeric{
 
         template<class T2, memory::simd O2, class Rep2>
         inline Vec& operator= (Vec<T2,O2,Rep2 > const& rhs){
-            this->rep()() = rhs.rep()();
+            this->rep()() = rhs.rep()(); //evaluate the three
+            this->rep()().store(data_pointer); //store the SIMD register into main memory
             return *this;
         } 
 
@@ -130,6 +135,7 @@ namespace numeric{
         }
 
     private:
+        const_pointer data_pointer;        
         Rep expr_rep;
     };
 

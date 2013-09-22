@@ -76,7 +76,7 @@ namespace numeric{
             return *this;
         }
 
-        inline void store(pointer a) const{
+        inline void store(const_pointer a) const{
             _mm_store<value_type,O>(xmm,a);
         } 
 
