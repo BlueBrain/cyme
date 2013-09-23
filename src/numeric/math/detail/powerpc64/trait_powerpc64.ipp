@@ -26,37 +26,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_SIMD_H
-#define COREBLURON_SIMD_H
+#ifndef COREBLURON_TRAIT_POWERPC64_IPP
+#define COREBLURON_TRAIT_POWERPC64_IPP
 
-namespace memory{
-    enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpx = 32}; //sizeof(void*) = 8 on 64 bits machine 
-
-// In C++0x the macro __cplusplus will be set to a value that differs from (is greater than) the current 199711L (ISO rules)
-// Be carefull could change in the futur ...
-#if (__cplusplus > 199711L)
-    constexpr static simd __GETSIMD__() {return qpx;} //default value, should  be passed by PP e.g. -Dsse, C++11
-#else
-    #define __GETSIMD__() qpx // This is a shame but I can not use c++11
-#endif
-
-    enum order {AoS, AoSoA};
-    
-    template<class T, order O>
-    struct stride;
-    
-    template<class T>
-    struct stride<T,AoS>{
-        static inline std::size_t helper_stride(){return 1;}
+namespace numeric{
+/*
+    template <>
+    struct simd_trait<float,memory::qpx> : trait<float>{
+        typedef vector8float register_type;
     };
-
-    template<class T>
-    struct stride<T,AoSoA>{
-        static inline std::size_t helper_stride(){return __GETSIMD__()/sizeof(T);}
+  */ 
+    template <>
+    struct simd_trait<double,memory::qpx> : trait<double>{
+        typedef vector4double register_type;
     };
-
-    
-} //end namespace
-
-
+}
 #endif

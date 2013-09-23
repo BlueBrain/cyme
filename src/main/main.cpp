@@ -7,7 +7,7 @@
 #include "utils/timer.h"
 
 #define TYPE double
-#define SIZE 16384
+#define SIZE 64000
 #define M 8
 #define ORDER AoS
 
@@ -34,6 +34,13 @@ int main(int argc, char* argv[]){
     long long int t1,t2;
 
     t1 = rdtsc();
+    for(it_aos = block_aos.begin(); it_aos != block_aos.end(); ++it_aos)
+        P_aos[0] = (2*P_aos[1]*(P_aos[2]*(P_aos[3]+P_aos[4]) + P_aos[5]*(P_aos[6]+P_aos[7])) +8.1 )/P_aos[7];
+
+    t2 = rdtsc();
+    std::cout << " cycle aos " << t2 - t1 << std::endl;
+
+    t1 = rdtsc();
     for(it_aosoa = block_aosoa.begin(); it_aosoa != block_aosoa.end(); ++it_aosoa){
         P_aosoa[0] = (2*P_aosoa[1]*(P_aosoa[2]*(P_aosoa[3]+P_aosoa[4]) + P_aosoa[5]*(P_aosoa[6]+P_aosoa[7])) +8.1 )/P_aosoa[7];
 
@@ -41,10 +48,5 @@ int main(int argc, char* argv[]){
     t2 = rdtsc();
     std::cout << " cycle aosoa " << t2 - t1 << std::endl;
 
-    t1 = rdtsc();
-    for(it_aos = block_aos.begin(); it_aos != block_aos.end(); ++it_aos)
-        P_aos[0] = (2*P_aos[1]*(P_aos[2]*(P_aos[3]+P_aos[4]) + P_aos[5]*(P_aos[6]+P_aos[7])) +8.1 )/P_aos[7];
 
-    t2 = rdtsc();
-    std::cout << " cycle aos " << t2 - t1 << std::endl;
 }

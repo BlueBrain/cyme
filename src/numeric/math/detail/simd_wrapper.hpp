@@ -59,4 +59,8 @@ namespace numeric{
     #include "numeric/math/detail/x86/simd_wrapper_avx.ipp"
 #endif 
 
+#ifdef _ARCH_QP
+    #include "numeric/math/detail/powerpc64/simd_wrapper_qpx.ipp"
+#endif 
+
 #endif 

@@ -55,5 +55,9 @@ namespace numeric{
 #include "numeric/math/detail/x86/trait_x86.ipp"
 #endif
 
+#ifdef _ARCH_QP
+#include "numeric/math/detail/powerpc64/trait_powerpc64.ipp"
+#endif
+
 #endif
 
