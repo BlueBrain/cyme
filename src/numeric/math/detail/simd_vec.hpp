@@ -118,6 +118,7 @@ namespace numeric{
         nrv += rhs;
         return nrv;
     }
+
 } //end namespace
 
 #endif

@@ -37,7 +37,7 @@ namespace memory{
 #if (__cplusplus > 199711L)
     constexpr static simd __GETSIMD__() {return avx;} //default value, should  be passed by PP e.g. -Dsse, C++11
 #else
-    #define __GETSIMD__() sse // This is a shame but I can not use c++11
+    #define __GETSIMD__() avx // This is a shame but I can not use c++11
 #endif
 
     enum order {AoS, AoSoA};

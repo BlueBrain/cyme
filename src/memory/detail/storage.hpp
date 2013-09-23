@@ -74,7 +74,6 @@ namespace memory{
          explicit storage(value_type value);
          inline reference operator()(size_type i);
          inline const_reference operator()(size_type i) const;         
-
          inline numeric::Vec<T,memory::__GETSIMD__()> operator[](size_type i);
          inline const numeric::Vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
 

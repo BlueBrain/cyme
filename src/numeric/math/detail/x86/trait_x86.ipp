@@ -48,7 +48,7 @@ namespace numeric{
     struct simd_trait<double, memory::sse> : trait<double>{
         typedef __m128d register_type;
     };
-#ifdef __AVX__
+#ifdef __AVX__ 
     /*! \class template<float> simd_trait  
         \brief Specialization for float with AVX SIMD 
     */
