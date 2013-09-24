@@ -80,7 +80,35 @@ namespace numeric{
 
         inline vec_mul(OP1 const& a, OP2 const& b):op1(a), op2(b){
         }
+
+        inline const typename vec_traits<OP1,O>::exp_ref& getop1() const{
+             return op1;
+        }
+        
+        inline const typename vec_traits<OP1,O>::exp_ref& getop2() const{
+             return op2;
+        }
+
     };
+    
+    
+    template<class T, memory::simd O, class OP1, class OP2, class OP3>
+    class vec_muladd{
+        typename vec_traits<OP1,O>::exp_ref op1; // I made distinction between operands it can be scalar or vector
+        typename vec_traits<OP2,O>::exp_ref op2;
+        typename vec_traits<OP3,O>::exp_ref op3;
+
+    public:
+
+        inline vec<T,O> operator()() const{ // <------------------------------ WELL DO NOT RESPECT THE PATTERN, MAYBE PB
+            std::cout << " call vec to do" << std::endl;
+            return muladd(op1(),op2(),op3());
+        }
+
+        inline vec_muladd(vec_mul<T,O,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){
+        }
+    };
+    
 
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_div{
@@ -157,6 +185,24 @@ namespace numeric{
     inline operator +(Vec<T,O,R1> const& a, Vec<T,O,R2> const& b){
         return Vec<T,O, vec_add<T,O,R1,R2> >(vec_add<T,O,R1,R2>(a.rep(),b.rep()));
     }
+   
+    //mul add
+    template<class T, memory::simd O, class R1, class R2, class R3>
+    Vec<T,O, vec_muladd<T,O,R1,R2,R3> >
+    inline operator +(Vec<T,O,vec_mul<T,O,R1,R2> >const& a, Vec<T,O,R3> const& b){
+        return  Vec<T,O, vec_muladd<T,O,R1,R2,R3> >(vec_muladd<T,O,R1,R2,R3>(a.rep(),b.rep()));
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     //multiplication of two vectors v*w
     template<class T, memory::simd O, class R1, class R2>
@@ -171,6 +217,22 @@ namespace numeric{
     inline operator /(Vec<T,O,R1> const& a, Vec<T,O,R2> const& b){
         return Vec<T,O,vec_div<T,O,R1,R2> >(vec_div<T,O,R1,R2>(a.rep(),b.rep()));
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /* OK I give the type because the compiler makes me partial specialization*/
 

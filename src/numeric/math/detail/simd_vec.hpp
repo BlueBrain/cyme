@@ -75,10 +75,14 @@ namespace numeric{
             xmm = _mm_add<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
-
+        
         inline void store(const_pointer a) const{
             _mm_store<value_type,O>(xmm,a);
         } 
+
+        inline void ma(const vec& lhs, const vec& rhs){
+            xmm = _mm_fma<value_type,O>(xmm,lhs.xmm,rhs.xmm);
+        }
 
         register_type xmm;
     };
@@ -118,6 +122,15 @@ namespace numeric{
         nrv += rhs;
         return nrv;
     }
+
+    template<class T,memory::simd O>
+    inline vec<T,O> muladd(const vec<T,O>& lhs, const vec<T,O>& mhs, const vec<T,O>& rhs){
+        vec<T,O> nrv(lhs);
+        nrv.ma(mhs,rhs);
+        return nrv;
+    }
+
+
 
 } //end namespace
 

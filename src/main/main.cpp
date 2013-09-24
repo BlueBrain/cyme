@@ -7,7 +7,7 @@
 #include "utils/timer.h"
 
 #define TYPE double
-#define SIZE 64000
+#define SIZE 1024
 #define M 8
 #define ORDER AoS
 
@@ -31,7 +31,14 @@ int main(int argc, char* argv[]){
     memory::block<TYPE,M,SIZE, memory::AoS>::iterator it_aos = block_aos.begin();
     memory::block<TYPE,M,SIZE, memory::AoSoA>::iterator it_aosoa = block_aosoa.begin();
 
-    long long int t1,t2;
+    long long int t1,t2;//;
+/*
+    t1 = rdtsc();
+    for(int i=0; i <SIZE; i++)
+      block_aos(i,0) = (2*block_aos(i,1)*(block_aos(i,2)*(block_aos(i,3)+block_aos(i,4)) + block_aos(i,5)*(block_aos(i,6)+block_aos(i,7))) +8.1 )/block_aos(i,7);
+    t2 = rdtsc();
+    std::cout << " classic " << t2 - t1 << std::endl;
+    
 
     t1 = rdtsc();
     for(it_aos = block_aos.begin(); it_aos != block_aos.end(); ++it_aos)
@@ -39,10 +46,11 @@ int main(int argc, char* argv[]){
 
     t2 = rdtsc();
     std::cout << " cycle aos " << t2 - t1 << std::endl;
-
+*/
     t1 = rdtsc();
     for(it_aosoa = block_aosoa.begin(); it_aosoa != block_aosoa.end(); ++it_aosoa){
-        P_aosoa[0] = (2*P_aosoa[1]*(P_aosoa[2]*(P_aosoa[3]+P_aosoa[4]) + P_aosoa[5]*(P_aosoa[6]+P_aosoa[7])) +8.1 )/P_aosoa[7];
+        P_aosoa[0] = P_aosoa[1]*P_aosoa[2]+P_aosoa[3];
+//      P_aosoa[0] = (2*P_aosoa[1]*(P_aosoa[2]*(P_aosoa[3]+P_aosoa[4]) + P_aosoa[5]*(P_aosoa[6]+P_aosoa[7])) +8.1 )/P_aosoa[7];
 
     }
     t2 = rdtsc();
