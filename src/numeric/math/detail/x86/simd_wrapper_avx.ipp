@@ -98,7 +98,7 @@ namespace numeric{
 
     template<>
     inline typename simd_trait<float,memory::avx>::register_type _mm_fma<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::register_type xmm1, typename simd_trait<float,memory::avx>::register_type xmm2){
-        return (xmm0);// = _mm256_fmadd_ps(xmm0, xmm1, xmm2));
+        return (xmm0 = _mm256_fmadd_ps(xmm0, xmm1, xmm2));
     };
 } //end namespace 
 
