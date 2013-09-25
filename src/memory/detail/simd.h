@@ -35,9 +35,9 @@ namespace memory{
 // In C++0x the macro __cplusplus will be set to a value that differs from (is greater than) the current 199711L (ISO rules)
 // Be carefull could change in the futur ...
 #if (__cplusplus > 199711L)
-    constexpr static simd __GETSIMD__() {return qpx;} //default value, should  be passed by PP e.g. -Dsse, C++11
+    constexpr static simd __GETSIMD__() {return avx;} //default value, should  be passed by PP e.g. -Dsse, C++11
 #else
-    #define __GETSIMD__() qpx // This is a shame but I can not use c++11
+    #define __GETSIMD__() avx // This is a shame but I can not use c++11
 #endif
 
     enum order {AoS, AoSoA};
