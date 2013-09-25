@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
 
     for(int i=0; i <SIZE; ++i)
         for(int j=0; j <M; ++j){
-            TYPE random = drand48();
+            TYPE random = 1.1;// drand48();
             block_aos(i,j) = random;
             block_aosoa(i,j) = random;
         }
@@ -47,8 +47,13 @@ int main(int argc, char* argv[]){
     std::cout << " cycle aos " << t2 - t1 << std::endl;
 
     t1 = rdtsc();
-    for(it_aosoa = block_aosoa.begin(); it_aosoa != block_aosoa.end(); ++it_aosoa)
-        P_aosoa[0] = ((P_aosoa[4]*(P_aosoa[5]*P_aosoa[1]*P_aosoa[2]+ P_aosoa[3])+P_aosoa[6]) + P_aosoa[2]*P_aosoa[3])/P_aosoa[6];
+    for(it_aosoa = block_aosoa.begin(); it_aosoa != block_aosoa.end(); ++it_aosoa){
+        P_aosoa[0] =  P_aosoa[3] + P_aosoa[4]*P_aosoa[5] ;
+        P_aosoa[0] = P_aosoa[4]*P_aosoa[5]+ P_aosoa[3];
+
+}
+//        P_aosoa[0] = ((P_aosoa[4]*(P_aosoa[5]*P_aosoa[1]*P_aosoa[2]+ P_aosoa[3])+P_aosoa[6]) + P_aosoa[2]*P_aosoa[3])/P_aosoa[6];
+
     t2 = rdtsc();
     std::cout << " cycle aosoa " << t2 - t1 << std::endl;
 

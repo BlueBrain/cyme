@@ -48,19 +48,19 @@ namespace numeric{
    
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_add(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
-    
+#ifdef __FMA__ // This macro is a compiler one
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_fma(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
-
+#endif
 } //end namespace 
 
 #ifdef __SSE2__ 
     #include "numeric/math/detail/x86/simd_wrapper_sse.ipp"
 #endif 
 
-//#ifdef __AVX__
+#ifdef __AVX__
     #include "numeric/math/detail/x86/simd_wrapper_avx.ipp"
-//#endif
+#endif
 
 #ifdef _ARCH_QP
     #include "numeric/math/detail/powerpc64/simd_wrapper_qpx.ipp"

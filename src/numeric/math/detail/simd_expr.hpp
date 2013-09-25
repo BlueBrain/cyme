@@ -54,12 +54,6 @@ namespace numeric{
         typedef vec_scalar<T,O> exp_ref;
     };
 
-    //speciali vec  mul_add
-
-
-
-
-
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_add{
         typename vec_traits<OP1,O>::exp_ref op1; // I made distinction between operands it can be scalar or vector
@@ -112,10 +106,8 @@ namespace numeric{
             return muladd(op1(),op2(),op3());
         }
 
-//        inline vec_muladd(vec_mul<T,O,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){
-
     inline vec_muladd(vec_mul<T,O,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){
-      } // op2 est un vector mais a est vec_mul<vec,vec> donc a.get_op2()
+      }
 
     };
     
@@ -195,25 +187,21 @@ namespace numeric{
     inline operator +(Vec<T,O,R1> const& a, Vec<T,O,R2> const& b){
         return Vec<T,O, vec_add<T,O,R1,R2> >(vec_add<T,O,R1,R2>(a.rep(),b.rep()));
     }
-   
-    //mul add
+#ifdef __FMA__
+    //mul add a*b + c
     template<class T, memory::simd O, class R1, class R2, class R3>
     Vec<T,O, vec_muladd<T,O,R1,R2,R3> >
     inline operator +(Vec<T,O,vec_mul<T,O,R1,R2> >const& a, Vec<T,O,R3> const& b){
         return  Vec<T,O, vec_muladd<T,O,R1,R2,R3> >(vec_muladd<T,O,R1,R2,R3>(a.rep(),b.rep()));
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
+    //mul add c + a*b
+    template<class T, memory::simd O, class R1, class R2, class R3>
+    Vec<T,O, vec_muladd<T,O,R1,R2,R3> >
+    inline operator +(Vec<T,O,R1> const& a, Vec<T,O,vec_mul<T,O,R2,R3> >const& b){
+        return operator+(b,a);
+    }
+#endif
     //multiplication of two vectors v*w
     template<class T, memory::simd O, class R1, class R2>
     Vec<T,O, vec_mul<T,O,R1,R2> >
@@ -228,22 +216,6 @@ namespace numeric{
         return Vec<T,O,vec_div<T,O,R1,R2> >(vec_div<T,O,R1,R2>(a.rep(),b.rep()));
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
     /* OK I give the type because the compiler makes me partial specialization*/
 
     //addition of scalar/vector, lambda+v for double, partial specialization are impossible on a single function
