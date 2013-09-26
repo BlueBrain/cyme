@@ -30,7 +30,7 @@
 #define COREBLURON_SIMD_WRAPPER_AVX_HPP
 
 namespace numeric{
-
+    /*  -------------------------------------------------------------------------------------------------------------------- double */
     template<>
     inline typename simd_trait<double,memory::avx>::register_type _mm_load1<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::value_type a){
         return (xmm0 = _mm256_broadcast_sd(&a)); 
@@ -38,12 +38,12 @@ namespace numeric{
    
     template<>
     inline typename simd_trait<double,memory::avx>::register_type _mm_load<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::const_pointer a){
-        return (xmm0 = _mm256_load_pd(a)); 
+        return (xmm0 = _mm256_loadu_pd(a)); 
     }
 
     template<>
     void _mm_store<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::pointer a){
-        _mm256_store_pd(a,xmm0); 
+        _mm256_storeu_pd(a,xmm0);
     }
    
     template<>
@@ -60,12 +60,25 @@ namespace numeric{
     inline typename simd_trait<double,memory::avx>::register_type _mm_add<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::register_type xmm1){
         return (xmm0 = _mm256_add_pd(xmm0, xmm1));
     };
+
+    template<>
+    inline typename simd_trait<double,memory::avx>::register_type _mm_sub<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::register_type xmm1){
+        return (xmm0 = _mm256_sub_pd(xmm0, xmm1));
+    };
+    
 #ifdef __FMA__
     template<>
     inline typename simd_trait<double,memory::avx>::register_type _mm_fma<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::register_type xmm1, typename simd_trait<double,memory::avx>::register_type xmm2){
         return (xmm0 = _mm256_fmadd_pd(xmm0, xmm1, xmm2));
     };
+
+    template<>
+    inline typename simd_trait<double,memory::avx>::register_type _mm_fms<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::register_type xmm1, typename simd_trait<double,memory::avx>::register_type xmm2){
+        return (xmm0 = _mm256_fmsub_pd(xmm0, xmm1, xmm2));
+    };
 #endif
+    
+    /*  -------------------------------------------------------------------------------------------------------------------- float */
     template<>
     typename simd_trait<float,memory::avx>::register_type _mm_load1<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::value_type a){
         return (xmm0 = _mm256_broadcast_ss(&a)); 
@@ -73,12 +86,12 @@ namespace numeric{
    
     template<>
     typename simd_trait<float,memory::avx>::register_type _mm_load<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::const_pointer a){
-        return (xmm0 = _mm256_load_ps(a)); 
+        return (xmm0 = _mm256_loadu_ps(a)); 
     }
 
     template<>
     void _mm_store<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::pointer a){
-        _mm256_store_ps(a,xmm0); 
+        _mm256_storeu_ps(a,xmm0); 
     }
    
     template<>
@@ -95,10 +108,21 @@ namespace numeric{
     inline typename simd_trait<float,memory::avx>::register_type _mm_add<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::register_type xmm1){
         return (xmm0 = _mm256_add_ps(xmm0, xmm1));
     };
+
+    template<>
+    inline typename simd_trait<float,memory::avx>::register_type _mm_sub<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::register_type xmm1){
+        return (xmm0 = _mm256_sub_ps(xmm0, xmm1));
+    };
+    
 #ifdef __FMA__
     template<>
     inline typename simd_trait<float,memory::avx>::register_type _mm_fma<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::register_type xmm1, typename simd_trait<float,memory::avx>::register_type xmm2){
         return (xmm0 = _mm256_fmadd_ps(xmm0, xmm1, xmm2));
+    };
+
+    template<>
+    inline typename simd_trait<float,memory::avx>::register_type _mm_fms<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::register_type xmm1, typename simd_trait<float,memory::avx>::register_type xmm2){
+        return (xmm0 = _mm256_fmsub_ps(xmm0, xmm1, xmm2));
     };
 #endif
 } //end namespace 

@@ -48,9 +48,16 @@ namespace numeric{
    
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_add(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
-#ifdef __FMA__ // This macro is a compiler one
+
     template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_sub(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1); //xmm0 - xmm1
+
+#ifdef __FMA__ // This macro is a compiler one
+    template<class T, memory::simd O> // a*b+c
     inline typename simd_trait<T,O>::register_type _mm_fma(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
+
+    template<class T, memory::simd O> // a*b-c
+    inline typename simd_trait<T,O>::register_type _mm_fms(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
 #endif
 } //end namespace 
 

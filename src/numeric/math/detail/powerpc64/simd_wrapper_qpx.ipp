@@ -30,67 +30,36 @@
 #define COREBLURON_SIMD_WRAPPER_AVX_HPP
 
 namespace numeric{
-
-    template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_load1<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::value_type a){
+    // QPX does not support float 
+    template<class T>
+    inline  simd_trait<T,memory::qpx>::register_type _mm_load1<T,memory::qpx>( simd_trait<T,memory::qpx>::register_type xmm0,  simd_trait<T,memory::qpx>::value_type a){
         return (xmm0 = vec_lds(0L,&a)); 
     }
    
-    template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_load<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::const_pointer a){
+    template<class T>
+    inline  simd_trait<T,memory::qpx>::register_type _mm_load<T,memory::qpx>( simd_trait<T,memory::qpx>::register_type xmm0,  simd_trait<T,memory::qpx>::const_pointer a){
         return (xmm0 = vec_ld(0L,a)); 
     }
 
-    template<>
-    void _mm_store<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::pointer a){
+    template<class T>
+    void _mm_store<T,memory::qpx>( simd_trait<T,memory::qpx>::register_type xmm0,  simd_trait<T,memory::qpx>::pointer a){
         vec_st(xmm0,0L,a);
     }
    
-    template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_mul<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
+    template<class T>
+    inline  simd_trait<T,memory::qpx>::register_type _mm_mul<T,memory::qpx>( simd_trait<T,memory::qpx>::register_type xmm0,  simd_trait<T,memory::qpx>::register_type xmm1){
         return (xmm0 = vec_mul(xmm0, xmm1));
     };
    
-    template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_div<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
+    template<class T>
+    inline  simd_trait<T,memory::qpx>::register_type _mm_div<T,memory::qpx>( simd_trait<T,memory::qpx>::register_type xmm0,  simd_trait<T,memory::qpx>::register_type xmm1){
         return (xmm0 = vec_swdiv(xmm0, xmm1));
     };
    
-    template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_add<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
+    template<class T>
+    inline  simd_trait<T,memory::qpx>::register_type _mm_add<T,memory::qpx>( simd_trait<T,memory::qpx>::register_type xmm0,  simd_trait<T,memory::qpx>::register_type xmm1){
         return (xmm0 = vec_add(xmm0, xmm1));
     };
-  /* 
-    template<>
-     simd_trait<float,memory::qpx>::register_type _mm_load1<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::value_type a){
-        return (xmm0 = _mm256_broadcast_ss(&a)); 
-    }
-   
-    template<>
-     simd_trait<float,memory::qpx>::register_type _mm_load<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::const_pointer a){
-        return (xmm0 = _mm256_load_ps(a)); 
-    }
-
-    template<>
-    void _mm_store<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::pointer a){
-        _mm256_store_ps(a,xmm0); 
-    }
-   
-    template<>
-    inline  simd_trait<float,memory::qpx>::register_type _mm_mul<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
-        return (xmm0 = _mm256_mul_ps(xmm0, xmm1));
-    };
-   
-    template<>
-    inline  simd_trait<float,memory::qpx>::register_type _mm_div<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
-        return (xmm0 = _mm256_div_ps(xmm0, xmm1));
-    };
-   
-    template<>
-    inline  simd_trait<float,memory::qpx>::register_type _mm_add<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
-        return (xmm0 = _mm256_add_ps(xmm0, xmm1));
-    };
-*/
 
 } //end namespace 
 

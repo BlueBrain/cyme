@@ -29,6 +29,9 @@
 #ifndef COREBLURON_STORAGE_IPP 
 #define COREBLURON_STORAGE_IPP
 namespace memory{
+
+    /* --------------------------------------- AOS --------------------------------------- */
+
     template <class T, std::size_t Size>
     storage<T, Size, AoS>::storage(){
         memset((void*)&this->data[0],T(),Size*sizeof(T)); // memset works only for char, T() return 0 so ok
@@ -42,24 +45,28 @@ namespace memory{
 
     template <class T, std::size_t Size>
     typename storage<T, Size, AoS>::reference storage<T, Size, AoS>::operator()(size_type i){
+        assert(i < Size);
         return data[i];
     }
 
     template <class T, std::size_t Size>
     typename storage<T, Size, AoS>::const_reference storage<T, Size, AoS>::operator()(size_type i) const{
-          return data[i];
+        assert(i < Size);
+        return data[i];
     }
 
     template <class T, std::size_t Size>
     typename storage<T, Size, AoS>::reference storage<T, Size, AoS>::operator[](size_type i){
-             return operator()(i);
+        return operator()(i);
     }
 
     template <class T, std::size_t Size>
     typename storage<T, Size, AoS>::const_reference storage<T, Size, AoS>::operator[](size_type i) const{
-             return operator()(i);
+        return operator()(i);
     }
-    
+
+    /* --------------------------------------- AOSOA --------------------------------------- */
+
     template <class T, std::size_t Size>
     storage<T, Size, AoSoA>::storage(){
         memset((void*)&this->data[0],T(),Size*sizeof(T)); // memset works only for char, T() return 0 so ok
@@ -73,22 +80,24 @@ namespace memory{
 
     template <class T, std::size_t Size>
     typename storage<T, Size, AoSoA>::reference storage<T, Size, AoSoA>::operator()(size_type i){
+        BOOST_ASSERT_MSG( i < Size, "out of range" );
         return data[i];
     }
 
     template <class T, std::size_t Size>
     typename storage<T, Size, AoSoA>::const_reference storage<T, Size, AoSoA>::operator()(size_type i) const{
+        BOOST_ASSERT_MSG( i < Size, "out of range" );
         return data[i];
     }
 
     template <class T, std::size_t Size>
-    numeric::Vec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i){
-        return numeric::Vec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
+    numeric::vec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i){
+        return numeric::vec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 
     template <class T, std::size_t Size>
-    const numeric::Vec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
-        return numeric::Vec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
+    const numeric::vec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
+        return numeric::vec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 
 } //end namespace

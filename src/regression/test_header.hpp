@@ -34,6 +34,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>  
 #include "numeric/math/math.hpp"
 #include "memory/block.hpp"
 #include <boost/mpl/list.hpp>
@@ -46,6 +47,7 @@
 #include <boost/random/uniform_real_distribution.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 
+#define RELATIVE_ERROR 0.0001
 
 namespace corebluron {
     namespace test {
@@ -65,6 +67,23 @@ namespace corebluron {
     template<>
     double GetRandom<double>(){
         return RandomDouble(rng);
+    }
+
+    template<class Ba, class Bb> // m and n are differents into the block that why I passe like argument
+    void init(Ba& block_a, Bb& block_b){
+        for(int i=0; i<block_a.number_block(); ++i)
+            for(int j=0; j<block_a.size_block(); ++j){
+                typename Ba::value_type random = GetRandom<typename Ba::value_type>();
+                block_a(i,j) = random;
+                block_b(i,j) = random;
+            }
+    }
+
+    template<class Ba, class Bb>
+    void check(Ba const& block_a, Bb const& block_b){
+        for(int i=0; i<block_a.number_block(); ++i)
+            for(int j=0; j<block_a.size_block(); ++j)
+                BOOST_CHECK_CLOSE(block_a(i,j), block_b(i,j), RELATIVE_ERROR);
     }
 
     template<class T, std::size_t m, memory::order o>
@@ -90,23 +109,47 @@ namespace corebluron {
                                 data<double,14,memory::AoS>,
                                 data<double,14,memory::AoSoA>
                             > floating_point_test_types;
+    //max 20 elements, because MPL must emulate variadic template
+    typedef boost::mpl::list<
+                                data_block<float,2,1,memory::AoSoA>,
+                                data_block<double,3,1,memory::AoS>,
+                                data_block<float,4,1,memory::AoSoA>,
+                                data_block<double,5,1,memory::AoSoA>,
+
+                                data_block<float,2,2,memory::AoSoA>,
+                                data_block<double,3,2,memory::AoS>,
+                                data_block<float,4,2,memory::AoSoA>,
+                                data_block<double,5,2,memory::AoSoA>,
+                                
+                                data_block<float,2,2,memory::AoSoA>,
+                                data_block<double,3,2,memory::AoS>,
+                                data_block<float,4,2,memory::AoSoA>,
+                                data_block<double,5,2,memory::AoSoA>,
+                                
+                                data_block<float,2,2,memory::AoSoA>,
+                                data_block<double,3,2,memory::AoS>,
+                                data_block<float,4,2,memory::AoSoA>,
+                                data_block<double,5,2,memory::AoSoA>,
+                                
+                                data_block<float,2,2,memory::AoSoA>,
+                                data_block<double,3,2,memory::AoS>,
+                                data_block<float,4,2,memory::AoSoA>,
+                                data_block<double,5,2,memory::AoSoA>
+
+                            > floating_point_torture_list;
 
     typedef boost::mpl::list<
-                                data_block<float,3,2,memory::AoS>,
-                                data_block<float,3,2,memory::AoSoA>,
-                                data_block<float,4,4,memory::AoS>,
-                                data_block<float,4,4,memory::AoSoA>,
-                                data_block<float,4,6,memory::AoS>,
-                                data_block<float,4,6,memory::AoSoA>,
-                                data_block<double,3,2,memory::AoS>,
-                                data_block<double,3,2,memory::AoSoA>,
-                                data_block<double,4,4,memory::AoS>,
-                                data_block<double,4,4,memory::AoSoA>,
-                                data_block<double,4,6,memory::AoS>,
-                                data_block<double,4,6,memory::AoSoA>
+                                data_block<float,6,15,memory::AoS>,
+                                data_block<float,7,13,memory::AoSoA>,
+                                data_block<float,8,11,memory::AoS>,
+                                data_block<double,9,9,memory::AoS>,
+                                data_block<double,10,7,memory::AoSoA>,
+                                data_block<double,11,5,memory::AoSoA>
                             > floating_point_block_types;
 
+
+
     } // end namespace test
-} // end namespace corebluron  
+} // end namespace corebluron
 
 #endif // COREBLURON_TEST_HEADER_HPP

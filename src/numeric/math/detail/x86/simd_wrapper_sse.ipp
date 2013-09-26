@@ -60,6 +60,18 @@ namespace numeric{
     inline typename simd_trait<double,memory::sse>::register_type _mm_add<double,memory::sse>(typename simd_trait<double,memory::sse>::register_type xmm0, typename simd_trait<double,memory::sse>::register_type xmm1){
         return (xmm0 = _mm_add_pd(xmm0, xmm1));
     };
+
+#ifdef __FMA__
+    template<>
+    inline typename simd_trait<double,memory::sse>::register_type _mm_fma<double,memory::sse>(typename simd_trait<double,memory::sse>::register_type xmm0, typename simd_trait<double,memory::sse>::register_type xmm1, typename simd_trait<double,memory::sse>::register_type xmm2){
+        return (xmm0 = _mm_fmadd_pd(xmm0, xmm1, xmm2));
+    };
+
+    template<>
+    inline typename simd_trait<double,memory::sse>::register_type _mm_fms<double,memory::avx>(typename simd_trait<double,memory::sse>::register_type xmm0, typename simd_trait<double,memory::sse>::register_type xmm1, typename simd_trait<double,memory::sse>::register_type xmm2){
+        return (xmm0 = _mm_fmsub_pd(xmm0, xmm1, xmm2));
+    };
+#endif
    
     template<>
     typename simd_trait<float,memory::sse>::register_type _mm_load1<float,memory::sse>(typename simd_trait<float,memory::sse>::register_type xmm0, const typename simd_trait<float,memory::sse>::value_type a){
@@ -90,6 +102,18 @@ namespace numeric{
     inline typename simd_trait<float,memory::sse>::register_type _mm_add<float,memory::sse>(typename simd_trait<float,memory::sse>::register_type xmm0, typename simd_trait<float,memory::sse>::register_type xmm1){
         return (xmm0 = _mm_add_ps(xmm0, xmm1));
     };
+
+#ifdef __FMA__
+    template<>
+    inline typename simd_trait<float,memory::sse>::register_type _mm_fma<float,memory::sse>(typename simd_trait<float,memory::sse>::register_type xmm0, typename simd_trait<float,memory::sse>::register_type xmm1, typename simd_trait<float,memory::sse>::register_type xmm2){
+        return (xmm0 = _mm_fmadd_ps(xmm0, xmm1, xmm2));
+    };
+
+    template<>
+    inline typename simd_trait<float,memory::sse>::register_type _mm_fms<float,memory::avx>(typename simd_trait<float,memory::sse>::register_type xmm0, typename simd_trait<float,memory::sse>::register_type xmm1, typename simd_trait<float,memory::sse>::register_type xmm2){
+        return (xmm0 = _mm_fmsub_ps(xmm0, xmm1, xmm2));
+    };
+#endif
 
 
 } //end namespace 

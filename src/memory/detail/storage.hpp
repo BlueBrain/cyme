@@ -30,7 +30,7 @@
 #define COREBLURON_STORAGE_HPP
 
 #include "numeric/math/detail/simd_vec.hpp"
-#include "numeric/math/detail/simd_expr.hpp"
+#include "numeric/math/detail/expr_vec.hpp"
 
 
 namespace memory{
@@ -48,16 +48,16 @@ namespace memory{
          typedef const pointer*    const_pointer;
          typedef value_type&       reference;
          typedef const value_type& const_reference;
+         
          storage();
          explicit storage(value_type value);
          inline reference operator()(size_type i);
          inline const_reference operator()(size_type i) const;
          inline reference operator[](size_type i);
          inline const_reference operator[](size_type i) const;
-         
+
          private:
-         
-         value_type data[Size];       
+         value_type data[Size];
      };
     
      template <class T, std::size_t Size>
@@ -69,17 +69,18 @@ namespace memory{
          typedef value_type*       pointer;
          typedef const pointer*    const_pointer;
          typedef value_type&       reference;
+
          typedef const value_type& const_reference;
          storage();
          explicit storage(value_type value);
          inline reference operator()(size_type i);
          inline const_reference operator()(size_type i) const;         
-         inline numeric::Vec<T,memory::__GETSIMD__()> operator[](size_type i);
-         inline const numeric::Vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
+         inline numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i);
+         inline const numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
 
-         private:
          
-         value_type data[Size];       
+         private:
+         value_type data[Size];
      };    
 } //end namespace
 
