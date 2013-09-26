@@ -77,12 +77,11 @@ namespace memory{
             return base_type::operator[](i)(j);
         }
 
-
-        inline size_type number_block() const{
+        static inline size_type number_block() {
             return N;
         }
 
-        inline size_type size_block() const{
+        static inline size_type size_block() {
             return M;
         }
     };
@@ -125,11 +124,11 @@ namespace memory{
                                         (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
         };
 
-        inline size_type number_block() const{
+        static inline size_type number_block() {
             return N;
         }
 
-        inline size_type size_block() const{
+        static inline size_type size_block() {
             return M;
         }
     };

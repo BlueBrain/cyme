@@ -45,13 +45,13 @@ namespace memory{
 
     template <class T, std::size_t Size>
     typename storage<T, Size, AoS>::reference storage<T, Size, AoS>::operator()(size_type i){
-        assert(i < Size);
+        BOOST_ASSERT_MSG( i < Size, "out of range" );
         return data[i];
     }
 
     template <class T, std::size_t Size>
     typename storage<T, Size, AoS>::const_reference storage<T, Size, AoS>::operator()(size_type i) const{
-        assert(i < Size);
+        BOOST_ASSERT_MSG( i < Size, "out of range" );
         return data[i];
     }
 

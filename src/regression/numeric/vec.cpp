@@ -65,6 +65,29 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_add_operations, T, floating_point_test_types) 
     BOOST_CHECK_EQUAL(0,b_bool);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_sub_operations, T, floating_point_test_types) {
+
+    int n = memory::getsimd()/sizeof(TYPE);
+    TYPE a[n],b[n],res[n]; 
+
+    for(int i=0; i<n; ++i){
+       a[i] = GetRandom<TYPE>();
+       b[i] = GetRandom<TYPE>();
+    }
+
+    numeric::vec<TYPE,memory::getsimd()> va(a);
+    numeric::vec<TYPE,memory::getsimd()> vb(b);
+
+    for(int i=0; i<n; ++i)
+        a[i] -= b[i];
+
+    va -= vb;
+    va.store(res);
+
+    int b_bool = memcmp((void*)res,(void*)a,n*sizeof(TYPE)); 
+    BOOST_CHECK_EQUAL(0,b_bool);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_mul_operations, T, floating_point_test_types) {
 
     int n = memory::getsimd()/sizeof(TYPE);
