@@ -77,9 +77,9 @@ namespace numeric{
     */
     template<class T, std::size_t n>
     inline void pow(T* a, T const* b){
-        vec_simd<T, memory::__GETSIMD__()> v(b); // init register one cycle 
-        vec_simd<T, memory::__GETSIMD__()> nrv = pow<numeric::vec_simd<T, memory::__GETSIMD__()>,n>(v); // copy register one cycle
-        nrv.store(a); //push register to memory
+     //   vec_simd<T, memory::__GETSIMD__()> v(b); // init register one cycle
+     //   vec_simd<T, memory::__GETSIMD__()> nrv = pow<numeric::vec_simd<T, memory::__GETSIMD__()>,n>(v); // copy register one cycle
+    //    nrv.store(a); //push register to memory
     };
 
 } //end namespace 

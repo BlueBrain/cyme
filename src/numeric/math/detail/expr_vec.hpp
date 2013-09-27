@@ -169,7 +169,8 @@ namespace numeric{
     public:
         typedef T value_type;
         typedef value_type* pointer; 
-        typedef const pointer const_pointer; 
+        typedef const pointer const_pointer;
+        typedef Rep base_type;
 
         inline explicit vec():expr_rep(){
         }

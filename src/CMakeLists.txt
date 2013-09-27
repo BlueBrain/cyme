@@ -41,9 +41,8 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 option (COREBLURON_TESTS "Build the COREBLURONE regression tests" OFF)
 set(SIMD_TECH avx CACHE STRING "SIMD technology: sse2,avx,qpx")
-option (COREBLURON_FMA "support FMA, be carefull your machine can" OFF)
+option (COREBLURON_FMA "support FMA, very experiemental the parser is not still ready, it can not compile" OFF)
 add_definitions(-m${SIMD_TECH} "-D__COREBLURON_SIMD_VALUE__=${SIMD_TECH}")
-
 
 ########################################################################
 #
@@ -52,7 +51,7 @@ add_definitions(-m${SIMD_TECH} "-D__COREBLURON_SIMD_VALUE__=${SIMD_TECH}")
 ########################################################################
 
 if(COREBLURON_FMA)
-   add_definitions(-fma) 
+   add_definitions(-mfma) 
 endif(COREBLURON_FMA)
 
 ########################################################################
