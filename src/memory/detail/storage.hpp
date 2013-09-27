@@ -32,7 +32,6 @@
 #include "numeric/math/detail/simd_vec.hpp"
 #include "numeric/math/detail/expr_vec.hpp"
 
-
 namespace memory{
 
      template <class T, std::size_t Size, order O>

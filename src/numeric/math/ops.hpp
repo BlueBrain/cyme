@@ -31,46 +31,12 @@
 
 namespace numeric{
 
-    /*
-     template <class T>
-     inline void add(T& a, T const& b){
-         a += b;
-     };
+    template<class T, memory::simd O, class R>
+    vec<T,O,R>
+    inline exp(vec<T,O,R> const& a){
+        return  Helper_exp<typename vec<T,O,R>::base_type >::exp(a.rep());
+    }
     
-     template <class T>
-     inline void add(T* a, T const* b){
-        numeric::vec<T,memory::__GETSIMD__()> va(a);
-        numeric::vec<T,memory::__GETSIMD__()> vb(b);
-        va+=vb;
-        va.store(a);
-    };
-    
-    template <class T>
-    inline void mul(T& a, T const& b){
-         a *= b;
-    };
-    
-    template <class T>
-    inline void mul(T* a, T const* b){
-        numeric::vec<T,memory::__GETSIMD__()> va(a);
-        numeric::vec<T,memory::__GETSIMD__()> vb(b);
-        va*=vb;
-        va.store(a);
-    };
-        
-    template <class T>
-    inline void div(T& a, T const& b){
-         a *= b;
-    };
-    
-    template <class T>
-    inline void div(T* a, T const* b){
-        numeric::vec<T,memory::__GETSIMD__()> va(a);
-        numeric::vec<T,memory::__GETSIMD__()> vb(b);
-        va/=vb;
-        va.store(a);
-    };
-     */
 } //end namespace
 
 #endif 

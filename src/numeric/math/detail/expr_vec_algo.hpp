@@ -31,13 +31,6 @@
 
 namespace numeric{
 
-
-    template<class T, memory::simd O, class R>
-    vec<T,O,R>
-    inline pow_test(vec<T,O,R> const& a){
-        return pow<typename vec<T,O,R>::base_type,8>(a.rep());
-    }
-
     //addition of two vectors v+w
     template<class T, memory::simd O, class R1, class R2>
     vec<T,O, vec_add<T,O,R1,R2> >

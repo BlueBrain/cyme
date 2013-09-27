@@ -16,8 +16,10 @@ endif(MACHINE_CONFIG)
 set(CMAKE_INSTALL_PREFIX "/opt/corebluron" CACHE STRING "Install path prefix, prepended onto install directories.")
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.")
 if(NOT MACHINE_CONFIG)
-    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3  -std=c++11 -stdlib=libc++  " CACHE STRING "Compiler flags for Release compiles.")
-    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64   -std=c++11 -stdlib=libc++  " CACHE STRING "Compiler flags for Debug compiles.")
+#    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3  -std=c++11 -stdlib=libc++  " CACHE STRING "Compiler flags for Release compiles.")
+#    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64   -std=c++11 -stdlib=libc++  " CACHE STRING "Compiler flags for Debug compiles.")
+    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3  " CACHE STRING "Compiler flags for Release compiles.")
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64  " CACHE STRING "Compiler flags for Debug compiles.")
 endif(NOT MACHINE_CONFIG)
 
 ########################################################################
@@ -40,7 +42,7 @@ set (COREBLURON_VERSION_MINOR 1)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 option (COREBLURON_TESTS "Build the COREBLURONE regression tests" OFF)
-set(SIMD_TECH avx CACHE STRING "SIMD technology: sse2,avx,qpx")
+set(SIMD_TECH sse2 CACHE STRING "SIMD technology: sse2,avx,qpx")
 option (COREBLURON_FMA "support FMA, very experiemental the parser is not still ready, it can not compile" OFF)
 add_definitions(-m${SIMD_TECH} "-D__COREBLURON_SIMD_VALUE__=${SIMD_TECH}")
 

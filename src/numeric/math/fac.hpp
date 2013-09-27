@@ -46,11 +46,6 @@ namespace numeric{
     }
     /* \endcond */
 
-    /* c++ 11 not supported on BGQ
-        constexpr std::size_t quotient_factorial (std::size_t n, std::size_t m) {
-            return n > m ? n * quotient_factorial(n - 1, m) : 1;
-        }
-    */
     /*! \class template<std::size_t m, std::size_t n> helper_quotient_factorial  
         \brief This class helps the quotient_factorial function for partial spercialization, as partial specialization is not allowed on a "basic" template function
         template parameter must respect m < n

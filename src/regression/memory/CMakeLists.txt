@@ -1,7 +1,7 @@
 add_definitions (-DBOOST_TEST_DYN_LINK -Wno-unused-variable)
 
 set(tests alignment)
-set(simd_test normal sse avx qpx)
+set(simd_test normal sse2 avx qpx)
 
 foreach(test ${tests})
     foreach(simd ${simd_test})

@@ -52,6 +52,9 @@ namespace numeric{
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_sub(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1); //xmm0 - xmm1
 
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_exp(typename simd_trait<T,O>::register_type xmm0); //SVML only 
+
 #ifdef __FMA__ // This macro is a compiler one
     template<class T, memory::simd O> // a*b+c
     inline typename simd_trait<T,O>::register_type _mm_fma(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);

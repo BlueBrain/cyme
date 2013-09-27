@@ -221,7 +221,7 @@ namespace numeric{
             this->rep()().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
-
+        
         inline Rep const& rep() const{
             return expr_rep;
         }
