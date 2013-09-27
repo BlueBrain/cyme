@@ -26,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_O_VEC_HPP
-#define COREBLURON_O_VEC_HPP
+#ifndef COREBLURON_SIMD_VEC_HPP
+#define COREBLURON_SIMD_VEC_HPP
 
 #include "numeric/math/detail/trait.hpp"
 #include "numeric/math/detail/simd_wrapper.hpp"
@@ -35,89 +35,126 @@
 namespace numeric{
 
     template<class T,memory::simd O>
-    struct vec{
+    struct vec_simd{
         typedef typename simd_trait<T,O>::value_type value_type;
         typedef typename simd_trait<T,O>::pointer pointer;
         typedef typename simd_trait<T,O>::const_pointer const_pointer;
         typedef typename simd_trait<T,O>::register_type register_type;
       
-        inline explicit vec(const value_type a = value_type()){
+        inline explicit vec_simd(const value_type a = value_type()){
             xmm = _mm_load1<value_type,O>(xmm,a);
         }
 
-        inline vec(vec const& a){
+        inline vec_simd(vec_simd const& a){
             xmm = a.xmm;
         }
 
-        inline vec(const_pointer a){
+        inline vec_simd(const_pointer a){
             xmm = _mm_load<value_type,O>(xmm,a);
         }
 
-        inline vec& operator()(){
+        inline vec_simd& operator()(){
             return *this;
         }
 
-        inline const vec& operator()() const{
+        inline const vec_simd& operator()() const{
             return *this;
         }
 
-        inline vec& operator *=(const vec& rhs){
+        inline vec_simd& operator *=(const vec_simd& rhs){
             xmm = _mm_mul<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
         
-        inline vec& operator /=(const vec& rhs){
+        inline vec_simd& operator /=(const vec_simd& rhs){
             xmm = _mm_div<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
         
-        inline vec& operator +=(const vec& rhs){
+        inline vec_simd& operator +=(const vec_simd& rhs){
             xmm = _mm_add<value_type,O>(xmm,rhs.xmm);
+            return *this;
+        }
+
+        inline vec_simd& operator -=(const vec_simd& rhs){
+            xmm = _mm_sub<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
 
         inline void store(const_pointer a) const{
             _mm_store<value_type,O>(xmm,a);
         } 
+#ifdef __FMA__
+        inline void ma(const vec_simd& lhs, const vec_simd& rhs){
+            xmm = _mm_fma<value_type,O>(xmm,lhs.xmm,rhs.xmm);
+        }
 
+        inline void ms(const vec_simd& lhs, const vec_simd& rhs){
+            xmm = _mm_fms<value_type,O>(xmm,lhs.xmm,rhs.xmm);
+        }
+#endif
         register_type xmm;
     };
 
     template<class T,memory::simd O>
-    inline vec<T,O> operator* (const vec<T,O>& lhs, const vec<T,O>& rhs){
-        vec<T,O> nrv(lhs);   // named return value optimization
+    inline vec_simd<T,O> operator* (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);   // named return value optimization
         nrv *= rhs;
         return nrv;
     }
 
     template<class T,memory::simd O>
-    inline vec<T,O> operator* (int lhs, const vec<T,O>& rhs){
-        vec<T,O> nrv(lhs);
+    inline vec_simd<T,O> operator* (int lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
         nrv *= rhs;
         return nrv;
     }
 
     template<class T,memory::simd O>
-    inline vec<T,O> operator/ (const vec<T,O>& lhs, const vec<T,O>& rhs){
-        vec<T,O> nrv(lhs);
+    inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
         nrv /= rhs;
         return nrv;
     }
 
     template<class T,memory::simd O>
-    inline vec<T,O> operator/ (const vec<T,O>& lhs, const std::size_t rhs){
-        vec<T,O> nrv(lhs);
-        vec<T,O> nv_rhs(rhs);
+    inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const std::size_t rhs){
+        vec_simd<T,O> nrv(lhs);
+        vec_simd<T,O> nv_rhs(rhs);
         nrv /= nv_rhs;
         return nrv;
     }
     
     template<class T,memory::simd O>
-    inline vec<T,O> operator+ (const vec<T,O>& lhs, const vec<T,O>& rhs){
-        vec<T,O> nrv(lhs);
+    inline vec_simd<T,O> operator+ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
         nrv += rhs;
         return nrv;
     }
+
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> operator- (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv -= rhs;
+        return nrv;
+    }
+
+#ifdef __FMA__
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> muladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv.ma(mhs,rhs);
+        return nrv;
+    }
+
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> mulsub(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv.ms(mhs,rhs);
+        return nrv;
+    }
+#endif
+
 
 } //end namespace
 

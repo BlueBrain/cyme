@@ -32,10 +32,14 @@
 
 #include "memory/detail/simd.h"
 #include "memory/detail/storage.hpp"
+#include <boost/assert.hpp>
 
 namespace memory{
-    // M = #element into the mechanism, N = #number of synapse, Order SoA or SoAoS
 
+
+
+    // M = #element into the mechanism, N = #number of synapse, Order SoA or SoAoS
+    // or M size of block, N number of block
     template<class T, std::size_t M, std::size_t N, memory::order O>
     class block{
     };
@@ -48,7 +52,7 @@ namespace memory{
         typedef value_type&                    reference;
         typedef const value_type&              const_reference;
         typedef storage<T,M,AoS>               storage_type;
-        typedef boost::array<storage_type,N>     base_type; //default template seems impossible on partial specialization
+        typedef boost::array<storage_type,N>   base_type; //default template seems impossible on partial specialization
         typedef typename  base_type::iterator  iterator;
        
         explicit block(){
@@ -62,11 +66,23 @@ namespace memory{
         }
 
         inline reference operator()(size_type i, size_type j){
+            BOOST_ASSERT_MSG( i < N, "out of range: block AoS i" );
+            BOOST_ASSERT_MSG( j < M, "out of range: block AoS j" );
             return base_type::operator[](i)(j);
         }
 
         inline const_reference operator()(size_type i, size_type j) const{
+            BOOST_ASSERT_MSG( i < N, "out of range: block AoS i" );
+            BOOST_ASSERT_MSG( j < M, "out of range: block AoS j" );
             return base_type::operator[](i)(j);
+        }
+
+        static inline size_type number_block() {
+            return N;
+        }
+
+        static inline size_type size_block() {
+            return M;
         }
     };
 
@@ -74,13 +90,13 @@ namespace memory{
     template<class T, std::size_t M, std::size_t N>
     class block<T,M,N,AoSoA> : public boost::array<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>, N/(__GETSIMD__()/sizeof(T))+1>{
     public:
-        typedef std::size_t                                         size_type;
-        typedef T                                                   value_type; 
-        typedef value_type&                                         reference;
-        typedef const value_type&                                   const_reference;
-        typedef storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>              storage_type;
+        typedef std::size_t                                               size_type;
+        typedef T                                                         value_type;
+        typedef value_type&                                               reference;
+        typedef const value_type&                                         const_reference;
+        typedef storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>                storage_type;
         typedef boost::array<storage_type,N/(__GETSIMD__()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
-        typedef typename  base_type::iterator                       iterator;
+        typedef typename  base_type::iterator                             iterator;
 
         explicit block(){
             for(size_type i(0); i<N/(__GETSIMD__()/sizeof(T))+1; ++i)
@@ -92,17 +108,29 @@ namespace memory{
                 base_type::operator[](i) = storage_type(value); // fill up to value
         }
 
-        // Please tune me ! (does it exist a alternative to this ?)
+        // Please tune me ! (does it exist a alternative to this ? ^_^
         inline reference operator()(size_type i, size_type j){
+            BOOST_ASSERT_MSG( i < N, "out of range: block AoSoA i" );
+            BOOST_ASSERT_MSG( j < M, "out of range: block AoSoA j" );
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T)))                     //(i)
                                         (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
         };
 
-        // Please tune me ! (does it exist a alternative to this ?)
+        // Please tune me ! (does it exist a alternative to this ? ^_^
         inline const_reference operator()(size_type i, size_type j) const{
+            BOOST_ASSERT_MSG( i < N, "out of range: block AoSoA i" );
+            BOOST_ASSERT_MSG( j < M, "out of range: block AoSoA j" );
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
-                                        (j*M + i%(__GETSIMD__()/sizeof(T)));  //(j)
+                                        (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
         };
+
+        static inline size_type number_block() {
+            return N;
+        }
+
+        static inline size_type size_block() {
+            return M;
+        }
     };
 }
 

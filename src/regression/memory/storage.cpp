@@ -39,8 +39,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(storage_init_operator, T, floating_point_test_type
 BOOST_AUTO_TEST_CASE_TEMPLATE(storage_operator, T, floating_point_test_types) {
    memory::storage<TYPE, SIZE, ORDER> a;
    TYPE test = GetRandom<TYPE>();
-   a(SIZE%3) = test;
-   TYPE res = a(SIZE%3);
+   a(SIZE-1) = test;
+   TYPE res = a(SIZE-1);
    BOOST_CHECK_CLOSE( res, test, 0.0001);
 }
 

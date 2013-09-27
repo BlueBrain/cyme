@@ -42,7 +42,6 @@ namespace memory{
     protected:
         void* allocate_policy(size_type size) {
            assert(O>=sizeof(void*));
-           assert(O%2);
         
             if (size == 0) 
                 return NULL;

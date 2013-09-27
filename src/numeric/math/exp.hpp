@@ -125,42 +125,16 @@ namespace numeric{
     };
 
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
-        \brief final wrapper for the exp, pade approximant by default if -5 < x < 5 with n = 14, determinated experimentaly 
+        \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb)
     */
-    template<class T, std::size_t n = 14, int limit = 5,  class Solver = Pade_exp<T,n> >
+    template<class T, std::size_t n = 14, class Solver = Pade_exp<T,n> >
     struct Helper_exp{
         static inline T exp(T const& a){
              return Solver::exp(a);
-
-//           return ((a > -limit) && (a < limit)) ? Solver::exp(a) : std::exp(a);
         }
     };
-    /** fn final wrapper
-    */
-    template<class T, std::size_t n>
-    T exp(T const& x){
-        return Helper_exp<T,n>::exp(x);
-    }
 
-    /**  fn inline T pow(T const& a)
-    \brief calculate the exp of T, generic  
-    \param T const& a 
-    */
-    template<class T, std::size_t n>
-    inline void exp(T& a, T const& b){
-        a = exp<T,n>(b); 
-    };
 
-    /**  fn inline T pow(T const a)
-    \brief calculate the exp of T, privilege this version for array.  
-    \param T const& a 
-    */
-    template<class T, std::size_t n>
-    inline void exp(T* a, T const* b){
-        vec<T,memory::__GETSIMD__()> v(b); // init register one cycle 
-        vec<T,memory::__GETSIMD__()> nrv = exp<numeric::vec<T,memory::__GETSIMD__()>,n>(v); // copy register one cycle
-        nrv.store(a); //push register to memory
-    };
 } //end namespace 
 
 #endif 

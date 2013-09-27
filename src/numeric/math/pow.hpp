@@ -53,7 +53,7 @@ namespace numeric{
         }
     };
     /* \endcond */
-
+    
     /*! \class template<std::size_t T, std::size_t n> pow  
         \brief clean wrapper of the pow function 
     */
@@ -69,17 +69,6 @@ namespace numeric{
     template<class T, std::size_t n>
     inline void pow(T& a, T const& b){
         a = pow<T,n>(b); 
-    };
-
-    /**  fn inline T pow(T const a)
-    \brief calculate the pow of T, privilege this version.  
-    \param T const& a 
-    */
-    template<class T, std::size_t n>
-    inline void pow(T* a, T const* b){
-        vec<T, memory::__GETSIMD__()> v(b); // init register one cycle 
-        vec<T, memory::__GETSIMD__()> nrv = pow<numeric::vec<T, memory::__GETSIMD__()>,n>(v); // copy register one cycle
-        nrv.store(a); //push register to memory
     };
 
 } //end namespace 
