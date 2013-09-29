@@ -31,6 +31,8 @@
 
 #include <math.h>  
 
+#include "numeric/math/remez.hpp"
+
 namespace numeric{
 
     /*! \class template<std::size_t T, std::size_t n> helper_exp  
@@ -123,11 +125,35 @@ namespace numeric{
             return helper_Pade_numerator<T,n,n,n>::Pade_numerator(a)/helper_Pade_denominator<T,n,n,n>::Pade_denominator(a);
         }
     };
+    
+    template<class T, std::size_t n>
+    struct helper_remez_exp{
+        static inline T exp(T const& a){
+           return pow<T,n>(a)*T(coeff_remez<T,n>::coeff()) + pow<T,n-1>(a)*T(coeff_remez<T,n-1>::coeff());
+        }
+    };
+
+    template<class T>
+    struct helper_remez_exp<T,0>{
+        static inline T exp(T const& a){
+           return coeff_remez<T,0>::coeff();
+        }
+    };
+
+    template<class T, std::size_t n>
+    struct Remez_exp{
+        /** fn template<std::size_t T, std::size_t n> Pade_exp  
+            \brief clean wrapper of the Pade approximat method 
+        */
+        static inline T exp(T const& a){
+            return helper_remez_exp<T,n>::exp(a);
+        }
+    };
 
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
-        \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb)
+        \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
     */
-    template<class T, std::size_t n = 14, class Solver = Pade_exp<T,n> >
+    template<class T, std::size_t n = 20, class Solver = Remez_exp<T,n> >
     struct Helper_exp{
         static inline T exp(T const& a){
              return Solver::exp(a);

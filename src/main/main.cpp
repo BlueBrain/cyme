@@ -8,7 +8,7 @@
 
 #define TYPE float
 #define M 8
-#define SIZE 1024
+#define SIZE 8
 #define ORDER AoS
 
 #define P_aos (*it_aos)
@@ -55,17 +55,21 @@ int main(int argc, char* argv[]){
 
     t1 = rdtsc();
     for(it_aos = block_aos.begin(); it_aos != block_aos.end(); ++it_aos)
-        P_aos[0] = ((P_aos[4]*(P_aos[5]*P_aos[1]*exp(P_aos[2])+ P_aos[3])+P_aos[6]) + P_aos[2]*P_aos[3])/P_aos[6];
+        P_aos[0] = exp(P_aos[2]);
+
+//        P_aos[0] = ((P_aos[4]*(P_aos[5]*P_aos[1]*exp(P_aos[2])+ P_aos[3])+P_aos[6]) + P_aos[2]*P_aos[3])/P_aos[6];
 
     t2 = rdtsc();
     std::cout << " cycle aos " << t2 - t1 << std::endl;
 
     t1 = rdtsc();
     for(it_aosoa = block_aosoa.begin(); it_aosoa != block_aosoa.end(); ++it_aosoa)
-        P_aosoa[0] = ((P_aosoa[4]*(P_aosoa[5]*P_aosoa[1]*numeric::exp(P_aosoa[2])+ P_aosoa[3])+P_aosoa[6]) + P_aosoa[2]*P_aosoa[3])/P_aosoa[6];
+        P_aosoa[0] = numeric::exp(P_aosoa[2]);
+
+//        P_aosoa[0] = ((P_aosoa[4]*(P_aosoa[5]*P_aosoa[1]*numeric::exp(P_aosoa[2])+ P_aosoa[3])+P_aosoa[6]) + P_aosoa[2]*P_aosoa[3])/P_aosoa[6];
 
     t2 = rdtsc();
     std::cout << " cycle aosoa " << t2 - t1 << std::endl;
 
-  //  check(block_aos,block_aosoa);
+    check(block_aos,block_aosoa);
 }
