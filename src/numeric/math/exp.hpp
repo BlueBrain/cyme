@@ -129,14 +129,16 @@ namespace numeric{
     template<class T, std::size_t n>
     struct helper_remez_exp{
         static inline T exp(T const& a){
-           return pow<T,n>(a)*T(coeff_remez<T,n>::coeff()) + pow<T,n-1>(a)*T(coeff_remez<T,n-1>::coeff());
+//          return pow<T,n>(a)*T(coeff_remez<T,n>::coeff()) + helper_remez_exp<T,n-1>::exp(a); // classic implementation very slow as pow is recalculating
+//          for every iteration, not optimium as 20 is hardcoded
+            return  T(coeff_remez<T,coeff_remez_number::value-n>::coeff()) + helper_remez_exp<T,n-1>::exp(a)*a;
         }
     };
 
     template<class T>
     struct helper_remez_exp<T,0>{
         static inline T exp(T const& a){
-           return coeff_remez<T,0>::coeff();
+            return T(coeff_remez<T,coeff_remez_number::value>::coeff());
         }
     };
 
@@ -153,7 +155,7 @@ namespace numeric{
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
         \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
     */
-    template<class T, std::size_t n = 20, class Solver = Remez_exp<T,n> >
+    template<class T, std::size_t n = coeff_remez_number::value, class Solver = Remez_exp<T,n> >
     struct Helper_exp{
         static inline T exp(T const& a){
              return Solver::exp(a);
