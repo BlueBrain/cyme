@@ -6,7 +6,8 @@
 #include "memory/block.hpp"
 #include "utils/timer.h"
 
-#define TYPE float
+#define TYPE double
+
 #define M 1024
 #define SIZE 8
 #define ORDER AoS
@@ -67,5 +68,5 @@ int main(int argc, char* argv[]){
     t2 = rdtsc();
     std::cout << " cycle aosoa " << t2 - t1 << std::endl;
 
- //   check(block_aos,block_aosoa);
+//    check(block_aos,block_aosoa);
 }

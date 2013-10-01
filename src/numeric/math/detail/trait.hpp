@@ -40,8 +40,8 @@ namespace numeric{
         typedef T                  value_type; 
         typedef value_type*        pointer; 
         typedef const pointer      const_pointer; 
-        typedef value_type&        reference;
-        typedef const reference    const_reference;
+        typedef value_type &       reference;
+        typedef value_type const & const_reference;
     };
 
     /*! \class template<typename T> simd_trait  

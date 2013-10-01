@@ -65,6 +65,13 @@ namespace numeric{
     inline typename simd_trait<double,memory::avx>::register_type _mm_sub<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::register_type xmm1){
         return (xmm0 = _mm256_sub_pd(xmm0, xmm1));
     };
+
+#ifdef __INTEL_COMPILER 
+    template<>
+    inline typename simd_trait<double,memory::avx>::register_type _mm_exp<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0){
+        return (xmm0 = _mm256_exp_pd(xmm0));
+    };
+#endif
     
 #ifdef __FMA__
     template<>
@@ -113,6 +120,14 @@ namespace numeric{
     inline typename simd_trait<float,memory::avx>::register_type _mm_sub<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::register_type xmm1){
         return (xmm0 = _mm256_sub_ps(xmm0, xmm1));
     };
+
+#ifdef  __INTEL_COMPILER 
+    template<>
+    inline typename simd_trait<float,memory::avx>::register_type _mm_exp<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0){
+        return (xmm0 = _mm256_exp_ps(xmm0));
+    };
+#endif
+
     
 #ifdef __FMA__
     template<>

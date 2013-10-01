@@ -152,6 +152,14 @@ namespace numeric{
         }
     };
 
+
+    template<class T, std::size_t n>
+    struct Constructor_exp{
+        static inline T exp(T const& a){
+            return exp_v(a);            
+        }
+    };    
+
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
         \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
     */

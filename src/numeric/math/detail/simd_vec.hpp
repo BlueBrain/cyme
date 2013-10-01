@@ -40,7 +40,7 @@ namespace numeric{
         typedef typename simd_trait<T,O>::pointer pointer;
         typedef typename simd_trait<T,O>::const_pointer const_pointer;
         typedef typename simd_trait<T,O>::register_type register_type;
-      
+
         inline explicit vec_simd(const value_type a = value_type()){
             xmm = _mm_load1<value_type,O>(xmm,a);
         }
@@ -81,7 +81,7 @@ namespace numeric{
             return *this;
         }
 
-        inline void store(const_pointer a) const{
+        inline void store(pointer a) const{
             _mm_store<value_type,O>(xmm,a);
         } 
 #ifdef __FMA__
@@ -95,6 +95,13 @@ namespace numeric{
 #endif
         register_type xmm;
     };
+
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> exp_v(const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(0.0);
+        nrv.xmm = _mm_exp<T,O>(rhs.xmm);
+        return nrv;
+    }
 
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator* (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){

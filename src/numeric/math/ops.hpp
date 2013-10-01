@@ -36,7 +36,6 @@ namespace numeric{
     inline exp(vec<T,O,R> const& a){
         return  Helper_exp<typename vec<T,O,R>::base_type >::exp(a.rep());
     }
-    
 } //end namespace
 
 #endif 
