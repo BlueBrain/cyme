@@ -38,7 +38,7 @@ namespace numeric{
     inline typename simd_trait<T,O>::register_type _mm_load(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::const_pointer a);
    
     template<class T, memory::simd O>
-    void _mm_store(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::pointer a);
+    inline void _mm_store(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::pointer a);
 
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_mul(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
