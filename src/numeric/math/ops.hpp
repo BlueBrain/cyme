@@ -32,10 +32,17 @@
 namespace numeric{
 
     template<class T, memory::simd O, class R>
-    vec<T,O,R>
-    inline exp(vec<T,O,R> const& a){
+    inline vec<T,O,R> e(vec<T,O,R> const& a){
         return  Helper_exp<typename vec<T,O,R>::base_type >::exp(a.rep());
     }
+
+    template<class T>
+    inline T e(T const&a ){
+        return exp(a);
+    }
+
+
+
 } //end namespace
 
 #endif 
