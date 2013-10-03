@@ -92,7 +92,7 @@ namespace numeric{
     }
    
     template<>
-    typename simd_trait<float,memory::avx>::register_type _mm_load<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>::const_pointer a){
+    typename simd_trait<float,memory::avx>::register_type _mm_load<float,memory::avx>(typename simd_trait<float,memory::avx>::register_type xmm0, typename simd_trait<float,memory::avx>    ::const_pointer a){
         return (xmm0 = _mm256_load_ps(a)); 
     }
 
