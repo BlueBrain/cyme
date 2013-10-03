@@ -26,14 +26,48 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_SIMD_WRAPPER_AVX_HPP
-#define COREBLURON_SIMD_WRAPPER_AVX_HPP
+#ifndef COREBLURON_SIMD_WRAPPER_QPX_HPP
+#define COREBLURON_SIMD_WRAPPER_QPX_HPP
 
-
-    #include <mass_simd.h> //for exp
+extern "C" vector4double expd4(vector4double);// link to the fortran one 
 
 namespace numeric{
-    // QPX does not support float 
+    // QPX does not support float
+    template<>
+    inline simd_trait<float,memory::qpx>::register_type _mm_load1<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::value_type a){
+        return (xmm0 = vec_lds(0L,&a)); 
+    }
+   
+    template<>
+    inline simd_trait<float,memory::qpx>::register_type _mm_load<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::const_pointer a){
+        return (xmm0 = vec_lda(0L,a)); 
+    }
+
+    template<>
+    inline void _mm_store<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::pointer a){
+        vec_sta(xmm0,0L,a);
+    }
+   
+    template<>
+    inline simd_trait<float,memory::qpx>::register_type _mm_mul<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
+        return (xmm0 = vec_mul(xmm0, xmm1));
+    };
+   
+    template<>
+    inline simd_trait<float,memory::qpx>::register_type _mm_div<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
+        return (xmm0 = vec_swdiv(xmm0, xmm1));
+    };
+   
+    template<>
+    inline simd_trait<float,memory::qpx>::register_type _mm_add<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
+        return (xmm0 = vec_add(xmm0, xmm1));
+    };
+
+    template<>
+    inline simd_trait<float,memory::qpx>::register_type _mm_exp<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
+        return (xmm0 = expd4(xmm0));
+    }
+    // QPX does not support double
     template<>
     inline simd_trait<double,memory::qpx>::register_type _mm_load1<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::value_type a){
         return (xmm0 = vec_lds(0L,&a)); 

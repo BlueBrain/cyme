@@ -154,7 +154,7 @@ namespace numeric{
 
 
     template<class T, std::size_t n>
-    struct Constructor_exp{
+    struct Vendor_exp{
         static inline T exp(T const& a){
             return exp_v(a);            
         }

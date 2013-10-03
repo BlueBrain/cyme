@@ -36,7 +36,7 @@
 #endif
 
 #ifdef _ARCH_QP
-#include "utils/A2_inlines.h"
+//#include "utils/A2_inlines.h"
 
 static __inline__ unsigned long long rdtsc(void) {
   unsigned long long int result=0;
@@ -56,7 +56,7 @@ static __inline__ unsigned long long rdtsc(void) {
 
   return(result);
 }
-
+/*
 class timer {
   public:
     timer() {
@@ -78,7 +78,7 @@ class timer {
   private:
     unsigned long long int t1, t2;
 };
-
+*/
 #endif
 
 #ifdef __x86_64__

@@ -56,7 +56,112 @@ namespace numeric{
     // no C++ 11, so no constexpr into structure for double/float, ^.^ just partial specialization
     template<class T, std::size_t n>
     struct coeff_remez;
+/*
+    template<class T>
+    struct coeff_remez<T,0>{
+        constexpr static  typename remez_trait<T>::value_type value = 1.000000953288283335452191461655224410237;
+    };
     
+    template<class T>
+    struct coeff_remez<T,1>{
+        constexpr static  typename remez_trait<T>::value_type value = 9.999987386107006669941961264349482393695e-1;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,2>{
+        constexpr static  typename remez_trait<T>::value_type value = 4.999958838139845502002270787636339014924e-1;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,3>{
+        constexpr static  typename remez_trait<T>::value_type value = 1.666686904005461957579197011816065192715e-1;
+    };
+
+    template<class T>
+    struct coeff_remez<T,4>{
+        constexpr static  typename remez_trait<T>::value_type value = 4.166950043813903108603707567016329683468e-2;
+    };
+
+    template<class T>
+    struct coeff_remez<T,5>{
+        constexpr static  typename remez_trait<T>::value_type value = 8.332279835011092412371558098627564052965e-3;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,6>{
+        constexpr static  typename remez_trait<T>::value_type value = 1.388174402760494398109623056452802191184e-3;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,7>{
+        constexpr static  typename remez_trait<T>::value_type value = 1.986723355158949957796384995837872477569e-4;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,8>{
+        constexpr static  typename remez_trait<T>::value_type value = 2.488281528091228796914932062104412021000e-5;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,9>{
+        constexpr static  typename remez_trait<T>::value_type value = 2.721444948692314358199963677469028805934e-6;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,10>{
+        constexpr static  typename remez_trait<T>::value_type value = 2.717140499194528339405001244995537746744e-7;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,11>{
+        constexpr static  typename remez_trait<T>::value_type value = 2.756733556244288109757183650072746680348e-8;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,12>{
+        constexpr static  typename remez_trait<T>::value_type value = 2.070417462579269627749603630995991796024e-9;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,13>{
+        constexpr static  typename remez_trait<T>::value_type value = 6.184288350463214213567547267865497876970e-11;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,14>{
+        constexpr static  typename remez_trait<T>::value_type value = 2.046160013036850218452969327668798874891e-11;
+    };
+
+    template<class T>
+    struct coeff_remez<T,15>{
+        constexpr static  typename remez_trait<T>::value_type value = 2.446352603577699100102834867635630630022e-12;
+    };
+
+    template<class T>
+    struct coeff_remez<T,16>{
+        constexpr static  typename remez_trait<T>::value_type value = 2.718484761673811998575811326820787730345e-13;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,17>{
+        constexpr static  typename remez_trait<T>::value_type value = 5.429682151023236105458123297693967405137e-15;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,18>{
+        constexpr static  typename remez_trait<T>::value_type value = -3.473328569109608198516933463416425515192e-15;
+    };
+    
+    template<class T>
+    struct coeff_remez<T,19>{
+        constexpr static  typename remez_trait<T>::value_type value = -2.986053770607522240220173985268369196403e-16;
+    };
+
+    template<class T>
+    struct coeff_remez<T,20>{
+        constexpr static  typename remez_trait<T>::value_type value = 9.972590824455150104899742103044752031096e-18;
+    };
+*/    
     template<class T>
     struct coeff_remez<T,0>{
         const static inline typename remez_trait<T>::value_type coeff() {return 1.000000953288283335452191461655224410237;}

@@ -30,12 +30,12 @@
 #define COREBLURON_TRAIT_POWERPC64_IPP
 
 namespace numeric{
-/*
+
     template <>
     struct simd_trait<float,memory::qpx> : trait<float>{
-        typedef vector8float register_type;
+        typedef vector4double register_type;
     };
-  */ 
+   
     template <>
     struct simd_trait<double,memory::qpx> : trait<double>{
         typedef vector4double register_type;
