@@ -60,8 +60,8 @@ void print(long t1, long t2, std::string name){
 // no mpl it will not compile on bgq
 int main(int argc, char* argv[]){
 
-    memory::block<float,8,1024, memory::AoS> block_aos;
-    memory::block<float,8,1024, memory::AoSoA> block_aosoa;
+    memory::block<double,8,1024, memory::AoS> block_aos;
+    memory::block<double,8,1024, memory::AoSoA> block_aosoa;
 
     srand(-1);
 

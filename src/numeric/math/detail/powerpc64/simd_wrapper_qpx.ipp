@@ -64,6 +64,11 @@ namespace numeric{
     };
 
     template<>
+    inline simd_trait<float,memory::qpx>::register_type _mm_sub<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
+        return (xmm0 = vec_sub(xmm0, xmm1));
+    };
+
+    template<>
     inline simd_trait<float,memory::qpx>::register_type _mm_exp<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
         return (xmm0 = expd4(xmm0));
     }
@@ -96,6 +101,11 @@ namespace numeric{
     template<>
     inline simd_trait<double,memory::qpx>::register_type _mm_add<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
         return (xmm0 = vec_add(xmm0, xmm1));
+    };
+
+    template<>
+    inline simd_trait<double,memory::qpx>::register_type _mm_sub<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
+        return (xmm0 = vec_sub(xmm0, xmm1));
     };
 
     template<>

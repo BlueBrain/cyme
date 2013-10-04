@@ -44,6 +44,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 option (COREBLURON_TESTS "Build the COREBLURONE regression tests" OFF)
 set(SIMD_TECH sse2 CACHE STRING "SIMD technology: sse2,avx,qpx")
 option (COREBLURON_FMA "support FMA, very experiemental the parser is not still ready, it can not compile" OFF)
+option (COREBLURON_MATH "support lmass lmass_simd from IBM" OFF)
 add_definitions(-m${SIMD_TECH} "-D__COREBLURON_SIMD_VALUE__=${SIMD_TECH}")
 
 ########################################################################
@@ -56,6 +57,22 @@ if(COREBLURON_FMA)
    add_definitions(-mfma) 
 endif(COREBLURON_FMA)
 
+
+########################################################################
+#
+# math library 
+#
+########################################################################
+if(COREBLURON_MATH)
+find_library(MASS_LIBRARY
+             NAMES mass
+             PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
+
+find_library(SIMD_MASS_LIBRARY
+             NAMES mass_simd
+             PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
+endif(COREBLURON_MATH)
+
 ########################################################################
 #
 # Find dependencies
@@ -63,6 +80,7 @@ endif(COREBLURON_FMA)
 ########################################################################
 
 #this depends of the associated module
+set(Boost_NO_SYSTEM_PATHS TRUE)
 set(BOOST_DIR $ENV{BOOST_DIR} CACHE PATH "Path to the Boost installation (or to the Boost source)")
 set(BOOST_ROOT ${BOOST_DIR})
 #find_package (Boost COMPONENTS unit_test_framework system chrono)

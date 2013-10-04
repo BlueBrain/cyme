@@ -28,12 +28,9 @@
 #ifndef COREBLURON_BLOCK_HPP 
 #define COREBLURON_BLOCK_HPP
 
-
 #include "memory/detail/simd.h"
 #include "memory/detail/array.hpp" // copy of boost::array + align
 #include "memory/detail/storage.hpp"
-
-#include <boost/assert.hpp>
 
 namespace memory{
 
