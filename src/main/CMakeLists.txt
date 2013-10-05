@@ -9,6 +9,9 @@ if(COREBLURON_MATH)
 else(COREBLURON_MATH)
     target_link_libraries(main  )
 endif(COREBLURON_MATH)
+
+#add_executable(main_asm main.cpp)
+#SET_TARGET_PROPERTIES(main_asm PROPERTIES COMPILE_FLAGS "-S ")
 #target_link_libraries(main  -lrt)
 
 #add_executable(bench bench.cpp)

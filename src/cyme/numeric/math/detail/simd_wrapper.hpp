@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,39 +26,72 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_O_WRAPPER_H
-#define COREBLURON_O_WRAPPER_H
+#ifndef CYME_O_WRAPPER_H
+#define CYME_O_WRAPPER_H
 
 namespace numeric{
 
+    /**
+    \brief free function (wrapper) for loading basic type (double,into) into register
+    */
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_load1(typename simd_trait<T,O>::register_type xmm0, const typename simd_trait<T,O>::value_type a);
    
+    /**
+    \brief free function (wrapper) for loading data from memory (pointer) into register
+    \warning The data must be  aligned else segfault
+    */
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_load(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::const_pointer a);
-   
+
+    /**
+    \brief free function (wrapper) for storing the data in the memory (pointer)
+    \warning The data must be  aligned else segfault
+    */   
     template<class T, memory::simd O>
     inline void _mm_store(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::pointer a);
 
+    /**
+    \brief free function (wrapper) for multiplying two registers
+    */
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_mul(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
-   
+
+    /**
+    \brief free function (wrapper) for divising two registers
+    */
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_div(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
-   
+
+    /**
+    \brief free function (wrapper) for adding two registers
+    */
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_add(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
 
+    /**
+    \brief free function (wrapper) for substracting two registers
+    */
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_sub(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1); //xmm0 - xmm1
 
+    /**
+    \brief free function (wrapper) for calculating the exp of a vector
+    \warning this function is only works if the wrapper Helper_exp is setup to Vendor_exp
+    */
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_exp(typename simd_trait<T,O>::register_type xmm0); // Vendor (IBM/Intel) only 
 
 #ifdef __FMA__ // This macro is a compiler one
+    /**
+    \brief free function (wrapper) for the FMA bewteen three registers
+    */
     template<class T, memory::simd O> // a*b+c
     inline typename simd_trait<T,O>::register_type _mm_fma(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
 
+    /**
+    \brief free function (wrapper) for the FMS bewteen three registers
+    */
     template<class T, memory::simd O> // a*b-c
     inline typename simd_trait<T,O>::register_type _mm_fms(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
 #endif

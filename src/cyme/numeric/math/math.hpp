@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,38 +26,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_TRAIT_HPP
-#define COREBLURON_TRAIT_HPP
+#ifndef CYME_MATH_HPP
+#define CYME_MATH_HPP
 
-#include "memory/detail/simd.h"
-
-namespace numeric{
-    /*! \class template<typename T> trait  
-        \brief Basic trait to avoid dupliation into simd_trait
-    */
-    template <typename T> // TO DO add a safety on the type float and double only
-    struct trait{
-        typedef T                  value_type; 
-        typedef value_type*        pointer; 
-        typedef const pointer      const_pointer; 
-        typedef value_type &       reference;
-        typedef value_type const & const_reference;
-    };
-
-    /*! \class template<typename T> simd_trait  
-        \brief This trait class associates basic type (float and double) to corresponding SIMD register (__m128, __m128d - 128-bit), to allow a generic vectorial exponential
-    */
-    template <typename T, memory::simd O>
-    struct simd_trait : public trait<T>{};
-}
-
-#ifdef __x86_64__
-#include "numeric/math/detail/x86/trait_x86.ipp"
-#endif
-
-#ifdef _ARCH_QP
-#include "numeric/math/detail/powerpc64/trait_powerpc64.ipp"
-#endif
+#include "cstring" // for memset gcc
+#include "numeric/math/detail/simd_vec.hpp"
+#include "numeric/math/detail/expr_vec.hpp"
+#include "numeric/math/pow.hpp"
+#include "numeric/math/fac.hpp"
+#include "numeric/math/exp.hpp"
+#include "numeric/math/ops.hpp"
 
 #endif
-

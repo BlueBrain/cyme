@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,19 +26,51 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_TRAIT_POWERPC64_IPP
-#define COREBLURON_TRAIT_POWERPC64_IPP
+#ifndef CYME_POW_HPP
+#define CYME_POW_HPP
+
 
 namespace numeric{
+    /**
+        \brief This class helps the calculation of the pow function 
+    */
+    template<class T, std::size_t n>
+    struct helper_pow{
+        /**  fn static inline T pow(T const& a)
+        \brief calculate the pow of T 
+        \param T const& a 
+        */
+        inline static T pow(T const& a){
+            return a*helper_pow<T,n-1>::pow(a);
+        }
+    };
 
-    template <>
-    struct simd_trait<float,memory::qpx> : trait<float>{
-        typedef vector4double register_type;
+    /* \cond I do not need this part in the doc*/
+    template<class T>
+    struct helper_pow<T,0>{
+        inline static T pow(T const& a){
+            return T(1); //1 for basic type, xmm registers set up to 1 for simd
+        }
     };
-   
-    template <>
-    struct simd_trait<double,memory::qpx> : trait<double>{
-        typedef vector4double register_type;
+    /* \endcond */
+    
+    /** 
+        \brief clean wrapper of the pow function 
+    */
+    template<class T, std::size_t n>
+    inline T pow(T const& a){
+        return helper_pow<T,n>::pow(a);
     };
-}
-#endif
+
+    /**  fn inline T pow(T const& a)
+    \brief calculate the pow of T, generic  
+    \param T const& a 
+    */
+    template<class T, std::size_t n>
+    inline void pow(T& a, T const& b){
+        a = pow<T,n>(b); 
+    };
+
+} //end namespace 
+
+#endif 

@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,15 +26,29 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_MATH_HPP
-#define COREBLURON_MATH_HPP
+#ifndef CYME_OPS_HPP
+#define CYME_OPS_HPP
 
-#include "cstring" // for memset gcc
-#include "numeric/math/detail/simd_vec.hpp"
-#include "numeric/math/detail/expr_vec.hpp"
-#include "numeric/math/pow.hpp"
-#include "numeric/math/fac.hpp"
-#include "numeric/math/exp.hpp"
-#include "numeric/math/ops.hpp"
+namespace numeric{
+    /**
+       \brief Basic wrapper for the exp function vectorial
+    */
+    template<class T, memory::simd O, class R>
+    inline vec<T,O,R> e(vec<T,O,R> const& a){
+        return  Helper_exp<typename vec<T,O,R>::base_type >::exp(a.rep());
+    }
 
-#endif
+    /**
+       \brief Basic wrapper for the exp function serial
+    */
+    template<class T>
+    inline T e(T const&a ){
+        return exp(a);
+    }
+
+
+
+} //end namespace
+
+#endif 
+

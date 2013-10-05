@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,49 +26,45 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_FACTORIAL_HPP
-#define COREBLURON_FACTORIAL_HPP
+#ifndef CYME_TRAIT_X86_IPP
+#define CYME_TRAIT_X86_IPP
+
+#include <immintrin.h> //type SIMD, memory::sse and memory::avx
 
 namespace numeric{
-    /** fn template<std::size_t> inline std::size_t factorial()
-    \brief Calculate the factorial of n 
-    \param none
+
+    /** \cond I do not need this part in the doc
+        \brief Specialization trait for float with SSE SIMD 
     */
-    template<std::size_t n>
-    inline std::size_t factorial(){
-        return n*factorial<n-1>();
-    }
-
-    /* \cond I do not need this part in the doc*/
-    template<>
-    inline std::size_t factorial<0>(){
-        return 1; 
-    }
-    /* \endcond */
-
-    /*! \class template<std::size_t m, std::size_t n> helper_quotient_factorial  
-        \brief This class helps the quotient_factorial function for partial spercialization, as partial specialization is not allowed on a "basic" template function
-        template parameter must respect m < n
+    template <>
+    struct simd_trait<float, memory::sse2> : trait<float>{
+        typedef __m128 register_type;
+    };
+   
+    /**
+        \brief Specialization trait for double with SSE SIMD
     */
-    template<std::size_t m, std::size_t n>
-    struct helper_quotient_factorial{
-       /**  fn static inline std::size_t quotient_factorial()
-       \brief calculate the quotient of two factorial n!/m! with m < n 
-       \param none
-       */
-       static inline std::size_t quotient_factorial(){
-           return n*helper_quotient_factorial<m,n-1>::quotient_factorial();
-       }
+    template <>
+    struct simd_trait<double, memory::sse2> : trait<double>{
+        typedef __m128d register_type;
     };
-
-    /* \cond I do not need this part in the doc*/
-    template<std::size_t m>
-    struct helper_quotient_factorial<m,m>{
-       static inline std::size_t quotient_factorial(){
-           return 1;
-       }
+#ifdef __AVX__ 
+    /** 
+        \brief Specialization trait for float with AVX SIMD 
+    */
+    template <>
+    struct simd_trait<float,memory::avx> : trait<float>{
+        typedef __m256 register_type;
     };
-    /* \endcond */
-} //end namespace 
-
-#endif 
+   
+    /**
+        \brief Specialization trait for double with AVX SIMD
+    */
+    template <>
+    struct simd_trait<double,memory::avx> : trait<double>{
+        typedef __m256d register_type;
+    };
+#endif
+    /** \endcond I do not need this part in the doc */
+}
+#endif

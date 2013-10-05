@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,17 +26,21 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_STORAGE_HPP 
-#define COREBLURON_STORAGE_HPP
+#ifndef CYME_STORAGE_HPP 
+#define CYME_STORAGE_HPP
 
 #include "numeric/math/detail/simd_vec.hpp"
 #include "numeric/math/detail/expr_vec.hpp"
 
 namespace memory{
-
+     /* \cond I do not need this part in the doc*/
      template <class T, std::size_t Size, order O>
      class storage;
+     /* \endcond I do not need this part in the doc*/
     
+     /**
+     \brief subblock of memory needed by the block class, AoS specialization
+     */
      template <class T, std::size_t Size>
      class storage<T,Size,AoS>{
          public:
@@ -47,18 +51,42 @@ namespace memory{
          typedef const pointer*    const_pointer;
          typedef value_type&       reference;
          typedef const value_type& const_reference;
-         
+
+         /**
+         \brief Default constructor, the subblock is set up to 0
+         */
          storage();
+         /**
+         \brief Default constructor, the subblock is set up to a desired value
+         */
          explicit storage(value_type value);
+         /**
+         \brief write access operator, only use to a direct access to the datas
+         */
          inline reference operator()(size_type i);
+         /**
+         \brief read access operator, only use to a direct access to the datas
+         */
          inline const_reference operator()(size_type i) const;
+         /**
+         \brief write access operator, only use by the iterator when calculations are performed
+         */
          inline reference operator[](size_type i);
+         /**
+         \brief read access operator, only use by the iterator when calculations are performed
+         */
          inline const_reference operator[](size_type i) const;
 
          private:
+         /**
+         \brief a basic array is the container
+         */
          value_type data[Size];
      };
     
+     /**
+     \brief subblock of memory needed by the block class, AoSoA specialization
+     */
      template <class T, std::size_t Size>
      class storage<T,Size,AoSoA>{
          public:
@@ -68,13 +96,31 @@ namespace memory{
          typedef value_type*       pointer;
          typedef const pointer*    const_pointer;
          typedef value_type&       reference;
-
          typedef const value_type& const_reference;
+
+         /**
+         \brief Default constructor, the subblock is set up to 0
+         */
          storage();
+         /**
+         \brief Default constructor, the subblock is set up to a desired value
+         */
          explicit storage(value_type value);
+         /**
+         \brief write access operator, only use to a direct access to the datas
+         */
          inline reference operator()(size_type i);
-         inline const_reference operator()(size_type i) const;         
+         /**
+         \brief read access operator, only use to a direct access to the datas
+         */
+         inline const_reference operator()(size_type i) const;
+         /**
+         \brief write access operator, only use by the iterator when calculations are performed
+         */
          inline numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i);
+         /**
+         \brief read access operator, only use by the iterator when calculations are performed
+         */
          inline const numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
 
          

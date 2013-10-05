@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,51 +26,49 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_POW_HPP
-#define COREBLURON_POW_HPP
-
+#ifndef CYME_FACTORIAL_HPP
+#define CYME_FACTORIAL_HPP
 
 namespace numeric{
-    /*! \class template<std::size_t T, std::size_t n> helper_pow  
-        \brief This class helps the calculation of the pow function 
+    /** 
+    \brief Calculate the factorial of n 
+    \param none
     */
-    template<class T, std::size_t n>
-    struct helper_pow{
-        /**  fn static inline T pow(T const& a)
-        \brief calculate the pow of T 
-        \param T const& a 
-        */
-        inline static T pow(T const& a){
-            return a*helper_pow<T,n-1>::pow(a);
-        }
+    template<std::size_t n>
+    inline std::size_t factorial(){
+        return n*factorial<n-1>();
+    }
+
+    /* \cond I do not need this part in the doc*/
+    template<>
+    inline std::size_t factorial<0>(){
+        return 1; 
+    }
+    /* \endcond */
+
+    /** 
+        \brief This class helps the quotient_factorial function for partial spercialization, as partial specialization is not allowed on a "basic" template function
+        template parameter must respect m < n
+    */
+    template<std::size_t m, std::size_t n>
+    struct helper_quotient_factorial{
+       /**  fn static inline std::size_t quotient_factorial()
+       \brief calculate the quotient of two factorial n!/m! with m < n 
+       \param none
+       */
+       static inline std::size_t quotient_factorial(){
+           return n*helper_quotient_factorial<m,n-1>::quotient_factorial();
+       }
     };
 
     /* \cond I do not need this part in the doc*/
-    template<class T>
-    struct helper_pow<T,0>{
-        inline static T pow(T const& a){
-            return T(1); //1 for basic type, xmm registers set up to 1 for simd
-        }
+    template<std::size_t m>
+    struct helper_quotient_factorial<m,m>{
+       static inline std::size_t quotient_factorial(){
+           return 1;
+       }
     };
     /* \endcond */
-    
-    /*! \class template<std::size_t T, std::size_t n> pow  
-        \brief clean wrapper of the pow function 
-    */
-    template<class T, std::size_t n>
-    inline T pow(T const& a){
-        return helper_pow<T,n>::pow(a);
-    };
-
-    /**  fn inline T pow(T const& a)
-    \brief calculate the pow of T, generic  
-    \param T const& a 
-    */
-    template<class T, std::size_t n>
-    inline void pow(T& a, T const& b){
-        a = pow<T,n>(b); 
-    };
-
 } //end namespace 
 
 #endif 

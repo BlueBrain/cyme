@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_STORAGE_IPP 
-#define COREBLURON_STORAGE_IPP
+#ifndef CYME_STORAGE_IPP 
+#define CYME_STORAGE_IPP
 namespace memory{
 
     /* --------------------------------------- AOS --------------------------------------- */

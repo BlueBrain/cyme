@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_SIMD_WRAPPER_SSE_HPP
-#define COREBLURON_SIMD_WRAPPER_SSE_HPP
+#ifndef CYME_SIMD_WRAPPER_SSE_HPP
+#define CYME_SIMD_WRAPPER_SSE_HPP
 
 namespace numeric{
 

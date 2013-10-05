@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_TEST_HEADER_HPP
-#define COREBLURON_TEST_HEADER_HPP
+#ifndef CYME_TEST_HEADER_HPP
+#define CYME_TEST_HEADER_HPP
 
 #define BOOST_TEST_MODULE math
 //#define BOOST_TEST_MAIN  
@@ -49,7 +49,7 @@
 
 #define RELATIVE_ERROR 0.0001
 
-namespace corebluron {
+namespace cyme {
     namespace test {
 
     static boost::random::uniform_real_distribution<float>    RandomDouble = boost::random::uniform_real_distribution<float>(-5,5); 
@@ -150,6 +150,6 @@ namespace corebluron {
 
 
     } // end namespace test
-} // end namespace corebluron
+} // end namespace CYME
 
-#endif // COREBLURON_TEST_HEADER_HPP
+#endif // CYME_TEST_HEADER_HPP

@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,14 +26,18 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_SIMD_VEC_HPP
-#define COREBLURON_SIMD_VEC_HPP
+#ifndef CYME_SIMD_VEC_HPP
+#define CYME_SIMD_VEC_HPP
 
 #include "numeric/math/detail/trait.hpp"
 #include "numeric/math/detail/simd_wrapper.hpp"
 
 namespace numeric{
 
+    /**
+      \brief Vector computation class. The SIMD register (hardware) is encapsulated. It is generic, it can be SEE, AVX or QPX.
+      the type is given by the trait class (simd_trait)
+    */
     template<class T,memory::simd O>
     struct vec_simd{
         typedef typename simd_trait<T,O>::value_type value_type;
@@ -41,61 +45,97 @@ namespace numeric{
         typedef typename simd_trait<T,O>::const_pointer const_pointer;
         typedef typename simd_trait<T,O>::register_type register_type;
 
+        /**
+         \brief construtor desired value else 0, note copy constructor generated automaticaly. Only used for constant.
+         */
         inline explicit vec_simd(const value_type a = value_type()){
             xmm = _mm_load1<value_type,O>(xmm,a);
         }
 
-        inline vec_simd(vec_simd const& a){
-            xmm = a.xmm;
-        }
-
+        /**
+         \brief construtor from a pointer
+         */
         inline vec_simd(const_pointer a){
             xmm = _mm_load<value_type,O>(xmm,a);
         }
 
+        /**
+         \brief bracket operator called by the parser (expr_vec)
+         */
         inline vec_simd& operator()(){
             return *this;
         }
 
+        /**
+         \brief bracket operator called by the parser (expr_vec)
+         */
         inline const vec_simd& operator()() const{
             return *this;
         }
 
+        /**
+         \brief operator *= between two vectors
+         */
         inline vec_simd& operator *=(const vec_simd& rhs){
             xmm = _mm_mul<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
-        
+
+        /**
+         \brief operator /= between two vectors
+         */
         inline vec_simd& operator /=(const vec_simd& rhs){
             xmm = _mm_div<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
         
+        /**
+        \brief operator += between two vectors
+        */
         inline vec_simd& operator +=(const vec_simd& rhs){
             xmm = _mm_add<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
 
+        /**
+         \brief operator -= between two vectors
+         */
         inline vec_simd& operator -=(const vec_simd& rhs){
             xmm = _mm_sub<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
-
+        
+        /**
+         \brief Save the value into the register into the memory
+         */
         inline void store(pointer a) const{
             _mm_store<value_type,O>(xmm,a);
         } 
 #ifdef __FMA__
+        /**
+         \brief FMA operator experimantal: fix the parser
+         */
         inline void ma(const vec_simd& lhs, const vec_simd& rhs){
             xmm = _mm_fma<value_type,O>(xmm,lhs.xmm,rhs.xmm);
         }
 
+        /**
+         \brief FMS operator experimantal: fix the parser
+         */
         inline void ms(const vec_simd& lhs, const vec_simd& rhs){
             xmm = _mm_fms<value_type,O>(xmm,lhs.xmm,rhs.xmm);
         }
 #endif
+
+         /**
+         \brief hardware Register
+         */
         register_type xmm;
     };
 
+    /**
+    \brief free function for call the vendor exponential, this function uses the return value optimization
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> exp_v(const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(0.0);
@@ -103,6 +143,9 @@ namespace numeric{
         return nrv;
     }
 
+    /**
+    \brief free function * operator between two vectors, this function uses the return value optimization
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator* (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);   // named return value optimization
@@ -110,6 +153,9 @@ namespace numeric{
         return nrv;
     }
 
+    /**
+    \brief free function * operator between a vector and a int, used only for my exp, this function uses the return value optimization
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator* (int lhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
@@ -117,6 +163,9 @@ namespace numeric{
         return nrv;
     }
 
+    /**
+    \brief free function / operator between two vectors and a int, used only for my exp, this function uses the return value optimization
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
@@ -124,6 +173,9 @@ namespace numeric{
         return nrv;
     }
 
+    /**
+    \brief free function / operator between a vectors and a int, this function uses the return value optimization
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const std::size_t rhs){
         vec_simd<T,O> nrv(lhs);
@@ -132,13 +184,18 @@ namespace numeric{
         return nrv;
     }
     
+    /**
+    \brief free function + operator between two vectorsm, this function uses the return value optimization
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator+ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
         nrv += rhs;
         return nrv;
     }
-
+    /**
+    \brief free function - operator between two vectorsm, this function uses the return value optimization
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator- (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
@@ -147,6 +204,9 @@ namespace numeric{
     }
 
 #ifdef __FMA__
+    /**
+    \brief free function FMA between 3 vectors, experimental
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> muladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
@@ -154,6 +214,9 @@ namespace numeric{
         return nrv;
     }
 
+    /**
+    \brief free function FMS between 3 vectors, experimental
+    */
     template<class T,memory::simd O>
     inline vec_simd<T,O> mulsub(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
@@ -161,7 +224,6 @@ namespace numeric{
         return nrv;
     }
 #endif
-
 
 } //end namespace
 

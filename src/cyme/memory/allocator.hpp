@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_ALLOCATOR_HPP 
-#define COREBLURON_ALLOCATOR_HPP
+#ifndef CYME_ALLOCATOR_HPP 
+#define CYME_ALLOCATOR_HPP
 
 #include <assert.h> 
 #include <stdlib.h> // POSIX, size_t is inside
@@ -35,6 +35,10 @@
 
 namespace memory{
 
+   /**
+        \brief This class encapsulated the function allocate and deallocate for the memory allocation. I used POSX 
+        to allign on special memory bound.
+    */
     template<memory::simd O>
     class Align_POSIX{
     public:
@@ -59,7 +63,12 @@ namespace memory{
             free(ptr);
         }
     };
-
+    
+    /**
+        \brief this class is an allocator for STL container especailly std::vector, I garanty the allocated buffer is bound 
+        on 8-16 or 32 byte memory. It is a copy past from standard allocator, the only difference is the functions allocate
+        and deallocate where I call my own function with the help of the policy pattern
+    */
     template<class T, class Policy = Align_POSIX<memory::__GETSIMD__()> >
     class Allocator : private Policy {
         using Policy::allocate_policy;

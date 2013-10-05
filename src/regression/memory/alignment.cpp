@@ -4,7 +4,7 @@
 
 #include "memory/allocator.hpp" 
 
-using namespace corebluron::test;
+using namespace cyme::test;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(alignement_test, T, full_test_types)
 {

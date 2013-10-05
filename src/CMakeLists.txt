@@ -28,9 +28,17 @@ endif(NOT MACHINE_CONFIG)
 #
 ########################################################################
 
-project (corebluron)
-set (COREBLURON_VERSION_MAJOR 0)
-set (COREBLURON_VERSION_MINOR 1)
+project (cyme) 
+set (CYME_VERSION_MAJOR 0)
+set (CYME_VERSION_MINOR 1)
+	
+########################################################################
+#
+#
+########################################################################
+
+include_directories ("${PROJECT_SOURCE_DIR}/cyme")
+
 
 ########################################################################
 #
@@ -41,11 +49,12 @@ set (COREBLURON_VERSION_MINOR 1)
 # Look for modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-option (COREBLURON_TESTS "Build the COREBLURONE regression tests" OFF)
+option (CYME_TESTS "Build the CYMEE regression tests" OFF)
 set(SIMD_TECH sse2 CACHE STRING "SIMD technology: sse2,avx,qpx")
-option (COREBLURON_FMA "support FMA, very experiemental the parser is not still ready, it can not compile" OFF)
-option (COREBLURON_MATH "support lmass lmass_simd from IBM" OFF)
-add_definitions(-m${SIMD_TECH} "-D__COREBLURON_SIMD_VALUE__=${SIMD_TECH}")
+option (CYME_FMA "support FMA, very experiemental the parser is not still ready, it can not compile" OFF)
+option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
+option (CYME_DOCUMENTATION "Use Doxygen to create the HTML/LATEX based API documentation" OFF)
+add_definitions(-m${SIMD_TECH} "-D__CYME_SIMD_VALUE__=${SIMD_TECH}")
 
 ########################################################################
 #
@@ -53,9 +62,9 @@ add_definitions(-m${SIMD_TECH} "-D__COREBLURON_SIMD_VALUE__=${SIMD_TECH}")
 #
 ########################################################################
 
-if(COREBLURON_FMA)
+if(CYME_FMA)
    add_definitions(-mfma) 
-endif(COREBLURON_FMA)
+endif(CYME_FMA)
 
 
 ########################################################################
@@ -63,7 +72,7 @@ endif(COREBLURON_FMA)
 # math library 
 #
 ########################################################################
-if(COREBLURON_MATH)
+if(CYME_MATH)
 find_library(MASS_LIBRARY
              NAMES mass
              PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
@@ -71,7 +80,7 @@ find_library(MASS_LIBRARY
 find_library(SIMD_MASS_LIBRARY
              NAMES mass_simd
              PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
-endif(COREBLURON_MATH)
+endif(CYME_MATH)
 
 ########################################################################
 #
@@ -108,11 +117,37 @@ add_subdirectory( main/ )
 #
 ########################################################################
 
-if(COREBLURON_TESTS)
+if(CYME_TESTS)
     include(CTest)
     enable_testing()
     set(BUILDNAME "${PROJECT_VERSION}" CACHE STRING "Name of build on the dashboard")
       mark_as_advanced(BUILDNAME)
     add_subdirectory (regression)
-endif(COREBLURON_TESTS)
+endif(CYME_TESTS)
+
+########################################################################
+#
+# Documentation
+#
+########################################################################
+
+if(CYME_DOCUMENTATION)
+  FIND_PACKAGE(Doxygen)
+  if (NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR 
+      "Doxygen is needed to build the documentation. Please install it correctly")
+  endif()
+  #-- Configure the Template Doxyfile for our specific project
+  configure_file(Doxyfile.in 
+                 ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
+  #-- Add a custom target to run Doxygen when ever the project is built
+  add_custom_target (doc   
+                     COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+                     SOURCES ${PROJECT_BINARY_DIR}/Doxyfile)
+  # IF you want the documentation to be generated EVERY time you build the project
+  # then add the 'ALL' keyword after "doc" from the above command.
+endif()
+
+
+
 

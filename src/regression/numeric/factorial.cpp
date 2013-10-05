@@ -1,6 +1,6 @@
 #include <regression/test_header.hpp>
 
-using namespace corebluron::test;
+using namespace cyme::test;
 
 BOOST_AUTO_TEST_CASE(factorial_zero){
    std::size_t a(1),b;

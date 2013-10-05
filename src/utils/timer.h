@@ -1,5 +1,5 @@
 /*
- * corebluron, license
+ * CYME, license
  * 
  * timothee ewart - swiss federal institute of technology in lausanne 
  * 
@@ -25,8 +25,8 @@
  * arising from, out of or in connection with the software or the use or other
  * dealings in the software.
  */
-#ifndef COREBLURON_TIMER_H 
-#define COREBLURON_TIMER_H
+#ifndef CYME_TIMER_H 
+#define CYME_TIMER_H
 
 #include <time.h>
 

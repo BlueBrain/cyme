@@ -1,6 +1,6 @@
 #include <regression/test_header.hpp>
 
-using namespace corebluron::test;
+using namespace cyme::test;
 
 #define TYPE typename T::value_type
 #define SIZE T::size

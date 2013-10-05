@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  *
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne
  *
@@ -26,11 +26,14 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_EXPR_VEC_ALGO_HPP
-#define COREBLURON_EXPR_VEC_ALGO_HPP
+#ifndef CYME_EXPR_VEC_ALGO_HPP
+#define CYME_EXPR_VEC_ALGO_HPP
 
 namespace numeric{
+/** \cond I do not need this part in the doc */
 
+    /* this is the key of parser, describe every possibilities */
+   
     //addition of two vectors v+w
     template<class T, memory::simd O, class R1, class R2>
     vec<T,O, vec_add<T,O,R1,R2> >
@@ -201,6 +204,7 @@ namespace numeric{
     operator /(vec<T,O,R2> const& b, int const& s){
         return operator*(static_cast<T>(s),b);
     }
+/** \endcond I do not need this part in the doc */
 }
 
 #endif

@@ -31,6 +31,8 @@
 
 // this file is just a copy past of the boost array, I need to align to get better performance
 
+    /* \cond I do not need this part in the doc*/
+
 #ifndef BOOST_ARRAY_HPP
 #define BOOST_ARRAY_HPP
 
@@ -451,3 +453,5 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
 #endif 
 
 #endif /*BOOST_ARRAY_HPP*/
+
+    /* \endcond I do not need this part in the doc*/

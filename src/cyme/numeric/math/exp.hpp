@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_EXP_HPP
-#define COREBLURON_EXP_HPP
+#ifndef CYME_EXP_HPP
+#define CYME_EXP_HPP
 
 #include <math.h>  
 
@@ -35,7 +35,7 @@
 
 namespace numeric{
 
-    /*! \class template<std::size_t T, std::size_t n> helper_exp  
+    /**
         \brief This class implements the exp function based on the definition of the mathematical series, the template parameter n
         fixes the limit of the development, in practice n=20 is a maximum. For larger n, overflow accurs when we calculate the factorial.
     */
@@ -55,7 +55,7 @@ namespace numeric{
     };
     /* \endcond */
 
-    /*! \class template<std::size_t T, std::size_t p, std::size_t q. std::size_t i> helper_Pade_numerateur  
+    /**
         \brief This class implements the numerator of the Pade Approximant of the exponential function 
     */
     template<class T, std::size_t p, std::size_t q, std::size_t i>
@@ -80,7 +80,7 @@ namespace numeric{
     };
     /* \endcond */
 
-    /*! \class template<std::size_t T, std::size_t p, std::size_t q. std::size_t i> helper_Pade_numerateur  
+    /** 
         \brief This class implements the denominator of the Pade Approximat of the exponential function 
     */
     template<class T, std::size_t p, std::size_t q, std::size_t j>
@@ -108,8 +108,7 @@ namespace numeric{
 
     template<class T, std::size_t n>
     struct Series_exp{
-        /** fn template<std::size_t T, std::size_t n> exp  
-            \brief clean wrapper of the exp series method 
+        /**             \brief clean wrapper of the exp series method 
         */
         static inline T exp(T const& a){
             return helper_exp<T,n>::exp(a);
@@ -118,7 +117,7 @@ namespace numeric{
 
     template<class T, std::size_t n>
     struct Pade_exp{
-        /** fn template<std::size_t T, std::size_t n> Pade_exp  
+        /** 
             \brief clean wrapper of the Pade approximat method 
         */
         static inline T exp(T const& a){
@@ -163,7 +162,7 @@ namespace numeric{
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
         \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
     */
-    template<class T, std::size_t n = coeff_remez_number::value, class Solver = Vendor_exp<T,n> >
+    template<class T, std::size_t n = coeff_remez_number::value, class Solver = Remez_exp<T,n> >
     struct Helper_exp{
         static inline T exp(T const& a){
              return Solver::exp(a);

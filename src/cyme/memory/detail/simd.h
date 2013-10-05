@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  * 
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne 
  * 
@@ -26,45 +26,39 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_TRAIT_X86_IPP
-#define COREBLURON_TRAIT_X86_IPP
+#ifndef CYME_SIMD_H
+#define CYME_SIMD_H
 
-#include <immintrin.h> //type SIMD, memory::sse and memory::avx
+namespace memory{
+    /* \cond I do not need this part in the doc*/
+    enum simd {normal = sizeof(void*), sse2 = 16, avx = 32, qpx = 32}; //sizeof(void*) = 8 on 64 bits machine
 
-namespace numeric{
-
-    /*! \class template<float> simd_trait  
-        \brief Specialization for float with SSE SIMD 
-    */
-    template <>
-    struct simd_trait<float, memory::sse2> : trait<float>{
-        typedef __m128 register_type;
-    };
-   
-    /*! \class template<double> simd_trait  
-        \brief Specialization for float with SSE SIMD
-    */
-    template <>
-    struct simd_trait<double, memory::sse2> : trait<double>{
-        typedef __m128d register_type;
-    };
-#ifdef __AVX__ 
-    /*! \class template<float> simd_trait  
-        \brief Specialization for float with AVX SIMD 
-    */
-    template <>
-    struct simd_trait<float,memory::avx> : trait<float>{
-        typedef __m256 register_type;
-    };
-   
-    /*! \class template<double> simd_trait  
-        \brief Specialization for float with AVX SIMD
-    */
-    template <>
-    struct simd_trait<double,memory::avx> : trait<double>{
-        typedef __m256d register_type;
-    };
+// In C++0x the macro __cplusplus will be set to a value that differs from (is greater than) the current 199711L (ISO rules)
+// Be carefull could change in the futur ...
+#if (__cplusplus > 199711L)
+    constexpr static simd __GETSIMD__() {return __CYME_SIMD_VALUE__;} //default value, given by pp e.g. -Dsse2,
+#else
+    #define __GETSIMD__() __CYME_SIMD_VALUE__ // This is a shame but I can not use c++11
 #endif
 
-}
+    enum order {AoS, AoSoA};
+    
+    template<class T, order O>
+    struct stride;
+    
+    // just stride using for my meta-function
+    template<class T>
+    struct stride<T,AoS>{
+        static inline std::size_t helper_stride(){return 1;}
+    };
+
+    template<class T>
+    struct stride<T,AoSoA>{
+        static inline std::size_t helper_stride(){return __GETSIMD__()/sizeof(T);}
+    };
+    /* \endcond I do not need this part in the doc*/
+    
+} //end namespace
+
+
 #endif

@@ -1,5 +1,5 @@
 /*
- * CoreBluron, License
+ * CYME, License
  *
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne
  *
@@ -26,17 +26,17 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef COREBLURON_EXPR_VEC_HPP
-#define COREBLURON_EXPR_VEC_HPP
+#ifndef CYME_EXPR_VEC_HPP
+#define CYME_EXPR_VEC_HPP
 
 namespace numeric{
-
-    /*
+     /* \cond */
+    /* 
      *  this works modelizes template expression method to parse a series of basic operations into a three (during compile time). Therefore I limited
      *  the number of local copy to the minimum. Directly inspired (copy/past and modify ^_^) from C++ template the complete guide, chapter XVIII
      */
 
-    /* helper traits class to select how to refer to an ''expression template node'' * - in general: by reference
+     /* helper traits class to select how to refer to an ''expression template node'' * - in general: by reference
      * - for scalars: by value
      */
     template<class T, memory::simd O>
@@ -53,7 +53,11 @@ namespace numeric{
     struct vec_traits< vec_scalar<T,O>, O>{
         typedef vec_scalar<T,O> exp_ref;
     };
-
+    /* \endcond */
+    
+    /** 
+      \brief this class participate to the tree creation by recursive process, wrap addition e.g (*it)[0] + (*it)[1]
+    */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_add{
         typename vec_traits<OP1,O>::exp_ref op1;
@@ -68,6 +72,9 @@ namespace numeric{
         }
     };
 
+    /** 
+      \brief this class participate to the tree creation by recursive process, wrap subtraction (*it)[0] - (*it)[1]
+    */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_sub{
         typename vec_traits<OP1,O>::exp_ref op1;
@@ -82,6 +89,9 @@ namespace numeric{
         }
     };
 
+    /** 
+      \brief this class participate to the tree creation by recursive process, wrap subtraction (*it)[0] * (*it)[1]
+    */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_mul{
         typename vec_traits<OP1,O>::exp_ref op1;
@@ -106,6 +116,10 @@ namespace numeric{
         }
     };    
     
+    /** 
+      \brief this class participate to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]
+      \warning it is experimental
+    */
     template<class T, memory::simd O, class OP1, class OP2, class OP3>
     class vec_muladd{
         typename vec_traits<OP1,O>::exp_ref op1; 
@@ -122,6 +136,10 @@ namespace numeric{
 
     };
 
+    /** 
+      \brief this class participate to the tree creation by recursive process, wrap fms (*it)[0]*(*it)[1] - (*it)[2]
+      \warning it is experimental
+    */
     template<class T, memory::simd O, class OP1, class OP2, class OP3>
     class vec_mulsub{
         typename vec_traits<OP1,O>::exp_ref op1;
@@ -137,6 +155,9 @@ namespace numeric{
         inline vec_mulsub(vec_mul<T,O,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){}
     };
 
+    /** 
+      \brief this class participate to the tree creation by recursive process, wrap division (*it)[0] * (*it)[1]
+    */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_div{
         typename vec_traits<OP1,O>::exp_ref op1; // I made distinction between operands it can be scalar or vector
@@ -150,6 +171,9 @@ namespace numeric{
         inline vec_div(OP1 const& a, OP2 const& b):op1(a), op2(b){}
     };
 
+    /** 
+      \brief this class participate to the tree creation by recursive process, wrap scalar operations it return a vector
+    */
     template<class T, memory::simd O>
     class vec_scalar{
     public:
@@ -164,6 +188,11 @@ namespace numeric{
         vec_simd<T,O> const s; // valuer of the scalar
     };
 
+    /** 
+        \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
+        During the compilation, we will create the tree of operations or DAG. I called also this class Parser into
+        my comment
+    */
     template<class T, memory::simd O, class Rep = vec_simd<T,O> >
     class vec{
     public:
@@ -171,22 +200,38 @@ namespace numeric{
         typedef value_type* pointer; 
         typedef const pointer const_pointer;
         typedef Rep base_type;
-
+ 
+        /**
+           \brief default constructor nothing special
+        */
         inline explicit vec():expr_rep(){
         }
 
+        /**
+           \brief constructor rhs of the operator =, I do not care to save the pointer, as I read only the memory on this side
+        */
         inline vec(Rep const& rb):data_pointer(NULL),expr_rep(rb){
         }
 
+        /**
+           \brief constructor lhs of the operator =, I need to save the pointer to save the data into the memory after the calculation
+        */
         inline vec(const_pointer rb):data_pointer(rb),expr_rep(rb){
         }
 
+        /**
+           \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
+        */
         inline vec& operator= (vec const& rhs){
             this->expr_rep() = rhs.expr_rep();
             this->rep()().store(data_pointer);
             return *this;
         }
 
+
+        /**
+           \brief operator =, create the tree and execute  in normal condition
+        */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator= (vec<T2,O2,Rep2 > const& rhs){
             this->rep()() = rhs.rep()(); //evaluate the three compile time, and execute calculation
@@ -194,6 +239,9 @@ namespace numeric{
             return *this;
         } 
 
+        /**
+           \brief operator +=, create the tree and execute  in normal condition
+        */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator+= (vec<T2,O2,Rep2 > const& rhs){
             this->rep()() += rhs.rep()(); //evaluate the three compile time, and execute calculation
@@ -201,6 +249,9 @@ namespace numeric{
             return *this;
         }
 
+        /**
+           \brief operator -=, create the tree and execute  in normal condition
+        */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator-= (vec<T2,O2,Rep2 > const& rhs){
             this->rep()() -= rhs.rep()(); //evaluate the three compile time, and execute calculation
@@ -208,6 +259,9 @@ namespace numeric{
             return *this;
         }
 
+        /**
+           \brief operator *=, create the tree and execute  in normal condition
+        */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator*= (vec<T2,O2,Rep2 > const& rhs){
             this->rep()() *= rhs.rep()(); //evaluate the three compile time, and execute calculation
@@ -215,23 +269,35 @@ namespace numeric{
             return *this;
         }
 
+        /**
+           \brief operator /=, create the tree and execute  in normal condition
+        */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator/= (vec<T2,O2,Rep2 > const& rhs){
             this->rep()() /= rhs.rep()(); //evaluate the three compile time, and execute calculation
             this->rep()().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
-        
+        /**
+           \brief get the vector class, read only
+        */
         inline Rep const& rep() const{
             return expr_rep;
         }
-
+        /**
+           \brief get the vector class, write only
+        */
         inline Rep& rep(){
             return expr_rep;
         }
-
     private:
-        const_pointer data_pointer;        
+        /**
+        \brief need pointer for the operator=, to store the data into the memory, unfortunately I can not have an access to the lfs
+        */
+        const_pointer data_pointer;
+        /** 
+        \brief this is the vector_simd class
+        */
         Rep expr_rep;
     };
 }
