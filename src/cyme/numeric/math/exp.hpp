@@ -133,7 +133,12 @@ namespace numeric{
 #ifdef __FMA__
             return muladd(helper_remez_exp<T,n-1>::exp(a),a,T(coeff_remez<T,coeff_remez_number::value-n>::coeff()));
 #else
+<<<<<<< HEAD
             return  T(coeff_remez<T,coeff_remez_number::value-n>::coeff()) + helper_remez_exp<T,n-1>::exp(a)*a;
+=======
+            return T(coeff_remez<T,coeff_remez_number::value-n>::coeff()) + helper_remez_exp<T,n-1>::exp(a)*a;
+
+>>>>>>> f76cd8671084289f6f67d30a1dea5c2685c0a186
 #endif
         }
     };
