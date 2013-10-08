@@ -72,6 +72,20 @@ namespace numeric{
     inline simd_trait<float,memory::qpx>::register_type _mm_exp<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
         return (xmm0 = expd4(xmm0));
     }
+
+
+#ifdef __FMA__
+    template<>
+    inline simd_trait<float,memory::avx>::register_type _mm_fma<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0, simd_trait<float,memory::avx>::register_type xmm1, simd_trait<float,memory::avx>::register_type xmm2){
+        return (xmm0 =  vec_madd(xmm0, xmm1, xmm2));
+    };
+
+    template<>
+    inline simd_trait<float,memory::avx>::register_type _mm_fms<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0, simd_trait<float,memory::avx>::register_type xmm1, simd_trait<float,memory::avx>::register_type xmm2){
+        return (xmm0 = vec_msub(xmm0, xmm1, xmm2));
+    };
+#endif
+
     // QPX does not support double
 
     template<>

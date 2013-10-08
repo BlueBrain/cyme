@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) 
    
     for(int i=0; i<MAX; ++i){
         TYPE a = GetRandom<TYPE>();
-        b =  numeric::Helper_exp<TYPE>::exp(a);
+        b =  numeric::e(a);
         b_std = std::exp(a);
         BOOST_REQUIRE_CLOSE( b, b_std, 0.001); 
     }
