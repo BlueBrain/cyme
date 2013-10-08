@@ -63,7 +63,7 @@ add_definitions(-m${SIMD_TECH} "-D__CYME_SIMD_VALUE__=${SIMD_TECH}")
 ########################################################################
 
 if(CYME_FMA)
-   add_definitions(-mfma) 
+   add_definitions(-mfma -D__FMA__)
 endif(CYME_FMA)
 
 
@@ -92,8 +92,9 @@ endif(CYME_MATH)
 set(Boost_NO_SYSTEM_PATHS TRUE)
 set(BOOST_DIR $ENV{BOOST_DIR} CACHE PATH "Path to the Boost installation (or to the Boost source)")
 set(BOOST_ROOT ${BOOST_DIR})
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 #find_package (Boost COMPONENTS unit_test_framework system chrono)
-find_package (Boost COMPONENTS unit_test_framework)
+find_package (Boost 1.54 COMPONENTS unit_test_framework)
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
 else()

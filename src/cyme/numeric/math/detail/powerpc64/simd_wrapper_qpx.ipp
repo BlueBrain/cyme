@@ -55,7 +55,7 @@ namespace numeric{
    
     template<>
     inline simd_trait<float,memory::qpx>::register_type _mm_div<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
-        return (xmm0 = vec_swdiv(xmm0, xmm1));
+        return (xmm0 = vec_swdiv_nochk(xmm0, xmm1));
     };
    
     template<>
@@ -73,6 +73,7 @@ namespace numeric{
         return (xmm0 = expd4(xmm0));
     }
     // QPX does not support double
+
     template<>
     inline simd_trait<double,memory::qpx>::register_type _mm_load1<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::value_type a){
         return (xmm0 = vec_lds(0L,&a)); 
@@ -95,7 +96,7 @@ namespace numeric{
    
     template<>
     inline simd_trait<double,memory::qpx>::register_type _mm_div<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
-        return (xmm0 = vec_swdiv(xmm0, xmm1));
+        return (xmm0 = vec_swdiv_nochk(xmm0, xmm1));
     };
    
     template<>
@@ -113,6 +114,15 @@ namespace numeric{
         return (xmm0 = expd4(xmm0));
     }
 
+    template<>
+    inline simd_trait<double,memory::avx>::register_type _mm_fma<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0, simd_trait<double,memory::avx>::register_type xmm1, simd_trait<double,memory::avx>::register_type xmm2){
+        return (xmm0 =  vec_madd(xmm0, xmm1, xmm2));
+    };
+
+    template<>
+    inline simd_trait<double,memory::avx>::register_type _mm_fms<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0, simd_trait<double,memory::avx>::register_type xmm1, simd_trait<double,memory::avx>::register_type xmm2){
+        return (xmm0 = vec_msub(xmm0, xmm1, xmm2));
+    };
 } //end namespace 
 
 #endif 
