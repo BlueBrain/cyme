@@ -54,13 +54,6 @@ namespace numeric{
     inline operator +(vec<T,O,vec_mul<T,O,R1,R2> >const& a, vec<T,O,R3> const& b){
         return  vec<T,O, vec_muladd<T,O,R1,R2,R3> >(vec_muladd<T,O,R1,R2,R3>(a.rep(),b.rep()));
     }
-    
-    //mul add c + a*b
-    template<class T, memory::simd O, class R1, class R2, class R3>
-    vec<T,O, vec_muladd<T,O,R1,R2,R3> >
-    inline operator +(vec<T,O,R1> const& a, vec<T,O,vec_mul<T,O,R2,R3> >const& b){
-        return operator+(b,a);
-    }
 
     //mul add a*b - c
     template<class T, memory::simd O, class R1, class R2, class R3>
@@ -68,14 +61,15 @@ namespace numeric{
     inline operator -(vec<T,O,vec_mul<T,O,R1,R2> >const& a, vec<T,O,R3> const& b){
         return  vec<T,O, vec_mulsub<T,O,R1,R2,R3> >(vec_mulsub<T,O,R1,R2,R3>(a.rep(),b.rep()));
     }
-
-    //mul add c - a*b
-    template<class T, memory::simd O, class R1, class R2, class R3>
-    vec<T,O, vec_mulsub<T,O,R1,R2,R3> >
-    inline operator -(vec<T,O,R1> const& a, vec<T,O,vec_mul<T,O,R2,R3> >const& b){
-        return operator-(b,a);
-    }
 #endif
+    //division of two vectors v/w
+    template<class T, memory::simd O, class R1, class R2>
+    vec<T,O, vec_div<T,O,R1,R2> >
+    inline operator /(vec<T,O,R1> const& a, vec<T,O,R2> const& b){
+        return vec<T,O,vec_div<T,O,R1,R2> >(vec_div<T,O,R1,R2>(a.rep(),b.rep()));
+    }
+
+
     //multiplication of two vectors v*w
     template<class T, memory::simd O, class R1, class R2>
     vec<T,O, vec_mul<T,O,R1,R2> >
@@ -83,13 +77,7 @@ namespace numeric{
         return vec<T,O,vec_mul<T,O,R1,R2> >(vec_mul<T,O,R1,R2>(a.rep(),b.rep()));
     }
     
-    //division of two vectors v/w
-    template<class T, memory::simd O, class R1, class R2>
-    vec<T,O, vec_div<T,O,R1,R2> >
-    inline operator /(vec<T,O,R1> const& a, vec<T,O,R2> const& b){
-        return vec<T,O,vec_div<T,O,R1,R2> >(vec_div<T,O,R1,R2>(a.rep(),b.rep()));
-    }
-    
+
     /* OK I give the type because the compiler makes me partial specialization*/
 
     /* C - TIM TO DO, PLEASE FIND A SOLUTION DUPLICATION IS EVIL */

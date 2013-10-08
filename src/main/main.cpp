@@ -30,6 +30,8 @@ void bench1(memory::block<T,M,N,O>& a){
 
     for(it = a.begin(); it != a.end(); ++it)
         (*it)[0] = (*it)[4]*(*it)[5]+(*it)[1]*numeric::e((*it)[2]);
+
+
 }
 
 template<class T, std::size_t M, std::size_t N, memory::order O>
@@ -68,19 +70,20 @@ int main(int argc, char* argv[]){
     long long int t1,t2;//;
 
     init(block_aos, block_aosoa);
-
+/*
     t1 = rdtsc();
         bench1(block_aos);
     t2 = rdtsc();
 
     print(t1,t2,"exp aos");
-
+*/
     t1 = rdtsc();
         bench1(block_aosoa);
     t2 = rdtsc();
 
     print(t1,t2,"exp aosos");
 
+    /*
     t1 = rdtsc();
         bench2(block_aos);
     t2 = rdtsc();
@@ -104,6 +107,6 @@ int main(int argc, char* argv[]){
     t2 = rdtsc();
 
     print(t1,t2,"unroll aosoa");
-
+*/
 //    check(block_aos,block_aosoa);
 }
