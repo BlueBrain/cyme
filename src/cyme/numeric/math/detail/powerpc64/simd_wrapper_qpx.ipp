@@ -113,7 +113,7 @@ namespace numeric{
     inline simd_trait<double,memory::qpx>::register_type _mm_exp<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
         return (xmm0 = expd4(xmm0));
     }
-
+#ifdef __FMA__
     template<>
     inline simd_trait<double,memory::avx>::register_type _mm_fma<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0, simd_trait<double,memory::avx>::register_type xmm1, simd_trait<double,memory::avx>::register_type xmm2){
         return (xmm0 =  vec_madd(xmm0, xmm1, xmm2));
@@ -123,6 +123,7 @@ namespace numeric{
     inline simd_trait<double,memory::avx>::register_type _mm_fms<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0, simd_trait<double,memory::avx>::register_type xmm1, simd_trait<double,memory::avx>::register_type xmm2){
         return (xmm0 = vec_msub(xmm0, xmm1, xmm2));
     };
+#endif
 } //end namespace 
 
 #endif 

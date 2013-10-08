@@ -130,9 +130,11 @@ namespace numeric{
         static inline T exp(T const& a){
 //          return pow<T,n>(a)*T(coeff_remez<T,n>::coeff()) + helper_remez_exp<T,n-1>::exp(a); // classic implementation very slow as pow is recalculating
 //          for every iteration, not optimium as 20 is hardcoded
-            return  T(coeff_remez<T,coeff_remez_number::value-n>::coeff()) + helper_remez_exp<T,n-1>::exp(a)*a;
-#ifdef __FMA
-            return muladd(helper_remez_exp<T,n-1>::exp(a),a,T(coeff_remez<T,coeff_remez_number::value-n>::coeff()))
+#ifdef __FMA__
+            return muladd(helper_remez_exp<T,n-1>::exp(a),a,T(coeff_remez<T,coeff_remez_number::value-n>::coeff()));
+#else
+            return T(coeff_remez<T,coeff_remez_number::value-n>::coeff()) + helper_remez_exp<T,n-1>::exp(a)*a;
+
 #endif
         }
     };
@@ -141,10 +143,6 @@ namespace numeric{
     struct helper_remez_exp<T,0>{
         static inline T exp(T const& a){
             return T(coeff_remez<T,coeff_remez_number::value>::coeff());
-#ifdef __FMA
-
-#endif
-
         }
     };
 
