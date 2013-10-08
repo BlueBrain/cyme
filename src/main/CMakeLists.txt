@@ -3,12 +3,11 @@ add_executable(main main.cpp)
 
 set(LIBRAIRIES ${MASS_LIBRARY} ${SIMD_MASS_LIBRARY})
 
-
-if(COREBLURON_MATH)
+if(CYME_MATH)
     target_link_libraries(main ${LIBRAIRIES})
-else(COREBLURON_MATH)
+else(CYME_MATH)
     target_link_libraries(main  )
-endif(COREBLURON_MATH)
+endif(CYME_MATH)
 
 #add_executable(main_asm main.cpp)
 #SET_TARGET_PROPERTIES(main_asm PROPERTIES COMPILE_FLAGS "-S ")

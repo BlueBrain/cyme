@@ -74,7 +74,7 @@ namespace numeric{
 #endif
     
 #ifdef __FMA__
-    template<>
+   template<>
     inline typename simd_trait<double,memory::avx>::register_type _mm_fma<double,memory::avx>(typename simd_trait<double,memory::avx>::register_type xmm0, typename simd_trait<double,memory::avx>::register_type xmm1, typename simd_trait<double,memory::avx>::register_type xmm2){
         return (xmm0 = _mm256_fmadd_pd(xmm0, xmm1, xmm2));
     };
