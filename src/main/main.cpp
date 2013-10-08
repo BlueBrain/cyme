@@ -70,20 +70,19 @@ int main(int argc, char* argv[]){
     long long int t1,t2;//;
 
     init(block_aos, block_aosoa);
-/*
+
     t1 = rdtsc();
         bench1(block_aos);
     t2 = rdtsc();
 
     print(t1,t2,"exp aos");
-*/
+
     t1 = rdtsc();
         bench1(block_aosoa);
     t2 = rdtsc();
 
     print(t1,t2,"exp aosos");
-
-    /*
+    
     t1 = rdtsc();
         bench2(block_aos);
     t2 = rdtsc();
@@ -107,6 +106,6 @@ int main(int argc, char* argv[]){
     t2 = rdtsc();
 
     print(t1,t2,"unroll aosoa");
-*/
-//    check(block_aos,block_aosoa);
+
+   // check(block_aos,block_aosoa);
 }
