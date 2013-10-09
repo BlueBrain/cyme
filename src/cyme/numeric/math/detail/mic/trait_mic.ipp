@@ -26,39 +26,26 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_SIMD_H
-#define CYME_SIMD_H
+#ifndef CYME_TRAIT_X86_IPP
+#define CYME_TRAIT_X86_IPP
 
-namespace memory{
-    /* \cond I do not need this part in the doc*/
-    enum simd {normal = sizeof(void*), sse2 = 16, avx = 32, qpx = 32, mic = 64}; //sizeof(void*) = 8 on 64 bits machine
+#include <immintrin.h> //type SIMD, memory::sse, memory::avx, memory::mic
 
-// In C++0x the macro __cplusplus will be set to a value that differs from (is greater than) the current 199711L (ISO rules)
-// Be carefull could change in the futur ...
-#if (__cplusplus > 199711L)
-    constexpr static simd __GETSIMD__() {return __CYME_SIMD_VALUE__;} //default value, given by pp e.g. -Dsse2,
-#else
-    #define __GETSIMD__() __CYME_SIMD_VALUE__ // This is a shame but I can not use c++11
-#endif
+namespace numeric{
 
-    enum order {AoS, AoSoA};
-    
-    template<class T, order O>
-    struct stride;
-    
-    // just stride using for my meta-function
-    template<class T>
-    struct stride<T,AoS>{
-        static inline std::size_t helper_stride(){return 1;}
+    /** \cond I do not need this part in the doc
+        \brief Specialization trait for float with MIC SIMD 
+    */
+    template <>
+    struct simd_trait<float, memory::mic> : trait<float>{
+        typedef __m512 register_type;
     };
-
-    template<class T>
-    struct stride<T,AoSoA>{
-        static inline std::size_t helper_stride(){return __GETSIMD__()/sizeof(T);}
-    };
-    /* \endcond I do not need this part in the doc*/
-    
-} //end namespace
-
-
+   
+    /**
+        \brief Specialization trait for double with MIC SIMD
+    */
+    template <>
+    struct simd_trait<double, memory::mic> : trait<double>{
+        typedef __m512d register_type;
+}
 #endif

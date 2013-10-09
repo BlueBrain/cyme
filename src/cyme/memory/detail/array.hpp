@@ -58,7 +58,10 @@
 
 // FIXES for broken compilers
 #include <boost/config.hpp>
+#include "memory/detail/simd.h"
 
+#include <boost/preprocessor/array/elem.hpp>
+#include <boost/preprocessor/arithmetic/div.hpp>
 
 namespace boost { // Tim:  I keep the same name space else I am going to big mistake
 
@@ -68,7 +71,16 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
         // Tim: I need to align
         // Tim: OK Presently I have a bug I can not use __GETSIMD__() because the compiler complain, he just want an integer,
         // Tim: I  may do something with boost PP ? 32 is multuple of 16 for float so ok
-        T elems[N] __attribute__ ((aligned(32)));    // fixed-size array of elements of type T, align 
+        // I know ... but aligned function accepts ONLY real number .... close your eyes (^.^)'
+        #define sse2 16
+        #define avx 32
+        #define qpx 32
+        #define mic 64
+        T elems[N] __attribute__ ((aligned(__GETSIMD__())));    // fixed-size array of elements of type T, align 
+        #undef sse2
+        #undef avx
+        #undef qpx
+        #undef mic
 
       public:
         // type definitions
