@@ -26,13 +26,12 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_TRAIT_X86_IPP
-#define CYME_TRAIT_X86_IPP
+#ifndef CYME_TRAIT_MIC_IPP
+#define CYME_TRAIT_MIC_IPP
 
 #include <immintrin.h> //type SIMD, memory::sse, memory::avx, memory::mic
 
 namespace numeric{
-
     /** \cond I do not need this part in the doc
         \brief Specialization trait for float with MIC SIMD 
     */
@@ -47,5 +46,6 @@ namespace numeric{
     template <>
     struct simd_trait<double, memory::mic> : trait<double>{
         typedef __m512d register_type;
+    };
 }
 #endif

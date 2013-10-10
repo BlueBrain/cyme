@@ -109,4 +109,8 @@ namespace numeric{
     #include "numeric/math/detail/powerpc64/simd_wrapper_qpx.ipp"
 #endif 
 
+#ifdef __MIC__
+    #include "numeric/math/detail/mic/simd_wrapper_mic.ipp"
+#endif 
+
 #endif 

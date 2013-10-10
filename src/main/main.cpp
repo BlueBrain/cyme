@@ -73,7 +73,7 @@ void print(long t1, long t2, std::string name){
     std::cout << "bench: " << name <<", time [cycle] " << t2-t1 << std::endl;
 }
 
-#define TYPE float 
+#define TYPE double 
 
 // no mpl it will not compile on bgq
 int main(int argc, char* argv[]){

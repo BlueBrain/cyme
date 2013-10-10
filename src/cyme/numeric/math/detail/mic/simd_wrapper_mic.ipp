@@ -33,9 +33,7 @@ namespace numeric{
     /*  -------------------------------------------------------------------------------------------------------------------- double */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_load1<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::value_type a){
-        __m128d a_vec = _mm_load_pd(a);
-        __mmask8 k = 0xff; // mask to 1 the value is broadcast everywhere in the register
-        return (xmm0 = _mm512_maskz_broadcastsd_pd(k,a_vec));
+        return (xmm0 = _mm512_set1_pd(a));
     }
    
     template<>
@@ -51,45 +49,42 @@ namespace numeric{
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_mul<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
         return (xmm0 = _mm512_mul_pd(xmm0, xmm1));
-    };
+    }
    
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_div<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
         return (xmm0 = _mm512_div_pd(xmm0, xmm1));
-    };
+    }
    
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_add<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
         return (xmm0 = _mm512_add_pd(xmm0, xmm1));
-    };
+    }
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_sub<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
         return (xmm0 = _mm512_sub_pd(xmm0, xmm1));
-    };
+    }
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_exp<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0){
         return (xmm0 = _mm512_exp_pd(xmm0));
-    };
+    }
 
    template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_fma<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
         return (xmm0 = _mm512_fmadd_pd(xmm0, xmm1, xmm2));
-    };
+    }
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_fms<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
         return (xmm0 = _mm512_fmsub_pd(xmm0, xmm1, xmm2));
-    };
+    }
     
     /*  -------------------------------------------------------------------------------------------------------------------- float */
     template<>
     typename simd_trait<float,memory::mic>::register_type _mm_load1<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::value_type a){
-        __m128 a_vec = _mm_load_ps(a);
-        __mmask16 k = 0xffff; // mask to 1 (or -1 ^_^) the value is broadcast everywhere in the register
-        return (xmm0 = _mm512_maskz_broadcastsd_pd(k,a_vec));
-        return (xmm0 = _mm512_broadcast_ss(&a)); 
+        return (xmm0 = _mm512_set1_ps(a)); 
     }
    
     template<>
@@ -110,32 +105,33 @@ namespace numeric{
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_div<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
         return (xmm0 = _mm512_div_ps(xmm0, xmm1));
-    };
+    }
    
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_add<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
         return (xmm0 = _mm512_add_ps(xmm0, xmm1));
-    };
+    }
 
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_sub<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
         return (xmm0 = _mm512_sub_ps(xmm0, xmm1));
-    };
+    }
 
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_exp<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0){
         return (xmm0 = _mm512_exp_ps(xmm0));
-    };
+    }
     
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_fma<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
         return (xmm0 = _mm512_fmadd_ps(xmm0, xmm1, xmm2));
-    };
+    }
 
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_fms<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
         return (xmm0 = _mm512_fmsub_ps(xmm0, xmm1, xmm2));
-    };
+    }
+
 } //end namespace 
 
 #endif 

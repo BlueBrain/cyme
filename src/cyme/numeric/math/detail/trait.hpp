@@ -61,5 +61,9 @@ namespace numeric{
 #include "numeric/math/detail/powerpc64/trait_powerpc64.ipp"
 #endif
 
+#ifdef __MIC__
+#include "numeric/math/detail/mic/trait_mic.ipp"
+#endif
+
 #endif
 
