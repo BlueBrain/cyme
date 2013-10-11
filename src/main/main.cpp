@@ -29,7 +29,7 @@ void bench1(memory::block<T,M,N,O>& a){
     typename memory::block<T,M,N,O>::iterator it;
 
     for(it = a.begin(); it != a.end(); ++it)
-        (*it)[0] = (*it)[4]*(*it)[5]+(*it)[1]*numeric::e((*it)[2]);
+        (*it)[0] = (*it)[1]*(*it)[2]+(*it)[4]*((*it)[5]+(*it)[6]);
 
 
 }

@@ -63,7 +63,7 @@ add_definitions(-m${SIMD_TECH} "-D__CYME_SIMD_VALUE__=${SIMD_TECH}")
 ########################################################################
 
 if(CYME_FMA)
-   add_definitions(-mfma -D__FMA__)
+   add_definitions(-fma -D__FMA__)
 endif(CYME_FMA)
 
 

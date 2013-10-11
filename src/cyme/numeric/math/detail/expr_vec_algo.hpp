@@ -48,11 +48,25 @@ namespace numeric{
         return vec<T,O, vec_sub<T,O,R1,R2> >(vec_sub<T,O,R1,R2>(a.rep(),b.rep()));
     }
 #ifdef __FMA__
-    //mul add a*b + c
+   //mul add a*b + c
     template<class T, memory::simd O, class R1, class R2, class R3>
     vec<T,O, vec_muladd<T,O,R1,R2,R3> >
     inline operator +(vec<T,O,vec_mul<T,O,R1,R2> >const& a, vec<T,O,R3> const& b){
         return  vec<T,O, vec_muladd<T,O,R1,R2,R3> >(vec_muladd<T,O,R1,R2,R3>(a.rep(),b.rep()));
+    }
+
+    //mul add a + b*c
+    template<class T, memory::simd O, class R1, class R2, class R3>
+    vec<T,O, vec_muladd<T,O,R1,R2,R3> >
+    inline operator +(vec<T,O,R3> const& b, vec<T,O,vec_mul<T,O,R1,R2> >const& a){
+        return operator+(a,b); //take previous one ^_^
+    }
+
+    //mul add a*b + c*d, I introduce this new case, because the conmpiler can't distinguish a*b + c*d (ambiguous fma(a,b,c*d) or fma(c,d,a*b)), with the two previous wrappers
+    template<class T, memory::simd O, class R1, class R2, class R3, class R4>
+    vec<T,O, vec_mul_add_mul<T,O,R1,R2,R3,R4> >
+    inline operator +(vec<T,O,vec_mul<T,O,R1,R2> >const& a, vec<T,O,vec_mul<T,O,R3,R4> >const& b){
+        return  vec<T,O, vec_mul_add_mul<T,O,R1,R2,R3,R4> >(vec_mul_add_mul<T,O,R1,R2,R3,R4>(a.rep(),b.rep()));
     }
 
     //mul add a*b - c
