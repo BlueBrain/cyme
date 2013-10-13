@@ -76,12 +76,12 @@ namespace numeric{
 #ifdef __FMA__
     template<>
     inline typename simd_trait<double,memory::sse2>::register_type _mm_fma<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::register_type xmm1, typename simd_trait<double,memory::sse2>::register_type xmm2){
-        return xmm0;// (xmm0 = _mm_fmadd_pd(xmm0, xmm1, xmm2));
+        return (xmm0 = _mm_fmadd_pd(xmm0, xmm1, xmm2));
     };
 
     template<>
     inline typename simd_trait<double,memory::sse2>::register_type _mm_fms<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::register_type xmm1, typename simd_trait<double,memory::sse2>::register_type xmm2){
-        return xmm0;// (xmm0 = _mm_fmsub_pd(xmm0, xmm1, xmm2));
+        return (xmm0 = _mm_fmsub_pd(xmm0, xmm1, xmm2));
     };
 #endif
    
@@ -130,12 +130,12 @@ namespace numeric{
 #ifdef __FMA__
     template<>
     inline typename simd_trait<float,memory::sse2>::register_type _mm_fma<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::register_type xmm1, typename simd_trait<float,memory::sse2>::register_type xmm2){
-        return xmm0;// (xmm0 = _mm_fmadd_ps(xmm0, xmm1, xmm2));
+        return (xmm0 = _mm_fmadd_ps(xmm0, xmm1, xmm2));
     };
 
     template<>
     inline typename simd_trait<float,memory::sse2>::register_type _mm_fms<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::register_type xmm1, typename simd_trait<float,memory::sse2>::register_type xmm2){
-        return xmm0;// (xmm0 = _mm_fmsub_ps(xmm0, xmm1, xmm2));
+        return (xmm0 = _mm_fmsub_ps(xmm0, xmm1, xmm2));
     };
 #endif
 
