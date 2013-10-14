@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_value_constructor, T, floating_point_bl
      TYPE random = GetRandom<TYPE>(); 
      memory::block<TYPE,M,N,ORDER> block_a(random);
      TYPE test[M*N];
-     for(int i=0; i < M*N; ++i)
+     for(std::size_t i=0; i < M*N; ++i)
          test[i]=random;
      int b = memcmp((void*)test, (void*)&block_a(0,0), M*N*sizeof(TYPE));
      BOOST_CHECK_EQUAL(b,0); 

@@ -32,109 +32,109 @@
 namespace numeric{
 
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_load1<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, const typename simd_trait<double,memory::sse2>::value_type a){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_load1<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0, const  simd_trait<double,memory::sse2>::value_type a){
         return (xmm0 =_mm_load1_pd(&a)); 
     }
    
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_load<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::const_pointer a){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_load<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::const_pointer a){
         return (xmm0 =_mm_load_pd(a)); 
     }
 
     template<>
-    void _mm_store<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::pointer a){
+    void _mm_store<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::pointer a){
         _mm_store_pd(a,xmm0); 
     }
    
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_mul<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::register_type xmm1){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_mul<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_mul_pd(xmm0, xmm1));
     };
    
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_div<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::register_type xmm1){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_div<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_div_pd(xmm0, xmm1));
     };
    
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_add<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::register_type xmm1){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_add<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_add_pd(xmm0, xmm1));
     };
 
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_sub<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::register_type xmm1){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_sub<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_sub_pd(xmm0, xmm1));
     };
     
 #ifdef __SVML__
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_exp<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_exp<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0){
         return (xmm0 = _mm_exp_pd(xmm0));
     };
 #endif
 
 #ifdef __FMA__
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_fma<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::register_type xmm1, typename simd_trait<double,memory::sse2>::register_type xmm2){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_fma<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1,  simd_trait<double,memory::sse2>::register_type xmm2){
         return (xmm0 = _mm_fmadd_pd(xmm0, xmm1, xmm2));
     };
 
     template<>
-    inline typename simd_trait<double,memory::sse2>::register_type _mm_fms<double,memory::sse2>(typename simd_trait<double,memory::sse2>::register_type xmm0, typename simd_trait<double,memory::sse2>::register_type xmm1, typename simd_trait<double,memory::sse2>::register_type xmm2){
+    inline  simd_trait<double,memory::sse2>::register_type _mm_fms<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1,  simd_trait<double,memory::sse2>::register_type xmm2){
         return (xmm0 = _mm_fmsub_pd(xmm0, xmm1, xmm2));
     };
 #endif
    
     template<>
-    typename simd_trait<float,memory::sse2>::register_type _mm_load1<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, const typename simd_trait<float,memory::sse2>::value_type a){
+     simd_trait<float,memory::sse2>::register_type _mm_load1<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0, const  simd_trait<float,memory::sse2>::value_type a){
         return (xmm0 =_mm_load1_ps(&a)); 
     }
    
     template<>
-    typename simd_trait<float,memory::sse2>::register_type _mm_load<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::const_pointer a){
+     simd_trait<float,memory::sse2>::register_type _mm_load<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::const_pointer a){
         return (xmm0 =_mm_load_ps(a)); 
     }
 
     template<>
-    void _mm_store<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::pointer a){
+    void _mm_store<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::pointer a){
         _mm_store_ps(a,xmm0);
     }
    
     template<>
-    inline typename simd_trait<float,memory::sse2>::register_type _mm_mul<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::register_type xmm1){
+    inline  simd_trait<float,memory::sse2>::register_type _mm_mul<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_mul_ps(xmm0, xmm1));
     };
    
     template<>
-    inline typename simd_trait<float,memory::sse2>::register_type _mm_div<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::register_type xmm1){
+    inline  simd_trait<float,memory::sse2>::register_type _mm_div<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_div_ps(xmm0, xmm1));
     };
    
     template<>
-    inline typename simd_trait<float,memory::sse2>::register_type _mm_add<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::register_type xmm1){
+    inline  simd_trait<float,memory::sse2>::register_type _mm_add<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_add_ps(xmm0, xmm1));
     };
 
     template<>
-    inline typename simd_trait<float,memory::sse2>::register_type _mm_sub<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::register_type xmm1){
+    inline  simd_trait<float,memory::sse2>::register_type _mm_sub<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_sub_ps(xmm0, xmm1));
     };
     
 #ifdef __SVML__
     template<>
-    inline typename simd_trait<float,memory::sse2>::register_type _mm_exp<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0){
+    inline  simd_trait<float,memory::sse2>::register_type _mm_exp<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0){
         return (xmm0 = _mm_exp_ps(xmm0));
     };
 #endif
 
 #ifdef __FMA__
     template<>
-    inline typename simd_trait<float,memory::sse2>::register_type _mm_fma<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::register_type xmm1, typename simd_trait<float,memory::sse2>::register_type xmm2){
+    inline  simd_trait<float,memory::sse2>::register_type _mm_fma<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1,  simd_trait<float,memory::sse2>::register_type xmm2){
         return (xmm0 = _mm_fmadd_ps(xmm0, xmm1, xmm2));
     };
 
     template<>
-    inline typename simd_trait<float,memory::sse2>::register_type _mm_fms<float,memory::sse2>(typename simd_trait<float,memory::sse2>::register_type xmm0, typename simd_trait<float,memory::sse2>::register_type xmm1, typename simd_trait<float,memory::sse2>::register_type xmm2){
+    inline  simd_trait<float,memory::sse2>::register_type _mm_fms<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1,  simd_trait<float,memory::sse2>::register_type xmm2){
         return (xmm0 = _mm_fmsub_ps(xmm0, xmm1, xmm2));
     };
 #endif

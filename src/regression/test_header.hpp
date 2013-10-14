@@ -71,8 +71,8 @@ namespace cyme {
 
     template<class Ba, class Bb> // m and n are differents into the block that why I passe like argument
     void init(Ba& block_a, Bb& block_b){
-        for(int i=0; i<block_a.number_block(); ++i)
-            for(int j=0; j<block_a.size_block(); ++j){
+        for(std::size_t i=0; i<block_a.number_block(); ++i)
+            for(std::size_t j=0; j<block_a.size_block(); ++j){
                 typename Ba::value_type random = GetRandom<typename Ba::value_type>();
                 block_a(i,j) = random;
                 block_b(i,j) = random;
@@ -81,8 +81,8 @@ namespace cyme {
 
     template<class Ba, class Bb>
     void check(Ba const& block_a, Bb const& block_b){
-        for(int i=0; i<block_a.number_block(); ++i)
-            for(int j=0; j<block_a.size_block(); ++j)
+        for(std::size_t i=0; i<block_a.number_block(); ++i)
+            for(std::size_t j=0; j<block_a.size_block(); ++j)
                 BOOST_CHECK_CLOSE(block_a(i,j), block_b(i,j), RELATIVE_ERROR);
     }
 
