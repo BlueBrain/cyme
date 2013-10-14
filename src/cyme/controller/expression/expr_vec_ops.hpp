@@ -26,8 +26,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_EXPR_VEC_ALGO_HPP
-#define CYME_EXPR_VEC_ALGO_HPP
+#ifndef CYME_EXPR_VEC_OPS_HPP
+#define CYME_EXPR_VEC_OPS_HPP
 
 namespace numeric{
 /** \cond I do not need this part in the doc */
@@ -47,35 +47,7 @@ namespace numeric{
     inline operator -(vec<T,O,R1> const& a, vec<T,O,R2> const& b){
         return vec<T,O, vec_sub<T,O,R1,R2> >(vec_sub<T,O,R1,R2>(a.rep(),b.rep()));
     }
-#ifdef __FMA__
-   //mul add a*b + c
-    template<class T, memory::simd O, class R1, class R2, class R3>
-    vec<T,O, vec_muladd<T,O,R1,R2,R3> >
-    inline operator +(vec<T,O,vec_mul<T,O,R1,R2> >const& a, vec<T,O,R3> const& b){
-        return  vec<T,O, vec_muladd<T,O,R1,R2,R3> >(vec_muladd<T,O,R1,R2,R3>(a.rep(),b.rep()));
-    }
 
-    //mul add a + b*c
-    template<class T, memory::simd O, class R1, class R2, class R3>
-    vec<T,O, vec_muladd<T,O,R1,R2,R3> >
-    inline operator +(vec<T,O,R3> const& b, vec<T,O,vec_mul<T,O,R1,R2> >const& a){
-        return operator+(a,b); //take previous one ^_^
-    }
-
-    //mul add a*b + c*d, I introduce this new case, because the conmpiler can't distinguish a*b + c*d (ambiguous fma(a,b,c*d) or fma(c,d,a*b)), with the two previous wrappers
-    template<class T, memory::simd O, class R1, class R2, class R3, class R4>
-    vec<T,O, vec_mul_add_mul<T,O,R1,R2,R3,R4> >
-    inline operator +(vec<T,O,vec_mul<T,O,R1,R2> >const& a, vec<T,O,vec_mul<T,O,R3,R4> >const& b){
-        return  vec<T,O, vec_mul_add_mul<T,O,R1,R2,R3,R4> >(vec_mul_add_mul<T,O,R1,R2,R3,R4>(a.rep(),b.rep()));
-    }
-
-    //mul add a*b - c
-    template<class T, memory::simd O, class R1, class R2, class R3>
-    vec<T,O, vec_mulsub<T,O,R1,R2,R3> >
-    inline operator -(vec<T,O,vec_mul<T,O,R1,R2> >const& a, vec<T,O,R3> const& b){
-        return  vec<T,O, vec_mulsub<T,O,R1,R2,R3> >(vec_mulsub<T,O,R1,R2,R3>(a.rep(),b.rep()));
-    }
-#endif
     //division of two vectors v/w
     template<class T, memory::simd O, class R1, class R2>
     vec<T,O, vec_div<T,O,R1,R2> >
@@ -83,17 +55,14 @@ namespace numeric{
         return vec<T,O,vec_div<T,O,R1,R2> >(vec_div<T,O,R1,R2>(a.rep(),b.rep()));
     }
 
-
     //multiplication of two vectors v*w
     template<class T, memory::simd O, class R1, class R2>
     vec<T,O, vec_mul<T,O,R1,R2> >
     inline operator *(vec<T,O,R1> const& a, vec<T,O,R2> const& b){
         return vec<T,O,vec_mul<T,O,R1,R2> >(vec_mul<T,O,R1,R2>(a.rep(),b.rep()));
     }
-    
 
     /* OK I give the type because the compiler makes me partial specialization*/
-
     /* C - TIM TO DO, PLEASE FIND A SOLUTION DUPLICATION IS EVIL */
 
     //addition of scalar/vector, lambda+v for double, partial specialization are impossible on a single function

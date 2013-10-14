@@ -82,35 +82,48 @@ namespace numeric{
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_exp(typename simd_trait<T,O>::register_type xmm0); // Vendor (IBM/Intel) only 
 
+    /**
+     \brief free function (wrapper) for calculating the negation of a vector
+     */
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_neg(typename simd_trait<T,O>::register_type xmm0); 
+
 #ifdef __FMA__ // This macro is a compiler one
     /**
-    \brief free function (wrapper) for the FMA bewteen three registers
+    \brief free function (wrapper) for the FMA between three registers
     */
     template<class T, memory::simd O> // a*b+c
     inline typename simd_trait<T,O>::register_type _mm_fma(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
 
     /**
-    \brief free function (wrapper) for the FMS bewteen three registers
+    \brief free function (wrapper) for the FMS between three registers
     */
     template<class T, memory::simd O> // a*b-c
     inline typename simd_trait<T,O>::register_type _mm_fms(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
+
+    /**
+     \brief free function (wrapper) for the FMS 2nf part between three registers
+     */
+    template<class T, memory::simd O> // c- a*b
+    inline typename simd_trait<T,O>::register_type _mm_nfma(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
+
 #endif
 } //end namespace 
 
 #ifdef __SSE2__ 
-    #include "numeric/math/detail/x86/simd_wrapper_sse.ipp"
+    #include "controller/simd_vector/detail/x86/simd_wrapper_sse.ipp"
 #endif 
 
 #ifdef __AVX__
-    #include "numeric/math/detail/x86/simd_wrapper_avx.ipp"
+    #include "controller/simd_vector/detail/x86/simd_wrapper_avx.ipp"
 #endif
 
 #ifdef _ARCH_QP
-    #include "numeric/math/detail/powerpc64/simd_wrapper_qpx.ipp"
+    #include "controller/simd_vector/detail/powerpc64/simd_wrapper_qpx.ipp"
 #endif 
 
 #ifdef __MIC__
-    #include "numeric/math/detail/mic/simd_wrapper_mic.ipp"
+    #include "controller/simd_vector/detail/mic/simd_wrapper_mic.ipp"
 #endif 
 
 #endif 

@@ -54,15 +54,15 @@ namespace numeric{
 }
 
 #ifdef __x86_64__
-#include "numeric/math/detail/x86/trait_x86.ipp"
+#include "controller/simd_vector/detail/x86/trait_x86.ipp"
 #endif
 
 #ifdef _ARCH_QP
-#include "numeric/math/detail/powerpc64/trait_powerpc64.ipp"
+#include "controller/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
 #endif
 
 #ifdef __MIC__
-#include "numeric/math/detail/mic/trait_mic.ipp"
+#include "controller/simd_vector/detail/mic/trait_mic.ipp"
 #endif
 
 #endif

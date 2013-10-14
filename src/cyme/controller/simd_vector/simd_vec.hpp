@@ -29,8 +29,8 @@
 #ifndef CYME_SIMD_VEC_HPP
 #define CYME_SIMD_VEC_HPP
 
-#include "numeric/math/detail/trait.hpp"
-#include "numeric/math/detail/simd_wrapper.hpp"
+#include "controller/simd_vector/trait.hpp"
+#include "controller/simd_vector/simd_wrapper.hpp"
 
 namespace numeric{
 
@@ -104,26 +104,34 @@ namespace numeric{
             xmm = _mm_sub<value_type,O>(xmm,rhs.xmm);
             return *this;
         }
-        
+
         /**
          \brief Save the value into the register into the memory
          */
         inline void store(pointer a) const{
             _mm_store<value_type,O>(xmm,a);
         } 
+
 #ifdef __FMA__
         /**
-         \brief FMA operator experimantal: fix the parser
+         \brief FMA operator
          */
         inline void ma(const vec_simd& lhs, const vec_simd& rhs){
             xmm = _mm_fma<value_type,O>(xmm,lhs.xmm,rhs.xmm);
         }
 
         /**
-         \brief FMS operator experimantal: fix the parser
+         \brief FMS operator
          */
         inline void ms(const vec_simd& lhs, const vec_simd& rhs){
             xmm = _mm_fms<value_type,O>(xmm,lhs.xmm,rhs.xmm);
+        }
+
+        /**
+         \brief FMS operator, 2nd case of the operator -
+         */
+        inline void nma(const vec_simd& lhs, const vec_simd& rhs){
+            xmm = _mm_nfma<value_type,O>(xmm,lhs.xmm,rhs.xmm);
         }
 #endif
 
@@ -205,7 +213,7 @@ namespace numeric{
 
 #ifdef __FMA__
     /**
-    \brief free function FMA between 3 vectors, experimental
+    \brief free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> muladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
@@ -215,12 +223,22 @@ namespace numeric{
     }
 
     /**
-    \brief free function FMS between 3 vectors, experimental
+    \brief free function FMS between 3 vectors, only a*b - c, - is not commutative
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> mulsub(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
         nrv.ms(mhs,rhs);
+        return nrv;
+    }
+
+    /**
+     \brief free function FMS c - a*b as - is not commutative
+     */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> negatemuladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv.nma(mhs,rhs);
         return nrv;
     }
 #endif

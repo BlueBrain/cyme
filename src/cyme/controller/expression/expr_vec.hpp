@@ -135,6 +135,10 @@ namespace numeric{
     inline vec_muladd(vec_mul<T,O,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){}
     };
 
+    /**
+     \brief this class participate to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]*(*it)[3]
+     \warning it is experimental
+     */
     template<class T, memory::simd O, class OP1, class OP2, class OP3, class OP4>
     class vec_mul_add_mul{
         typename vec_traits<OP1,O>::exp_ref op1; 
@@ -149,6 +153,26 @@ namespace numeric{
         }
 
     inline vec_mul_add_mul(vec_mul<T,O,OP1,OP2> const& a, vec_mul<T,O,OP3,OP4> const& b):op1(a.getop1()), op2(a.getop2()), op3(b.getop1()), op4(b.getop2()){}
+    };
+
+    /**
+     \brief this class participate to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]*(*it)[3]
+     \warning it is experimental
+     */
+    template<class T, memory::simd O, class OP1, class OP2, class OP3, class OP4>
+    class vec_mul_sub_mul{
+        typename vec_traits<OP1,O>::exp_ref op1;
+        typename vec_traits<OP2,O>::exp_ref op2;
+        typename vec_traits<OP3,O>::exp_ref op3;
+        typename vec_traits<OP4,O>::exp_ref op4;
+
+    public:
+
+        inline vec_simd<T,O> operator()() const{
+            return mulsub(op1(),op2(),op3()*op4());
+        }
+
+        inline vec_mul_sub_mul(vec_mul<T,O,OP1,OP2> const& a, vec_mul<T,O,OP3,OP4> const& b):op1(a.getop1()), op2(a.getop2()), op3(b.getop1()), op4(b.getop2()){}
     };
 
     /** 
@@ -168,6 +192,46 @@ namespace numeric{
         }
 
         inline vec_mulsub(vec_mul<T,O,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){}
+    };
+
+
+    /**
+     \brief this class participate to the tree creation by recursive process, help to wrap fms (*it)[2] - (*it)[0]*(*it)[1]
+     As (*it)[2] - (*it)[0]*(*it)[1], it exists an operator for this at least on X86
+     \warning it is experimental
+     */
+    template<class T, memory::simd O, class OP1, class OP2, class OP3>
+    class vec_negate_muladd{
+        typename vec_traits<OP1,O>::exp_ref op1;
+        typename vec_traits<OP2,O>::exp_ref op2;
+        typename vec_traits<OP3,O>::exp_ref op3;
+
+    public:
+
+        inline vec_simd<T,O> operator()() const{
+            return negatemuladd(op1(),op2(),op3()); // -a*b+c <=> c - a*b
+        }
+
+        inline vec_negate_muladd(vec_mul<T,O,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){}
+    };
+
+    /**
+     \brief this class participate to the tree creation by recursive process, help to wrap fms (*it)[2] - (*it)[0]*(*it)[1]
+            As (*it)[2] - (*it)[0]*(*it)[1] = -((*it)[0]*(*it)[1]-(*it)[2]), I just applied previous operator (vec_mulsub) and I negate.
+            I do not have such problem with the addition as the operator + is commutative, not the case of the operator - 
+     \warning it is experimental
+     */
+    template<class T, memory::simd O, class OP1>
+    class vec_negate{
+        typename vec_traits<OP1,O>::exp_ref op1;
+
+    public:
+
+        inline vec_simd<T,O> operator()() const{
+            return negate(op1());
+        }
+
+        inline vec_negate(OP1 const& a):op1(a){}
     };
 
     /** 
@@ -317,6 +381,9 @@ namespace numeric{
     };
 }
 
-#include "numeric/math/detail/expr_vec_algo.hpp"
+#include "controller/expression/expr_vec_ops.hpp"
+#ifdef __FMA__
+#include "controller/expression/expr_vec_fma.hpp"
+#endif
 
 #endif
