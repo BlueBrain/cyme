@@ -42,7 +42,7 @@ namespace numeric{
     template<class T, memory::simd O, class R1, class R2, class R3>
     vec<T,O, vec_muladd<T,O,R1,R2,R3> >
     inline operator +(vec<T,O,R3> const& b, vec<T,O,vec_mul<T,O,R1,R2> >const& a){
-        return operator+(a,b); //take previous one ^_^
+        return operator+(a,b); //take previous one ^_^, as the addition is commutative 
     }
 
     //mul add a*b + c*d, I introduce this new case, because the conmpiler can't distinguish a*b + c*d (ambiguous fma(a,b,c*d) or fma(c,d,a*b)), with the two previous wrappers
