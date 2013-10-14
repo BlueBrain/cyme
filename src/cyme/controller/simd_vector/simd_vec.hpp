@@ -162,33 +162,12 @@ namespace numeric{
     }
 
     /**
-    \brief free function * operator between a vector and a int, used only for my exp, this function uses the return value optimization
-    */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> operator* (int lhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
-        nrv *= rhs;
-        return nrv;
-    }
-
-    /**
     \brief free function / operator between two vectors and a int, used only for my exp, this function uses the return value optimization
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
         nrv /= rhs;
-        return nrv;
-    }
-
-    /**
-    \brief free function / operator between a vectors and a int, this function uses the return value optimization
-    */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const std::size_t rhs){
-        vec_simd<T,O> nrv(lhs);
-        vec_simd<T,O> nv_rhs(rhs);
-        nrv /= nv_rhs;
         return nrv;
     }
     

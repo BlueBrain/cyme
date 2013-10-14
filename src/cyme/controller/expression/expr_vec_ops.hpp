@@ -33,7 +33,6 @@ namespace numeric{
 /** \cond I do not need this part in the doc */
 
     /* this is the key of parser, describe every possibilities */
-   
     //addition of two vectors v+w
     template<class T, memory::simd O, class R1, class R2>
     vec<T,O, vec_add<T,O,R1,R2> >
