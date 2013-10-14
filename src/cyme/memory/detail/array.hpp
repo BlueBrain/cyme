@@ -64,23 +64,13 @@
 #include <boost/preprocessor/arithmetic/div.hpp>
 
 namespace boost { // Tim:  I keep the same name space else I am going to big mistake
+    //__attribute__((aligned(SOMETHING ))), it is a very wierd function
+    const static int value_alignement = memory::__GETSIMD__();
 
     template<class T, std::size_t N>
     class array {
       public:
-        // Tim: I need to align
-        // Tim: OK Presently I have a bug I can not use __GETSIMD__() because the compiler complain, he just want an integer,
-        // Tim: I  may do something with boost PP ? 32 is multuple of 16 for float so ok
-        // I know ... but aligned function accepts ONLY real number .... close your eyes (^.^)'
-        #define sse2 16
-        #define avx 32
-        #define qpx 32
-        #define mic 64
-        T elems[N] __attribute__((aligned(64)));    // fixed-size array of elements of type T, align
-        #undef sse2
-        #undef avx
-        #undef qpx
-        #undef mic
+        T elems[N] __attribute__((aligned(value_alignement)));    // fixed-size array of elements of type T, align
 
       public:
         // type definitions
