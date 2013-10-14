@@ -11,7 +11,8 @@ using namespace cyme::test;
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_default_constructor, T, floating_point_test_types) {
     int n = memory::__GETSIMD__()/sizeof(TYPE);
     numeric::vec_simd<TYPE,memory::__GETSIMD__()> a;
-    TYPE test[n],res[n]; 
+    TYPE test[n]; 
+    TYPE res[n] __attribute__((aligned(64)));
     memset((void*)test,0,n*sizeof(TYPE)); 
     a.store(res);
     int b = memcmp((void*)test,(void*)res,n*sizeof(TYPE)); 
@@ -22,7 +23,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, floating_po
     int n = memory::__GETSIMD__()/sizeof(TYPE);
     TYPE Random = GetRandom<TYPE>();
     numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(Random);
-    TYPE test[n],res[n]; 
+    TYPE test[n]; 
+    TYPE res[n] __attribute__((aligned(64)));
    for(int i=0; i<n; ++i)
        test[i]=Random;
     a.store(res);
@@ -32,7 +34,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, floating_po
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_pointer_constructor, T, floating_point_test_types) {
     int n = memory::__GETSIMD__()/sizeof(TYPE);
-    TYPE test[n],res[n]; 
+    TYPE test[n]  __attribute__((aligned(64)))  ; 
+    TYPE res[n] __attribute__((aligned(64)));
     for(int i=0; i<n; ++i){
        test[i] = GetRandom<TYPE>();
     }
@@ -45,7 +48,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_pointer_constructor, T, floating_poi
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_add_operations, T, floating_point_test_types) {
 
     int n = memory::__GETSIMD__()/sizeof(TYPE);
-    TYPE a[n],b[n],res[n]; 
+    TYPE a[n] __attribute__((aligned(64)));
+    TYPE b[n] __attribute__((aligned(64)));
+    TYPE res[n] __attribute__((aligned(64)));
 
     for(int i=0; i<n; ++i){
        a[i] = GetRandom<TYPE>();
@@ -68,7 +73,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_add_operations, T, floating_point_test_ty
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_sub_operations, T, floating_point_test_types) {
 
     int n = memory::__GETSIMD__()/sizeof(TYPE);
-    TYPE a[n],b[n],res[n]; 
+    TYPE a[n] __attribute__((aligned(64)));
+    TYPE b[n] __attribute__((aligned(64)));
+    TYPE res[n] __attribute__((aligned(64)));
 
     for(int i=0; i<n; ++i){
        a[i] = GetRandom<TYPE>();
@@ -91,7 +98,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_sub_operations, T, floating_point_test_ty
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_mul_operations, T, floating_point_test_types) {
 
     int n = memory::__GETSIMD__()/sizeof(TYPE);
-    TYPE a[n],b[n],res[n]; 
+    TYPE a[n] __attribute__((aligned(64)));
+    TYPE b[n] __attribute__((aligned(64)));
+    TYPE res[n] __attribute__((aligned(64)));
 
     for(int i=0; i<n; ++i){
        a[i] = GetRandom<TYPE>();
@@ -114,7 +123,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_mul_operations, T, floating_point_test_ty
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_div_operations, T, floating_point_test_types) {
 
     int n = memory::__GETSIMD__()/sizeof(TYPE);
-    TYPE a[n],b[n],res[n]; 
+    TYPE a[n] __attribute__((aligned(64)));
+    TYPE b[n] __attribute__((aligned(64)));
+    TYPE res[n] __attribute__((aligned(64)));
 
     for(int i=0; i<n; ++i){
        a[i] = GetRandom<TYPE>();
