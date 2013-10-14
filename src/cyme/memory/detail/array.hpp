@@ -76,7 +76,7 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
         #define avx 32
         #define qpx 32
         #define mic 64
-        T elems[N] ;    // fixed-size array of elements of type T, align 
+        T elems[N] __attribute__((aligned(64)));    // fixed-size array of elements of type T, align
         #undef sse2
         #undef avx
         #undef qpx

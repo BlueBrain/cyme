@@ -30,11 +30,11 @@
 #define CYME_MATH_HPP
 
 #include "cstring" // for memset gcc
-#include "numeric/math/detail/simd_vec.hpp"
-#include "numeric/math/detail/expr_vec.hpp"
-#include "numeric/math/pow.hpp"
-#include "numeric/math/fac.hpp"
-#include "numeric/math/exp.hpp"
-#include "numeric/math/ops.hpp"
+#include "controller/simd_vector/simd_vec.hpp"
+#include "controller/expression/expr_vec.hpp"
+#include "math/pow.hpp"
+#include "math/fac.hpp"
+#include "math/exp.hpp"
+#include "math/ops.hpp"
 
 #endif

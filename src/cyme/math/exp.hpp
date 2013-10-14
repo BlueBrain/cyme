@@ -31,7 +31,7 @@
 
 #include <math.h>  
 
-#include "numeric/math/remez.hpp"
+#include "math/remez.hpp"
 
 namespace numeric{
 

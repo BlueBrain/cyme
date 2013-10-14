@@ -29,8 +29,8 @@
 #ifndef CYME_STORAGE_HPP 
 #define CYME_STORAGE_HPP
 
-#include "numeric/math/detail/simd_vec.hpp"
-#include "numeric/math/detail/expr_vec.hpp"
+#include "controller/simd_vector/simd_vec.hpp"
+#include "controller/expression/expr_vec.hpp"
 
 namespace memory{
      /* \cond I do not need this part in the doc*/

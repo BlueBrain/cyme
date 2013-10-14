@@ -30,12 +30,12 @@
 #define CYME_TEST_HEADER_HPP
 
 #define BOOST_TEST_MODULE math
-//#define BOOST_TEST_MAIN  
+//#define BOOST_TEST_MAIN
 
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>  
-#include "numeric/math/math.hpp"
+#include "math/math.hpp"
 #include "memory/block.hpp"
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp> 

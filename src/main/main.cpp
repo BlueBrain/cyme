@@ -2,7 +2,7 @@
 //#include <cassert>
 #include <iostream>
 
-#include "numeric/math/math.hpp"
+#include "math/math.hpp"
 #include "memory/block.hpp"
 #include "utils/timer.h"
 
