@@ -70,8 +70,11 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
     template<class T, std::size_t N>
     class array {
       public:
-        T elems[N] __attribute__((aligned(value_alignement)));    // fixed-size array of elements of type T, align
-
+#if (__cplusplus > 199711L)
+       alignas(memory::__GETSIMD__())  T elems[N];    // C
+#else
+       T elems[N] __attribute__((aligned(value_alignement)));    // fixed-size array of elements of type T, align
+#endif
       public:
         // type definitions
         typedef T              value_type;
