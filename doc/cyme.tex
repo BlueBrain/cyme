@@ -603,13 +603,13 @@ a[0] &=& a[5]/(a[1] \times a[2]+a[3]-a[4])
 \begin{center}
 $a[0] = a[4] \times a[5] + a[1] \times e^{a[2]}$, X86 cluster
 \end{center}
-\begin{tabular}{ c |  c c | c c }
-\color{C0}{float}       & \multicolumn{2}{c |}{AoS} & \multicolumn{2}{c}{AoSoA}\\
-                        & \multicolumn{2}{c | }{scalar} & AVX 256b & SSE 128b\\
+\begin{tabular}{ c |  c  | c c }
+\color{C0}{float}       & AoS & \multicolumn{2}{c}{AoSoA}\\
+                        & scalar & AVX 256b & SSE 128b\\
                         \hline
-   Clang - X86 & 115 007 & 124 404  & 22 747$^2$ & \cellcolor{C2}13 149$^2$\\
-   GCC - X86  & 113 631 & 115 220  & \cellcolor{C2}9 627$^2$ & 15 555$^2$ \\
-   Intel - X86   & 19 323$^1$  & 17 606$^1$ & \cellcolor{C2}8 293$^3$ & 11 181$^3$\\
+   Clang - X86 & 115 007  & 22 747$^2$ & \cellcolor{C2}13 149$^2$\\
+   GCC - X86  & 113 631   & \cellcolor{C2}9 627$^2$ & 15 555$^2$ \\
+   Intel - X86   & 19 323$^1$   & \cellcolor{C2}8 293$^3$ & 11 181$^3$\\
    \hline
 \end{tabular}\\
 \vspace{0.5cm}
@@ -623,13 +623,13 @@ $^1$ Intel math, $^2$ my vec exp,  $^3$ Intel SVML, no FMA, $e$ performance deci
 \begin{center}
 $a[0] = a[4] \times a[5] + a[1] \times e^{a[2]}$, X86 cluster
 \end{center}
-\begin{tabular}{ c |  c c | c c }
-\color{C0}{double}           & \multicolumn{2}{c |}{AoS} & \multicolumn{2}{c}{AoSoA}\\
-                        & \multicolumn{2}{c | }{scalar} & AVX 256b & SSE 128b\\
+\begin{tabular}{ c |  c  | c c }
+\color{C0}{double}           & AoS & \multicolumn{2}{c}{AoSoA}\\
+                        & scalar & AVX 256b & SSE 128b\\
    \hline
-   Clang - X86 & 112 263 & 133 821 & 41 059$^2$ & \cellcolor{C2}26 247$^2$\\
-   GCC - X86  & 110 554 & 144 569  & \cellcolor{C2}17 891$^2$ & 27 290$^2$ \\
-   Intel - X86   & 37 102$^1$ & 28 226$^1$  & 19 223$^3$ & \cellcolor{C2}16 105$^3$\\
+   Clang - X86 & 112 263 & 41 059$^2$ & \cellcolor{C2}26 247$^2$\\
+   GCC - X86  & 110 554   & \cellcolor{C2}17 891$^2$ & 27 290$^2$ \\
+   Intel - X86   & 37 102$^1$ & 19 223$^3$ & \cellcolor{C2}16 105$^3$\\
    \hline
 \end{tabular}\\
 \vspace{0.5cm}
@@ -697,23 +697,23 @@ $^1$ IBM mass, $^2$ my vec exp, $^3$ IBM simd\_mass,  FMA
 \centering
 $\boxed{a[0] = a[5]/(a[1] \times a[2]+a[3]-a[4])}$
 
-\begin{tabular}{ c c c | c c }
-\color{C0}{float}           & \multicolumn{2}{c |}{AoS} & \multicolumn{2}{c}{AoSoA}\\
-                        & \multicolumn{2}{c |}{scalar}& AVX 256b & SSE 128b\\
+\begin{tabular}{ c  c | c c }
+\color{C0}{float}           & AoS& \multicolumn{2}{c}{AoSoA}\\
+                        & scalar& AVX 256b & SSE 128b\\
 
                           \hline
-   GCC - X86  & 11 366 & 11 357 & 2 912 & \cellcolor{C2}2 894 \\
-   Clang- X86  & 11 686 & 11 488 & 2 990 & \cellcolor{C2}2 903 \\
-   Intel  - X86   & 11 446 & 11 345 & 2 924 &\cellcolor{C2} 2 679\\
+   GCC - X86  & 11 366  & 2 912 & \cellcolor{C2}2 894 \\
+   Clang- X86  & 11 686  & 2 990 & \cellcolor{C2}2 903 \\
+   Intel  - X86   & 11 446 & 2 924 &\cellcolor{C2} 2 679\\
       \hline
-        \color{C0}{double}                    &  & & & \\
-   GCC - X86  & 17 817 & 17 808  & 9 296 & \cellcolor{C2}8 932 \\
-   Clang- X86  & 17 814 & 17 799 & 8 950 & \cellcolor{C2}7 535 \\
-   Intel  - X86   & 17 813 & 17 796 & 9 006 & \cellcolor{C2}8 944\\
+        \color{C0}{double}                     &  & & \\
+   GCC - X86  & 17 817   & 9 296 & \cellcolor{C2}8 932 \\
+   Clang- X86  & 17 814  & 8 950 & \cellcolor{C2}7 535 \\
+   Intel  - X86   & 17 813  & 9 006 & \cellcolor{C2}8 944\\
    \hline
- \color{C0}{double}                         & QPX 256b &  & QPX 256b & \\
-   XLC - BGQ   &  \cellcolor{C2}30 211 &        -   & 52 177 &  - \\
-   Clang - BGQ   &  77 344 &        -   & \cellcolor{C2}49 022 &  - \\
+ \color{C0}{float}                        &  &  QPX 256b & \\
+   XLC - BGQ   &  \cellcolor{C2}30 211 &         52 177 &  - \\
+   Clang - BGQ   &  77 344 &         \cellcolor{C2}49 022 &  - \\
 \hline
 
 \end{tabular}
