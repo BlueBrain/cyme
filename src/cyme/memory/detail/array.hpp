@@ -71,7 +71,7 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
     class array {
       public:
 #if (__cplusplus > 199711L)
-       alignas(memory::__GETSIMD__())  T elems[N];    // C
+       alignas(memory::__GETSIMD__()) T elems[N];  
 #else
        T elems[N] __attribute__((aligned(value_alignement)));    // fixed-size array of elements of type T, align
 #endif

@@ -29,8 +29,9 @@
 #ifndef CYME_TEST_HEADER_HPP
 #define CYME_TEST_HEADER_HPP
 
-#define BOOST_TEST_MODULE math
-//#define BOOST_TEST_MAIN
+//#define BOOST_TEST_MODULE math
+#define BOOST_TEST_MAIN
+#include <boost/test/included/unit_test.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -39,7 +40,7 @@
 #include "memory/block.hpp"
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp> 
-#include <boost/test/unit_test.hpp>
+//#include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/random/mersenne_twister.hpp>
@@ -146,6 +147,7 @@ namespace cyme {
                                 data_block<double,10,7,memory::AoSoA>,
                                 data_block<double,11,5,memory::AoSoA>
                             > floating_point_block_types;
+
 
 
 
