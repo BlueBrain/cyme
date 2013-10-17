@@ -1,0 +1,8 @@
+#ifndef NT2_INCLUDE_FUNCTIONS_FUNCTION_HPP_INCLUDED
+#define NT2_INCLUDE_FUNCTIONS_FUNCTION_HPP_INCLUDED
+
+#include <nt2/core/include/functions/function.hpp>
+#include <nt2/core/include/functions/scalar/function.hpp>
+#include <nt2/core/include/functions/simd/function.hpp>
+
+#endif

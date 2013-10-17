@@ -27,10 +27,11 @@ template<class T, std::size_t M, std::size_t N, memory::order O>
 void bench1(memory::block<T,M,N,O>& a){
 
     typename memory::block<T,M,N,O>::iterator it;
-
-    for(it = a.begin(); it != a.end(); ++it)
+    for(it = a.begin(); it != a.end(); ++it){
         (*it)[0] = (*it)[1]*(*it)[2]+(*it)[4]*((*it)[5]+(*it)[6]);
-
+   //       auto d = (*it)[1]*(*it)[2]+(*it)[4]*((*it)[5]+(*it)[6]);
+   //      boost::simd::aligned_store(d,(*it).store(0));
+    }
 
 }
 
@@ -98,7 +99,7 @@ int main(int argc, char* argv[]){
     t2 = rdtsc();
 
     print(t1,t2,"exp aosos");
-    
+
     t1 = rdtsc();
         bench2(block_aos);
     t2 = rdtsc();
@@ -135,5 +136,5 @@ int main(int argc, char* argv[]){
 
     print(t1,t2,"exp aosoa");
 
-//    check(block_aos,block_aosoa);
+ //   check(block_aos,block_aosoa);
 }

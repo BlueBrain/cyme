@@ -31,7 +31,13 @@
 
 #include "controller/simd_vector/simd_vec.hpp"
 #include "controller/expression/expr_vec.hpp"
-
+/*
+#include <boost/simd/sdk/simd/pack.hpp>
+#include <boost/simd/include/functions/plus.hpp>
+#include <boost/simd/include/functions/multiplies.hpp>
+#include <boost/simd/include/functions/aligned_load.hpp>
+#include <boost/simd/include/functions/aligned_store.hpp>
+*/
 namespace memory{
      /* \cond I do not need this part in the doc*/
      template <class T, std::size_t Size, order O>
@@ -114,16 +120,16 @@ namespace memory{
          \brief read access operator, only use to a direct access to the datas
          */
          inline const_reference operator()(size_type i) const;
-         /**
-         \brief write access operator, only use by the iterator when calculations are performed
-         */
+
          inline numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i);
-         /**
-         \brief read access operator, only use by the iterator when calculations are performed
-         */
          inline const numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
 
-         
+         /*
+         inline  boost::simd::pack<T> operator[](size_type i);
+         inline  const boost::simd::pack<T> operator[](size_type i) const;
+         inline  T* store(size_type i);
+         */
+
          private:
          value_type data[Size];
      };    

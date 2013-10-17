@@ -38,6 +38,7 @@ set (CYME_VERSION_MINOR 1)
 ########################################################################
 
 include_directories ("${PROJECT_SOURCE_DIR}/cyme")
+include_directories ("${PROJECT_SOURCE_DIR}/utils/include")
 
 
 ########################################################################
