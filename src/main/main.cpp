@@ -1,10 +1,19 @@
 //#include <vector>
 //#include <cassert>
 #include <iostream>
+#include <vector>
 
 #include "math/math.hpp"
 #include "memory/block.hpp"
 #include "utils/timer.h"
+#include <boost/chrono.hpp>
+
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
+
+using namespace boost::accumulators;
 
 template<class Ba, class Bb> // m and n are differents into the block that why I passe like argument
 void init(Ba& block_a, Bb& block_b){
@@ -29,7 +38,7 @@ void bench1(memory::block<T,M,N,O>& a){
     typename memory::block<T,M,N,O>::iterator it;
     for(it = a.begin(); it != a.end(); ++it){
         (*it)[0] = (*it)[1]*(*it)[2]+(*it)[4]*((*it)[5]+(*it)[6]);
-   //       auto d = (*it)[1]*(*it)[2]+(*it)[4]*((*it)[5]+(*it)[6]);
+   //      auto d = (*it)[1]*(*it)[2]+(*it)[4]*((*it)[5]+(*it)[6]);
    //      boost::simd::aligned_store(d,(*it).store(0));
     }
 
@@ -70,11 +79,12 @@ void bench4(memory::block<T,M,N,O>& a){
     }
 }
 
-void print(long t1, long t2, std::string name){
-    std::cout << "bench: " << name <<", time [cycle] " << t2-t1 << std::endl;
+#define TYPE float
+
+void print( boost::accumulators::accumulator_set<TYPE, stats<tag::variance, tag::mean> >const& acc, std::string name){
+    std::cout << "bench: " << name <<", time [nano s] " << extract_result< tag::mean >( acc ) << " variance " << extract_result< tag::variance >( acc )  << std::endl;
 }
 
-#define TYPE double
 
 // no mpl it will not compile on bgq
 int main(int argc, char* argv[]){
@@ -87,30 +97,60 @@ int main(int argc, char* argv[]){
     long long int t1,t2;//;
 
     init(block_aos, block_aosoa);
+    
+    std::vector<TYPE> time_aos(100);
+    std::vector<TYPE> time_aosoa(100);
+    boost::chrono::system_clock::time_point start;
+    boost::chrono::nanoseconds sec;
+    
+    for(int j=0 ; j < 100; ++j){
+        start = boost::chrono::system_clock::now();
+        for(int i=0; i< 10000; ++i)
+            bench1(block_aos);
+        sec = boost::chrono::system_clock::now() - start;
+        time_aos.push_back(sec.count()/(1e9));
+       
+    }
+    
+    {
+        boost::accumulators::accumulator_set<TYPE, stats<tag::variance, tag::mean> > acc;
+        acc = std::for_each( time_aos.begin(), time_aos.end(), acc );
+        print(acc,"exp aos");
+    }
+    
+    for(int j=0 ; j < 100; ++j){
+        start = boost::chrono::system_clock::now();
+        for(int i=0; i< 10000; ++i)
+            bench1(block_aosoa);
+        sec = boost::chrono::system_clock::now() - start;
+        time_aosoa.push_back(sec.count()/(1e9));
+    }
 
+    {
+        boost::accumulators::accumulator_set<TYPE, stats<tag::variance, tag::mean> > acc;
+        acc = std::for_each( time_aosoa.begin(), time_aosoa.end(), acc );
+        print(acc,"exp aosoa");
+    }
+
+/*
+    start = boost::chrono::system_clock::now();
     t1 = rdtsc();
-        bench1(block_aos);
-    t2 = rdtsc();
-
-    print(t1,t2,"exp aos");
-
-    t1 = rdtsc();
-        bench1(block_aosoa);
-    t2 = rdtsc();
-
-    print(t1,t2,"exp aosos");
-
-    t1 = rdtsc();
+    for(int i=0; i< 10000; ++i)
         bench2(block_aos);
     t2 = rdtsc();
+    sec = boost::chrono::system_clock::now() - start;
 
-    print(t1,t2,"multi aos");
+    print(sec,"multi aos");
 
+    start = boost::chrono::system_clock::now();
     t1 = rdtsc();
+    for(int i=0; i< 10000; ++i)
         bench2(block_aosoa);
     t2 = rdtsc();
+    sec = boost::chrono::system_clock::now() - start;
 
-    print(t1,t2,"multi aosoa");
+    print(sec,"multi aosoa");
+
 
     t1 = rdtsc();
         bench3(block_aos);
@@ -135,6 +175,6 @@ int main(int argc, char* argv[]){
     t2 = rdtsc();
 
     print(t1,t2,"exp aosoa");
-
+*/
  //   check(block_aos,block_aosoa);
 }
