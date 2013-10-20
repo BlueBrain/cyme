@@ -108,6 +108,7 @@ namespace memory{
         static inline size_type size_block() {
             return M;
         }
+    
     };
 
     /**
@@ -178,6 +179,7 @@ namespace memory{
         static inline size_type size_block() {
             return M;
         }
+
     };
 }
 
