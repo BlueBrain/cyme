@@ -35,7 +35,7 @@ void init(Ba& block_a){
 }
 
 void print( boost::accumulators::accumulator_set<double, stats<tag::variance, tag::mean> >const& acc, std::string name){
-    std::cout << "bench: " << name <<" " << extract_result< tag::mean >(acc) << " [nano s], variance " << extract_result< tag::variance >(acc)  << std::endl;
+    std::cout << "bench: " << name <<" " << extract_result< tag::mean >(acc) << " [s], variance " << extract_result< tag::variance >(acc)  << std::endl;
 }
 
 struct benchmark_one{
