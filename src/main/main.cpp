@@ -25,7 +25,7 @@ typedef memory::block<double,8,1024, memory::AoSoA> block_d_aosoa;
 
 typedef boost::mpl::vector< block_f_aos, block_f_aosoa, block_d_aos, block_d_aosoa > block_list;
 
-template<class Ba> // m and n are differents into the block that why I passe like argument
+template<class Ba>
 void init(Ba& block_a){
     for(int i=0; i<block_a.number_block(); ++i)
         for(int j=0; j<block_a.size_block(); ++j){
@@ -105,7 +105,10 @@ struct test_case{
 
 int main(int argc, char* argv[]){
     boost::mpl::for_each<block_list>(test_case<benchmark_one>());
+    std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_two>());
-//    boost::mpl::for_each<block_list>(test_case<benchmark_tree>());
-//    boost::mpl::for_each<block_list>(test_case<benchmark_four>());
+    std::cout << " --------- " << std::endl;
+    boost::mpl::for_each<block_list>(test_case<benchmark_tree>());
+    std::cout << " --------- " << std::endl;
+    boost::mpl::for_each<block_list>(test_case<benchmark_four>());
 }
