@@ -85,16 +85,15 @@ struct test_case{
         block b;
         init(b);
         std::vector<double> time_res(100);
-        
         boost::chrono::system_clock::time_point start;
-        boost::chrono::nanoseconds sec;
-        
-        for(int i=0 ; i < 100; ++i){
+        boost::chrono::duration<double> sec;
+
+        for(std::size_t i=0 ; i < 100; ++i){
             start = boost::chrono::system_clock::now();
-            for(int j=0 ; j < 100; ++j)
+             for(std::size_t j=0 ; j < 100; ++j)
                  Bench::template bench<block>(b);
             sec = boost::chrono::system_clock::now() - start;
-            time_res.push_back(sec.count()/(1e9));
+            time_res.push_back(sec.count());
         }
     
         boost::accumulators::accumulator_set<double, stats<tag::variance, tag::mean> > acc;
