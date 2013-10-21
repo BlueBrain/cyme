@@ -420,7 +420,7 @@ Memory access:
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% EXP 6
-\section[expression-template]{expression-template}
+\section[Expression-template]{Expression-template}
 \subsection*{Template-expression: expression-template 1}
 \begin{frame}[fragile]
 Evaluate: \\
@@ -493,14 +493,12 @@ Reorder operations (recursive tree - compile time) \underline{without useless re
 \end{center}
 \end{frame}
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%% EXP 7
 
 \subsection*{Template-expression: expression-template 3 }
 \begin{frame}[fragile]
 \begin{center}
- $\boxed{a[0] = a[1]  \times e^{a[2]}  +a[3]/1.2}$,  $ e^x = \sum_i^n a_ix^i$ (Remez)
+ $\boxed{a[0] = a[1]  \times e^{a[2]}  +a[3]/1.2}$,  $ e^x = \sum_i^n a_ix^i$ (Remez-Order 20)
 \end{center}
 \begin{minipage}{0.45\textwidth}
 \begin{tikzpicture}[every node/.style={circle,draw,scale=0.4},scale=0.4]
@@ -572,16 +570,63 @@ FMA support (not fully)
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 6 bis
+
+\subsection*{Template-expression: expression-template 4 }
+\begin{frame}[fragile]
+\centering
+Alternative, boost-simd ?  
+\vspace{0.5cm}
+
+\begin{minipage}{0.4\textwidth}
+\begin{tikzpicture}[auto,node distance=3 cm, scale = 1, transform shape,scale=0.5]
+\node[initial,state] (A)                                        {Container};
+\node[state]         (B) [right of=A]                       {Vector};
+\node[state]         (C) [above of=B]                  {Math};
+\node[state]         (D) [below of=B]                   {expression-template};
+
+\path[<->] (A) edge [left]      node [align=center]  {AoS} (C)
+               (A) edge [left]          node [align=center]  {AoSoA} (D)
+               (B) edge [right]       node [align=center]  {} (D)
+               (B) edge [right]       node [align=center]  {} (C);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{tikzpicture}[auto,node distance=3 cm, scale = 1, transform shape,scale=0.5]
+\node[initial,state] (A)                                        {Container};
+\node[state]         (C) [above of=B]                  {Math};
+\node[state]         (D) [below of=B]                   {boost-simd};
+
+\path[<->] (A) edge [left]      node [align=center]  {AoS} (C)
+               (A) edge [left]          node [align=center]  {AoSoA} (D)
+               (C) edge [right]       node [align=center]  {} (D);
+\end{tikzpicture}
+\end{minipage}
+
+\begin{center}
+Template expression and vector class remplaced by boost-simd. \\
+\underline{Same x86-ASM}  between Cyme and boost-simd
+
+\end{center}
+\end{frame}
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%% EXP 8
 \section[Benchmark]{Benchmarks}
 \subsection*{Benchmarks}
 \begin{frame}[fragile]
 \centering
 Two benchmarks:
-\begin{eqnarray}
-a[0] &=& a[4] \times a[5] + a[1] \times e^{a[2]} \\
-a[0] &=& a[5]/(a[1] \times a[2]+a[3]-a[4])
-\end{eqnarray}
+%\begin{eqnarray}
+ \begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
+     for(int i=0; i < 100; ++i){
+         a[0] = a[4]*a[5] + a[1]*exp(a[2])  // benchmark 1
+         a[0] = a[5]/(a[1]*a[2]+a[3]-a[4])} // benchmark 2
+\end{lstlisting}
+%\end{eqnarray}
 
 
 \begin{itemize}
@@ -591,7 +636,7 @@ a[0] &=& a[5]/(a[1] \times a[2]+a[3]-a[4])
 \item Option of compilation X86: -O3 -avx or -sse2 
 \item Option of compilation PPC:  -O3 -qhot
 \item \verb+block<float/double,8,1024, AoS/AoSoA> block+
-\item Unit: [cycle] , \verb+rdtsc+ counter
+\item  repeat 100 times for mean value and variance
 \end{itemize}
 
 \end{frame}
@@ -605,22 +650,22 @@ $a[0] = a[4] \times a[5] + a[1] \times e^{a[2]}$, X86 cluster
 \end{center}
 \centering
 \begin{tabular}{ c |  c  | c c }
-     & AoS & \multicolumn{2}{c}{AoSoA}\\
-                        & scalar & AVX 256b & SSE 128b\\
+     & AoS  $[10^{-4}$s]& \multicolumn{2}{c}{AoSoA $[10^{-4}$s]}\\
+                        & scalar & SSE 128b & AVX 256b\\
                         \hline
-   \color{C0}{float}       &   & & \\
-   Clang - X86 & 115 007  & 22 747$^2$ & \cellcolor{C2}13 149$^2$\\
-   GCC - X86  & 113 631   & \cellcolor{C2}9 627$^2$ & 15 555$^2$ \\
-   Intel - X86   & 19 323$^1$   & \cellcolor{C2}8 293$^3$ & 11 181$^3$\\
+   \color{C0}{float}      &  & & \\
+   Clang - X86 & $ 16.30\pm0.01$ &\cellcolor{C2}$2.42\pm0.01^2$ & $3.97\pm0.01^2$\\
+   GCC - X86  & $16.30\pm0.01$   & $2.48\pm0.01^2$ & \cellcolor{C2}$1.83\pm0.01^2$ \\
+   Intel - X86   & $3.36\pm0.01^1$   & $1.38\pm0.01^3$ & \cellcolor{C2}$1.17\pm0.01^3$\\
    \hline
-   \color{C0}{double}       &   & & \\
-   Clang - X86 & 112 263 & 41 059$^2$ & \cellcolor{C2}26 247$^2$\\
-   GCC - X86  & 110 554   & \cellcolor{C2}17 891$^2$ & 27 290$^2$ \\
-   Intel - X86   & 37 102$^1$ & 19 223$^3$ & \cellcolor{C2}16 105$^3$\\
+   \color{C0}{double}      &   & & \\
+   Clang - X86 & $16.60\pm0.01$ & $4.83\pm0.01^2$ & \cellcolor{C2}$7.92\pm0.01^2$\\
+   GCC - X86  & $16.30\pm0.01$   & $4.94\pm0.01^2$ & \cellcolor{C2}$3.70\pm0.01^2$ \\
+   Intel - X86   & $5.11\pm 0.01^1$ & $3.12\pm0.01^3$ & \cellcolor{C2}$2.18\pm0.01^3$\\
    \hline
 \end{tabular}\\
 \vspace{0.5cm}
-$^1$ Intel math, $^2$ my vec exp,  $^3$ Intel SVML, no FMA, $e$ performance decisive 
+$^1$ Intel math scalar, $^2$ my vec exp,  $^3$ Intel SVML vectorial,  FMA off, $e$ performance decisive 
 \end{frame}
 
 
@@ -652,23 +697,24 @@ $^1$ Intel math, $^2$ my vec exp,  $^3$ Intel SVML, no FMA, $e$ performance deci
 $a[0] = a[4] \times a[5] + a[1] \times e^{a[2]}$, BGQ
 \vspace{0.5cm}
 
-\begin{tabular}{ c |  c c | c c }
-          & \multicolumn{2}{c |}{AoS} & \multicolumn{2}{c}{AoSoA}\\
- \color{C0}{float}                        & \multicolumn{2}{c |}{scalar} & \multicolumn{2}{c }{QPX 256b} \\
+\begin{tabular}{ c |  c  | c}
+          &AoS $[10^{-3}$s] & AoSoA $[10^{-3}$s]\\
+                       & scalar& QPX 256b  \\
+ \color{C0}{float}                        &  &   \\
    \hline
 %   XLC - BGQ  & \multicolumn{2}{c |}{  129 591$^1$}&  \multicolumn{2}{c |}{\cellcolor{C2}$48\, 666^2$} \\
-   XLC - BGQ  & \multicolumn{2}{c |}{  129 591$^1$}&  \multicolumn{2}{c |}{\cellcolor{C2}$72\, 468^2$} \\
+   XLC - BGQ  &  $ 4.57 \pm 0.02^1 $ & \cellcolor{C2}$2.20\pm0.01^2$ \\
   % Clang - BGQ & \multicolumn{2}{c |}{127 784$^1$} & \multicolumn{2}{c |}{\cellcolor{C2}$23\, 830^2$}\\
-   Clang - BGQ & \multicolumn{2}{c |}{127 784$^1$} & \multicolumn{2}{c |}{\cellcolor{C2}$54\, 071^2$}\\
+   Clang - BGQ & $3.92 \pm 0.02^1$ & \cellcolor{C2}$1.60\pm0.02^2$\\
    \hline
- \color{C0}{double} & & &   \\
-   XLC - BGQ  & \multicolumn{2}{c |}{  127 487$^1$}&  \multicolumn{2}{c |}{\cellcolor{C2}$97\, 605^2$} \\
-   Clang - BGQ & \multicolumn{2}{c |}{123 864$^1$} & \multicolumn{2}{c |}{\cellcolor{C2}$ 96 \,159^2$} \\
+ \color{C0}{double} &   &    \\
+   XLC - BGQ  &\cellcolor{C2}$4.00\pm0.02^1$&  $4.99\pm0.02^2$ \\
+   Clang - BGQ & $3.81\pm0.01^1$ &\cellcolor{C2}$3.71\pm0.01^2$ \\
 \end{tabular}\\
 \end{center}
 
 %$^1$ IBM mass, $^2$ my vec exp, $^3$ IBM simd\_mass,  FMA
-$^1$ IBM mass,  $^2$ IBM simd\_mass,  FMA
+$^1$ IBM mass scalar,  $^2$ IBM simd\_mass vectorial,  FMA on
 
 \vspace{0.5cm}
 \end{frame}
@@ -711,50 +757,52 @@ $a[0] = a[5]/(a[1] \times a[2]+a[3]-a[4])$, X86
 \vspace{0.5cm}
 
 \begin{tabular}{ c  c | c c }
-           & AoS& \multicolumn{2}{c}{AoSoA}\\
-                        & scalar& AVX 256b & SSE 128b\\
+           & AoS $[10^{-4}$s]& \multicolumn{2}{c}{AoSoA $[10^{-4}$s]}\\
+                        & scalar & SSE 128b & AVX 256b \\
                         \hline
 \color{C0}{float} & & & \\
-   GCC - X86  & 11 366  & 2 912 & \cellcolor{C2}2 894 \\
-   Intel  - X86   & 11 446 & 2 924 &\cellcolor{C2} 2 679\\
-   Clang- X86  & 11 686  & 2 990 & \cellcolor{C2}2 903 \\
+   GCC - X86  & $2.17\pm0.01$  &\cellcolor{C2} $0.56\pm0.01$ & $0.58\pm 0.01$ \\
+   Intel  - X86   & $2.32\pm0.01$ & \cellcolor{C2}$0.54\pm0.01$ & $0.55 \pm 0.01$\\
+   Clang- X86  & $2.18\pm0.01$  & $0.55\pm0.01$ & \cellcolor{C2}$0.55 \pm 0.01$ \\
       \hline
         \color{C0}{double}                     &  & & \\
-   GCC - X86  & 17 817   & 9 296 & \cellcolor{C2}8 932 \\
-   Intel  - X86   & 17 813  & 9 006 & \cellcolor{C2}8 944\\
-   Clang- X86  & 17 814  & 8 950 & \cellcolor{C2}7 535 \\
+   GCC - X86  & $3.42\pm0.01$   & \cellcolor{C2}$1.71\pm0.01$ & $1.73\pm0.01$ \\
+   Intel  - X86   & $3.42\pm0.01$  & \cellcolor{C2}$1.71\pm0.01$ & $1.72\pm0.01$\\
+   Clang- X86  & $3.42\pm0.01$  & \cellcolor{C2}$1.71\pm0.01$ & $1.74\pm0.01$\\
    \hline
 
 \end{tabular}
+\vspace{0.5cm}
 
+note:  div twice slower on AVX (33-35 cycles) than SSE2 (16-22) (plus/mul same cost)
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% EXP 9 bis
 
 \subsection*{$2^{nd}$ Benchmark, $a[0] = a[5]/(a[1] \times a[2]+a[3]-a[4])$}
 \begin{frame}[fragile]
-\centering
+\begin{center}
 $a[0] = a[5]/(a[1] \times a[2]+a[3]-a[4])$, BGQ
+
 \vspace{0.5cm}
 
 \begin{tabular}{ c  c | c  }
-         & AoS& AoSoA\\
+         & AoS $[10^{-3}$s]& AoSoA $[10^{-3}$s]\\
                         &   scalar &  QPX 256b \\
 \hline
 \color{C0}{float}   & & \\
-   XLC - BGQ   &  \cellcolor{C2}30 211 &         52 177  \\
-   Clang - BGQ   &  77 344 &         \cellcolor{C2}49 022  \\
+   XLC - BGQ   &  \cellcolor{C2}$1.13\pm0.01$& $1.56\pm0.01$ \\
+   Clang - BGQ   & $2.39\pm0.01$ &  \cellcolor{C2} $1.63\pm0.01$        \\
    \hline
     \color{C0}{double}                        &  &   \\
-   XLC - BGQ   &  \cellcolor{C2}52 615 &        97 176  \\
-   Clang - BGQ   &    \cellcolor{C2} 87 450 &       98 463 \\
+   XLC - BGQ   &  \cellcolor{C2}$1.64\pm0.01$ &     $2.68\pm0.01$  \\
+   Clang - BGQ   &    \cellcolor{C2} $2.69\pm0.01$  &      $3.53\pm0.10$ \\
 \hline
-
 \end{tabular}
-
+\end{center}
 \vspace{0.5cm}
 
-note: vec\_div is scalar on BGQ, break SIMD optimization
+note : vec\_div is scalar on BGQ, break SIMD optimization
 
 \end{frame}
 
@@ -767,16 +815,16 @@ MIC benchmark on one core:
 \vspace{0.5cm}
 
 \begin{tabular}{ c c  |  c }
-      & AoS & AoSoA\\
+      & AoS $[10^{-3}$s] & AoSoA $[10^{-3}$s]\\
                             & scalar & 512b SIMD reg. \\                            
                            \hline
         \color{C0}{float}                    &  &  \\
-   Bench 1  & 78 225 & \cellcolor{C2}15 945 \\
-   Bench 2  & 68 640 & \cellcolor{C2}12 862  \\
+   Bench 1  & $3.68\pm0.10$ & \cellcolor{C2}$0.36\pm0.01$\\
+   Bench 2  & $3.24\pm0.10$ & \cellcolor{C2}$0.28\pm0.01$  \\
       \hline
         \color{C0}{double}                    &  &  \\
-        Bench 1  & 114 629 & \cellcolor{C2}49 642 \\
-   Bench 2  & 99 126 &\cellcolor{C2} 29 961  \\
+   Bench 1  & $4.17\pm0.10$ & \cellcolor{C2}$1.24\pm0.10$ \\
+   Bench 2  & $4.66\pm0.14$ &\cellcolor{C2} $1.31\pm0.10$  \\
 \hline
 \end{tabular}
 \vspace{0.5cm}
@@ -826,7 +874,7 @@ Conclusions:
 \item Intel math lib: excellent
 \item Clang good surprise
 \item regression tests with a lot of torture tests, validation ok
-\item Finest analysis requires read the processor manual (very long)
+\item Finest analysis requires read the processor manual (Power A2)
 \end{itemize}
 
 \end{frame}
