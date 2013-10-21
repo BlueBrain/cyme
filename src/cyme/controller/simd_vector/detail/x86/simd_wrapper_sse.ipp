@@ -66,7 +66,7 @@ namespace numeric{
         return (xmm0 = _mm_sub_pd(xmm0, xmm1));
     };
     
-#ifdef __SVML__
+#ifdef __INTEL_COMPILER  
     template<>
     inline  simd_trait<double,memory::sse2>::register_type _mm_exp<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0){
         return (xmm0 = _mm_exp_pd(xmm0));
@@ -142,7 +142,7 @@ namespace numeric{
         return (xmm0 = _mm_sub_ps(xmm0, xmm1));
     };
     
-#ifdef __SVML__
+#ifdef __INTEL_COMPILER 
     template<>
     inline  simd_trait<float,memory::sse2>::register_type _mm_exp<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0){
         return (xmm0 = _mm_exp_ps(xmm0));

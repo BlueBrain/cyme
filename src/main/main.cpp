@@ -35,6 +35,8 @@ void init(Ba& block_a){
 }
 
 void print( boost::accumulators::accumulator_set<double, stats<tag::variance, tag::mean> >const& acc, std::string name){
+    std::cout.precision(2);
+    std::cout.setf(std::ios::scientific, std::ios::floatfield);
     std::cout << "bench: " << name <<" " << extract_result< tag::mean >(acc) << " [s], variance " << extract_result< tag::variance >(acc)  << std::endl;
 }
 
