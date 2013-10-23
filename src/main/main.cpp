@@ -34,10 +34,12 @@ void init(Ba& block_a){
         }
 }
 
-void print( boost::accumulators::accumulator_set<double, stats<tag::variance, tag::mean> >const& acc, std::string name){
+void print( boost::accumulators::accumulator_set<double, stats<tag::mean, tag::variance> >const& acc, std::string name){
     std::cout.precision(2);
     std::cout.setf(std::ios::scientific, std::ios::floatfield);
-    std::cout << "bench: " << name <<" " << extract_result< tag::mean >(acc) << " [s], variance " << extract_result< tag::variance >(acc)  << std::endl;
+    std::cout << "bench: " << name <<" " << extract_result< tag::mean >(acc)
+                           << " [s], variance " << extract_result< tag::variance >(acc)
+                           << ", standard deviation " << sqrt(extract_result< tag::variance >(acc)) << std::endl;
 }
 
 struct benchmark_one{
@@ -86,7 +88,7 @@ struct test_case{
     void operator()(block const&){
         block b;
         init(b);
-        std::vector<double> time_res(100);
+        std::vector<double> time_res;
         boost::chrono::system_clock::time_point start;
         boost::chrono::duration<double> sec;
 
@@ -98,7 +100,7 @@ struct test_case{
             time_res.push_back(sec.count());
         }
     
-        boost::accumulators::accumulator_set<double, stats<tag::variance, tag::mean> > acc;
+        boost::accumulators::accumulator_set<double, stats<tag::mean, tag::variance> > acc;
         acc = std::for_each(time_res.begin(), time_res.end(), acc );
         print(acc,"to do");
     }

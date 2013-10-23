@@ -83,6 +83,10 @@ find_library(SIMD_MASS_LIBRARY
              PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
 endif(CYME_MATH)
 
+
+
+
+
 ########################################################################
 #
 # Find dependencies
@@ -90,10 +94,10 @@ endif(CYME_MATH)
 ########################################################################
 
 #this depends of the associated module
-set(Boost_NO_SYSTEM_PATHS TRUE)
+#set(Boost_NO_SYSTEM_PATHS TRUE)
 set(BOOST_DIR $ENV{BOOST_DIR} CACHE PATH "Path to the Boost installation (or to the Boost source)")
 set(BOOST_ROOT ${BOOST_DIR})
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+#set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 find_package (Boost 1.54 COMPONENTS unit_test_framework system chrono)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
@@ -121,6 +125,7 @@ add_subdirectory( main/ )
 ########################################################################
 
 if(CYME_TESTS)
+    find_package(PythonInterp 2.6 REQUIRED )
     include(CTest)
     enable_testing()
     set(BUILDNAME "${PROJECT_VERSION}" CACHE STRING "Name of build on the dashboard")
