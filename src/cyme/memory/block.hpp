@@ -150,7 +150,7 @@ namespace memory{
         inline reference operator()(size_type i, size_type j){
             BOOST_ASSERT_MSG( i < N, "out of range: block AoSoA i" );
             BOOST_ASSERT_MSG( j < M, "out of range: block AoSoA j" );
-            // Please tune me ! (does it exist a alternative to this ? ^_^
+            // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T)))                         //(i)
                                         (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
         };
@@ -161,7 +161,7 @@ namespace memory{
         inline const_reference operator()(size_type i, size_type j) const{
             BOOST_ASSERT_MSG( i < N, "out of range: block AoSoA i" );
             BOOST_ASSERT_MSG( j < M, "out of range: block AoSoA j" );
-            // Please tune me ! (does it exist a alternative to this ? ^_^
+            // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
                                         (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
         };

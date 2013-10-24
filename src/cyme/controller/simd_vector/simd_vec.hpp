@@ -224,5 +224,7 @@ namespace numeric{
 
 } //end namespace
 
+#include "controller/simd_vector/simd_div.hpp"
+
 #endif
 

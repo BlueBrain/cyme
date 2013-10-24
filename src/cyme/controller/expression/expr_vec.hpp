@@ -307,7 +307,6 @@ namespace numeric{
             return *this;
         }
 
-
         /**
            \brief operator =, create the tree and execute  in normal condition
         */

@@ -141,7 +141,12 @@ namespace numeric{
     inline  simd_trait<float,memory::sse2>::register_type _mm_sub<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_sub_ps(xmm0, xmm1));
     };
-    
+
+    template<>
+    inline simd_trait<float,memory::sse2>::register_type _mm_rec<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0){
+        return (xmm0 = _mm_rcp_ps(xmm0));
+    };
+
 #ifdef __INTEL_COMPILER 
     template<>
     inline  simd_trait<float,memory::sse2>::register_type _mm_exp<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0){
