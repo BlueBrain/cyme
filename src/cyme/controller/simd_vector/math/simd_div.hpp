@@ -30,7 +30,9 @@
 #define CYME_SIMD_DIV_HPP
 
 namespace numeric{
-
+    /**
+     \brief reccursive implementation of the Newton-Raphson algo
+     */
     template<class T, memory::simd O, std::size_t n>
     struct helper_div{
         static inline vec_simd<T,O> div(vec_simd<T,O> const& rhs){
@@ -38,6 +40,9 @@ namespace numeric{
         }
     };
 
+    /**
+     \brief reccursive init with 1/r approximation
+     */
     template<class T, memory::simd O>
     struct helper_div<T,O,0>{
         static inline vec_simd<T,O> div(vec_simd<T,O> const& rhs){
@@ -55,7 +60,7 @@ namespace numeric{
     }
 
     /**
-     \brief free function / operator between two vectors and a int, used only for my exp, this function uses the return value optimization
+     \brief free function / operator between two vectors this function uses the return value optimization
      */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){

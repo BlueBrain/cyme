@@ -45,9 +45,6 @@ namespace numeric{
     inline T e(T const&a ){
         return exp(a);
     }
-
-
-
 } //end namespace
 
 #endif 
