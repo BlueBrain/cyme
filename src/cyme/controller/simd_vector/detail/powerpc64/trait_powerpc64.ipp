@@ -46,5 +46,21 @@ namespace numeric{
         typedef vector4double register_type;
     };
     /* \endcond I do not need this part in the doc*/
+
+    /**
+     \brief Specialization trait for float  Newton-Raphson division
+     */
+    template<>
+    struct div_recursion<float>{
+        static const std::size_t value = 2; // cardinal([0-2])=3
+    };
+
+    /**
+     \brief Specialization trait for double  Newton-Raphson division
+     */
+    template<>
+    struct div_recursion<double>{
+        static const std::size_t value = 3; // card([0-3])=4
+    };
 }
 #endif

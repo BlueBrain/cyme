@@ -41,12 +41,12 @@ namespace numeric{
     }
 
     /**
-     \brief free function FMS c - a*b as - is not commutative
+     \brief free function nFMA 
      */
     template<class T,memory::simd O>
-    inline vec_simd<T,O> negatemuladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
+    inline vec_simd<T,O> negatemulsub(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
         vec_simd<T,O> nrv(lhs);
-        nrv.nma(mhs,rhs);
+        nrv.nms(mhs,rhs);
         return nrv;
     }
 } //end namespace

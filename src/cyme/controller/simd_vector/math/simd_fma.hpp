@@ -39,6 +39,16 @@ namespace numeric{
         nrv.ma(mhs,rhs);
         return nrv;
     }
+
+    /**
+     \brief free function nFMA 
+     */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> negatemuladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv.nma(mhs,rhs);
+        return nrv;
+    }
 } //end namespace
 
 #endif

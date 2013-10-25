@@ -18,10 +18,10 @@
 
 using namespace boost::accumulators;
 
-typedef memory::block<float,8,16, memory::AoS> block_f_aos;
-typedef memory::block<float,8,16, memory::AoSoA> block_f_aosoa;
-typedef memory::block<double,8,16, memory::AoS> block_d_aos;
-typedef memory::block<double,8,16, memory::AoSoA> block_d_aosoa;
+typedef memory::block<float,8,1024, memory::AoS> block_f_aos;
+typedef memory::block<float,8,1024, memory::AoSoA> block_f_aosoa;
+typedef memory::block<double,8,1024, memory::AoS> block_d_aos;
+typedef memory::block<double,8,1024, memory::AoSoA> block_d_aosoa;
 
 typedef boost::mpl::vector< block_f_aos, block_f_aosoa, block_d_aos, block_d_aosoa > block_list;
 
@@ -126,6 +126,7 @@ struct test_case{
 };
 
 int main(int argc, char* argv[]){
+/*
     block_d_aos     a;
     block_d_aosoa   b;
     init(a,b);
@@ -140,13 +141,15 @@ int main(int argc, char* argv[]){
 
     check(a,b);
 
-    /*
+    
     boost::mpl::for_each<block_list>(test_case<benchmark_one>());
+*/
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_two>());
+/*
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_tree>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_four>());
-    */
+  */
 }

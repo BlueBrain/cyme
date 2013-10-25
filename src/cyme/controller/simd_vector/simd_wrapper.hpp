@@ -102,10 +102,17 @@ namespace numeric{
     inline typename simd_trait<T,O>::register_type _mm_fms(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
 
     /**
-     \brief free function (wrapper) for the FMS 2nf part between three registers
+     \brief free function (wrapper) for the negative FMA part between three registers
      */
-    template<class T, memory::simd O> // c- a*b
+    template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_nfma(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
+
+    /**
+     \brief free function (wrapper) for the negative FMS part between three registers
+     */
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_nfms(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
+
 #endif
 } //end namespace 
 

@@ -36,7 +36,11 @@ namespace numeric{
     template<class T, memory::simd O, std::size_t n>
     struct helper_div{
         static inline vec_simd<T,O> div(vec_simd<T,O> const& rhs){
-            return helper_div<T,O,n-1>::div(rhs)*(vec_simd<T,O>(2)-rhs*helper_div<T,O,n-1>::div(rhs)); // TO DO FMA
+#ifdef __FMA__
+            return helper_div<T,O,n-1>::div(rhs)*negatemulsub(rhs,helper_div<T,O,n-1>::div(rhs),vec_simd<T,O>(2.0)); 
+#else
+            return helper_div<T,O,n-1>::div(rhs)*(vec_simd<T,O>(2.0)-rhs*helper_div<T,O,n-1>::div(rhs));
+#endif
         }
     };
 

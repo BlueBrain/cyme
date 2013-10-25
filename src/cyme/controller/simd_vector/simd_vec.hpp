@@ -105,6 +105,11 @@ namespace numeric{
          \brief FMS operator, 2nd case of the operator -
          */
         inline void nma(const vec_simd& lhs, const vec_simd& rhs);
+
+        /**
+         \brief FMS operator, 2nd case of the operator -
+         */
+        inline void nms(const vec_simd& lhs, const vec_simd& rhs);
 #endif
          /**
          \brief hardware Register

@@ -34,8 +34,8 @@ namespace numeric{
     \brief free function for call the reciprocal for the Newton-Raphson division (initialization only), this function uses the return value optimization
     */
     template<class T,memory::simd O>
-    inline vec_simd<T,O> rec(vec_simd<T,O> rhs){
-        vec_simd<T,O> nrv;
+    inline vec_simd<T,O> rec(vec_simd<T,O> const& rhs){
+        vec_simd<T,O> nrv(0.0); // for xlc ...
         nrv.xmm = _mm_rec<T,O>(rhs.xmm);
         return nrv;
     }

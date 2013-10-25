@@ -95,79 +95,12 @@ namespace numeric{
     void vec_simd<T,O>::nma(const vec_simd& lhs, const vec_simd& rhs){
         this->xmm = _mm_nfma<typename simd_trait<T,O>::value_type,O>(this->xmm,lhs.xmm,rhs.xmm);
     }
-#endif
 
-/*
-    template<class T,memory::simd O>
-    struct vec_simd{
-        typedef typename simd_trait<T,O>::value_type value_type;
-        typedef typename simd_trait<T,O>::pointer pointer;
-        typedef typename simd_trait<T,O>::const_pointer const_pointer;
-        typedef typename simd_trait<T,O>::register_type register_type;
-
-    };
-
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> rec(vec_simd<T,O> rhs){
-        vec_simd<T,O> nrv;
-        nrv.xmm = _mm_rec<T,O>(rhs.xmm);
-        return nrv;
-    }
-
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> exp_v(const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(0.0);
-        nrv.xmm = _mm_exp<T,O>(rhs.xmm);
-        return nrv;
-    }
-
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> operator* (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);   // named return value optimization
-        nrv *= rhs;
-        return nrv;
-    }
-
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> operator+ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
-        nrv += rhs;
-        return nrv;
-    }
-
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> operator- (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
-        nrv -= rhs;
-        return nrv;
-    }
-
-#ifdef __FMA__
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> muladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
-        nrv.ma(mhs,rhs);
-        return nrv;
-    }
-
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> mulsub(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
-        nrv.ms(mhs,rhs);
-        return nrv;
-    }
-
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> negatemuladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
-        nrv.nma(mhs,rhs);
-        return nrv;
+    template<class T, memory::simd O>
+    void vec_simd<T,O>::nms(const vec_simd& lhs, const vec_simd& rhs){
+        this->xmm = _mm_nfms<typename simd_trait<T,O>::value_type,O>(this->xmm,lhs.xmm,rhs.xmm);
     }
 #endif
-
-
-#include "controller/simd_vector/simd_div.hpp"
-*/
 
 } //end namespace
 
