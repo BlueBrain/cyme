@@ -215,24 +215,6 @@ namespace numeric{
         inline vec_negate_muladd(vec_mul<T,O,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){}
     };
 
-    /**
-     \brief this class participate to the tree creation by recursive process, help to wrap fms (*it)[2] - (*it)[0]*(*it)[1]
-            As (*it)[2] - (*it)[0]*(*it)[1] = -((*it)[0]*(*it)[1]-(*it)[2]), I just applied previous operator (vec_mulsub) and I negate.
-            I do not have such problem with the addition as the operator + is commutative, not the case of the operator - 
-     \warning it is experimental
-     */
-    template<class T, memory::simd O, class OP1>
-    class vec_negate{
-        typename vec_traits<OP1,O>::exp_ref op1;
-
-    public:
-
-        inline vec_simd<T,O> operator()() const{
-            return negate(op1());
-        }
-
-        inline vec_negate(OP1 const& a):op1(a){}
-    };
 
     /** 
       \brief this class participate to the tree creation by recursive process, wrap division (*it)[0] * (*it)[1]
