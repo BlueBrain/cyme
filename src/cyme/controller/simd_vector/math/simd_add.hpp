@@ -26,62 +26,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_TRAIT_X86_IPP
-#define CYME_TRAIT_X86_IPP
-
-#include <immintrin.h> //type SIMD, memory::sse and memory::avx
+#ifndef CYME_SIMD_ADD_HPP
+#define CYME_SIMD_ADD_HPP
 
 namespace numeric{
-
-    /** \cond I do not need this part in the doc
-        \brief Specialization trait for float with SSE SIMD 
-    */
-    template <>
-    struct simd_trait<float, memory::sse2> : trait<float>{
-        typedef __m128 register_type;
-    };
-   
     /**
-        \brief Specialization trait for double with SSE SIMD
+    \brief free function + operator between two vectors, this function uses the return value optimization
     */
-    template <>
-    struct simd_trait<double, memory::sse2> : trait<double>{
-        typedef __m128d register_type;
-    };
-
-    /**
-     \brief Specialization trait for float  Newton-Raphson division
-     */
-    template<>
-    struct div_recursion<float>{
-        static const std::size_t value = 1; // cardinal([0-1])=2
-    };
-
-    /**
-     \brief Specialization trait for double  Newton-Raphson division
-     */
-    template<>
-    struct div_recursion<double>{
-        static const std::size_t value = 2; // card([0-2])=3, should be 3
-    };
-
-#ifdef __AVX__ 
-    /** 
-        \brief Specialization trait for float with AVX SIMD 
-    */
-    template <>
-    struct simd_trait<float,memory::avx> : trait<float>{
-        typedef __m256 register_type;
-    };
-   
-    /**
-        \brief Specialization trait for double with AVX SIMD
-    */
-    template <>
-    struct simd_trait<double,memory::avx> : trait<double>{
-        typedef __m256d register_type;
-    };
-#endif
-    /** \endcond I do not need this part in the doc */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> operator+ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv += rhs;
+        return nrv;
+    }
 }
 #endif
+

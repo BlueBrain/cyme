@@ -18,10 +18,10 @@
 
 using namespace boost::accumulators;
 
-typedef memory::block<float,8,1024, memory::AoS> block_f_aos;
-typedef memory::block<float,8,1024, memory::AoSoA> block_f_aosoa;
-typedef memory::block<double,8,1024, memory::AoS> block_d_aos;
-typedef memory::block<double,8,1024, memory::AoSoA> block_d_aosoa;
+typedef memory::block<float,8,16, memory::AoS> block_f_aos;
+typedef memory::block<float,8,16, memory::AoSoA> block_f_aosoa;
+typedef memory::block<double,8,16, memory::AoS> block_d_aos;
+typedef memory::block<double,8,16, memory::AoSoA> block_d_aosoa;
 
 typedef boost::mpl::vector< block_f_aos, block_f_aosoa, block_d_aos, block_d_aosoa > block_list;
 
@@ -32,6 +32,25 @@ void init(Ba& block_a){
             typename Ba::value_type random = 10*drand48();
             block_a(i,j) = random;
         }
+}
+
+template<class Ba, class Bb>
+void init(Ba& block_a, Bb& block_b){
+    for(int i=0; i<block_a.number_block(); ++i)
+        for(int j=0; j<block_a.size_block(); ++j){
+            typename Ba::value_type random = 10*drand48();
+            block_a(i,j) = random;
+            block_b(i,j) = random;
+        }
+}
+
+template<class Ba, class Bb>
+void check(Ba const & block_a, Bb const & block_b){
+    std::cout.precision(2*sizeof(typename Ba::value_type));
+
+    for(int i=0; i<block_a.number_block(); ++i)
+        for(int j=0; j<block_a.size_block(); ++j)
+            std::cout << block_a(i,j)  << " " << block_b(i,j) << " " << block_a(i,j) - block_b(i,j) << std::endl;
 }
 
 void print( boost::accumulators::accumulator_set<double, stats<tag::mean, tag::variance> >const& acc, std::string name){
@@ -107,6 +126,21 @@ struct test_case{
 };
 
 int main(int argc, char* argv[]){
+    block_d_aos     a;
+    block_d_aosoa   b;
+    init(a,b);
+
+    for(typename block_d_aos::iterator it = a.begin(); it != a.end(); ++it)
+        (*it)[0] = (*it)[5]/((*it)[1]*(*it)[2]+(*it)[3]-(*it)[4]);
+
+
+    for(typename block_d_aosoa::iterator it = b.begin(); it != b.end(); ++it)
+        (*it)[0] = (*it)[5]/((*it)[1]*(*it)[2]+(*it)[3]-(*it)[4]);
+
+
+    check(a,b);
+
+    /*
     boost::mpl::for_each<block_list>(test_case<benchmark_one>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_two>());
@@ -114,4 +148,5 @@ int main(int argc, char* argv[]){
     boost::mpl::for_each<block_list>(test_case<benchmark_tree>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_four>());
+    */
 }

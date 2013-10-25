@@ -112,6 +112,13 @@ namespace numeric{
         register_type xmm;
     };
 
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> rec(vec_simd<T,O> rhs){
+        vec_simd<T,O> nrv;
+        nrv.xmm = _mm_rec<T,O>(rhs.xmm);
+        return nrv;
+    }
+
     /**
     \brief free function for call the vendor exponential, this function uses the return value optimization
     */
@@ -121,6 +128,68 @@ namespace numeric{
         nrv.xmm = _mm_exp<T,O>(rhs.xmm);
         return nrv;
     }
+
+    /**
+    \brief free function * operator between two vectors, this function uses the return value optimization
+    */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> operator* (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);   // named return value optimization
+        nrv *= rhs;
+        return nrv;
+    }
+
+    /**
+    \brief free function + operator between two vectorsm, this function uses the return value optimization
+    */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> operator+ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv += rhs;
+        return nrv;
+    }
+    /**
+    \brief free function - operator between two vectorsm, this function uses the return value optimization
+    */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> operator- (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv -= rhs;
+        return nrv;
+    }
+
+#ifdef __FMA__
+    /**
+    \brief free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb
+    */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> muladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv.ma(mhs,rhs);
+        return nrv;
+    }
+
+    /**
+    \brief free function FMS between 3 vectors, only a*b - c, - is not commutative
+    */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> mulsub(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv.ms(mhs,rhs);
+        return nrv;
+    }
+
+    /**
+     \brief free function FMS c - a*b as - is not commutative
+     */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> negatemuladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(lhs);
+        nrv.nma(mhs,rhs);
+        return nrv;
+    }
+#endif
+
 } //end namespace
 
 #include "controller/simd_vector/simd_vec.ipp"

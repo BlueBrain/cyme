@@ -106,7 +106,6 @@ namespace numeric{
      */
     template<class T, memory::simd O> // c- a*b
     inline typename simd_trait<T,O>::register_type _mm_nfma(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1, typename simd_trait<T,O>::register_type xmm2);
-
 #endif
 } //end namespace 
 

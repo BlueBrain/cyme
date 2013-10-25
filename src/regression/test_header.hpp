@@ -48,7 +48,7 @@
 #include <boost/random/uniform_real_distribution.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 
-#define RELATIVE_ERROR 0.0001
+#define RELATIVE_ERROR 0.001
 
 namespace cyme {
     namespace test {

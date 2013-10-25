@@ -51,18 +51,29 @@ namespace numeric{
     template <typename T, memory::simd O>
     struct simd_trait : public trait<T>{};
     /* \endcond I do not need this part in the doc */
+
+
+    /**
+     \brief structure giving the maximum number of the recursion for the Newton-Raphson division algorithm.
+     the precision of the Newton-Raphson algo double at every step. As the approximation of the SIMD _mm_rcp_ps
+     function is 12 bits on (x86), I need 2 iterations for the float (mantissa 24 bit) and 3/4 iterations for double (mantissa 52 bit).
+     _mm_rcp_ps gives the same precision 12 bit for SSE2 and AVX. On Mic the precision is 14 bit (so 3 iterations) and QPX the prevision is
+     8 bits (3 iterations float, 4 iterations double)
+     */
+    template <typename T>
+    struct div_recursion;
 }
 
 #ifdef __x86_64__
-#include "controller/simd_vector/detail/x86/trait_x86.ipp"
+    #include "controller/simd_vector/detail/x86/trait_x86.ipp"
 #endif
 
 #ifdef _ARCH_QP
-#include "controller/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
+    #include "controller/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
 #endif
 
 #ifdef __MIC__
-#include "controller/simd_vector/detail/mic/trait_mic.ipp"
+    #include "controller/simd_vector/detail/mic/trait_mic.ipp"
 #endif
 
 #endif

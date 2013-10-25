@@ -65,7 +65,14 @@ namespace numeric{
     inline  simd_trait<double,memory::sse2>::register_type _mm_sub<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1){
         return (xmm0 = _mm_sub_pd(xmm0, xmm1));
     };
-    
+
+    template<>
+    inline  simd_trait<double,memory::sse2>::register_type _mm_rec<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0){
+        xmm0 = _mm_cvtpd_ps(xmm0);
+        xmm0 = _mm_rcp_ps(xmm0);
+        return (xmm0 = _mm_cvtps_pd(xmm0));
+    };
+
 #ifdef __INTEL_COMPILER  
     template<>
     inline  simd_trait<double,memory::sse2>::register_type _mm_exp<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0){
@@ -75,40 +82,29 @@ namespace numeric{
 
 #ifdef __FMA__
     template<>
-    inline  simd_trait<double,memory::sse2>::register_type _mm_fma<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1,  simd_trait<double,memory::sse2>::register_type xmm2){
-#ifdef NDEBUG
+    inline  simd_trait<double,memory::sse2>::register_type _mm_fma<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0,
+                                                                                        simd_trait<double,memory::sse2>::register_type xmm1,
+                                                                                        simd_trait<double,memory::sse2>::register_type xmm2){
         return  (xmm0 = _mm_fmadd_pd(xmm0, xmm1, xmm2));
-#else
-        return  (xmm0 = _mm_add_pd(_mm_mul_pd(xmm0, xmm1), xmm2));
-#endif
     };
 
     template<>
-    inline  simd_trait<double,memory::sse2>::register_type _mm_fms<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1,  simd_trait<double,memory::sse2>::register_type xmm2){
-#ifdef NDEBUG
+    inline  simd_trait<double,memory::sse2>::register_type _mm_fms<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0,
+                                                                                        simd_trait<double,memory::sse2>::register_type xmm1,
+                                                                                        simd_trait<double,memory::sse2>::register_type xmm2){
         return  (xmm0 = _mm_fmsub_pd(xmm0, xmm1, xmm2));
-#else
-        return  (xmm0 = _mm_sub_pd(_mm_mul_pd(xmm0, xmm1), xmm2));
-#endif
     };
 
     template<>
-    inline  simd_trait<double,memory::sse2>::register_type _mm_nfma<double,memory::sse2>( simd_trait<double,memory::sse2>::register_type xmm0,  simd_trait<double,memory::sse2>::register_type xmm1,  simd_trait<double,memory::sse2>::register_type xmm2){
-#ifdef NDEBUG
+    inline  simd_trait<double,memory::sse2>::register_type _mm_nfma<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0,
+                                                                                         simd_trait<double,memory::sse2>::register_type xmm1,
+                                                                                         simd_trait<double,memory::sse2>::register_type xmm2){
         return  (xmm0 = _mm_fnmadd_pd(xmm0, xmm1, xmm2));
-#else
-         simd_trait<double,memory::sse2>::register_type tmp_reg;
-        tmp_reg = _mm_xor_pd(tmp_reg,tmp_reg);
-        xmm0 = _mm_sub_pd(_mm_mul_pd(xmm0, xmm1), xmm2);
-        xmm0 = _mm_sub_pd(tmp_reg,xmm0);
-        return xmm0;
-#endif
     };
-
 #endif //end FMA
    
     template<>
-     simd_trait<float,memory::sse2>::register_type _mm_load1<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0, const  simd_trait<float,memory::sse2>::value_type a){
+     simd_trait<float,memory::sse2>::register_type _mm_load1<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0, const  simd_trait<float,memory::sse2>::value_type a){
         return (xmm0 =_mm_load1_ps(&a)); 
     }
    
@@ -156,36 +152,25 @@ namespace numeric{
 
 #ifdef __FMA__
     template<>
-    inline  simd_trait<float,memory::sse2>::register_type _mm_fma<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1,  simd_trait<float,memory::sse2>::register_type xmm2){
-#ifdef NDEBUG
+    inline  simd_trait<float,memory::sse2>::register_type _mm_fma<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0,
+                                                                                      simd_trait<float,memory::sse2>::register_type xmm1,
+                                                                                      simd_trait<float,memory::sse2>::register_type xmm2){
         return  (xmm0 = _mm_fmadd_ps(xmm0, xmm1, xmm2));
-#else
-        return  (xmm0 = _mm_add_ps(_mm_mul_ps(xmm0, xmm1), xmm2));
-#endif
     };
 
     template<>
-    inline  simd_trait<float,memory::sse2>::register_type _mm_fms<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1,  simd_trait<float,memory::sse2>::register_type xmm2){
-#ifdef NDEBUG
-        return  (xmm0 = _mm_fmsub_ps(xmm0, xmm1, xmm2));
-#else
-        return  (xmm0 = _mm_sub_ps(_mm_mul_ps(xmm0, xmm1), xmm2));
-#endif
+    inline  simd_trait<float,memory::sse2>::register_type _mm_fms<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0,
+                                                                                      simd_trait<float,memory::sse2>::register_type xmm1,
+                                                                                      simd_trait<float,memory::sse2>::register_type xmm2){
+        return  (xmm0 = _mm256_fmsub_ps(xmm0, xmm1, xmm2));
     };
 
     template<>
-    inline  simd_trait<float,memory::sse2>::register_type _mm_nfma<float,memory::sse2>( simd_trait<float,memory::sse2>::register_type xmm0,  simd_trait<float,memory::sse2>::register_type xmm1,  simd_trait<float,memory::sse2>::register_type xmm2){
-#ifdef NDEBUG
+    inline  simd_trait<float,memory::sse2>::register_type _mm_nfma<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0,
+                                                                                       simd_trait<float,memory::sse2>::register_type xmm1,
+                                                                                       simd_trait<float,memory::sse2>::register_type xmm2){
         return  (xmm0 = _mm256_fnmadd_ps(xmm0, xmm1, xmm2));
-#else
-        simd_trait<float,memory::sse2>::register_type tmp_reg;
-        tmp_reg = _mm_xor_ps(tmp_reg,tmp_reg);
-        xmm0 = _mm_sub_ps(_mm_mul_ps(xmm0, xmm1), xmm2);
-        xmm0 = _mm_sub_ps(tmp_reg,xmm0);
-        return xmm0;
-#endif
     };
-
 #endif //end FMA
 
 
