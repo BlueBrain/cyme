@@ -60,7 +60,7 @@ namespace numeric{
      _mm_rcp_ps gives the same precision 12 bit for SSE2 and AVX. On Mic the precision is 14 bit (so 3 iterations) and QPX the prevision is
      8 bits (3 iterations float, 4 iterations double)
      */
-    template <typename T>
+    template <typename T, memory::simd O>
     struct div_recursion;
 }
 

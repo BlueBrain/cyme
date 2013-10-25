@@ -59,7 +59,7 @@ namespace numeric{
      */
     template<class T,memory::simd O>
     inline vec_simd<T,O> div (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
-        vec_simd<T,O> nrv = lhs*helper_div<T,O,div_recursion<T>::value>::div(rhs); 
+        vec_simd<T,O> nrv = lhs*helper_div<T,O,div_recursion<T,O>::value>::div(rhs); 
         return nrv;
     }
 

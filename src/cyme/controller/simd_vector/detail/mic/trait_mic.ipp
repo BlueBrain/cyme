@@ -29,7 +29,7 @@
 #ifndef CYME_TRAIT_MIC_IPP
 #define CYME_TRAIT_MIC_IPP
 
-#include <immintrin.h> //type SIMD, memory::sse, memory::avx, memory::mic
+#include <zmmintrin.h> //for rcp
 
 namespace numeric{
     /** \cond I do not need this part in the doc
@@ -46,6 +46,22 @@ namespace numeric{
     template <>
     struct simd_trait<double, memory::mic> : trait<double>{
         typedef __m512d register_type;
+    };
+
+    /**
+     \brief Specialization trait for float  Newton-Raphson division
+     */
+    template<>
+    struct div_recursion<float, memory::mic>{
+        static const std::size_t value = 1; // cardinal([0-1])=2
+    };
+
+    /**
+     \brief Specialization trait for double  Newton-Raphson division
+     */
+    template<>
+    struct div_recursion<double, memory::mic>{
+        static const std::size_t value = 1; // card([0-2])=3, should be 3
     };
 }
 #endif

@@ -71,6 +71,12 @@ namespace numeric{
         return (xmm0 = _mm512_exp_pd(xmm0));
     }
 
+    template<>
+    inline simd_trait<double,memory::mic>::register_type _mm_rec<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
+        //return (xmm0 = _mm512_cvtps_pd(_mm256_rcp_ps(_mm512_cvtpd_ps(xmm0))));
+        return (xmm0);
+    };
+
    template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_fma<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
         return (xmm0 = _mm512_fmadd_pd(xmm0, xmm1, xmm2));
@@ -79,6 +85,11 @@ namespace numeric{
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_fms<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
         return (xmm0 = _mm512_fmsub_pd(xmm0, xmm1, xmm2));
+    }
+
+    template<>
+    inline typename simd_trait<double,memory::mic>::register_type _mm_nfms<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
+        return (xmm0 = _mm512_fnmsub_pd(xmm0, xmm1, xmm2));
     }
 
     template<>
@@ -123,6 +134,11 @@ namespace numeric{
     }
 
     template<>
+    inline simd_trait<float,memory::mic>::register_type _mm_rec<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
+        return (xmm0 = _mm512_rcp23_ps(xmm0));
+    };
+
+    template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_exp<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0){
         return (xmm0 = _mm512_exp_ps(xmm0));
     }
@@ -135,6 +151,11 @@ namespace numeric{
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_fms<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
         return (xmm0 = _mm512_fmsub_ps(xmm0, xmm1, xmm2));
+    }
+
+    template<>
+    inline typename simd_trait<float,memory::mic>::register_type _mm_nfms<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
+        return (xmm0 = _mm512_fnmsub_ps(xmm0, xmm1, xmm2));
     }
 
     template<>
