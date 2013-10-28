@@ -36,8 +36,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>  
-#include "math/math.hpp"
-#include "memory/block.hpp"
+#include "cyme/cyme.hpp"
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp> 
 #include <boost/test/unit_test.hpp>

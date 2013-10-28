@@ -29,10 +29,6 @@
 #ifndef CYME_EXP_HPP
 #define CYME_EXP_HPP
 
-#include <math.h>  
-
-#include "math/remez.hpp"
-
 namespace numeric{
     //the classical exp and Pade exp are into the git revision: c0788dfd49424fe9abc2809896efdd81fe03ffd4 
     template<class T, std::size_t n>
@@ -83,7 +79,21 @@ namespace numeric{
         }
     };
 
+    /**
+       \brief Basic wrapper for the exp function vectorial
+    */
+    template<class T, memory::simd O, class R>
+    inline vec<T,O,R> e(vec<T,O,R> const& a){
+        return  Helper_exp<typename vec<T,O,R>::base_type >::exp(a.rep());
+    }
 
+    /**
+       \brief Basic wrapper for the exp function serial
+    */
+    template<class T>
+    inline T e(T const&a ){
+        return exp(a);
+    }
 } //end namespace 
 
 #endif 

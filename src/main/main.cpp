@@ -3,8 +3,8 @@
 #include <iostream>
 #include <vector>
 
-#include "math/math.hpp"
-#include "memory/block.hpp"
+#include "cyme/cyme.hpp"
+
 #include "utils/timer.h"
 #include <boost/chrono.hpp>
 
