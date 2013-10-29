@@ -1,5 +1,6 @@
 #SET_TARGET_PROPERTIES(main PROPERTIES COMPILE_FLAGS "-stdlib=libc++ ")
 add_executable(main main.cpp)
+add_definitions(-m${SIMD_TECH} "-D__CYME_SIMD_VALUE__=${SIMD_TECH}")
 
 set(LIBRAIRIES ${MASS_LIBRARY} ${SIMD_MASS_LIBRARY})
 

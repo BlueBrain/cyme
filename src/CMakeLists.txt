@@ -55,7 +55,6 @@ set(SIMD_TECH sse2 CACHE STRING "SIMD technology: sse2, avx, qpx and mic")
 option (CYME_FMA "support FMA, very experiemental the parser is not still ready, it can not compile" OFF)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_DOCUMENTATION "Use Doxygen to create the HTML/LATEX based API documentation" OFF)
-add_definitions(-m${SIMD_TECH} "-D__CYME_SIMD_VALUE__=${SIMD_TECH}")
 
 ########################################################################
 #
