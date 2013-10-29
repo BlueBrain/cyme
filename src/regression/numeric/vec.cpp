@@ -28,6 +28,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, floating_po
    for(int i=0; i<n; ++i)
        test[i]=Random;
     a.store(res);
+
     int b = memcmp((void*)test,(void*)res,n*sizeof(TYPE)); 
     BOOST_CHECK_EQUAL(0,b);
 }
@@ -41,6 +42,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_pointer_constructor, T, floating_poi
     }
     numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(test);
     a.store(res);
+
     int b = memcmp((void*)test,(void*)res,n*sizeof(TYPE)); 
     BOOST_CHECK_EQUAL(0,b);
 }
@@ -66,8 +68,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_add_operations, T, floating_point_test_ty
     va += vb;
     va.store(res);
 
-    int b_bool = memcmp((void*)res,(void*)a,n*sizeof(TYPE)); 
-    BOOST_CHECK_EQUAL(0,b_bool);
+    for(int i=0; i<n; ++i)
+        BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001); 
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_sub_operations, T, floating_point_test_types) {
@@ -91,8 +93,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_sub_operations, T, floating_point_test_ty
     va -= vb;
     va.store(res);
 
-    int b_bool = memcmp((void*)res,(void*)a,n*sizeof(TYPE)); 
-    BOOST_CHECK_EQUAL(0,b_bool);
+    for(int i=0; i<n; ++i)
+        BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001); 
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_mul_operations, T, floating_point_test_types) {
@@ -116,8 +118,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_mul_operations, T, floating_point_test_ty
     va *= vb;
     va.store(res);
 
-    int b_bool = memcmp((void*)res,(void*)a,n*sizeof(TYPE)); 
-    BOOST_CHECK_EQUAL(0,b_bool);
+    for(int i=0; i<n; ++i)
+        BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001); 
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_div_operations, T, floating_point_test_types) {
@@ -141,8 +143,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_div_operations, T, floating_point_test_ty
     va /= vb;
     va.store(res);
 
-    int b_bool = memcmp((void*)res,(void*)a,n*sizeof(TYPE)); 
-    BOOST_CHECK_EQUAL(0,b_bool);
+    for(int i=0; i<n; ++i)
+        BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001); 
 }
 
 #undef SIZE

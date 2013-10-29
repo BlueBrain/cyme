@@ -68,9 +68,7 @@ namespace numeric{
 
     template<>
     inline  simd_trait<double,memory::sse2>::register_type _mm_rec<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0){
-        xmm0 = _mm_cvtpd_ps(xmm0);
-        xmm0 = _mm_rcp_ps(xmm0);
-        return (xmm0 = _mm_cvtps_pd(xmm0));
+        return (xmm0 = _mm_cvtps_pd(_mm_rcp_ps(_mm_cvtpd_ps(xmm0))));
     };
 
 #ifdef __INTEL_COMPILER  
