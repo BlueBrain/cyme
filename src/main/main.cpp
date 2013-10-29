@@ -18,10 +18,16 @@
 
 using namespace boost::accumulators;
 
-typedef memory::block<float,8,1024, memory::AoS> block_f_aos;
-typedef memory::block<float,8,1024, memory::AoSoA> block_f_aosoa;
-typedef memory::block<double,8,1024, memory::AoS> block_d_aos;
-typedef memory::block<double,8,1024, memory::AoSoA> block_d_aosoa;
+template<class T>
+struct synapse{
+    typedef T value_type;
+    static const int value_size = 8;
+};
+
+typedef cyme::array<synapse<float>,1024, memory::AoS> block_f_aos;
+typedef cyme::array<synapse<float>,1024, memory::AoSoA> block_f_aosoa;
+typedef cyme::array<synapse<double>,1024, memory::AoS> block_d_aos;
+typedef cyme::array<synapse<double>,1024, memory::AoSoA> block_d_aosoa;
 
 typedef boost::mpl::vector< block_f_aos, block_f_aosoa, block_d_aos, block_d_aosoa > block_list;
 
@@ -80,6 +86,7 @@ struct benchmark_two{
 struct benchmark_tree{
     template<class Ba>
     static void bench(Ba& a){
+
         for(typename Ba::iterator it = a.begin(); it != a.end(); ++it){
             (*it)[0] = (*it)[1]*(*it)[2]+(*it)[6] + 3.14;
             (*it)[1] = (*it)[2]*(*it)[3]+(*it)[6] + 2.18;
@@ -125,31 +132,13 @@ struct test_case{
     }
 };
 
+
 int main(int argc, char* argv[]){
-/*
-    block_d_aos     a;
-    block_d_aosoa   b;
-    init(a,b);
-
-    for(typename block_d_aos::iterator it = a.begin(); it != a.end(); ++it)
-        (*it)[0] = (*it)[5]/((*it)[1]*(*it)[2]+(*it)[3]-(*it)[4]);
-
-
-    for(typename block_d_aosoa::iterator it = b.begin(); it != b.end(); ++it)
-        (*it)[0] = (*it)[5]/((*it)[1]*(*it)[2]+(*it)[3]-(*it)[4]);
-
-
-    check(a,b);
-
-    
     boost::mpl::for_each<block_list>(test_case<benchmark_one>());
-*/
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_two>());
-/*
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_tree>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<block_list>(test_case<benchmark_four>());
-  */
 }

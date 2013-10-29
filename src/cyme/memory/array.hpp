@@ -25,15 +25,23 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+#ifndef CYME_ARRAY_HPP 
+#define CYME_ARRAY_HPP
 
-#ifndef CYME_CYME_HPP
-#define CYME_CYME_HPP
+#include "memory/block.hpp"
 
-#include "cstring" // for memset gcc
-#include <math.h> // e system
-#include "controller/simd_vector/simd_vec.hpp" // simd vector
-#include "controller/expression/expr_vec.hpp" // template expression
-#include "controller/math/math.hpp" // exp,pow,fac
-#include "memory/array.hpp" // container
+namespace cyme {
+    /*
+    \brief  This class facilitates the creation of an array of synapses (or whatever), the condition the class
+     must encapsulate the basic type (value_type) and the size (value_size) of the basic object under the form:
+     template <class T>
+     class example{
+        typedef T value_type;
+        static const int value_size = 5;
+     }
+    */
+    template<class T, std::size_t N, memory::order O>
+    class array : public memory::block<typename T::value_type, T::value_size, N, O>{ };
+}
 
 #endif

@@ -44,7 +44,6 @@ namespace memory{
     };
     /* \endcond */
 
-
     /**
         \brief Block of the memory (partial specialization) is instantiated following  AoS layout
         T is the type, M the size of the subblock and N the total number of subblock. For AoS  specialization
@@ -179,8 +178,6 @@ namespace memory{
         static inline size_type size_block() {
             return M;
         }
-
     };
 }
-
 #endif
