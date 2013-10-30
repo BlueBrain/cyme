@@ -6,10 +6,10 @@ set(LIBRAIRIES ${MASS_LIBRARY} ${SIMD_MASS_LIBRARY})
 
 if(CYME_MATH)
     target_link_libraries(main ${LIBRAIRIES} ${Boost_CHRONO_LIBRARY}
-${Boost_SYSTEM_LIBRARY} -lrt )
+${Boost_SYSTEM_LIBRARY}  )
 else(CYME_MATH)
     target_link_libraries(main  ${Boost_CHRONO_LIBRARY}
-${Boost_SYSTEM_LIBRARY} -lrt )
+${Boost_SYSTEM_LIBRARY}  )
 endif(CYME_MATH)
 
 #add_executable(main_asm main.cpp)
