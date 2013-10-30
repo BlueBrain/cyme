@@ -68,10 +68,10 @@ namespace numeric{
      */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-      //     vec_simd<T,O> nrv(lhs);
-      //     nrv /= rhs;
-      //     return nrv;
-        vec_simd<T,O> nrv = div(lhs,rhs);
+           vec_simd<T,O> nrv(lhs);
+           nrv /= rhs;
+           return nrv;
+      //  vec_simd<T,O> nrv = div(lhs,rhs);
         return nrv;
     }
 } //end namespace

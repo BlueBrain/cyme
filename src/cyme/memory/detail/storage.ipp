@@ -34,7 +34,8 @@ namespace memory{
 
     template <class T, std::size_t Size>
     storage<T, Size, AoS>::storage(){
-        memset((void*)&this->data[0],T(),Size*sizeof(T)); // memset works only for char, T() return 0 so ok
+        for(size_type i=0; i<Size; ++i)
+            this->data[i] = T();
     }
 
     template <class T, std::size_t Size>
@@ -69,7 +70,8 @@ namespace memory{
 
     template <class T, std::size_t Size>
     storage<T, Size, AoSoA>::storage(){
-        memset((void*)&this->data[0],T(),Size*sizeof(T)); // memset works only for char, T() return 0 so ok
+        for(size_type i=0; i<Size; ++i)
+            this->data[i] = T();
     }
 
     template <class T, std::size_t Size>

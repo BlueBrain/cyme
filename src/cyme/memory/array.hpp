@@ -25,8 +25,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#ifndef CYME_BLOCK_HPP 
-#define CYME_BLOCK_HPP
+#ifndef CYME_ARRAY_HPP
+#define CYME_ARRAY_HPP
 
 #include "memory/detail/simd.h"
 #include "memory/detail/array.hpp" // copy of boost::array + align
@@ -94,13 +94,6 @@ namespace memory{
         }
 
         /**
-        \brief return the number of subblock into the full block
-        */
-        static inline size_type number_block() {
-            return N;
-        }
-
-        /**
         \brief return the size of basic subblock 
         */
         static inline size_type size_block() {
@@ -163,13 +156,6 @@ namespace memory{
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
                                         (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
         };
-
-        /**
-        \brief return the number of subblock into the full block
-        */
-        static inline size_type number_block() {
-            return N;
-        }
 
         /**
         \brief return the size of basic subblock 

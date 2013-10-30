@@ -35,5 +35,6 @@
 #include "controller/expression/expr_vec.hpp" // template expression
 #include "controller/math/math.hpp" // exp,pow,fac
 #include "memory/array.hpp" // container
+#include "memory/vector.hpp" // container
 
 #endif
