@@ -63,16 +63,14 @@ namespace memory{
         \brief Default constructor, the block is set up to 0
         */
         explicit block(){
-            for(size_type i(0); i<N; ++i)
-                base_type::operator[](i) = storage_type(); // fill up to 0
+            std::fill(base_type::begin(),base_type::end(),storage_type());
         }
         
         /**
         \brief set up the block to the desired value
         */
         block(value_type value){
-            for(size_type i(0); i<N; ++i)
-                base_type::operator[](i) = storage_type(value); // fill up to value
+            std::fill(base_type::begin(),base_type::end(),storage_type(value));
         }
         
         /**

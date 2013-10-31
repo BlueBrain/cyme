@@ -72,7 +72,7 @@ namespace numeric{
            nrv /= rhs;
            return nrv;
       //  vec_simd<T,O> nrv = div(lhs,rhs);
-        return nrv;
+      //  return nrv;
     }
 } //end namespace
 #endif

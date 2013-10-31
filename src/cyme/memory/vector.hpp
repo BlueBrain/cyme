@@ -28,13 +28,13 @@
 #ifndef CYME_VECTOR_HPP
 #define CYME_VECTOR_HPP
 
+#include <vector>
 #include "memory/detail/simd.h"
 #include "memory/allocator.hpp"
 #include "memory/detail/storage.hpp"
 
+
 namespace memory{
-
-
     template<class T, std::size_t M,  memory::order O>
     class block_v{
     };
@@ -86,7 +86,6 @@ namespace memory{
         static inline size_type size_block() {
             return M;
         }
-
     };
 
     template<class T, std::size_t M>
@@ -108,8 +107,8 @@ namespace memory{
             BOOST_ASSERT_MSG( i < base_type::size(), "out of range: block_v AoSoA i" );
             BOOST_ASSERT_MSG( j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
-            return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T)))                         //(i)
-            (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
+            return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
+            (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
         };
 
         inline const_reference operator()(size_type i, size_type j) const{
@@ -117,14 +116,22 @@ namespace memory{
             BOOST_ASSERT_MSG( j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
-            (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
+            (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
         };
 
         static inline size_type size_block() {
             return M;
         }
+
+        void resize(size_type n){
+            return base_type::resize(n/(__GETSIMD__()/sizeof(T))+1);
+        }
+
+	void reserve(size_type n){
+            return base_type::reserve(n/(__GETSIMD__()/sizeof(T))+1);
+        }
     };
-}
+} //end namespace memory
 
 namespace cyme {
     /*
@@ -139,10 +146,15 @@ namespace cyme {
     template<class T, memory::order O>
     class vector : public memory::block_v<typename T::value_type,  T::value_size, O>{
     public:
+        typedef typename T::value_type value_type;
 
-        explicit vector(const size_t size = 1, const typename T::value_type value = typename T::value_type())
-        :memory::block_v<typename T::value_type, T::value_size, O>(size, value){
+        explicit vector(const size_t size = 1, const value_type value = value_type())
+        :memory::block_v<value_type, T::value_size, O>(size, value){
         }
+/*
+        void push_back(const T& value){
+            memory::block_v<value_type, T::value_size, O>push_nback(value);
+        } */
    };
 }
 
