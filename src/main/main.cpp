@@ -98,10 +98,10 @@ struct benchmark_tree{
     static void bench(Ba& a){
 
         for(typename Ba::iterator it = a.begin(); it != a.end(); ++it){
-            (*it)[0] = (*it)[1]*(*it)[2]+(*it)[6] + 3.14;
-            (*it)[1] = (*it)[2]*(*it)[3]+(*it)[6] + 2.18;
-            (*it)[2] = (*it)[3]*(*it)[4]+(*it)[6] + 4.26;
-            (*it)[3] = (*it)[4]*(*it)[5]+(*it)[6] + 3;
+            (*it)[0] = (*it)[4]*(*it)[6]+(*it)[6] + 3.14;
+            (*it)[1] = (*it)[5]*(*it)[5]+(*it)[6] + 2.18;
+            (*it)[2] = (*it)[6]*(*it)[5]+(*it)[6] + 4.26;
+            (*it)[3] = (*it)[7]*(*it)[4]+(*it)[6] + 3;
         }
     }
 };
