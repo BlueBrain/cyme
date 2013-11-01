@@ -150,7 +150,7 @@ int main(int argc, char* argv[]){
 
     typename memory::block_a<float,8,128,memory::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
-        (*it_AoS)[0] /(*it_AoS)[1]/(*it_AoS)[2];
+        (*it_AoS)[0] = (*it_AoS)[1]/(*it_AoS)[2];
 
     typename memory::block_a<float,8,128,memory::AoSoA>::iterator it_AoSoA = block_b.begin();
     for(; it_AoSoA != block_b.end(); ++it_AoSoA)
