@@ -104,16 +104,16 @@ namespace memory{
         }
 
         inline reference operator()(size_type i, size_type j){
-            BOOST_ASSERT_MSG( i < base_type::size(), "out of range: block_v AoSoA i" );
-            BOOST_ASSERT_MSG( j < M, "out of range: block_v AoSoA j" );
+           // nothing on i as the original size is destroyed in the constructor 
+            BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
             (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
         };
 
         inline const_reference operator()(size_type i, size_type j) const{
-            BOOST_ASSERT_MSG( i < base_type::size(), "out of range: block_v AoSoA i" );
-            BOOST_ASSERT_MSG( j < M, "out of range: block_v AoSoA j" );
+           // nothing on i as the original size is destroyed in the constructor 
+            BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
             (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
@@ -127,7 +127,7 @@ namespace memory{
             return base_type::resize(n/(__GETSIMD__()/sizeof(T))+1);
         }
 
-	void reserve(size_type n){
+	    void reserve(size_type n){
             return base_type::reserve(n/(__GETSIMD__()/sizeof(T))+1);
         }
     };

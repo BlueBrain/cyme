@@ -103,6 +103,7 @@ namespace cyme {
     };
 
     typedef boost::mpl::list<boost::int32_t,boost::int64_t,float,double> full_test_types;
+
     typedef boost::mpl::list<
                                 data<float,14,memory::AoS>,
                                 data<float,14,memory::AoSoA>,
@@ -111,30 +112,30 @@ namespace cyme {
                             > floating_point_test_types;
     //max 20 elements, because MPL must emulate variadic template
     typedef boost::mpl::list<
-                                data_block<float,2,1,memory::AoSoA>,
-                                data_block<double,3,1,memory::AoS>,
-                                data_block<float,4,1,memory::AoSoA>,
-                                data_block<double,5,1,memory::AoSoA>,
+                                data_block<float,2,2,memory::AoSoA>,
+                                data_block<double,3,2,memory::AoS>,
+                                data_block<float,4,2,memory::AoSoA>,
+                                data_block<double,5,2,memory::AoSoA>,
 
-                                data_block<float,2,2,memory::AoSoA>,
-                                data_block<double,3,2,memory::AoS>,
-                                data_block<float,4,2,memory::AoSoA>,
-                                data_block<double,5,2,memory::AoSoA>,
+                                data_block<float,2,3,memory::AoSoA>,
+                                data_block<double,3,3,memory::AoS>,
+                                data_block<float,4,3,memory::AoSoA>,
+                                data_block<double,5,3,memory::AoSoA>,
                                 
-                                data_block<float,2,2,memory::AoSoA>,
-                                data_block<double,3,2,memory::AoS>,
-                                data_block<float,4,2,memory::AoSoA>,
-                                data_block<double,5,2,memory::AoSoA>,
+                                data_block<float,2,4,memory::AoSoA>,
+                                data_block<double,3,4,memory::AoS>,
+                                data_block<float,4,4,memory::AoSoA>,
+                                data_block<double,5,4,memory::AoSoA>,
                                 
-                                data_block<float,2,2,memory::AoSoA>,
-                                data_block<double,3,2,memory::AoS>,
-                                data_block<float,4,2,memory::AoSoA>,
-                                data_block<double,5,2,memory::AoSoA>,
+                                data_block<float,2,5,memory::AoSoA>,
+                                data_block<double,3,5,memory::AoS>,
+                                data_block<float,4,5,memory::AoSoA>,
+                                data_block<double,5,5,memory::AoSoA>,
                                 
-                                data_block<float,2,2,memory::AoSoA>,
-                                data_block<double,3,2,memory::AoS>,
-                                data_block<float,4,2,memory::AoSoA>,
-                                data_block<double,5,2,memory::AoSoA>
+                                data_block<float,2,6,memory::AoSoA>,
+                                data_block<double,3,6,memory::AoS>,
+                                data_block<float,4,6,memory::AoSoA>,
+                                data_block<double,5,6,memory::AoSoA>
 
                             > floating_point_torture_list;
 

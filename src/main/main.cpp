@@ -143,6 +143,8 @@ struct test_case{
 };
 
 int main(int argc, char* argv[]){
+
+/*
     boost::mpl::for_each<vector_list>(test_case<benchmark_one>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<vector_list>(test_case<benchmark_two>());
@@ -150,7 +152,7 @@ int main(int argc, char* argv[]){
     boost::mpl::for_each<vector_list>(test_case<benchmark_tree>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<vector_list>(test_case<benchmark_four>());
-/*
+
     boost::mpl::for_each<array_list>(test_case<benchmark_one>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<array_list>(test_case<benchmark_two>());
