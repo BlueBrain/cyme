@@ -37,7 +37,7 @@ namespace numeric{
     struct helper_div{
         static inline vec_simd<T,O> div(vec_simd<T,O> const& rhs){
 #ifdef __FMA__
-            return helper_div<T,O,n-1>::div(rhs)*negatemuladd(rhs,helper_div<T,O,n-1>::div(rhs),vec_simd<T,O>(2.0));
+            return helper_div<T,O,n-1>::div(rhs)*negatemuladd(rhs,helper_div<T,O,n-1>::div(rhs),vec_simd<T,O>(2.0)); // FMA negate operations are differents between INTEL-IBM
 #else
             return helper_div<T,O,n-1>::div(rhs)*(vec_simd<T,O>(2.0)-rhs*helper_div<T,O,n-1>::div(rhs));
 #endif

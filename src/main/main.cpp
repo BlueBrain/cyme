@@ -143,16 +143,16 @@ struct test_case{
 };
 
 int main(int argc, char* argv[]){
-    memory::block_a<float,8,128,memory::AoS> block_a;
-    memory::block_a<float,8,128,memory::AoSoA> block_b;
+    memory::block_a<double,8,128,memory::AoS> block_a;
+    memory::block_a<double,8,128,memory::AoSoA> block_b;
 
     init(block_a, block_b);
 
-    typename memory::block_a<float,8,128,memory::AoS>::iterator it_AoS = block_a.begin();
+    memory::block_a<double,8,128,memory::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
         (*it_AoS)[0] = (*it_AoS)[1]/(*it_AoS)[2];
 
-    typename memory::block_a<float,8,128,memory::AoSoA>::iterator it_AoSoA = block_b.begin();
+    memory::block_a<double,8,128,memory::AoSoA>::iterator it_AoSoA = block_b.begin();
     for(; it_AoSoA != block_b.end(); ++it_AoSoA)
         (*it_AoSoA)[0] = (*it_AoSoA)[1]/(*it_AoSoA)[2];
 
