@@ -87,6 +87,13 @@ namespace numeric{
     };
 
     template<>
+    inline  simd_trait<double,memory::sse2>::register_type _mm_nfma<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0,
+                                                                                         simd_trait<double,memory::sse2>::register_type xmm1,
+                                                                                         simd_trait<double,memory::sse2>::register_type xmm2){
+        return  (xmm0 = _mm_fnmadd_pd(xmm0, xmm1, xmm2));
+    };
+
+    template<>
     inline  simd_trait<double,memory::sse2>::register_type _mm_fms<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0,
                                                                                         simd_trait<double,memory::sse2>::register_type xmm1,
                                                                                         simd_trait<double,memory::sse2>::register_type xmm2){
@@ -94,10 +101,10 @@ namespace numeric{
     };
 
     template<>
-    inline  simd_trait<double,memory::sse2>::register_type _mm_nfma<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0,
-                                                                                         simd_trait<double,memory::sse2>::register_type xmm1,
-                                                                                         simd_trait<double,memory::sse2>::register_type xmm2){
-        return  (xmm0 = _mm_fnmadd_pd(xmm0, xmm1, xmm2));
+    inline  simd_trait<double,memory::sse2>::register_type _mm_nfms<double,memory::sse2>(simd_trait<double,memory::sse2>::register_type xmm0,
+                                                                                        simd_trait<double,memory::sse2>::register_type xmm1,
+                                                                                        simd_trait<double,memory::sse2>::register_type xmm2){
+        return  (xmm0 = _mm_fnmsub_pd(xmm0, xmm1, xmm2));
     };
 #endif //end FMA
    
@@ -157,18 +164,26 @@ namespace numeric{
     };
 
     template<>
-    inline  simd_trait<float,memory::sse2>::register_type _mm_fms<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0,
-                                                                                      simd_trait<float,memory::sse2>::register_type xmm1,
-                                                                                      simd_trait<float,memory::sse2>::register_type xmm2){
-        return  (xmm0 = _mm256_fmsub_ps(xmm0, xmm1, xmm2));
-    };
-
-    template<>
     inline  simd_trait<float,memory::sse2>::register_type _mm_nfma<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0,
                                                                                        simd_trait<float,memory::sse2>::register_type xmm1,
                                                                                        simd_trait<float,memory::sse2>::register_type xmm2){
-        return  (xmm0 = _mm256_fnmadd_ps(xmm0, xmm1, xmm2));
+        return  (xmm0 = _mm_fnmadd_ps(xmm0, xmm1, xmm2));
     };
+
+    template<>
+    inline  simd_trait<float,memory::sse2>::register_type _mm_fms<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0,
+                                                                                      simd_trait<float,memory::sse2>::register_type xmm1,
+                                                                                      simd_trait<float,memory::sse2>::register_type xmm2){
+        return  (xmm0 = _mm_fmsub_ps(xmm0, xmm1, xmm2));
+    };
+
+    template<>
+    inline  simd_trait<float,memory::sse2>::register_type _mm_nfms<float,memory::sse2>(simd_trait<float,memory::sse2>::register_type xmm0,
+                                                                                      simd_trait<float,memory::sse2>::register_type xmm1,
+                                                                                      simd_trait<float,memory::sse2>::register_type xmm2){
+        return  (xmm0 = _mm_fnmsub_ps(xmm0, xmm1, xmm2));
+    };
+
 #endif //end FMA
 
 
