@@ -2,7 +2,7 @@ add_definitions (-DBOOST_TEST_DYN_LINK -Wno-unused-variable)
 
 set(tests alignment)
 
-set(simd_test normal sse2 avx qpx)
+set(simd_test normal sse avx qpx)
 
 foreach(test ${tests})
     foreach(simd ${simd_test})
@@ -13,8 +13,8 @@ foreach(test ${tests})
     endforeach(simd)
 endforeach(test)
 
-if(${SIMD_TECH} STREQUAL "avx" OR ${SIMD_TECH} STREQUAL "sse2" )
-    set(simd_test sse2 avx)
+if(${SIMD_TECH} STREQUAL "avx" OR ${SIMD_TECH} STREQUAL "sse" )
+    set(simd_test sse avx)
 endif()
 
 if(${SIMD_TECH} STREQUAL "qpx")

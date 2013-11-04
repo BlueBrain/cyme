@@ -2,8 +2,8 @@ add_definitions (-DBOOST_TEST_DYN_LINK -Wno-unused-variable)
 
 set(tests factorial pow exp vec)
 
-if(${SIMD_TECH} STREQUAL "avx" OR ${SIMD_TECH} STREQUAL "sse2" )
-    set(simd_test sse2 avx)
+if(${SIMD_TECH} STREQUAL "avx" OR ${SIMD_TECH} STREQUAL "sse" )
+    set(simd_test sse avx)
 endif()
 
 if(${SIMD_TECH} STREQUAL "qpx")

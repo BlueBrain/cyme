@@ -51,7 +51,7 @@ include_directories ("${PROJECT_SOURCE_DIR}/utils/include")
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 option (CYME_TESTS "Build the CYMEE regression tests" OFF)
-set(SIMD_TECH sse2 CACHE STRING "SIMD technology: sse2, avx, qpx and mic")
+set(SIMD_TECH sse CACHE STRING "SIMD technology: sse, avx, qpx and mic")
 option (CYME_FMA "support FMA, very experiemental the parser is not still ready, it can not compile" ON)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_DOCUMENTATION "Use Doxygen to create the HTML/LATEX based API documentation" OFF)
@@ -94,11 +94,11 @@ endif(CYME_MATH)
 ########################################################################
 
 #this depends of the associated module
-set(Boost_NO_SYSTEM_PATHS TRUE)
+#set(Boost_NO_SYSTEM_PATHS TRUE)
 set(BOOST_DIR $ENV{BOOST_DIR} CACHE PATH "Path to the Boost installation (or to the Boost source)")
 set(BOOST_ROOT ${BOOST_DIR})
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-find_package (Boost 1.54 COMPONENTS unit_test_framework system chrono)
+#set(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
+find_package (Boost COMPONENTS unit_test_framework system chrono)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
 if(Boost_FOUND)

@@ -37,7 +37,7 @@ namespace numeric{
         \brief Specialization trait for float with SSE SIMD 
     */
     template <>
-    struct simd_trait<float, memory::sse2> : trait<float>{
+    struct simd_trait<float, memory::sse> : trait<float>{
         typedef __m128 register_type;
     };
    
@@ -45,7 +45,7 @@ namespace numeric{
         \brief Specialization trait for double with SSE SIMD
     */
     template <>
-    struct simd_trait<double, memory::sse2> : trait<double>{
+    struct simd_trait<double, memory::sse> : trait<double>{
         typedef __m128d register_type;
     };
 
@@ -53,7 +53,7 @@ namespace numeric{
      \brief Specialization trait for float  Newton-Raphson division
      */
     template<>
-    struct div_recursion<float, memory::sse2>{
+    struct div_recursion<float, memory::sse>{
         static const std::size_t value = 1; // cardinal([0-1])=2
     };
 
@@ -66,7 +66,7 @@ namespace numeric{
      \brief Specialization trait for double  Newton-Raphson division
      */
     template<>
-    struct div_recursion<double, memory::sse2>{
+    struct div_recursion<double, memory::sse>{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
 

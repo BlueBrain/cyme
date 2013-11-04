@@ -116,7 +116,7 @@ namespace numeric{
 #endif
 } //end namespace 
 
-#ifdef __SSE2__ 
+#ifdef __SSE__ 
     #include "controller/simd_vector/detail/x86/simd_wrapper_sse.ipp"
 #endif 
 
