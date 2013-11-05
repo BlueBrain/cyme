@@ -122,7 +122,7 @@ template<class Bench>
 struct test_case{
     template <typename block>
     void operator()(block const&){
-        block b(16384);
+        block b;//(16384);
         init(b);
         std::vector<double> time_res;
         boost::chrono::system_clock::time_point start;
@@ -143,6 +143,7 @@ struct test_case{
 };
 
 int main(int argc, char* argv[]){
+/*
     memory::block_a<double,8,128,memory::AoS> block_a;
     memory::block_a<double,8,128,memory::AoSoA> block_b;
 
@@ -157,7 +158,7 @@ int main(int argc, char* argv[]){
         (*it_AoSoA)[0] = (*it_AoSoA)[1]/(*it_AoSoA)[2];
 
     check(block_a, block_b);
-
+*/
 /*
     boost::mpl::for_each<vector_list>(test_case<benchmark_one>());
     std::cout << " --------- " << std::endl;
@@ -166,7 +167,7 @@ int main(int argc, char* argv[]){
     boost::mpl::for_each<vector_list>(test_case<benchmark_tree>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<vector_list>(test_case<benchmark_four>());
-
+*/
     boost::mpl::for_each<array_list>(test_case<benchmark_one>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<array_list>(test_case<benchmark_two>());
@@ -174,5 +175,5 @@ int main(int argc, char* argv[]){
     boost::mpl::for_each<array_list>(test_case<benchmark_tree>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<array_list>(test_case<benchmark_four>());
-*/
+
 }
