@@ -1,5 +1,5 @@
 add_executable(main main.cpp)
-add_definitions("-mavx -D__CYME_SIMD_VALUE__=${SIMD_TECH}")
+add_definitions("-mavx -mfma -D__CYME_SIMD_VALUE__=${SIMD_TECH}")
 
 set(LIBRAIRIES ${MASS_LIBRARY} ${SIMD_MASS_LIBRARY})
 

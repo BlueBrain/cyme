@@ -179,7 +179,7 @@ namespace numeric{
     inline  simd_trait<float,memory::sse>::register_type _mm_nfma<float,memory::sse>(simd_trait<float,memory::sse>::register_type xmm0,
                                                                                        simd_trait<float,memory::sse>::register_type xmm1,
                                                                                        simd_trait<float,memory::sse>::register_type xmm2){
-        return  (xmm0 = _mm_fnmsub_ps(xmm0, xmm1, xmm2)); 
+        return  (xmm0 = _mm_fnmadd_ps(xmm0, xmm1, xmm2)); 
     };
 
     template<>
@@ -193,7 +193,7 @@ namespace numeric{
     inline  simd_trait<float,memory::sse>::register_type _mm_nfms<float,memory::sse>(simd_trait<float,memory::sse>::register_type xmm0,
                                                                                       simd_trait<float,memory::sse>::register_type xmm1,
                                                                                       simd_trait<float,memory::sse>::register_type xmm2){
-        return  (xmm0 = _mm_fnmadd_ps(xmm0, xmm1, xmm2));
+        return  (xmm0 = _mm_fnmsub_ps(xmm0, xmm1, xmm2));
     };
 
 #endif //end FMA
