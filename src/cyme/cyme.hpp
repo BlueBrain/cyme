@@ -29,11 +29,9 @@
 #ifndef CYME_CYME_HPP
 #define CYME_CYME_HPP
 
-#include "cstring" // for memset gcc
 #include <math.h> // e system
 #include "controller/simd_vector/simd_vec.hpp" // simd vector
 #include "controller/expression/expr_vec.hpp" // template expression
-#include "controller/math/math.hpp" // exp,pow,fac
 #include "memory/array.hpp" // container
 #include "memory/vector.hpp" // container
 

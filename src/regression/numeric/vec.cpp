@@ -33,6 +33,42 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, floating_po
     BOOST_CHECK_EQUAL(0,b);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_negate, T, floating_point_test_types) {
+    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    TYPE Random = GetRandom<TYPE>();
+    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(Random);
+    TYPE test[n];
+    TYPE res[n] __attribute__((aligned(64)));
+    for(int i=0; i<n; ++i)
+        test[i]=-Random;
+
+    a = a.neg();
+
+    a.store(res);
+
+    int b = memcmp((void*)test,(void*)res,n*sizeof(TYPE));
+    BOOST_CHECK_EQUAL(0,b);
+}
+
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_double_negate, T, floating_point_test_types) {
+    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    TYPE Random = GetRandom<TYPE>();
+    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(Random);
+    TYPE test[n];
+    TYPE res[n] __attribute__((aligned(64)));
+    for(int i=0; i<n; ++i)
+        test[i]=Random;
+
+    a = (a.neg().neg());
+
+    a.store(res);
+
+    int b = memcmp((void*)test,(void*)res,n*sizeof(TYPE));
+    BOOST_CHECK_EQUAL(0,b);
+}
+
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_pointer_constructor, T, floating_point_test_types) {
     int n = memory::__GETSIMD__()/sizeof(TYPE);
     TYPE test[n]  __attribute__((aligned(64)))  ; 

@@ -1,3 +1,4 @@
+
 //#include <vector>
 //#include <cassert>
 #include <iostream>
@@ -8,6 +9,9 @@
 #include "utils/timer.h"
 #include <boost/chrono.hpp>
 
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
+
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
@@ -15,14 +19,34 @@
 
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/push_back.hpp>
 
-using namespace boost::accumulators;
+
+
+#include <functional>
+
+#include <algorithm>
 
 template<class T>
 struct synapse{
     typedef T value_type;
-    static const int value_size = 8;
+    static const int value_size = 5;
 };
+
+typedef cyme::array<synapse<float>,1024, memory::AoS> block_f_aos;
+typedef cyme::array<synapse<float>,1024, memory::AoSoA> block_f_aosoa;
+typedef cyme::array<synapse<double>,1024, memory::AoS> block_d_aos;
+typedef cyme::array<synapse<double>,1024, memory::AoSoA> block_d_aosoa;
+
+
+typedef cyme::vector<synapse<float>, memory::AoS> vector_f_aos;
+typedef cyme::vector<synapse<float>, memory::AoSoA> vector_f_aosoa;
+typedef cyme::vector<synapse<double>, memory::AoS> vector_d_aos;
+typedef cyme::vector<synapse<double>, memory::AoSoA> vector_d_aosoa;
+
+using namespace boost::accumulators;
+
+
 
 typedef cyme::array<synapse<float>,1024, memory::AoS> block_f_aos;
 typedef cyme::array<synapse<float>,1024, memory::AoSoA> block_f_aosoa;
@@ -81,7 +105,7 @@ struct benchmark_one{
     template<class Ba>
     static void bench(Ba& a){
         for(typename Ba::iterator it = a.begin(); it != a.end(); ++it)
-            (*it)[0] = (*it)[3]*(*it)[4]+(*it)[1]*numeric::e((*it)[2]);
+            (*it)[0] = (*it)[3]*(*it)[4]+(*it)[1]*exp((*it)[2]);
         }
 };
 
@@ -110,10 +134,10 @@ struct benchmark_four{
     template<class Ba>
     static void bench(Ba& a){
         for(typename Ba::iterator it = a.begin(); it != a.end(); ++it){
-            (*it)[0] = numeric::e((*it)[4]);
-            (*it)[1] = numeric::e((*it)[5]);
-            (*it)[2] = numeric::e((*it)[6]);
-            (*it)[3] = numeric::e((*it)[7]);
+            (*it)[0] = exp((*it)[4]);
+            (*it)[1] = exp((*it)[5]);
+            (*it)[2] = exp((*it)[6]);
+            (*it)[3] = exp((*it)[7]);
         }
     }
 };
@@ -142,24 +166,93 @@ struct test_case{
     }
 };
 
+struct ProbGABAA{
+    typedef float value_type;
+
+    template<class iterator>
+    static inline void nrn_function(iterator const& it){
+        (*it)[12] = (0.182*((*it)[16]+35.0))/ (1.0 - exp(-(-(*it)[14]-35.0))/9.0);
+
+    };
+
+    const static int value_size = 8;
+};
+
+struct ProbAMPA{
+    typedef double value_type;
+
+    template<class iterator>
+    void nrn_function(iterator const& it){
+        (*it)[1] = ((*it)[4] + (*it)[2] + (*it)[5]) / (*it)[2];
+    };
+
+    const static int value_size = 7;
+};
+
+struct Na{
+    typedef double value_type;
+
+    template<class iterator>
+    void nrn_function(iterator const& it){
+        (*it)[1] = (-(*it)[6] + (*it)[7] + (*it)[2]) / exp((*it)[2]/9.0);
+    };
+
+    const static int value_size = 6;
+};
+
+template<class mechanism, class container = cyme::vector<mechanism, memory::AoSoA> > // should use cyme container there
+class pack{
+public:
+    explicit pack(int size, int value):cont(size*mechanism::value_size,value){ // vector constructor
+    }
+
+    explicit pack():cont(){ // array constructor
+    }
+
+    void execution(){
+        for(typename container::iterator it = cont.begin(); it < cont.end(); ++it) // cilk should do that in parallel
+            m.nrn_function(it);
+    }
+private:
+    container cont;
+    mechanism m;
+};
+
+class stack{
+public:
+    typedef boost::function<void(void)> base_type; // pointer to function
+    stack(){
+
+    }
+
+    void push_back(base_type const& f){
+        s.push_back(f); // fill up the stack
+    }
+
+    void flush(){
+        #pragma omp parallel
+        for(std::vector<base_type>::iterator it = s.begin(); it < s.end(); ++it)
+            #pragma omp task
+            (*it)(); // execute nrn_function
+    }
+private:
+    std::vector<base_type> s;
+};
+
 int main(int argc, char* argv[]){
-/*
-    memory::block_a<double,8,128,memory::AoS> block_a;
-    memory::block_a<double,8,128,memory::AoSoA> block_b;
+    stack s;
 
-    init(block_a, block_b);
+    pack<ProbGABAA > a(16384,1); // pack 16384 synapse, AoSoA
+    pack<ProbAMPA> b(32415,2); // pack 32415 synapse, AoSoA
+    pack<Na, cyme::array<Na, 16, memory::AoSoA> > c; // pack 16 channel small object array is better choice, AoSoA
 
-    memory::block_a<double,8,128,memory::AoS>::iterator it_AoS = block_a.begin();
-    for(; it_AoS != block_a.end(); ++it_AoS)
-        (*it_AoS)[0] = (*it_AoS)[1]/(*it_AoS)[2];
+    s.push_back(boost::bind(&pack<ProbGABAA>::execution,a)); // fill up the stack
+    s.push_back(boost::bind(&pack<ProbAMPA>::execution,b)); // again
+    s.push_back(boost::bind(&pack<Na, cyme::array<Na, 16, memory::AoSoA> >::execution,c)); // again
+    std::cout << " stack execution " << std::endl;
+    s.flush(); // execute the stack
 
-    memory::block_a<double,8,128,memory::AoSoA>::iterator it_AoSoA = block_b.begin();
-    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] = (*it_AoSoA)[1]/(*it_AoSoA)[2];
 
-    check(block_a, block_b);
-*/
-/*
     boost::mpl::for_each<vector_list>(test_case<benchmark_one>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<vector_list>(test_case<benchmark_two>());
@@ -167,7 +260,7 @@ int main(int argc, char* argv[]){
     boost::mpl::for_each<vector_list>(test_case<benchmark_tree>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<vector_list>(test_case<benchmark_four>());
-*/
+/*
     boost::mpl::for_each<array_list>(test_case<benchmark_one>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<array_list>(test_case<benchmark_two>());
@@ -175,5 +268,5 @@ int main(int argc, char* argv[]){
     boost::mpl::for_each<array_list>(test_case<benchmark_tree>());
     std::cout << " --------- " << std::endl;
     boost::mpl::for_each<array_list>(test_case<benchmark_four>());
-
+*/
 }

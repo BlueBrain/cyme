@@ -161,6 +161,10 @@ namespace memory{
         static inline size_type size_block() {
             return M;
         }
+
+        static inline size_type size(){
+            return N;
+        }
     };
 }
 

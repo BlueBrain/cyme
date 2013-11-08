@@ -29,11 +29,13 @@
 #ifndef CYME_SIMD_MATH_HPP
 #define CYME_SIMD_MATH_HPP
 // C - order mater !
+    #include "controller/simd_vector/math/simd_neg.hpp" 
     #include "controller/simd_vector/math/simd_rec.hpp" 
     #include "controller/simd_vector/math/simd_div.hpp"
     #include "controller/simd_vector/math/simd_add.hpp"
     #include "controller/simd_vector/math/simd_sub.hpp"
     #include "controller/simd_vector/math/simd_mul.hpp"
+    #include "controller/simd_vector/math/simd_exp.hpp"
 #ifdef __FMA__
     #include "controller/simd_vector/math/simd_fma.hpp"
     #include "controller/simd_vector/math/simd_fms.hpp"

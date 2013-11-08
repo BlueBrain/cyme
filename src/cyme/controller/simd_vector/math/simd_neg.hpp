@@ -26,20 +26,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_MATH_HPP
-#define CYME_MATH_HPP
+#ifndef CYME_SIMD_NEG_HPP
+#define CYME_SIMD_NEG_HPP
 
-/* 
-    "complex" mathematical solver are defined on the top layer, thus
-    I simplify a lot my "template expression" framework, I do not have to implemenent
-    the specialization in expr_vec_??? for every math functions. New math functions as
-    ln, log, cos, etc ... should be implemented there
- */
-
-#include "controller/math/pow.hpp"
-#include "controller/math/fac.hpp"
-#include "controller/math/detail/remez.hpp"
-#include "controller/math/exp.hpp"
-
-#endif 
+namespace numeric{
+    /**
+    \brief free function + operator between two vectors, this function uses the return value optimization
+    */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> neg(vec_simd<T,O> const& rhs){
+        vec_simd<T,O> nrv(rhs);
+        nrv.neg();
+        return nrv;
+    }
+}
+#endif
 

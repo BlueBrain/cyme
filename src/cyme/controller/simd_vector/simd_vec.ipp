@@ -80,6 +80,11 @@ namespace numeric{
         _mm_store<value_type,O>(this->xmm,a);
     } 
 
+    template<class T, memory::simd O>
+    vec_simd<T,O>& vec_simd<T,O>::neg(){
+       this->xmm = _mm_neg<typename simd_trait<T,O>::value_type,O>(this->xmm);
+       return *this;
+    } 
 #ifdef __FMA__
     template<class T, memory::simd O>
     void vec_simd<T,O>::ma(const vec_simd& lhs, const vec_simd& rhs){

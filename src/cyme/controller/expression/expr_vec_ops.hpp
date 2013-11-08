@@ -32,19 +32,33 @@
 namespace numeric{
 /** \cond I do not need this part in the doc */
 
+    /* parser for the exp */
+    template<class T, memory::simd O, class R1>
+    vec<T,O,vec_exp<T,O,R1> >
+    inline exp(vec<T,O,R1> const& a){
+        return vec<T,O,vec_exp<T,O,R1> >(vec_exp<T,O,R1>(a.rep()));
+    }
+
+    /* parser for neg */
+    template<class T, memory::simd O, class R1>
+    vec<T,O,vec_neg<T,O,R1> >
+    inline operator-(vec<T,O,R1> const& a){
+        return vec<T,O,vec_neg<T,O,R1> >(vec_neg<T,O,R1>(a.rep()));
+    }
+
     /* this is the key of parser, describe every possibilities */
     //addition of two vectors v+w
     template<class T, memory::simd O, class R1, class R2>
     vec<T,O, vec_add<T,O,R1,R2> >
     inline operator +(vec<T,O,R1> const& a, vec<T,O,R2> const& b){
-        return vec<T,O, vec_add<T,O,R1,R2> >(vec_add<T,O,R1,R2>(a.rep(),b.rep()));
+        return vec<T,O,vec_add<T,O,R1,R2> >(vec_add<T,O,R1,R2>(a.rep(),b.rep()));
     }
 
     //subtraction of two vectors v-w
     template<class T, memory::simd O, class R1, class R2>
     vec<T,O, vec_sub<T,O,R1,R2> >
     inline operator -(vec<T,O,R1> const& a, vec<T,O,R2> const& b){
-        return vec<T,O, vec_sub<T,O,R1,R2> >(vec_sub<T,O,R1,R2>(a.rep(),b.rep()));
+        return vec<T,O,vec_sub<T,O,R1,R2> >(vec_sub<T,O,R1,R2>(a.rep(),b.rep()));
     }
 
     //division of two vectors v/w
@@ -138,7 +152,8 @@ namespace numeric{
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_mul<T,O,vec_scalar<T,O>,R2> >
     operator *(vec<T,O,R2> const& b, double const& s){
-        return operator*(s,b);    }
+        return operator*(s,b);
+    }
 
     //v * lambda(int)
     template<class T, memory::simd O, class R2>
@@ -146,7 +161,8 @@ namespace numeric{
     operator *(vec<T,O,R2> const& b, int const& s){
         return operator*(static_cast<T>(s),b);
     }
-    
+
+    // DIVISION IS NOT COMMUTATIVE A/B != B/A !!!!!!!!!!!!!!!!!!!!!!!!!
     //division of scalar/vector, lambda*v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
@@ -154,25 +170,25 @@ namespace numeric{
         return vec<T,O,vec_div<T,O,vec_scalar<T,O>, R2> >(vec_div<T,O,vec_scalar<T,O>,R2>(vec_scalar<T,O>(s),b.rep()));
     }
 
-    //division of scalar/vector, lambda*v for int
+    //division of scalar/vector, lambda/v for int
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
     operator /(int const& s, vec<T,O,R2> const& b){
         return operator/(static_cast<T>(s),b); 
     }
     
-    //v * lambda(double)
+    //v / lambda(double)
     template<class T, memory::simd O, class R2>
-    inline vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
+    inline vec<T,O, vec_div<T,O,R2,vec_scalar<T,O> > >
     operator /(vec<T,O,R2> const& b, double const& s){
-        return operator*(s,b);
+        return  vec<T,O,vec_div<T,O,R2,vec_scalar<T,O> > >(vec_div<T,O,R2,vec_scalar<T,O> >(b.rep(),vec_scalar<T,O>(s)));
     }
 
-    //v * lambda(int)
+    //v / lambda(int)
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
     operator /(vec<T,O,R2> const& b, int const& s){
-        return operator*(static_cast<T>(s),b);
+        return operator/(b,static_cast<T>(s));
     }
 /** \endcond I do not need this part in the doc */
 }

@@ -71,6 +71,12 @@ namespace numeric{
         return (xmm0 = _mm_cvtps_pd(_mm_rcp_ps(_mm_cvtpd_ps(xmm0))));
     };
 
+    template<>
+    inline  simd_trait<double,memory::sse>::register_type _mm_neg<double,memory::sse>(simd_trait<double,memory::sse>::register_type xmm0){
+        simd_trait<double,memory::sse>::register_type mask =  _mm_castsi128_pd(_mm_set1_epi64x(0x8000000000000000));
+        return ( xmm0 = _mm_xor_pd(xmm0, mask));
+    };
+
 #ifdef __INTEL_COMPILER  
     template<>
     inline  simd_trait<double,memory::sse>::register_type _mm_exp<double,memory::sse>( simd_trait<double,memory::sse>::register_type xmm0){
@@ -148,7 +154,13 @@ namespace numeric{
         return (xmm0 = _mm_rcp_ps(xmm0));
     };
 
-#ifdef __INTEL_COMPILER 
+    template<>
+    inline  simd_trait<float,memory::sse>::register_type _mm_neg<float,memory::sse>(simd_trait<float,memory::sse>::register_type xmm0){
+        simd_trait<float,memory::sse>::register_type mask =  _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
+        return ( xmm0 = _mm_xor_ps(xmm0, mask));
+    };
+
+#ifdef __INTEL_COMPILER
     template<>
     inline  simd_trait<float,memory::sse>::register_type _mm_exp<float,memory::sse>( simd_trait<float,memory::sse>::register_type xmm0){
         return (xmm0 = _mm_exp_ps(xmm0));

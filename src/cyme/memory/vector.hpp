@@ -33,7 +33,6 @@
 #include "memory/allocator.hpp"
 #include "memory/detail/storage.hpp"
 
-
 namespace memory{
     template<class T, std::size_t M,  memory::order O>
     class block_v{
@@ -62,6 +61,10 @@ namespace memory{
         :base_type(size,storage_type(value)){
         }
 
+        block_v(block_v<T,M,AoS>const& v):base_type(v.size()){
+            std::copy(v.begin(),v.end(),(*this).begin()); // memcopy may be faster ....
+        }
+
         /**
          \brief return the value of the block_v i, element j, write only
          */
@@ -86,6 +89,20 @@ namespace memory{
         static inline size_type size_block() {
             return M;
         }
+
+        /**
+        \brief adding a new element at the end of the AoS container, using classical push_back of the mother container
+        */
+        void push_back(value_type value){
+            base_type::push_back(storage_type(value));
+        }
+
+        /**
+         \brief adding a new element at the beginning of the AoS container, using classical push_back of the mother container
+         */
+        void push_front(value_type value){
+            base_type::insert(base_type::begin(),storage_type(value));
+        }
     };
 
     template<class T, std::size_t M>
@@ -99,12 +116,17 @@ namespace memory{
         typedef std::vector<storage_type, memory::Allocator<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA> > >   base_type;                  //default template seems impossible on partial specialization
         typedef typename  base_type::iterator                             iterator;
 
-        block_v(const size_type size, const value_type value)
-        :base_type(size/(__GETSIMD__()/sizeof(T))+1, storage_type(value)){
+        explicit block_v(const size_type size, const value_type value)
+        :base_type(size/(__GETSIMD__()/sizeof(T))+1, storage_type(value)),size_cyme(size){
+        }
+
+        block_v(block_v<T,M,AoSoA >const& v):base_type(v.size()),size_cyme(v.size()){
+            std::copy(v.begin(),v.end(),(*this).begin());
         }
 
         inline reference operator()(size_type i, size_type j){
            // nothing on i as the original size is destroyed in the constructor 
+            BOOST_ASSERT_MSG( i < size(), "out of range: block_v AoS i" );
             BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
@@ -127,9 +149,52 @@ namespace memory{
             return base_type::resize(n/(__GETSIMD__()/sizeof(T))+1);
         }
 
-	    void reserve(size_type n){
+        void reserve(size_type n){
             return base_type::reserve(n/(__GETSIMD__()/sizeof(T))+1);
         }
+
+        const size_type size() const{
+            return size_cyme;
+        }
+
+
+        /**
+         \brief adding a new element at the end of the AoSoA container, first check the size if pb increase
+         */
+        void push_back(value_type value){
+            if((this->size_cyme/(__GETSIMD__()/sizeof(T))+1) > base_type::size())
+                (*this).resize(size_cyme);
+
+            for(size_type j=0; j<M; ++j)
+                (*this)(this->size_cyme,j)=value; // I prefer (*this) than operator()
+
+            ++size_cyme;
+        }
+
+
+        /**
+         \brief adding a new element at the beginning of the AoSoA container, first check the size if pb increase, 
+          and copy element one by one, very slow ....
+         */
+        void push_front(value_type value){
+            BOOST_ASSERT_MSG(true, " push_front is VERY SLOW for AoSoA container " );
+            if((this->size_cyme/(__GETSIMD__()/sizeof(T))+1) > base_type::size())
+                (*this).resize(size_cyme);
+
+            for(size_type i=size_cyme; i>0; --i){ // reorder coeff one by one it is slow
+                BOOST_ASSERT_MSG( i == 0, " mistake push_front ! Debug ! " );
+                for(size_type j=0; j<M; ++j)
+                    (*this)(i,j)=(*this)(i-1,j); // the -1 makes the translation
+            }
+
+            for(size_type j=0; j<M; ++j)
+                (*this)(0,j)=value; // I prefer (*this) than operator()
+
+            ++size_cyme;
+        }
+
+    private:
+        size_type size_cyme; // it is the same than the size() for AoS
     };
 } //end namespace memory
 
@@ -151,10 +216,9 @@ namespace cyme {
         explicit vector(const size_t size = 1, const value_type value = value_type())
         :memory::block_v<value_type, T::value_size, O>(size, value){
         }
-/*
-        void push_back(const T& value){
-            memory::block_v<value_type, T::value_size, O>push_nback(value);
-        } */
+
+        vector(vector const& a):memory::block_v<typename T::value_type,  T::value_size, O>(a){
+        }
    };
 }
 

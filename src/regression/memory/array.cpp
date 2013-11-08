@@ -35,6 +35,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_operator_bracket, T, floating_point_blo
     check(block_a, block_b);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(block_copy_constructor, T, floating_point_block_types) {
+    memory::block_a<TYPE,M,N,memory::AoS> block_a;
+    memory::block_a<TYPE,M,N,memory::AoSoA> block_b;
+
+    init(block_a, block_b);
+
+    memory::block_a<TYPE,M,N,memory::AoS> block_a_cpy(block_a);
+    memory::block_a<TYPE,M,N,memory::AoSoA> block_b_cpy(block_b);
+
+    check(block_a, block_b);
+    check(block_a_cpy, block_b_cpy);
+}
+
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal, T, floating_point_torture_list) {
     memory::block_a<TYPE,M,N,memory::AoS> block_a;
@@ -52,6 +65,50 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal, T, floating_point_torture_li
 
     check(block_a, block_b);
 }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_negate, T, floating_point_torture_list) {
+    memory::block_a<TYPE,M,N,memory::AoS> block_a;
+    memory::block_a<TYPE,M,N,memory::AoSoA> block_b;
+
+    init(block_a, block_b);
+
+    typename memory::block_a<TYPE,M,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = -(*it_AoS)[1];
+
+    typename memory::block_a<TYPE,M,N,memory::AoSoA>::iterator it_AoSoA = block_b.begin();
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = -(*it_AoSoA)[1];
+
+    check(block_a, block_b);
+
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = -(-(*it_AoS)[1]);
+
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = -(-(*it_AoSoA)[1]);
+
+    check(block_a, block_b);
+
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = -(-(*it_AoS)[1] -  -(*it_AoS)[2]);
+
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = -(-(*it_AoSoA)[1] -  -(*it_AoS)[2] );
+
+    check(block_a, block_b);
+
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = -(-(*it_AoS)[1] - - - - - -(*it_AoS)[2]);
+
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = -(-(*it_AoSoA)[1] - - - - - -(*it_AoS)[2] );
+
+    check(block_a, block_b);
+
+
+}
+
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal_multiple, T, floating_point_block_types) {
     memory::block_a<TYPE,4,N,memory::AoS> block_a;
@@ -219,6 +276,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_divideequal, T, floating_point_tort
 
     check(block_a, block_b);
 }
+
 
 
 #undef TYPE

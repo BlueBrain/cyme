@@ -131,7 +131,7 @@ namespace memory{
          */
 
          private:
-         value_type data[Size];
+         value_type data[Size]; // need for std algo
      };    
 } //end namespace
 

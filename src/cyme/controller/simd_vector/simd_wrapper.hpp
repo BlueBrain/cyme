@@ -88,6 +88,12 @@ namespace numeric{
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_rec(typename simd_trait<T,O>::register_type xmm0);
 
+    /**
+     \brief free function (wrapper) for calculating the negate number
+     */
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_neg(typename simd_trait<T,O>::register_type xmm0);
+
 #ifdef __FMA__ // This macro is a compiler one
     /**
     \brief free function (wrapper) for the FMA between three registers

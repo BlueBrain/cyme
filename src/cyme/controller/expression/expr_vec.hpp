@@ -54,8 +54,24 @@ namespace numeric{
         typedef vec_scalar<T,O> exp_ref;
     };
     /* \endcond */
-    
-    /** 
+
+    /**
+    \brief this class participate to the tree creation by recursive process, wrap exp e.g exp((*it)[0])
+    */
+    template<class T, memory::simd O, class OP1>
+    class vec_exp{
+        typename vec_traits<OP1,O>::exp_ref op1;
+
+    public:
+        inline vec_exp(OP1 const& a):op1(a){
+        }
+
+        inline vec_simd<T,O> operator()() const{
+            return exp(op1());
+        }
+    };
+
+    /**
       \brief this class participate to the tree creation by recursive process, wrap addition e.g (*it)[0] + (*it)[1]
     */
     template<class T, memory::simd O, class OP1, class OP2>
@@ -86,6 +102,19 @@ namespace numeric{
 
         inline vec_simd<T,O> operator()() const{
             return op1() - op2();
+        }
+    };
+
+    template<class T, memory::simd O, class OP1>
+    class vec_neg{
+        typename vec_traits<OP1,O>::exp_ref op1;
+
+    public:
+        inline vec_neg(OP1 const& a):op1(a){
+        }
+
+        inline vec_simd<T,O> operator()() const{
+            return neg(op1());
         }
     };
 
@@ -330,7 +359,7 @@ namespace numeric{
         }
 
         /**
-           \brief operator /=, create the tree and execute  in normal condition
+        \brief operator /=, create the tree and execute  in normal condition
         */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator/= (vec<T2,O2,Rep2 > const& rhs){
@@ -338,6 +367,7 @@ namespace numeric{
             this->rep()().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
+
         /**
            \brief get the vector class, read only
         */

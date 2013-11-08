@@ -82,13 +82,18 @@ namespace numeric{
 
         /**
          \brief operator -= between two vectors
-         */
+        */
         inline vec_simd& operator -=(const vec_simd& rhs);
 
         /**
          \brief Save the value into the register into the memory
-         */
+        */
         inline void store(pointer a) const;
+
+        /**
+         \brief negate the value of the register 
+        */
+        inline vec_simd& neg();
 
 #ifdef __FMA__
         /**

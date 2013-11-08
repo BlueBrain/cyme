@@ -72,6 +72,12 @@ namespace numeric{
         return (xmm0 = _mm256_cvtps_pd(_mm_rcp_ps(_mm256_cvtpd_ps(xmm0)))); // 256d --(cast)--> 128s --(cast)--> 256d
     };
 
+    template<>
+    inline  simd_trait<double,memory::avx>::register_type _mm_neg<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0){
+        simd_trait<double,memory::avx>::register_type mask =  _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
+        return ( xmm0 = _mm256_xor_pd(xmm0, mask));
+    };
+
 #ifdef __INTEL_COMPILER
     template<>
     inline  simd_trait<double,memory::avx>::register_type _mm_exp<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0){
@@ -147,6 +153,12 @@ namespace numeric{
     template<>
     inline simd_trait<float,memory::avx>::register_type _mm_rec<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0){
         return (xmm0 = _mm256_rcp_ps(xmm0));
+    };
+
+    template<>
+    inline  simd_trait<float,memory::avx>::register_type _mm_neg<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0){
+        simd_trait<float,memory::avx>::register_type mask =  _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
+        return ( xmm0 = _mm256_xor_ps(xmm0, mask));
     };
 
 #ifdef  __INTEL_COMPILER
