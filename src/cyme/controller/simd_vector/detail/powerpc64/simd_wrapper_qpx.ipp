@@ -78,6 +78,11 @@ namespace numeric{
         return (xmm0 = vec_re(xmm0));
     };
 
+    template<>
+    inline  simd_trait<float,memory::qpx>::register_type _mm_neg<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
+        return (xmm0 = vec_neg(xmm0));
+    };
+
 #ifdef __FMA__
     template<>
     inline simd_trait<float,memory::qpx>::register_type _mm_fma<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0, simd_trait<float,memory::qpx>::register_type xmm1, simd_trait<float,memory::qpx>::register_type xmm2){
@@ -143,6 +148,11 @@ namespace numeric{
     template<>
     inline simd_trait<float,memory::qpx>::register_type _mm_rec<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
         return (xmm0 = vec_re(xmm0)); // vec_res ????
+    };
+
+    template<>
+    inline  simd_trait<double,memory::qpx>::register_type _mm_neg<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
+        return (xmm0 = vec_neg(xmm0));
     };
 
 #ifdef __FMA__

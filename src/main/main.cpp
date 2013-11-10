@@ -146,7 +146,7 @@ template<class Bench>
 struct test_case{
     template <typename block>
     void operator()(block const&){
-        block b;//(16384);
+        block b(16384);
         init(b);
         std::vector<double> time_res;
         boost::chrono::system_clock::time_point start;

@@ -72,7 +72,7 @@ namespace numeric{
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
         \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
     */
-    template<class T, std::size_t n = coeff_remez_number::value, class Solver = Remez_exp<T,n> >
+    template<class T, std::size_t n = coeff_remez_number::value, class Solver = Vendor_exp<T,n> >
     struct Helper_exp{
         static inline T exp(T const& a){
              return Solver::exp(a);
@@ -84,7 +84,7 @@ namespace numeric{
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> exp(const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(0.0);;
+        vec_simd<T,O> nrv(0.0);
         nrv = Helper_exp<vec_simd<T,O> >::exp(rhs);
         return nrv;
     }

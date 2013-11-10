@@ -58,20 +58,36 @@ namespace numeric{
      \brief free function based on Newton-Raphson algo <3, ^_^'
      */
     template<class T,memory::simd O>
-    inline vec_simd<T,O> div (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
-        vec_simd<T,O> nrv = lhs*helper_div<T,O,div_recursion<T,O>::value>::div(rhs); 
-        return nrv;
-    }
+    struct NewtonRaphson_div{
+        static inline vec_simd<T,O> div (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
+            vec_simd<T,O> nrv = lhs*helper_div<T,O,div_recursion<T,O>::value>::div(rhs); 
+            return nrv;
+        }
+    };
+
+    template<class T,memory::simd O>
+    struct Vendor_div{
+        static inline vec_simd<T,O> div(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
+             vec_simd<T,O> nrv(lhs); 
+             nrv /= rhs;
+             return nrv;
+        }
+    };    
+
+    template<class T, memory::simd O, class Solver = NewtonRaphson_div<T,O> >
+    struct Helper_div{
+        static inline  vec_simd<T,O> div (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
+            return Solver::div(lhs,rhs);
+        }
+    };
 
     /**
      \brief free function / operator between two vectors this function uses the return value optimization
      */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-    //     vec_simd<T,O> nrv(lhs); // new return value optimization
-    //     nrv /= rhs;
-    //     return nrv;
-           vec_simd<T,O> nrv = div(lhs,rhs);
+           vec_simd<T,O> nrv(0.0);
+           nrv  = Helper_div<T,O>::div(lhs,rhs);
            return nrv;
     }
 } //end namespace
