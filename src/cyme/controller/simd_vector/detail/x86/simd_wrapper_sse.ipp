@@ -77,7 +77,12 @@ namespace numeric{
         return ( xmm0 = _mm_xor_pd(xmm0, mask));
     };
 
-#ifdef __INTEL_COMPILER  
+    template<>
+    inline  simd_trait<double,memory::sse>::register_type _mm_floor<double,memory::sse>(simd_trait<double,memory::sse>::register_type xmm0){
+        return ( xmm0 = _mm_floor_pd(xmm0));
+    };
+
+#ifdef __INTEL_COMPILER
     template<>
     inline  simd_trait<double,memory::sse>::register_type _mm_exp<double,memory::sse>( simd_trait<double,memory::sse>::register_type xmm0){
         return (xmm0 = _mm_exp_pd(xmm0));
@@ -158,6 +163,11 @@ namespace numeric{
     inline  simd_trait<float,memory::sse>::register_type _mm_neg<float,memory::sse>(simd_trait<float,memory::sse>::register_type xmm0){
         simd_trait<float,memory::sse>::register_type mask =  _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
         return ( xmm0 = _mm_xor_ps(xmm0, mask));
+    };
+
+    template<>
+    inline  simd_trait<float,memory::sse>::register_type _mm_floor<float,memory::sse>(simd_trait<float,memory::sse>::register_type xmm0){
+        return ( xmm0 = _mm_floor_ps(xmm0));
     };
 
 #ifdef __INTEL_COMPILER

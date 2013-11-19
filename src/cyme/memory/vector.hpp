@@ -157,6 +157,14 @@ namespace memory{
             return size_cyme;
         }
 
+        const size_type size_debug() const{
+            return base_type::size()
+            ;
+        }
+
+
+
+
 
         /**
          \brief adding a new element at the end of the AoSoA container, first check the size if pb increase
@@ -211,6 +219,7 @@ namespace cyme {
     template<class T, memory::order O>
     class vector : public memory::block_v<typename T::value_type,  T::value_size, O>{
     public:
+        const static memory::order order_value = O;
         typedef typename T::value_type value_type;
 
         explicit vector(const size_t size = 1, const value_type value = value_type())

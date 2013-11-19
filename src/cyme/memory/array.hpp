@@ -179,7 +179,10 @@ namespace cyme {
      }
      */
     template<class T, std::size_t N, memory::order O>
-    class array : public memory::block_a<typename T::value_type, T::value_size, N, O>{ };
+    class array : public memory::block_a<typename T::value_type, T::value_size, N, O>{
+        const static memory::order order_value = O;
+        typedef typename T::value_type value_type;
+    };
 }
 
 #endif

@@ -72,10 +72,37 @@ namespace numeric{
     /** \class template<std::size_t T, std::size_t n, class Solver> exp  
         \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
     */
-    template<class T, std::size_t n = coeff_remez_number::value, class Solver = Vendor_exp<T,n> >
+    template<class T, std::size_t n = coeff_remez_number::value, class Solver = Remez_exp<T,n> >
     struct Helper_exp{
-        static inline T exp(T const& a){
-             return Solver::exp(a);
+        static inline T exp(T a){
+            return Solver::exp(a);
+            /*
+             T px(T(T(1.4426950408889634073599) + a + T(0.5)).floor());
+             T tmp(px);
+            __m128i u =  _mm_castpd_si128(px.xmm);
+            u =  _mm_srli_epi64(u,51);
+            u = _mm_sub_epi64(u,_mm_set1_epi64x(1023));
+            //  __m128i
+
+            long long int oiu(1023);
+            u = _mm_add_epi64(u,_mm_set1_epi64x(oiu));
+            u = _mm_slli_epi64(u,52);
+            __m128d v = _mm_castsi128_pd(u);
+
+            //          tmp.xmm = _mm_castsi128_pd(_mm_slli_epi64(_mm_castpd_si128(tmp.xmm),52));
+
+        //     tmp.xmm = _mm_castsi128_pd(_mm_slli_epi64(_mm_castpd_si128(tmp.xmm),52));
+             
+           
+  
+#ifdef __FMA__
+#else
+             a -=  (px*T(6.93145751953125E-1) + px*T(1.42860682030941723212E-6));
+#endif
+             a = Solver::exp(a);
+            T toto(a*tmp);
+             return a*tmp;
+             */
         }
     };
 

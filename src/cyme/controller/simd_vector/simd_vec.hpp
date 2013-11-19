@@ -95,6 +95,11 @@ namespace numeric{
         */
         inline vec_simd& neg();
 
+        /**
+         \brief floor the value of the register
+         */
+        inline vec_simd& floor();
+
 #ifdef __FMA__
         /**
          \brief FMA operator
