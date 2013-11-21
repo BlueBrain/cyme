@@ -93,11 +93,13 @@ void print( boost::accumulators::accumulator_set<double, stats<tag::mean, tag::v
 static double dt = 0.01;
 
 
+
 struct Na{
-    typedef float value_type;
+    typedef double value_type;
 
     template<class iterator, memory::order O>
     static inline void cnrn_functions(iterator it){
+        typedef typename std::iterator_traits<iterator>::value_type::value_type toto;
         cnrn_initmodel(it);
         cnrn_cur<iterator,O>(it);
         cnrn_state(it);
@@ -225,7 +227,6 @@ int main(int argc, char* argv[]){
  //   s.push_back(boost::bind(&pack<Na, cyme::array<Na, 16, memory::AoSoA> >::execution,&c)); // again
 
     boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
-    a.execution();
     s.flush(); // execute the stack
     boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
     std::cout << " sec " << sec.count() << std::endl;

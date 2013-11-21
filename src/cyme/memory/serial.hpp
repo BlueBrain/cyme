@@ -71,7 +71,7 @@ namespace cyme{
         }
 
         inline serial& operator-=(base_type b){
-             (*this).a -= b;
+             (*this).a.rep() -= b.rep(); // operations inter vector, does not have sens to a-=b, else it will modify the memory also with the store
              return (*this);
         }
       
