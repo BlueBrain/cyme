@@ -50,6 +50,14 @@ namespace numeric{
     };
 
     /**
+     \brief Specialization trait for int with SSE SIMD, use by the exp
+     */
+    template <>
+    struct simd_trait<int, memory::sse> : trait<int>{
+        typedef __m128i register_type;
+    };
+
+    /**
      \brief Specialization trait for float  Newton-Raphson division
      */
     template<>
@@ -89,6 +97,14 @@ namespace numeric{
     template <>
     struct simd_trait<double,memory::avx> : trait<double>{
         typedef __m256d register_type;
+    };
+
+    /**
+     \brief Specialization trait for int with SSE SIMD, use by the exp
+     */
+    template <>
+    struct simd_trait<int, memory::avx> : trait<int>{
+        typedef __m256i register_type;
     };
 #endif
     /** \endcond I do not need this part in the doc */

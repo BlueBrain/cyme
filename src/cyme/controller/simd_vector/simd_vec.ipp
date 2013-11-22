@@ -86,10 +86,40 @@ namespace numeric{
        return *this;
     } 
 
+
+    template<class T,memory::simd O>
+    vec_simd<T,O> cast(const vec_simd<int,O>& rhs){
+        vec_simd<T,O> nrv;
+        nrv.xmm = _mm_cast<typename simd_trait<T,O>::value_type,O>(rhs.xmm); // TO change a day no time this week
+        return nrv;
+    }
+
     template<class T, memory::simd O>
-    vec_simd<T,O>& vec_simd<T,O>::floor(){
-        this->xmm = _mm_floor<typename simd_trait<T,O>::value_type,O>(this->xmm);
-        return *this;
+    vec_simd<int,O> floor(vec_simd<T,O> &rhs){
+        vec_simd<int,O> nrv;
+        nrv.xmm = _mm_floor<typename simd_trait<T,O>::value_type,O>(rhs.xmm);
+        return nrv;
+    }
+
+    template<class T,memory::simd O>
+    vec_simd<T,O> twok(const vec_simd<int,O>& rhs){
+        vec_simd<T,O> nrv;
+        nrv.xmm = _mm_twok<typename simd_trait<T,O>::value_type,O>(rhs.xmm); // TO change a day no time this week 
+        return nrv;
+    }
+
+    template<class T, memory::simd O>
+    vec_simd<T,O> min(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv;
+        nrv.xmm = _mm_min<typename simd_trait<T,O>::value_type,O>(lhs.xmm,rhs.xmm);
+        return nrv;
+    }
+
+    template<class T, memory::simd O>
+    vec_simd<T,O> max(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv;
+        nrv.xmm = _mm_max<typename simd_trait<T,O>::value_type,O>(lhs.xmm,rhs.xmm);
+        return nrv;
     }
 
 #ifdef __FMA__

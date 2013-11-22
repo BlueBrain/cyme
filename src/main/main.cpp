@@ -95,14 +95,17 @@ static double dt = 0.01;
 
 
 struct Na{
-    typedef double value_type;
+    typedef double  value_type;
 
     template<class iterator, memory::order O>
     static inline void cnrn_functions(iterator it){
-        typedef typename std::iterator_traits<iterator>::value_type::value_type toto;
-        cnrn_initmodel(it);
-        cnrn_cur<iterator,O>(it);
-        cnrn_state(it);
+        (*it)[0] = exp((*it)[1]);
+
+        double t = 123;
+
+    //    cnrn_initmodel(it);
+   //     cnrn_cur<iterator,O>(it);
+    //    cnrn_state(it);
     }
 
     template<class iterator>

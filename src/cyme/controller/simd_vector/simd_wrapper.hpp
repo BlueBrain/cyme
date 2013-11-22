@@ -98,8 +98,31 @@ namespace numeric{
      \brief free function (wrapper) to floor
      */
     template<class T, memory::simd O>
-    inline typename simd_trait<T,O>::register_type _mm_floor(typename simd_trait<T,O>::register_type xmm0);
+    inline typename simd_trait<int,O>::register_type _mm_floor(typename simd_trait<T,O>::register_type xmm0);
 
+    /**
+     \brief free function cast in to float for the exp
+     */
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_cast(typename simd_trait<int,O>::register_type xmm0);
+
+    /**
+     \brief free function return the FLOAT vector 2^k
+     */
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_twok(typename simd_trait<int,O>::register_type xmm0);
+
+    /**
+     \brief free function min between two vectors
+     */
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_min(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
+
+    /**
+     \brief free function max between two vectors
+     */
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_max(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
 
 #ifdef __FMA__ // This macro is a compiler one
     /**

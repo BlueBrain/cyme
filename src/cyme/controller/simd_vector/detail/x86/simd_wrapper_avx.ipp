@@ -29,9 +29,12 @@
 #ifndef CYME_SIMD_WRAPPER_AVX_HPP
 #define CYME_SIMD_WRAPPER_AVX_HPP
 
-#include <cassert>
-
 namespace numeric{
+    template<>
+    inline  simd_trait<int,memory::avx>::register_type _mm_load1<int,memory::avx>( simd_trait<int,memory::avx>::register_type xmm0, const  simd_trait<int,memory::avx>::value_type a){
+        return xmm0;
+    }
+
     template<>
     inline  simd_trait<double,memory::avx>::register_type _mm_load1<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::value_type a){
         return (xmm0 = _mm256_broadcast_sd(&a)); 
@@ -76,6 +79,36 @@ namespace numeric{
     inline  simd_trait<double,memory::avx>::register_type _mm_neg<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0){
         simd_trait<double,memory::avx>::register_type mask =  _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
         return ( xmm0 = _mm256_xor_pd(xmm0, mask));
+    };
+
+    template<>
+    inline  simd_trait<int,memory::avx>::register_type _mm_floor<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0){
+        return _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0)));
+    };
+
+    template<>
+    inline  simd_trait<double,memory::avx>::register_type _mm_cast<double,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
+        return  _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0));
+    };
+
+    template<>
+    inline  simd_trait<double,memory::avx>::register_type _mm_twok<double,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
+        // ((int + 127) << 23) <=> int to float 
+        /* AVX2, return _mm256_castsi256_ps(_mm256_slli_epi32(_mm256_add_epi32(xmm0, _mm256_set1_epi32(127)), 23)); */
+        xmm0 = _mm256_insertf128_si256(xmm0, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0,0), _mm_set1_epi32(127)), 23),0);
+        simd_trait<int,memory::avx>::register_type xmm1 =  _mm256_permute2f128_si256( xmm0, xmm1,0);
+        xmm0 = _mm256_castsi128_si256(_mm_slli_si128(_mm_srli_si128( _mm256_castsi256_si128(xmm0),32),32));
+        return  _mm256_castsi256_pd(xmm0);
+    };
+
+    template<>
+    inline  simd_trait<double,memory::avx>::register_type _mm_min<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0, simd_trait<double,memory::avx>::register_type xmm1){
+        return _mm256_min_pd(xmm0,xmm1);
+    };
+
+    template<>
+    inline  simd_trait<double,memory::avx>::register_type _mm_max<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0, simd_trait<double,memory::avx>::register_type xmm1){
+        return _mm256_max_pd(xmm0,xmm1);
     };
 
 #ifdef __INTEL_COMPILER
@@ -159,6 +192,35 @@ namespace numeric{
     inline  simd_trait<float,memory::avx>::register_type _mm_neg<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0){
         simd_trait<float,memory::avx>::register_type mask =  _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
         return ( xmm0 = _mm256_xor_ps(xmm0, mask));
+    };
+
+    template<>
+    inline  simd_trait<int,memory::avx>::register_type _mm_floor<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0){
+        return _mm256_cvttps_epi32(_mm256_floor_ps(xmm0));
+    };
+
+    template<>
+    inline  simd_trait<float,memory::avx>::register_type _mm_cast<float,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
+        return  _mm256_cvtepi32_ps(xmm0);
+    };
+
+    template<>
+    inline  simd_trait<float,memory::avx>::register_type _mm_twok<float,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
+        // ((int + 127) << 23) <=> int to float 
+        /* AVX2, return _mm256_castsi256_ps(_mm256_slli_epi32(_mm256_add_epi32(xmm0, _mm256_set1_epi32(127)), 23)); */
+        xmm0 = _mm256_insertf128_si256(xmm0, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0,0), _mm_set1_epi32(127)), 23),0);
+        xmm0 = _mm256_insertf128_si256(xmm0, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0,1), _mm_set1_epi32(127)), 23),1);
+        return  _mm256_castsi256_ps(xmm0);
+    };
+
+    template<>
+    inline  simd_trait<float,memory::avx>::register_type _mm_min<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0, simd_trait<float,memory::avx>::register_type xmm1){
+        return _mm256_min_ps(xmm0,xmm1);
+    };
+
+    template<>
+    inline  simd_trait<float,memory::avx>::register_type _mm_max<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0, simd_trait<float,memory::avx>::register_type xmm1){
+        return _mm256_max_ps(xmm0,xmm1);
     };
 
 #ifdef  __INTEL_COMPILER

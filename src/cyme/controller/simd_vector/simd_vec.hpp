@@ -95,10 +95,7 @@ namespace numeric{
         */
         inline vec_simd& neg();
 
-        /**
-         \brief floor the value of the register
-         */
-        inline vec_simd& floor();
+
 
 #ifdef __FMA__
         /**
@@ -126,6 +123,36 @@ namespace numeric{
          */
         register_type xmm;
     };
+
+    /**
+     \brief cast int to float
+     */
+    template<class T, memory::simd O>
+    inline vec_simd<T,O> cast(const vec_simd<int,O>& ths);
+
+    /**
+     \brief return the 2^k where k is a vector base on an integer
+     */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> twok(const vec_simd<int,O>& rhs);
+
+    /**
+     \brief floor the value return a int simd register
+     */
+    template<class T,memory::simd O>
+    inline vec_simd<int,O> floor(vec_simd<T,O>& rhs);
+
+    /**
+     \brief return the min between two vector
+     */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> min(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs);
+
+    /**
+     \brief return the min between two vector
+     */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> max(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs);
 
     /**
     \brief free function for call the vendor exponential, this function uses the return value optimization
