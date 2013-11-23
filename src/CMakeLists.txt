@@ -156,6 +156,13 @@ if(CYME_DOCUMENTATION)
   # then add the 'ALL' keyword after "doc" from the above command.
 endif()
 
+########################################################################
+#
+# install 
+#
+########################################################################
+
+install(DIRECTORY cyme DESTINATION include FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.ipp")
 
 
 

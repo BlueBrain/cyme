@@ -13,8 +13,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) 
     TYPE a[n] __attribute__((aligned(64)));
     TYPE b[n] __attribute__((aligned(64)));
     TYPE res[n] __attribute__((aligned(64)));
-  std::cout.precision(16);
-    std::cout << n << std::endl;
     for(int k=0; k<100; ++k){
         for(int i=0; i<n; ++i){
             a[i] = GetRandom<TYPE>();
@@ -31,13 +29,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) 
         va.store(res);
         
         for(int i=0; i<n; ++i)
-            std::cout << b[i] << " " << a[i] << " " << res[i] << std::endl;
+          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
     }
-//        BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_vec_exp_comparison, T, floating_point_test_types) {
-
 }
 
 #undef TYPE
