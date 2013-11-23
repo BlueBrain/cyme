@@ -52,8 +52,8 @@
 namespace cyme {
     namespace test {
 
-    static boost::random::uniform_real_distribution<float>    RandomDouble = boost::random::uniform_real_distribution<float>(-5,5); 
-    static boost::random::uniform_real_distribution<double>   Randomfloat  = boost::random::uniform_real_distribution<double>(-5,5); 
+    static boost::random::uniform_real_distribution<float>    Randomfloat  = boost::random::uniform_real_distribution<float>(-70,70); 
+    static boost::random::uniform_real_distribution<double>   Randomdouble = boost::random::uniform_real_distribution<double>(-700,700); 
     static boost::random::mt19937    rng;
 
     template<class T>
@@ -66,7 +66,7 @@ namespace cyme {
    
     template<>
     double GetRandom<double>(){
-        return RandomDouble(rng);
+        return Randomdouble(rng);
     }
 
     template<class Ba, class Bb> // m and n are differents into the block that why I passe like argument

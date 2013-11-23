@@ -8,7 +8,7 @@
 
 //#include "utils/timer.h"
 
-#include <boost/chrono.hpp>
+//#include <boost/chrono.hpp>
 
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
@@ -101,7 +101,7 @@ struct Na{
     static inline void cnrn_functions(iterator it){
         (*it)[0] = exp((*it)[1]);
 
-        double t = 123;
+      double toto;
 
     //    cnrn_initmodel(it);
    //     cnrn_cur<iterator,O>(it);
@@ -229,11 +229,11 @@ int main(int argc, char* argv[]){
  //   s.push_back(boost::bind(&pack<ProbAMPA>::execution,&b)); // again
  //   s.push_back(boost::bind(&pack<Na, cyme::array<Na, 16, memory::AoSoA> >::execution,&c)); // again
 
-    boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+  //  boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
     s.flush(); // execute the stack
-    boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-    std::cout << " sec " << sec.count() << std::endl;
-
+//boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
+//    std::cout << " sec " << sec.count() << std::endl;
+//
 
 //    boost::mpl::for_each<vector_list>(test_case<benchmark_two>());
 /*
