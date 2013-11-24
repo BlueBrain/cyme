@@ -58,12 +58,18 @@ namespace cyme{
          T a;
     };
 
+
     template<class T>
     struct serial<T,memory::AoSoA>{
         typedef T value_type;
         typedef numeric::vec<value_type,memory::__GETSIMD__()> base_type;        
 
         serial(base_type m):a(m){}
+
+        template<class T2, memory::simd O, class Rep>
+        serial(numeric::vec<T2,O,Rep > const& rhs){
+            a = rhs.rep()(); //evaluate the three compile time, and execute calculation
+        }
 
         inline serial& operator=(base_type b){
             a = b; // create the tree
@@ -78,8 +84,12 @@ namespace cyme{
         inline operator base_type (){ //implicit conversion operator
             return a;
         }
-    
-         base_type a;
+
+        inline const base_type& operator ()() const{
+            return a;
+        }
+
+        base_type a;
     };
 
 }

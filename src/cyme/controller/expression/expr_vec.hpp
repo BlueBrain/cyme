@@ -389,7 +389,7 @@ namespace numeric{
         /**
         \brief need pointer for the operator=, to store the data into the memory, unfortunately I can not have an access to the lfs
         */
-        const_pointer data_pointer;
+        pointer data_pointer;
         /** 
         \brief this is the vector_simd class
         */
