@@ -50,6 +50,7 @@ include_directories ("${PROJECT_SOURCE_DIR}/cyme")
 # Look for modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
+option (CYME_MAIN "Build the main (sandbox)" OFF)
 option (CYME_TESTS "Build the CYMEE regression tests" OFF)
 set(SIMD_TECH avx CACHE STRING "SIMD technology: sse, avx, qpx and mic")
 option (CYME_FMA "support FMA, very experiemental the parser is not still ready, it can not compile" OFF)
@@ -115,7 +116,10 @@ endif()
 ########################################################################
 include_directories ("${PROJECT_BINARY_DIR}")
 include_directories ("${PROJECT_SOURCE_DIR}")
-add_subdirectory( main/ )
+
+if(CYME_MAIN)
+add_subdirectory(main/)
+endif(CYME_MAIN)
 #include_directories ("${PROJECT_SOURCE_DIR}/memory/")
 
 ########################################################################
