@@ -153,11 +153,11 @@ namespace memory{
             return base_type::reserve(n/(__GETSIMD__()/sizeof(T))+1);
         }
 
-        const size_type size() const{
+        size_type size() const{
             return size_cyme;
         }
 
-        const size_type size_debug() const{
+        size_type size_debug() const{
             return base_type::size()
             ;
         }
