@@ -314,9 +314,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_push_back_front, T, floating_point_torture_
     check(vector_a, vector_b);
 }
 
-
-
-
 #undef TYPE
 #undef N
 #undef ORRDER

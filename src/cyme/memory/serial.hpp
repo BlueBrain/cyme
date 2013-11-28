@@ -39,19 +39,18 @@ namespace cyme{
     struct serial<T,memory::AoS>{
         typedef T value_type;
 
-        serial(T m):a(m=T()){}
+        serial(T m=T()):a(m){}
 
         inline serial& operator =(value_type b){
             a = b;
             return *this; 
         }
 
-        inline serial& operator -=(value_type b){
-            (*this).a-=b;
-            return (*this);
-        }
-      
         inline operator T (){ //implicit conversion operator
+            return a;
+        }
+
+        inline const value_type& operator ()() const{
             return a;
         }
     
@@ -64,7 +63,7 @@ namespace cyme{
         typedef T value_type;
         typedef numeric::vec<value_type,memory::__GETSIMD__()> base_type;        
 
-        serial(base_type m):a(m){}
+        serial(base_type m = base_type()):a(m){}
 
         template<class T2, memory::simd O, class Rep>
         serial(numeric::vec<T2,O,Rep > const& rhs){
@@ -76,11 +75,6 @@ namespace cyme{
             return *this; 
         }
 
-        inline serial& operator-=(base_type b){
-             (*this).a.rep() -= b.rep(); // operations inter vector, does not have sens to a-=b, else it will modify the memory also with the store
-             return (*this);
-        }
-      
         inline operator base_type (){ //implicit conversion operator
             return a;
         }

@@ -25,7 +25,7 @@ if(${SIMD_TECH} STREQUAL "mic")
     set(simd_test mic)
 endif()
 
-set(tests_memory array array_algo vector)
+set(tests_memory array array_algo vector serial)
 foreach(test ${tests_memory})
     foreach(simd ${simd_test})
         add_executable(${test}_test_${simd} ${test}.cpp)
