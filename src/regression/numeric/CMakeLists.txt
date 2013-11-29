@@ -1,6 +1,6 @@
 add_definitions (-DBOOST_TEST_DYN_LINK -Wno-unused-variable)
 
-set(tests exp vec)
+set(tests exp log vec)
 
 if(${SIMD_TECH} STREQUAL "avx" OR ${SIMD_TECH} STREQUAL "sse" )
     set(simd_test sse avx)

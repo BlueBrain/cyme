@@ -72,6 +72,22 @@ namespace numeric{
     };
 
     /**
+    \brief this class participate to the tree creation by recursive process, wrap log e.g exp((*it)[0])
+    */
+    template<class T, memory::simd O, class OP1>
+    class vec_log{
+        typename vec_traits<OP1,O>::log_ref op1;
+
+    public:
+        inline vec_log(OP1 const& a):op1(a){
+        }
+
+        inline vec_simd<T,O> operator()() const{
+            return log(op1());
+        }
+    };
+
+    /**
       \brief this class participate to the tree creation by recursive process, wrap addition e.g (*it)[0] + (*it)[1]
     */
     template<class T, memory::simd O, class OP1, class OP2>

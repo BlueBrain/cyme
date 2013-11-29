@@ -39,6 +39,13 @@ namespace numeric{
         return vec<T,O,vec_exp<T,O,R1> >(vec_exp<T,O,R1>(a.rep()));
     }
 
+    /* parser for the log */
+    template<class T, memory::simd O, class R1>
+    vec<T,O,vec_log<T,O,R1> >
+    inline log(vec<T,O,R1> const& a){
+        return vec<T,O,vec_log<T,O,R1> >(vec_log<T,O,R1>(a.rep()));
+    }
+
     /* parser for neg */
     template<class T, memory::simd O, class R1>
     vec<T,O,vec_neg<T,O,R1> >

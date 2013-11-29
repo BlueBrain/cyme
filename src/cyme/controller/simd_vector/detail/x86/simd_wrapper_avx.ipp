@@ -119,6 +119,11 @@ namespace numeric{
     inline  simd_trait<double,memory::avx>::register_type _mm_exp<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0){
         return (xmm0 = _mm256_exp_pd(xmm0));
     };
+
+    template<>
+    inline  simd_trait<double,memory::avx>::register_type _mm_log<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0){
+        return (xmm0 = _mm256_log_pd(xmm0));
+    };
 #endif
     
 #ifdef __FMA__
@@ -230,6 +235,11 @@ namespace numeric{
     template<>
     inline simd_trait<float,memory::avx>::register_type _mm_exp<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0){
         return (xmm0 = _mm256_exp_ps(xmm0));
+    };
+
+    template<>
+    inline simd_trait<float,memory::avx>::register_type _mm_log<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0){
+        return (xmm0 = _mm256_log_ps(xmm0));
     };
 #endif
 

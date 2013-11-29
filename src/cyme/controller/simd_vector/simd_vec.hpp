@@ -163,6 +163,16 @@ namespace numeric{
         nrv.xmm = _mm_exp<T,O>(rhs.xmm);
         return nrv;
     }
+
+    /**
+    \brief free function for call the vendor logarithm, this function uses the return value optimization
+    */
+    template<class T,memory::simd O>
+    inline vec_simd<T,O> log_v(const vec_simd<T,O>& rhs){
+        vec_simd<T,O> nrv(0.0);
+        nrv.xmm = _mm_log<T,O>(rhs.xmm);
+        return nrv;
+    }
 } //end namespace
 
 #include "controller/simd_vector/simd_vec.ipp"

@@ -117,6 +117,11 @@ namespace numeric{
     inline  simd_trait<double,memory::sse>::register_type _mm_exp<double,memory::sse>( simd_trait<double,memory::sse>::register_type xmm0){
         return (xmm0 = _mm_exp_pd(xmm0));
     };
+
+    template<>
+    inline  simd_trait<double,memory::sse>::register_type _mm_log<double,memory::sse>( simd_trait<double,memory::sse>::register_type xmm0){
+        return (xmm0 = _mm_log_pd(xmm0));
+    };
 #endif
 
 #ifdef __FMA__
@@ -225,6 +230,11 @@ namespace numeric{
     template<>
     inline  simd_trait<float,memory::sse>::register_type _mm_exp<float,memory::sse>( simd_trait<float,memory::sse>::register_type xmm0){
         return (xmm0 = _mm_exp_ps(xmm0));
+    };
+
+    template<>
+    inline  simd_trait<float,memory::sse>::register_type _mm_log<float,memory::sse>( simd_trait<float,memory::sse>::register_type xmm0){
+        return (xmm0 = _mm_log_ps(xmm0));
     };
 #endif
 

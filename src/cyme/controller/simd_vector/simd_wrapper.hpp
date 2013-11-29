@@ -83,6 +83,13 @@ namespace numeric{
     inline typename simd_trait<T,O>::register_type _mm_exp(typename simd_trait<T,O>::register_type xmm0); // Vendor (IBM/Intel) only 
 
     /**
+    \brief free function (wrapper) for calculating the log of a vector
+    \warning this function is only works if the wrapper Helper_log is setup to Vendor_log
+    */
+    template<class T, memory::simd O>
+    inline typename simd_trait<T,O>::register_type _mm_log(typename simd_trait<T,O>::register_type xmm0); // Vendor (IBM/Intel) only 
+
+    /**
      \brief free function (wrapper) for calculating a light version of the inverse
      */
     template<class T, memory::simd O>
