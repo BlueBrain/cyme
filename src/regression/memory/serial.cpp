@@ -30,6 +30,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_default_constructor_value, T, floating_
           BOOST_CHECK_CLOSE(v(i*ORDER,0),1,RELATIVE_ERROR); 
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(serial_doest_not_store, T, floating_point_block_types) {
+     cyme::vector<synapse<TYPE,1>,ORDER> v(memory::stride<TYPE,ORDER>::helper_stride(),2);
+     cyme::serial<TYPE,ORDER> a = v[0][0];
+     v[0][0] = a();
+     for(int i = 0;  i< memory::stride<TYPE,ORDER>::helper_stride();++i)
+         BOOST_CHECK_CLOSE(v(i*ORDER,0),2,RELATIVE_ERROR); 
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_ops_value, T, floating_point_block_types) {
      cyme::serial<TYPE,ORDER> a(2);
      cyme::vector<synapse<TYPE,1>,ORDER> v(memory::stride<TYPE,ORDER>::helper_stride(),2);

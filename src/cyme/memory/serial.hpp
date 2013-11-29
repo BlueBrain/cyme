@@ -67,11 +67,11 @@ namespace cyme{
 
         template<class T2, memory::simd O, class Rep>
         serial(numeric::vec<T2,O,Rep > const& rhs){
-            a = rhs.rep()(); //evaluate the three compile time, and execute calculation
+            a.rep()() = rhs.rep()(); // not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
         }
 
         inline serial& operator=(base_type b){
-            a = b; // create the tree
+            a.rep()() = b.rep()(); 
             return *this; 
         }
 

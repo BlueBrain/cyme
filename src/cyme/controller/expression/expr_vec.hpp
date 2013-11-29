@@ -46,6 +46,7 @@ namespace numeric{
     template<class T, memory::simd O>
     struct vec_traits{
         typedef T const& exp_ref;
+        typedef T const& log_ref;
     };
 
     //partial specialization for scalars
