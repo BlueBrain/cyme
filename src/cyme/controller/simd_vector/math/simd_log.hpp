@@ -34,7 +34,7 @@ namespace numeric{
     /** \class template<std::size_t T, std::size_t n, class Solver> log  
         \brief final wrapper for the log
     */
-    template<class T, memory::simd O, std::size_t n, class Solver> // Remez, series ...
+    template<class T, memory::simd O, std::size_t n> // Remez, series ...
     struct my_log{
         static inline vec_simd<T,O> log(vec_simd<T,O> x){
             std::cout << " TO DO " << std::endl;
@@ -49,7 +49,7 @@ namespace numeric{
         }
     };
     
-    template<class T, memory::simd O, std::size_t n = 0, class Solver = Vendor_log<T,O,n> > // my_log (to do) ou vendor
+    template<class T, memory::simd O, std::size_t n = 0, class Solver = my_log<T,O,n> > // my_log (to do) ou vendor
     struct Selector_log{
          static inline vec_simd<T,O> log(vec_simd<T,O> x){
                x = Solver::log(x);

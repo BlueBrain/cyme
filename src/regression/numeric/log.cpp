@@ -28,8 +28,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) 
         va.store(res);
         
         for(int i=0; i<n; ++i)
-          std::cout <<  a[i] << " " <<  res[i] << std::endl;
-        //  BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
+          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
     }
 }
 

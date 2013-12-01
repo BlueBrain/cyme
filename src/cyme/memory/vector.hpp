@@ -126,7 +126,7 @@ namespace memory{
 
         inline reference operator()(size_type i, size_type j){
            // nothing on i as the original size is destroyed in the constructor 
-            BOOST_ASSERT_MSG( i < size(), "out of range: block_v AoS i" );
+           // BOOST_ASSERT_MSG( i < size(), "out of range: block_v AoS i" );
             BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
@@ -190,7 +190,7 @@ namespace memory{
                 (*this).resize(size_cyme);
 
             for(size_type i=size_cyme; i>0; --i){ // reorder coeff one by one it is slow
-                BOOST_ASSERT_MSG( i == 0, " mistake push_front ! Debug ! " );
+ //               BOOST_ASSERT_MSG( i == 0, " mistake push_front ! Debug ! " );
                 for(size_type j=0; j<M; ++j)
                     (*this)(i,j)=(*this)(i-1,j); // the -1 makes the translation
             }

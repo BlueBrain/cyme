@@ -95,8 +95,6 @@ namespace numeric{
         */
         inline vec_simd& neg();
 
-
-
 #ifdef __FMA__
         /**
          \brief FMA operator

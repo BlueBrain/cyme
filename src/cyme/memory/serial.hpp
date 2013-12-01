@@ -34,19 +34,18 @@ namespace cyme{
     class serial{
     };
 
-
     template<class T>
     struct serial<T,memory::AoS>{
         typedef T value_type;
 
-        serial(T m=T()):a(m){}
+        serial(value_type m=value_type()):a(m){}
 
         inline serial& operator =(value_type b){
             a = b;
             return *this; 
         }
 
-        inline operator T (){ //implicit conversion operator
+        inline operator value_type (){ //implicit conversion operator
             return a;
         }
 
@@ -56,7 +55,6 @@ namespace cyme{
     
         T a;
     };
-
 
     template<class T>
     struct serial<T,memory::AoSoA>{
@@ -85,7 +83,6 @@ namespace cyme{
 
         base_type a;
     };
-
 }
 
 #endif
