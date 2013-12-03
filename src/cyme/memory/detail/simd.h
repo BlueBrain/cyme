@@ -46,7 +46,7 @@ namespace memory{
     template<class T, order O>
     struct stride;
     
-    // just stride using for my meta-function
+    // just stride using meta-function
     template<class T>
     struct stride<T,AoS>{
         static inline std::size_t helper_stride(){return 1;}

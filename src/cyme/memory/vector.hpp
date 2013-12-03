@@ -162,10 +162,6 @@ namespace memory{
             ;
         }
 
-
-
-
-
         /**
          \brief adding a new element at the end of the AoSoA container, first check the size if pb increase
          */

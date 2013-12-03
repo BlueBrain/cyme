@@ -73,7 +73,7 @@ namespace numeric{
     };
 
     /**
-    \brief this class participate to the tree creation by recursive process, wrap log e.g exp((*it)[0])
+    \brief this class participate to the tree creation by recursive process, wrap log e.g log((*it)[0])
     */
     template<class T, memory::simd O, class OP1>
     class vec_log{
@@ -122,6 +122,9 @@ namespace numeric{
         }
     };
 
+    /** 
+      \brief this class participate to the tree creation by recursive process, wrap negation -(*it)[1], not optimal FIX ME 
+    */
     template<class T, memory::simd O, class OP1>
     class vec_neg{
         typename vec_traits<OP1,O>::exp_ref op1;

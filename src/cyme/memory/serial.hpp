@@ -30,6 +30,13 @@
 
 namespace cyme{
 
+    /*
+       The serail calss provides a solution for temporary object into mechanism.
+       it the order is AoS, it will provide a basic float/double, else it encapsulates
+       a SIMD vector. Note for AoSoA version: is serial = ... , it will generates the
+       the tree but it will not save the data into memory.
+    */
+
     template<class T, memory::order O>
     class serial{
     };
@@ -38,17 +45,29 @@ namespace cyme{
     struct serial<T,memory::AoS>{
         typedef T value_type;
 
+        /**
+         \brief Default constructor, nothing special
+         */
         serial(value_type m=value_type()):a(m){}
 
+        /**
+         \brief assignement operatior for basic type 
+         */
         inline serial& operator =(value_type b){
             a = b;
             return *this; 
         }
 
-        inline operator value_type (){ //implicit conversion operator
+        /**
+         \brief implicit conversion operator 
+         */
+        inline operator value_type (){
             return a;
         }
 
+        /**
+         \brief bracket operator to fit with AoSoA syntax
+         */
         inline const value_type& operator ()() const{
             return a;
         }
@@ -61,22 +80,38 @@ namespace cyme{
         typedef T value_type;
         typedef numeric::vec<value_type,memory::__GETSIMD__()> base_type;        
 
+        /**
+         \brief constructor
+         */
         serial(base_type m = base_type()):a(m){}
 
+        /**
+         \brief copy constructor create the tree with bracket operator call 
+                 not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
+         */
         template<class T2, memory::simd O, class Rep>
         serial(numeric::vec<T2,O,Rep > const& rhs){
-            a.rep()() = rhs.rep()(); // not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
+            a.rep()() = rhs.rep()(); 
         }
 
+        /**
+        \brief normal situation initialize serial by vector returned by the iteratos serial = (*it)[1];  
+        */
         inline serial& operator=(base_type b){
             a.rep()() = b.rep()(); 
             return *this; 
         }
 
-        inline operator base_type (){ //implicit conversion operator
+        /**
+         \brief implicit conversion operator 
+         */
+        inline operator base_type (){
             return a;
         }
 
+        /**
+         \brief bracket operator return the vector
+         */
         inline const base_type& operator ()() const{
             return a;
         }
