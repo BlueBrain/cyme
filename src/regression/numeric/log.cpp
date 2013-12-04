@@ -15,16 +15,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) 
     TYPE res[n] __attribute__((aligned(64)));
     for(int k=0; k<100; ++k){
         for(int i=0; i<n; ++i){
-            a[i] = GetRandom<TYPE>();
-            b[i] = GetRandom<TYPE>();
+            b[i] = fabs(GetRandom<TYPE>());
         }
         
-        numeric::vec_simd<TYPE,memory::__GETSIMD__()> va(a);
+        numeric::vec_simd<TYPE,memory::__GETSIMD__()> va;
         numeric::vec_simd<TYPE,memory::__GETSIMD__()> vb(b);
         
         for(int i=0; i<n; ++i)
             a[i] = log(b[i]);
         
+        va = log(vb);
         va.store(res);
         
         for(int i=0; i<n; ++i)
