@@ -122,7 +122,7 @@ namespace numeric{
         }
     };
     
-    template<class T, memory::simd O, std::size_t n = coeff_remez_number::value, class Solver = my_exp<T,O,n> > // my_exp ou vendor
+    template<class T, memory::simd O, std::size_t n = coeff_remez_number::value, class Solver = Vendor_exp<T,O,n> > // my_exp ou vendor
     struct Selector_exp{
          static inline vec_simd<T,O> exp(vec_simd<T,O> x){
                x = Solver::exp(x);

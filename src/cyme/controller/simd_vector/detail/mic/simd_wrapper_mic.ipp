@@ -30,6 +30,12 @@
 #define CYME_SIMD_WRAPPER_MIC_HPP
 
 namespace numeric{
+
+    template<>
+    inline  simd_trait<int,memory::mic>::register_type _mm_load1<int,memory::mic>( simd_trait<int,memory::mic>::register_type xmm0, const  simd_trait<int,memory::mic>::value_type a){
+        return xmm0;
+    }
+
     /*  -------------------------------------------------------------------------------------------------------------------- double */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_load1<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::value_type a){
@@ -67,13 +73,47 @@ namespace numeric{
     }
 
     template<>
+    inline  simd_trait<double,memory::mic>::register_type _mm_neg<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
+        return (xmm0);
+    };
+
+    template<>
+    inline  simd_trait<int,memory::mic>::register_type _mm_floor<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
+        return (xmm0);
+    };
+
+    template<>
+    inline  simd_trait<double,memory::mic>::register_type _mm_cast<double,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
+        return  (xmm0);
+    };
+
+    template<>
+    inline  simd_trait<double,memory::mic>::register_type _mm_twok<double,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
+        return  (xmm0);
+    };
+
+    template<>
+    inline  simd_trait<double,memory::mic>::register_type _mm_min<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0, simd_trait<double,memory::mic>::register_type xmm1){
+        return _mm512_min_pd(xmm0,xmm1);
+    };
+
+    template<>
+    inline  simd_trait<double,memory::mic>::register_type _mm_max<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0, simd_trait<double,memory::mic>::register_type xmm1){
+        return _mm512_max_pd(xmm0,xmm1);
+    };
+
+    template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_exp<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0){
         return (xmm0 = _mm512_exp_pd(xmm0));
     }
 
     template<>
+    inline typename simd_trait<double,memory::mic>::register_type _mm_log<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0){
+        return (xmm0 = _mm512_log_pd(xmm0));
+    }
+
+    template<>
     inline simd_trait<double,memory::mic>::register_type _mm_rec<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
-        //return (xmm0 = _mm512_cvtps_pd(_mm256_rcp_ps(_mm512_cvtpd_ps(xmm0))));
         return (xmm0);
     };
 
@@ -132,6 +172,39 @@ namespace numeric{
     inline typename simd_trait<float,memory::mic>::register_type _mm_sub<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
         return (xmm0 = _mm512_sub_ps(xmm0, xmm1));
     }
+
+    template<>
+    inline  simd_trait<float,memory::mic>::register_type _mm_neg<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
+
+        return (xmm0);
+    };
+
+    template<>
+    inline  simd_trait<int,memory::mic>::register_type _mm_floor<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
+        return (xmm0);
+    };
+
+    template<>
+    inline  simd_trait<float,memory::mic>::register_type _mm_cast<float,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
+        return  (xmm0);
+    };
+
+    template<>
+    inline  simd_trait<float,memory::mic>::register_type _mm_twok<float,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
+        return  (xmm0);
+    };
+
+    template<>
+    inline  simd_trait<float,memory::mic>::register_type _mm_min<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0, simd_trait<float,memory::mic>::register_type xmm1){
+        return _mm512_min_ps(xmm0,xmm1);
+    };
+
+    template<>
+    inline  simd_trait<float,memory::mic>::register_type _mm_max<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0, simd_trait<float,memory::mic>::register_type xmm1){
+        return _mm512_max_ps(xmm0,xmm1);
+    };
+
+
 
     template<>
     inline simd_trait<float,memory::mic>::register_type _mm_rec<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){

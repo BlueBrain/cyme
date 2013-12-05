@@ -48,6 +48,11 @@ namespace numeric{
         typedef __m512d register_type;
     };
 
+    template <>
+    struct simd_trait<int, memory::mic> : trait<int>{
+        typedef __m512i register_type;
+    };
+
     /**
      \brief Specialization trait for float  Newton-Raphson division
      */
