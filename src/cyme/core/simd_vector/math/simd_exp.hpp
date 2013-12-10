@@ -29,7 +29,7 @@
 #ifndef CYME_SIMD_EXP_HPP
 #define CYME_SIMD_EXP_HPP
 
-#include "controller/simd_vector/math/detail/remez.hpp"
+#include "core/simd_vector/math/detail/remez.hpp"
 
 namespace numeric{
     template<class T, memory::simd O, std::size_t n>
@@ -122,7 +122,7 @@ namespace numeric{
         }
     };
     
-    template<class T, memory::simd O, std::size_t n = coeff_remez_number::value, class Solver = Vendor_exp<T,O,n> > // my_exp ou vendor
+    template<class T, memory::simd O, std::size_t n = coeff_remez_number::value, class Solver = my_exp<T,O,n> > // my_exp ou vendor
     struct Selector_exp{
          static inline vec_simd<T,O> exp(vec_simd<T,O> x){
                x = Solver::exp(x);
@@ -135,9 +135,7 @@ namespace numeric{
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> exp(const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(0.0);
-        nrv =  Selector_exp<T,O>::exp(rhs);
-        return nrv;
+        return Selector_exp<T,O>::exp(rhs);
     }
 }
 #endif

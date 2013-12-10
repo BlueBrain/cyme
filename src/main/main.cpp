@@ -99,7 +99,8 @@ struct Na{
 
     template<class iterator, memory::order O>
     static inline void cnrn_functions(iterator it){
-        (*it)[0] = exp((*it)[1]);
+//        (*it)[0] = exp((*it)[1]);
+           (*it)[8]  = (0.182*((*it)[16]+35.0)) / (1.0 - (exp((-(*it)[16]-35.0)/9.0)));
 
       double toto;
 

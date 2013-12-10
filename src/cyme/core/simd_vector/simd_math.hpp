@@ -26,20 +26,20 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_SIMD_REC_HPP
-#define CYME_SIMD_REC_HPP
-
-namespace numeric{
-    /**
-    \brief free function for call the reciprocal for the Newton-Raphson division (initialization only), this function uses the return value optimization
-    */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> rec(vec_simd<T,O> const& rhs){
-        vec_simd<T,O> nrv(0.0); // for xlc ...
-        nrv.xmm = _mm_rec<T,O>(rhs.xmm);
-        return nrv;
-    }
-} //end namespace
-
+#ifndef CYME_SIMD_MATH_HPP
+#define CYME_SIMD_MATH_HPP
+// C - order mater !
+    #include "core/simd_vector/math/simd_neg.hpp" 
+    #include "core/simd_vector/math/simd_rec.hpp" 
+    #include "core/simd_vector/math/simd_div.hpp"
+    #include "core/simd_vector/math/simd_add.hpp"
+    #include "core/simd_vector/math/simd_sub.hpp"
+    #include "core/simd_vector/math/simd_mul.hpp"
+    #include "core/simd_vector/math/simd_exp.hpp"
+    #include "core/simd_vector/math/simd_log.hpp"
+#ifdef __FMA__
+    #include "core/simd_vector/math/simd_fma.hpp"
+    #include "core/simd_vector/math/simd_fms.hpp"
 #endif
 
+#endif

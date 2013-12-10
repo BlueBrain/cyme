@@ -29,8 +29,8 @@
 #ifndef CYME_SIMD_VEC_HPP
 #define CYME_SIMD_VEC_HPP
 
-#include "controller/simd_vector/trait.hpp"
-#include "controller/simd_vector/simd_wrapper.hpp"
+#include "core/simd_vector/trait.hpp"
+#include "core/simd_vector/simd_wrapper.hpp"
 
 namespace numeric{
 
@@ -48,7 +48,11 @@ namespace numeric{
         /**
          \brief construtor desired value else 0, note copy constructor generated automaticaly. Only used for constant.
          */
-        inline explicit vec_simd(const value_type a = value_type());
+        inline explicit vec_simd(const value_type a);
+
+        /**
+         \brief construtor without nothing load a value cost */
+        inline explicit vec_simd();
 
         /**
          \brief construtor from a pointer
@@ -157,8 +161,7 @@ namespace numeric{
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> exp_v(const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(0.0);
-        nrv.xmm = _mm_exp<T,O>(rhs.xmm);
+        vec_simd<T,O> nrv(_mm_exp<T,O>(rhs.xmm));
         return nrv;
     }
 
@@ -167,14 +170,13 @@ namespace numeric{
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> log_v(const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(0.0);
-        nrv.xmm = _mm_log<T,O>(rhs.xmm);
+        vec_simd<T,O> nrv(_mm_log<T,O>(rhs.xmm));
         return nrv;
     }
 } //end namespace
 
-#include "controller/simd_vector/simd_vec.ipp"
-#include "controller/simd_vector/simd_math.hpp" // contains all math operations include
+#include "core/simd_vector/simd_vec.ipp"
+#include "core/simd_vector/simd_math.hpp" // contains all math operations include
 
 #endif
 

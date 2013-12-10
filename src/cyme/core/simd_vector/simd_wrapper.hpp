@@ -160,19 +160,19 @@ namespace numeric{
 } //end namespace 
 
 #ifdef __SSE__ 
-    #include "controller/simd_vector/detail/x86/simd_wrapper_sse.ipp"
+    #include "core/simd_vector/detail/x86/simd_wrapper_sse.ipp"
 #endif 
 
 #ifdef __AVX__
-    #include "controller/simd_vector/detail/x86/simd_wrapper_avx.ipp"
+    #include "core/simd_vector/detail/x86/simd_wrapper_avx.ipp"
 #endif
 
 #ifdef _ARCH_QP
-    #include "controller/simd_vector/detail/powerpc64/simd_wrapper_qpx.ipp"
+    #include "core/simd_vector/detail/powerpc64/simd_wrapper_qpx.ipp"
 #endif 
 
 #ifdef __MIC__
-    #include "controller/simd_vector/detail/mic/simd_wrapper_mic.ipp"
+    #include "core/simd_vector/detail/mic/simd_wrapper_mic.ipp"
 #endif 
 
 #endif 

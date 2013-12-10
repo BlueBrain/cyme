@@ -49,7 +49,7 @@ namespace numeric{
         }
     };
     
-    template<class T, memory::simd O, std::size_t n = 0, class Solver = Vendor_log<T,O,n> > // my_log (to do) ou vendor
+    template<class T, memory::simd O, std::size_t n = 0, class Solver = my_log<T,O,n> > // my_log (to do) ou vendor
     struct Selector_log{
          static inline vec_simd<T,O> log(vec_simd<T,O> x){
                x = Solver::log(x);
@@ -62,9 +62,7 @@ namespace numeric{
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> log(const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(0.0);
-        nrv =  Selector_log<T,O>::log(rhs);
-        return nrv;
+        return Selector_log<T,O>::log(rhs);
     }
 }
 #endif

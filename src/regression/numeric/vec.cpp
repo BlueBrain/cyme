@@ -10,7 +10,7 @@ using namespace cyme::test;
 //not the SIMD type is presently given bu the __GETSIMD__() function hardcoded into /memory/detail/simd.h
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_default_constructor, T, floating_point_test_types) {
     int n = memory::__GETSIMD__()/sizeof(TYPE);
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a;
+    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(0.0);
     TYPE test[n]; 
     TYPE res[n] __attribute__((aligned(64)));
     memset((void*)test,0,n*sizeof(TYPE)); 

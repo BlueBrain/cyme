@@ -65,11 +65,11 @@ namespace numeric{
 }
 
 #ifdef __x86_64__
-    #include "controller/simd_vector/detail/x86/trait_x86.ipp"
+    #include "core/simd_vector/detail/x86/trait_x86.ipp"
 #endif
 
 #ifdef _ARCH_QP
-    #include "controller/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
+    #include "core/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
 #endif
 
 #ifdef __MIC__
