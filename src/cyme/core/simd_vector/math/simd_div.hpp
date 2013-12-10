@@ -74,7 +74,7 @@ namespace numeric{
         }
     };    
 
-    template<class T, memory::simd O, class Solver = Vendor_div<T,O> >
+    template<class T, memory::simd O, class Solver = NewtonRaphson_div<T,O> >
     struct Helper_div{
         static inline  vec_simd<T,O> div (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
             return Solver::div(lhs,rhs);
@@ -86,9 +86,7 @@ namespace numeric{
      */
     template<class T,memory::simd O>
     inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-           vec_simd<T,O> nrv(0.0);
-           nrv  = Helper_div<T,O>::div(lhs,rhs);
-           return nrv;
+           return Helper_div<T,O>::div(lhs,rhs);
     }
 } //end namespace
 #endif

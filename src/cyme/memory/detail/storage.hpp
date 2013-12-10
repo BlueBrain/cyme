@@ -29,8 +29,8 @@
 #ifndef CYME_STORAGE_HPP 
 #define CYME_STORAGE_HPP
 
-#include "controller/simd_vector/simd_vec.hpp"
-#include "controller/expression/expr_vec.hpp"
+#include "core/simd_vector/simd_vec.hpp"
+#include "core/expression/expr_vec.hpp"
 /*
 #include <boost/simd/sdk/simd/pack.hpp>
 #include <boost/simd/include/functions/plus.hpp>

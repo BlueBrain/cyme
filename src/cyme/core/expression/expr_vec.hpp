@@ -45,8 +45,8 @@ namespace numeric{
     //primary template, generic
     template<class T, memory::simd O>
     struct vec_traits{
-        typedef T const& exp_ref;
-        typedef T const& log_ref;
+        typedef T const exp_ref;
+        typedef T const log_ref;
     };
 
     //partial specialization for scalars
@@ -274,7 +274,7 @@ namespace numeric{
         typename vec_traits<OP2,O>::exp_ref op2;
     public:
 
-        inline vec_simd<T,O> operator()() const{ 
+        inline vec_simd<T,O> operator()() const{
             return op1() / op2();
         }
 
@@ -339,7 +339,7 @@ namespace numeric{
         */
         inline vec& operator= (vec const& rhs){
             this->expr_rep() = rhs.expr_rep(); //basic register copy no three
-            this->rep()().store(data_pointer);
+            this->rep().store(data_pointer);
             return *this;
         }
 
@@ -348,8 +348,8 @@ namespace numeric{
         */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator= (vec<T2,O2,Rep2 > const& rhs){
-            this->rep()() = rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep()().store(data_pointer); //store the SIMD register into main memory
+            this->rep() = rhs.rep()(); //evaluate the three compile time, and execute calculation
+            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         } 
 
@@ -358,8 +358,8 @@ namespace numeric{
         */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator+= (vec<T2,O2,Rep2 > const& rhs){
-            this->rep()() += rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep()().store(data_pointer); //store the SIMD register into main memory
+            this->rep() += rhs.rep()(); //evaluate the three compile time, and execute calculation
+            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -368,8 +368,8 @@ namespace numeric{
         */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator-= (vec<T2,O2,Rep2 > const& rhs){
-            this->rep()() -= rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep()().store(data_pointer); //store the SIMD register into main memory
+            this->rep() -= rhs.rep()(); //evaluate the three compile time, and execute calculation
+            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -378,8 +378,8 @@ namespace numeric{
         */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator*= (vec<T2,O2,Rep2 > const& rhs){
-            this->rep()() *= rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep()().store(data_pointer); //store the SIMD register into main memory
+            this->rep() *= rhs.rep()(); //evaluate the three compile time, and execute calculation
+            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -388,8 +388,8 @@ namespace numeric{
         */
         template<class T2, memory::simd O2, class Rep2>
         inline vec& operator/= (vec<T2,O2,Rep2 > const& rhs){
-            this->rep()() /= rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep()().store(data_pointer); //store the SIMD register into main memory
+            this->rep() /= rhs.rep()(); //evaluate the three compile time, and execute calculation
+            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -417,9 +417,9 @@ namespace numeric{
     };
 }
 
-#include "controller/expression/expr_vec_ops.hpp"
+#include "core/expression/expr_vec_ops.hpp"
 #ifdef __FMA__
-#include "controller/expression/expr_vec_fma.hpp"
+#include "core/expression/expr_vec_fma.hpp"
 #endif
 
 #endif
