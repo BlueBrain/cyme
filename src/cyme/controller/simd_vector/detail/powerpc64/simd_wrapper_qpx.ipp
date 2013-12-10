@@ -30,6 +30,7 @@
 #define CYME_SIMD_WRAPPER_QPX_HPP
 
 extern "C" vector4double expd4(vector4double);// link to the fortran one 
+extern "C" vector4double logd4(vector4double);// link to the fortran one 
 
 namespace numeric{
     // QPX does not support float
