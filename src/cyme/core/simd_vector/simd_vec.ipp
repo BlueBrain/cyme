@@ -46,6 +46,11 @@ namespace numeric{
     }
 
     template<class T, memory::simd O>
+    vec_simd<T,O>::vec_simd(typename simd_trait<T,O>::register_type x){
+        this->xmm = x;
+    }
+
+    template<class T, memory::simd O>
     vec_simd<T,O>& vec_simd<T,O>::operator()(){
         return *this;
     }

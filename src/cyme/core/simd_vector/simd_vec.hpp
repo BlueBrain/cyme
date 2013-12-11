@@ -55,6 +55,10 @@ namespace numeric{
         inline explicit vec_simd();
 
         /**
+         \brief construtor for exp and log */
+        inline explicit vec_simd(register_type x);
+
+        /**
          \brief construtor from a pointer
          */
         inline vec_simd(const_pointer a);
