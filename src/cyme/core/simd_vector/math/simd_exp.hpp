@@ -130,7 +130,7 @@ namespace numeric{
          }
     };
     
-    /** \class <Up>plate<std::size_t T, std::size_t n, class Solver> exp  
+    /**  
         \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
     */
     template<class T,memory::simd O>

@@ -142,7 +142,7 @@ namespace memory{
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T)))                         //(i)
                                         (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
-        };
+        }
 
         /**
         \brief return the value of the block_a i, element j, read only
@@ -153,7 +153,7 @@ namespace memory{
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
                                         (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
-        };
+        }
 
         /**
         \brief return the size of basic subblock_a 

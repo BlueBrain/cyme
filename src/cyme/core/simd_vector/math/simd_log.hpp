@@ -57,7 +57,7 @@ namespace numeric{
          }
     };
     
-    /** \class <Up>plate<std::size_t T, std::size_t n, class Solver> log  
+    /**   
         \brief final wrapper for the log
     */
     template<class T,memory::simd O>

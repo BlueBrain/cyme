@@ -32,7 +32,8 @@
 #include "memory/detail/simd.h"
 
 namespace numeric{
-    /** \cond I do not need this part in the doc
+    /**
+        \cond I do not need this part in the doc
         \brief Basic trait to avoid duplication into simd_trait
     */
     template <typename T> // TO DO add a safety on the type float and double only

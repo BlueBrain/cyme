@@ -7,6 +7,6 @@ if(CYME_MATH)
     target_link_libraries(main ${LIBRAIRIES} ${Boost_CHRONO_LIBRARY}
 ${Boost_SYSTEM_LIBRARY} )
 else(CYME_MATH)
-    #target_link_libraries(main  ${Boost_CHRONO_LIBRARY} ${Boost_SYSTEM_LIBRARY} )
+    target_link_libraries(main  ${Boost_CHRONO_LIBRARY} ${Boost_SYSTEM_LIBRARY} )
  #   target_link_libraries(main)
 endif(CYME_MATH)

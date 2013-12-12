@@ -8,7 +8,7 @@
 
 //#include "utils/timer.h"
 
-//#include <boost/chrono.hpp>
+#include <boost/chrono.hpp>
 
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
@@ -99,14 +99,9 @@ struct Na{
 
     template<class iterator, memory::order O>
     static inline void cnrn_functions(iterator it){
-//        (*it)[0] = exp((*it)[1]);
-           (*it)[8]  = (0.182*((*it)[16]+35.0)) / (1.0 - (exp((-(*it)[16]-35.0)/9.0)));
-
-      double toto;
-
-    //    cnrn_initmodel(it);
-   //     cnrn_cur<iterator,O>(it);
-    //    cnrn_state(it);
+        cnrn_initmodel(it);
+        cnrn_cur<iterator,O>(it);
+        cnrn_state(it);
     }
 
     template<class iterator>
@@ -150,7 +145,7 @@ struct Na{
         double _v=-33.33; // _v voltage fron a node random number
         cyme::serial<value_type,O> tmp  = cnrn_current<iterator, O>(it, _v + 0.001);
         cyme::serial<value_type,O> tmp2 = cnrn_current<iterator, O>(it, _v);
-        tmp -= tmp2;
+//        tmp() -= tmp2();
         (*it)[17] = tmp;
         (*it)[17] = (*it)[17]/0.001;
     }
@@ -221,7 +216,7 @@ int main(int argc, char* argv[]){
 
 
     stack s;
-    pack<Na> a(16384,0); // pack 16384 synapse, AoSoA
+    pack<Na> a(0xffffff,0); // pack 16384 synapse, AoSoA
 
     init(a);
 
@@ -230,10 +225,11 @@ int main(int argc, char* argv[]){
  //   s.push_back(boost::bind(&pack<ProbAMPA>::execution,&b)); // again
  //   s.push_back(boost::bind(&pack<Na, cyme::array<Na, 16, memory::AoSoA> >::execution,&c)); // again
 
-  //  boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+    boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
     s.flush(); // execute the stack
-//boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-//    std::cout << " sec " << sec.count() << std::endl;
+    boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
+
+    std::cout << " sec " << sec.count() << std::endl;
 //
 
 //    boost::mpl::for_each<vector_list>(test_case<benchmark_two>());

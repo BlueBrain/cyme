@@ -131,7 +131,7 @@ namespace memory{
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
             (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
-        };
+        }
 
         inline const_reference operator()(size_type i, size_type j) const{
            // nothing on i as the original size is destroyed in the constructor 
@@ -139,7 +139,7 @@ namespace memory{
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
             (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
-        };
+        }
 
         static inline size_type size_block() {
             return M;
