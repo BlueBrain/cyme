@@ -99,9 +99,12 @@ struct Na{
 
     template<class iterator, memory::order O>
     static inline void cnrn_functions(iterator it){
+            (*it)[0]  = (*it)[1] - (*it)[2] + (*it)[3];
+/*
         cnrn_initmodel(it);
         cnrn_cur<iterator,O>(it);
         cnrn_state(it);
+*/
     }
 
     template<class iterator>
