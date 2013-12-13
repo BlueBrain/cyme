@@ -39,12 +39,12 @@ namespace numeric{
     /*  -------------------------------------------------------------------------------------------------------------------- double */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_load1<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::value_type a){
-        return (xmm0 = _mm512_set1_pd(a));
+        return _mm512_set1_pd(a);
     }
    
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_load<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::const_pointer a){
-        return (xmm0 = _mm512_load_pd(a)); 
+        return _mm512_load_pd(a);
     }
 
     template<>
@@ -54,22 +54,22 @@ namespace numeric{
    
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_mul<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
-        return (xmm0 = _mm512_mul_pd(xmm0, xmm1));
+        return _mm512_mul_pd(xmm0, xmm1);
     }
    
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_div<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
-        return (xmm0 = _mm512_div_pd(xmm0, xmm1));
+        return _mm512_div_pd(xmm0, xmm1);
     }
    
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_add<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
-        return (xmm0 = _mm512_add_pd(xmm0, xmm1));
+        return _mm512_add_pd(xmm0, xmm1);
     }
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_sub<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
-        return (xmm0 = _mm512_sub_pd(xmm0, xmm1));
+        return _mm512_sub_pd(xmm0, xmm1);
     }
 
     template<>
@@ -104,12 +104,12 @@ namespace numeric{
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_exp<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0){
-        return (xmm0 = _mm512_exp_pd(xmm0));
+        return _mm512_exp_pd(xmm0);
     }
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_log<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0){
-        return (xmm0 = _mm512_log_pd(xmm0));
+        return _mm512_log_pd(xmm0);
     }
 
     template<>
@@ -119,33 +119,33 @@ namespace numeric{
 
    template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_fma<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
-        return (xmm0 = _mm512_fmadd_pd(xmm0, xmm1, xmm2));
+        return _mm512_fmadd_pd(xmm0, xmm1, xmm2);
     }
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_fms<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
-        return (xmm0 = _mm512_fmsub_pd(xmm0, xmm1, xmm2));
+        return _mm512_fmsub_pd(xmm0, xmm1, xmm2);
     }
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_nfms<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
-        return (xmm0 = _mm512_fnmsub_pd(xmm0, xmm1, xmm2));
+        return _mm512_fnmsub_pd(xmm0, xmm1, xmm2);
     }
 
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_nfma<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
-        return (xmm0 = _mm512_fnmadd_pd(xmm0, xmm1, xmm2));
+        return _mm512_fnmadd_pd(xmm0, xmm1, xmm2);
     }
 
     /*  -------------------------------------------------------------------------------------------------------------------- float */
     template<>
     typename simd_trait<float,memory::mic>::register_type _mm_load1<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::value_type a){
-        return (xmm0 = _mm512_set1_ps(a)); 
+        return _mm512_set1_ps(a);
     }
    
     template<>
     typename simd_trait<float,memory::mic>::register_type _mm_load<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>    ::const_pointer a){
-        return (xmm0 = _mm512_load_ps(a)); 
+        return _mm512_load_ps(a);
     }
 
     template<>
@@ -155,22 +155,22 @@ namespace numeric{
    
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_mul<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
-        return (xmm0 = _mm512_mul_ps(xmm0, xmm1));
+        return _mm512_mul_ps(xmm0, xmm1);
     }
    
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_div<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
-        return (xmm0 = _mm512_div_ps(xmm0, xmm1));
+        return _mm512_div_ps(xmm0, xmm1);
     }
    
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_add<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
-        return (xmm0 = _mm512_add_ps(xmm0, xmm1));
+        return _mm512_add_ps(xmm0, xmm1);
     }
 
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_sub<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
-        return (xmm0 = _mm512_sub_ps(xmm0, xmm1));
+        return _mm512_sub_ps(xmm0, xmm1);
     }
 
     template<>
@@ -208,32 +208,32 @@ namespace numeric{
 
     template<>
     inline simd_trait<float,memory::mic>::register_type _mm_rec<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
-        return (xmm0 = _mm512_rcp23_ps(xmm0));
+        return _mm512_rcp23_ps(xmm0);
     };
 
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_exp<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0){
-        return (xmm0 = _mm512_exp_ps(xmm0));
+        return _mm512_exp_ps(xmm0);
     }
     
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_fma<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
-        return (xmm0 = _mm512_fmadd_ps(xmm0, xmm1, xmm2));
+        return _mm512_fmadd_ps(xmm0, xmm1, xmm2);
     }
 
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_fms<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
-        return (xmm0 = _mm512_fmsub_ps(xmm0, xmm1, xmm2));
+        return _mm512_fmsub_ps(xmm0, xmm1, xmm2);
     }
 
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_nfms<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
-        return (xmm0 = _mm512_fnmsub_ps(xmm0, xmm1, xmm2));
+        return _mm512_fnmsub_ps(xmm0, xmm1, xmm2);
     }
 
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_nfma<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
-        return (xmm0 = _mm512_fnmadd_ps(xmm0, xmm1, xmm2));
+        return _mm512_fnmadd_ps(xmm0, xmm1, xmm2);
     }
 
 } //end namespace 
