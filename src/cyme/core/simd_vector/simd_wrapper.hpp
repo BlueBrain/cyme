@@ -35,14 +35,14 @@ namespace numeric{
     \brief free function (wrapper) for loading basic type (double,into) into register
     */
     template<class T, memory::simd O>
-    inline typename simd_trait<T,O>::register_type _mm_load1(typename simd_trait<T,O>::register_type xmm0, const typename simd_trait<T,O>::value_type a);
+    inline typename simd_trait<T,O>::register_type _mm_load1(const typename simd_trait<T,O>::value_type a);
    
     /**
     \brief free function (wrapper) for loading data from memory (pointer) into register
     \warning The data must be  aligned else segfault
     */
     template<class T, memory::simd O>
-    inline typename simd_trait<T,O>::register_type _mm_load(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::const_pointer a);
+    inline typename simd_trait<T,O>::register_type _mm_load(typename simd_trait<T,O>::const_pointer a);
 
     /**
     \brief free function (wrapper) for storing the data in the memory (pointer)

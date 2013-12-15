@@ -31,17 +31,16 @@
 
 namespace numeric{
     template<>
-    inline  simd_trait<int,memory::avx>::register_type _mm_load1<int,memory::avx>( simd_trait<int,memory::avx>::register_type xmm0, const  simd_trait<int,memory::avx>::value_type a){
-        return xmm0;
+    inline  simd_trait<int,memory::avx>::register_type _mm_load1<int,memory::avx>(const  simd_trait<int,memory::avx>::value_type a){
     }
 
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_load1<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::value_type a){
+    inline  simd_trait<double,memory::avx>::register_type _mm_load1<double,memory::avx>(simd_trait<double,memory::avx>::value_type a){
         return _mm256_broadcast_sd(&a);
     }
    
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_load<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::const_pointer a){
+    inline  simd_trait<double,memory::avx>::register_type _mm_load<double,memory::avx>(simd_trait<double,memory::avx>::const_pointer a){
         return _mm256_load_pd(a);
     }
 
@@ -157,12 +156,12 @@ namespace numeric{
 #endif //end FMA
     
     template<>
-     simd_trait<float,memory::avx>::register_type _mm_load1<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0,  simd_trait<float,memory::avx>::value_type a){
+     simd_trait<float,memory::avx>::register_type _mm_load1<float,memory::avx>(simd_trait<float,memory::avx>::value_type a){
         return _mm256_broadcast_ss(&a);
     }
    
     template<>
-     simd_trait<float,memory::avx>::register_type _mm_load<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0,  simd_trait<float,memory::avx>    ::const_pointer a){
+     simd_trait<float,memory::avx>::register_type _mm_load<float,memory::avx>(simd_trait<float,memory::avx>::const_pointer a){
         return _mm256_load_ps(a);
     }
 

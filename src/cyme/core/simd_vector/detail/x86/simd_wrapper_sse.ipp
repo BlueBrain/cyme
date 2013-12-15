@@ -32,17 +32,16 @@
 namespace numeric{
 
     template<>
-    inline  simd_trait<int,memory::sse>::register_type _mm_load1<int,memory::sse>( simd_trait<int,memory::sse>::register_type xmm0, const  simd_trait<int,memory::sse>::value_type a){
-        return xmm0;
+    inline  simd_trait<int,memory::sse>::register_type _mm_load1<int,memory::sse>(const  simd_trait<int,memory::sse>::value_type a){
     }
 
     template<>
-    inline  simd_trait<double,memory::sse>::register_type _mm_load1<double,memory::sse>( simd_trait<double,memory::sse>::register_type xmm0, const  simd_trait<double,memory::sse>::value_type a){
+    inline  simd_trait<double,memory::sse>::register_type _mm_load1<double,memory::sse>(const simd_trait<double,memory::sse>::value_type a){
         return _mm_load1_pd(&a);
     }
    
     template<>
-    inline  simd_trait<double,memory::sse>::register_type _mm_load<double,memory::sse>( simd_trait<double,memory::sse>::register_type xmm0,  simd_trait<double,memory::sse>::const_pointer a){
+    inline  simd_trait<double,memory::sse>::register_type _mm_load<double,memory::sse>(simd_trait<double,memory::sse>::const_pointer a){
         return _mm_load_pd(a);
     }
 
@@ -155,12 +154,12 @@ namespace numeric{
 #endif //end FMA
    
     template<>
-     simd_trait<float,memory::sse>::register_type _mm_load1<float,memory::sse>(simd_trait<float,memory::sse>::register_type xmm0, const  simd_trait<float,memory::sse>::value_type a){
+     simd_trait<float,memory::sse>::register_type _mm_load1<float,memory::sse>(const  simd_trait<float,memory::sse>::value_type a){
         return _mm_load1_ps(&a);
     }
    
     template<>
-     simd_trait<float,memory::sse>::register_type _mm_load<float,memory::sse>( simd_trait<float,memory::sse>::register_type xmm0,  simd_trait<float,memory::sse>::const_pointer a){
+     simd_trait<float,memory::sse>::register_type _mm_load<float,memory::sse>(simd_trait<float,memory::sse>::const_pointer a){
         return _mm_load_ps(a);
     }
 

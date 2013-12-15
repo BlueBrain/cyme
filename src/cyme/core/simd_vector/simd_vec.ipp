@@ -33,7 +33,7 @@ namespace numeric{
 
     template<class T, memory::simd O>
     vec_simd<T,O>::vec_simd(const typename simd_trait<T,O>::value_type a){
-        this->xmm = _mm_load1<typename simd_trait<T,O>::value_type,O>(this->xmm,a);
+        this->xmm = _mm_load1<typename simd_trait<T,O>::value_type,O>(a);
     }
 
     template<class T, memory::simd O>
@@ -42,7 +42,7 @@ namespace numeric{
 
     template<class T, memory::simd O>
     vec_simd<T,O>::vec_simd(typename simd_trait<T,O>::const_pointer a){
-        this->xmm = _mm_load<typename simd_trait<T,O>::value_type,O>(this->xmm,a);
+        this->xmm = _mm_load<typename simd_trait<T,O>::value_type,O>(a);
     }
 
     template<class T, memory::simd O>
