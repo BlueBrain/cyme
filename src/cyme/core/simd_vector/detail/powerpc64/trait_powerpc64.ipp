@@ -31,6 +31,15 @@
 
 namespace numeric{
     /** \cond I do not need this part in the doc
+        \brief Specialization trait for int with QPX
+              QPX does not support int they are store into double ....
+    */
+    template <>
+    struct simd_trait<int, memory::qpx> : trait<int>{
+        typedef vector4double register_type;
+    };
+
+    /** \cond I do not need this part in the doc
         \brief Specialization trait for float with QPX
     */
     template <>
@@ -62,5 +71,6 @@ namespace numeric{
     struct div_recursion<double, memory::qpx>{
         static const std::size_t value = 3; // card([0-3])=4
     };
+
 }
 #endif

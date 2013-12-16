@@ -30,11 +30,6 @@
 #define CYME_SIMD_WRAPPER_SSE_HPP
 
 namespace numeric{
-
-    template<>
-    inline  simd_trait<int,memory::sse>::register_type _mm_load1<int,memory::sse>(const  simd_trait<int,memory::sse>::value_type a){
-    }
-
     template<>
     inline  simd_trait<double,memory::sse>::register_type _mm_load1<double,memory::sse>(const simd_trait<double,memory::sse>::value_type a){
         return _mm_load1_pd(&a);

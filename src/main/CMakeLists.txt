@@ -1,11 +1,11 @@
 add_executable(main main.cpp)
-add_definitions("-mavx  -D__CYME_SIMD_VALUE__=${SIMD_TECH}")
+add_definitions(" -D__CYME_SIMD_VALUE__=${SIMD_TECH}")
 
 set(LIBRAIRIES ${MASS_LIBRARY} ${SIMD_MASS_LIBRARY})
 
 if(CYME_MATH)
     target_link_libraries(main ${LIBRAIRIES} ${Boost_CHRONO_LIBRARY}
-${Boost_SYSTEM_LIBRARY} )
+${Boost_SYSTEM_LIBRARY} -lrt )
 else(CYME_MATH)
     target_link_libraries(main  ${Boost_CHRONO_LIBRARY}
 ${Boost_SYSTEM_LIBRARY} -lrt )

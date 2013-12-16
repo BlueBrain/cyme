@@ -31,10 +31,6 @@
 
 namespace numeric{
     template<>
-    inline  simd_trait<int,memory::avx>::register_type _mm_load1<int,memory::avx>(const  simd_trait<int,memory::avx>::value_type a){
-    }
-
-    template<>
     inline  simd_trait<double,memory::avx>::register_type _mm_load1<double,memory::avx>(simd_trait<double,memory::avx>::value_type a){
         return _mm256_broadcast_sd(&a);
     }

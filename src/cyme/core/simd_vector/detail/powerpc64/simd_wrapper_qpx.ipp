@@ -35,12 +35,12 @@ extern "C" vector4double logd4(vector4double);// link to the fortran one
 namespace numeric{
     // QPX does not support float
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_load1<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::value_type a){
-        return vec_lds(0L,&a);
+    inline simd_trait<float,memory::qpx>::register_type _mm_load1<float,memory::qpx>(simd_trait<float,memory::qpx>::value_type a){
+        return vec_splats(a);
     }
    
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_load<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::const_pointer a){
+    inline simd_trait<float,memory::qpx>::register_type _mm_load<float,memory::qpx>(simd_trait<float,memory::qpx>::const_pointer a){
         return vec_lda(0L,a);
     }
 
@@ -89,6 +89,21 @@ namespace numeric{
         return vec_neg(xmm0);
     };
 
+    template<>
+    inline  simd_trait<float,memory::avx>::register_type _mm_cast<float,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+        return  xmm0; // this int is already a float as floor is saved into vec_double
+    }
+
+    template<>
+    inline  simd_trait<int,memory::qpx>::register_type _mm_floor<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
+        return vec_floor(xmm0);
+    }
+
+    template<>
+    inline  simd_trait<float,memory::qpx>::register_type _mm_twok<float,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+        return xmm0; 
+    }
+
 #ifdef __FMA__
     template<>
     inline simd_trait<float,memory::qpx>::register_type _mm_fma<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0, simd_trait<float,memory::qpx>::register_type xmm1, simd_trait<float,memory::qpx>::register_type xmm2){
@@ -112,13 +127,13 @@ namespace numeric{
 #endif
 
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_load1<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::value_type a){
-        return vec_lds(0L,&a);
+    inline simd_trait<double,memory::qpx>::register_type _mm_load1<double,memory::qpx>(simd_trait<double,memory::qpx>::value_type a){
+        return vec_splats(a);
     }
    
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_load<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::const_pointer a){
-        return vec_lda(0L,a);
+    inline simd_trait<double,memory::qpx>::register_type _mm_load<double,memory::qpx>(simd_trait<double,memory::qpx>::const_pointer a){
+        return  vec_lda(0L,a);
     }
 
     template<>
@@ -165,6 +180,38 @@ namespace numeric{
     inline  simd_trait<double,memory::qpx>::register_type _mm_neg<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
         return vec_neg(xmm0);
     };
+
+    template<>
+    inline  simd_trait<int,memory::qpx>::register_type _mm_floor<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
+        return vec_floor(xmm0);
+    }
+
+    template<>
+    inline  simd_trait<double,memory::avx>::register_type _mm_cast<double,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+        return  xmm0; // this int is already a float as floor is saved into vec_double, so no cast
+    }
+
+    typedef union {
+        double d;
+        unsigned short s[4];
+    } ieee754;
+
+    template<>
+    inline  simd_trait<double,memory::qpx>::register_type _mm_twok<double,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+        simd_trait<double,memory::qpx>::register_type xmm1 =  vec_ctid(xmm0);
+        ieee754 u;
+        long long int n;
+        for(int i=0; i<4; ++i){
+            u.d = 0.;
+            n = vec_extract(xmm1,i);
+            std::cout << " n " << n << std::endl;
+            n += 1023;
+            u.s[3] = (unsigned short)((n << 4) & 0x7FF0);
+            std::cout << " d " << u.d << std::endl;
+            vec_insert(u.d,xmm0,i);
+        }
+        return xmm0; 
+    }
 
 #ifdef __FMA__
     template<>

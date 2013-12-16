@@ -57,7 +57,7 @@ template<class Ba>
 void init(Ba& block_a){
     for(int i=0; i<block_a.size(); ++i)
         for(int j=0; j<block_a.size_block(); ++j){
-            typename Ba::value_type random = 10*drand48();
+            typename Ba::value_type random = 100*drand48();
             block_a(i,j) = random;
         }
 }
@@ -219,7 +219,7 @@ int main(int argc, char* argv[]){
 
 
     stack s;
-    pack<Na> a(0xffffff,0); // pack 16384 synapse, AoSoA
+    pack<Na> a(7,0); // pack 16384 synapse, AoSoA
 
     init(a);
 

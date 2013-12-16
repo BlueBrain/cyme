@@ -80,12 +80,13 @@ namespace numeric{
     struct my_exp{
         static inline vec_simd<T,O> exp(vec_simd<T,O> x){
             /* Load calculate if into correct range */
+/* optionnal presently I do not take care of the limite i.e. x < -700 and x > 700
             vec_simd<T,O> minlog(-7.08396418532264106224e2);
             vec_simd<T,O> maxlog(7.09782712893383996843e2);
 
             x = min(x,maxlog);
             x = max(x,minlog);
-
+*/
             /* calculate k,  k = (int)floor(a); p = (float)k; */
             vec_simd<T,O>   log2e(1.4426950408889634073599);
             vec_simd<T,O>   y(x*log2e);
