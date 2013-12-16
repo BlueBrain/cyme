@@ -219,7 +219,7 @@ int main(int argc, char* argv[]){
 
 
     stack s;
-    pack<Na> a(7,0); // pack 16384 synapse, AoSoA
+    pack<Na> a(0xffffff,0); // pack 16384 synapse, AoSoA
 
     init(a);
 

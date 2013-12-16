@@ -29,10 +29,23 @@
 #ifndef CYME_SIMD_WRAPPER_QPX_HPP
 #define CYME_SIMD_WRAPPER_QPX_HPP
 
+#include <boost/cstdint.hpp>
+
 extern "C" vector4double expd4(vector4double);// link to the fortran one 
 extern "C" vector4double logd4(vector4double);// link to the fortran one 
 
 namespace numeric{
+    // tools to make calculate 2^k as vectorial integer operations are not supported 
+    typedef union {
+        double d;
+        boost::uint64_t ll;
+    } ieee754;
+
+    inline double uint642dp(boost::uint64_t ll) {
+        ieee754 tmp;
+        tmp.ll=ll;
+        return tmp.d;
+    }
     // QPX does not support float
     template<>
     inline simd_trait<float,memory::qpx>::register_type _mm_load1<float,memory::qpx>(simd_trait<float,memory::qpx>::value_type a){
@@ -101,6 +114,20 @@ namespace numeric{
 
     template<>
     inline  simd_trait<float,memory::qpx>::register_type _mm_twok<float,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+        return xmm0; 
+    }
+
+    template<>
+    inline  simd_trait<double,memory::qpx>::register_type _mm_twok<double,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+  //      simd_trait<double,memory::qpx>::register_type xmm1 =  vec_ctid(xmm0);
+        boost::uint32_t n;
+        for(int i=0; i<4; ++i){
+            ieee754 u;
+            u.d = 0;
+            n = vec_extract(xmm0,i);
+            double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52); 
+            vec_insert(d,xmm0,i);
+        }
         return xmm0; 
     }
 
@@ -191,24 +218,17 @@ namespace numeric{
         return  xmm0; // this int is already a float as floor is saved into vec_double, so no cast
     }
 
-    typedef union {
-        double d;
-        unsigned short s[4];
-    } ieee754;
 
     template<>
     inline  simd_trait<double,memory::qpx>::register_type _mm_twok<double,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
-        simd_trait<double,memory::qpx>::register_type xmm1 =  vec_ctid(xmm0);
-        ieee754 u;
-        long long int n;
+  //      simd_trait<double,memory::qpx>::register_type xmm1 =  vec_ctid(xmm0);
+        boost::uint32_t n;
         for(int i=0; i<4; ++i){
-            u.d = 0.;
-            n = vec_extract(xmm1,i);
-            std::cout << " n " << n << std::endl;
-            n += 1023;
-            u.s[3] = (unsigned short)((n << 4) & 0x7FF0);
-            std::cout << " d " << u.d << std::endl;
-            vec_insert(u.d,xmm0,i);
+            ieee754 u;
+            u.d = 0;
+            n = vec_extract(xmm0,i);
+            double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52); 
+            vec_insert(d,xmm0,i);
         }
         return xmm0; 
     }
