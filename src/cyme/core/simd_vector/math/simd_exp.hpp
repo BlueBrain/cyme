@@ -106,12 +106,10 @@ namespace numeric{
 #endif
             /* Compute e^x using a polynomial approximation, remez order 9 by default */
             x = Solver::exp(x);
-
             /* p = 2^k; */
             p = twok<T,O>(k);
             /* e^x = 2^k * e^y */
             x *= p;
-
             return x;
         }
     };

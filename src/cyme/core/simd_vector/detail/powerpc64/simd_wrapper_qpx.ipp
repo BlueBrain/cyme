@@ -103,7 +103,7 @@ namespace numeric{
     };
 
     template<>
-    inline  simd_trait<float,memory::avx>::register_type _mm_cast<float,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+    inline  simd_trait<float,memory::qpx>::register_type _mm_cast<float,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
         return  xmm0; // this int is already a float as floor is saved into vec_double
     }
 
@@ -113,12 +113,7 @@ namespace numeric{
     }
 
     template<>
-    inline  simd_trait<float,memory::qpx>::register_type _mm_twok<float,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
-        return xmm0; 
-    }
-
-    template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_twok<double,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+    inline  simd_trait<double,memory::qpx>::register_type _mm_twok<float,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
   //      simd_trait<double,memory::qpx>::register_type xmm1 =  vec_ctid(xmm0);
         boost::uint32_t n;
         for(int i=0; i<4; ++i){
@@ -214,21 +209,20 @@ namespace numeric{
     }
 
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_cast<double,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
+    inline  simd_trait<double,memory::qpx>::register_type _mm_cast<double,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
         return  xmm0; // this int is already a float as floor is saved into vec_double, so no cast
     }
 
 
     template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_twok<double,memory::avx>(simd_trait<int,memory::qpx>::register_type xmm0){
-  //      simd_trait<double,memory::qpx>::register_type xmm1 =  vec_ctid(xmm0);
+    inline  simd_trait<double,memory::qpx>::register_type _mm_twok<double,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
         boost::uint32_t n;
         for(int i=0; i<4; ++i){
             ieee754 u;
             u.d = 0;
             n = vec_extract(xmm0,i);
             double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52); 
-            vec_insert(d,xmm0,i);
+            xmm0 = vec_insert(d,xmm0,i);
         }
         return xmm0; 
     }

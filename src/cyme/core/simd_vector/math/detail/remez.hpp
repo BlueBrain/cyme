@@ -33,7 +33,7 @@
 namespace numeric{
     //just encapsulate the number of coeff
     struct coeff_remez_number{
-        static const std::size_t value = 9;
+        static const std::size_t value = 11;
     };
 
     // no C++ 11, so no constexpr into structure for double/float, ^.^ just partial specialization
@@ -42,52 +42,62 @@ namespace numeric{
 
     template<class T>
     struct coeff_remez<T,0>{
-        const static inline T coeff() {return 0.99999999999998091336479463057053516986466888462081;}
+        const static inline T coeff() {return 0.99999999999999999566016490920259318691496540598896;}
     };
 
     template<class T>
     struct coeff_remez<T,1>{
-        const static inline T coeff() {return 1.0000000000054730504284163017295863259125942049362;}
+        const static inline T coeff() {return 1.0000000000000017952745258419615282194236357388884;}
     };
 
     template<class T>
     struct coeff_remez<T,2>{
-        const static inline T coeff() {return 0.49999999974109940909767965915362308135415179642286;}
+        const static inline T coeff() {return 0.499999999999877094481580370323249951329122224389189;}
     };
 
     template<class T>
     struct coeff_remez<T,3>{
-        const static inline T coeff() {return 0.166666671414320541875332123507829990378055646330574;}
+        const static inline T coeff() {return 0.166666666669960803484477734308515404418108830469798;}
     };
 
     template<class T>
     struct coeff_remez<T,4>{
-        const static inline T coeff() {return 4.1666622504201078708502686068113075402683415962893e-2;}
+        const static inline T coeff() {return 4.1666666621080810610346717440523105184720007971655e-2;}
     };
 
     template<class T>
     struct coeff_remez<T,5>{
-        const static inline T coeff() {return 8.3335688409829575034112982839739473866857586300664e-3;}
+        const static inline T coeff() {return  8.3333337052009872221152811550156335074160546333973e-3;}
     };
 
     template<class T>
     struct coeff_remez<T,6>{
-        const static inline T coeff() {return 1.38812674551586429265054343505879910146775323730237e-3;}
+        const static inline T coeff() {return  1.3888869684178659239014256260881685824525255547326e-3;}
     };
 
     template<class T>
     struct coeff_remez<T,7>{
-        const static inline T coeff() {return 1.99930498409474044486498978862963995247838069436646e-4;}
+        const static inline T coeff() {return  1.98419213985637881240770890090795533564573406893163e-4;}
     };
 
     template<class T>
     struct coeff_remez<T,8>{
-        const static inline T coeff() {return 2.299608440919942766555719515783308016700833740918e-5;}
+        const static inline T coeff() {return 2.47868893393199945541176652007657202642495832996107e-5;}
     };
 
     template<class T>
     struct coeff_remez<T,9>{
-        const static inline T coeff() {return 3.9099787920346160288874633639268318097077213911751e-6;}
+        const static inline T coeff() {return 2.77750562801295315877005242757916081614772210463065e-6;}
+    };
+
+    template<class T>
+    struct coeff_remez<T,10>{
+        const static inline T coeff() {return 2.5535368519306500343384723775435166753084614063349e-7;}
+    };
+
+    template<class T>
+    struct coeff_remez<T,11>{
+        const static inline T coeff() {return 3.5524625185478232665958141148891055719216674475023e-8;}
     };
 
     /* \endcond I do not need this part in the doc*/

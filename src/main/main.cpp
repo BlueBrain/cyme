@@ -66,7 +66,7 @@ template<class Ba, class Bb>
 void init(Ba& block_a, Bb& block_b){
     for(int i=0; i<block_a.size(); ++i)
         for(int j=0; j<block_a.size_block(); ++j){
-            typename Ba::value_type random = 5.8;//10*drand48();
+            typename Ba::value_type random = 100*drand48();
             block_a(i,j) = random;
             block_b(i,j) = random;
         }
@@ -99,12 +99,14 @@ struct Na{
 
     template<class iterator, memory::order O>
     static inline void cnrn_functions(iterator it){
-//            (*it)[0]  = (*it)[1] - (*it)[2] + (*it)[3];
-
+//               (*it)[0]  = (*it)[1] - (*it)[2] + (*it)[3];
+               (*it)[0]  = exp((*it)[1]);
+                
+/*
         cnrn_initmodel(it);
         cnrn_cur<iterator,O>(it);
         cnrn_state(it);
-
+*/
     }
 
     template<class iterator>
@@ -216,42 +218,23 @@ private:
 
 
 int main(int argc, char* argv[]){
-
+     std::cout.precision(14);
 
     stack s;
-    pack<Na> a(0xffffff,0); // pack 16384 synapse, AoSoA
+    cyme::vector<Na, memory::AoSoA>  a(0xf,0); // pack 16384 synapse, AoSoA
+    cyme::vector<Na, memory::AoS>  b(0xf,0); // pack 16384 synapse, AoSoA
 
-    init(a);
 
+    init(a,b);
 
-    s.push_back(boost::bind(&pack<Na>::execution,&a)); // fill up the stack
- //   s.push_back(boost::bind(&pack<ProbAMPA>::execution,&b)); // again
- //   s.push_back(boost::bind(&pack<Na, cyme::array<Na, 16, memory::AoSoA> >::execution,&c)); // again
+    for(cyme::vector<Na, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
+        (*it)[0] = exp((*it)[1]);
 
-    boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
-    s.flush(); // execute the stack
-    boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
+    for(cyme::vector<Na, memory::AoS>::iterator it = b.begin(); it < b.end(); ++it)
+        (*it)[0] = exp((*it)[1]);
 
-    std::cout << " sec " << sec.count() << std::endl;
-//
+    for(int i = 0; i < a.size(); ++i)
+        std::cout << a(i,1) << " " << a(i,0)<< " " << b(i,1) << " "  << b(i,0) << std::endl;
+    
 
-//    boost::mpl::for_each<vector_list>(test_case<benchmark_two>());
-/*
-    boost::mpl::for_each<vector_list>(test_case<benchmark_one>());
-    std::cout << " --------- " << std::endl;
-
-    boost::mpl::for_each<vector_list>(test_case<benchmark_two>());
-    std::cout << " --------- " << std::endl;
-    boost::mpl::for_each<vector_list>(test_case<benchmark_tree>());
-    std::cout << " --------- " << std::endl;
-    boost::mpl::for_each<vector_list>(test_case<benchmark_four>());
-
-    boost::mpl::for_each<array_list>(test_case<benchmark_one>());
-    std::cout << " --------- " << std::endl;
-    boost::mpl::for_each<array_list>(test_case<benchmark_two>());
-    std::cout << " --------- " << std::endl;
-    boost::mpl::for_each<array_list>(test_case<benchmark_tree>());
-    std::cout << " --------- " << std::endl;
-    boost::mpl::for_each<array_list>(test_case<benchmark_four>());
-*/
 }
