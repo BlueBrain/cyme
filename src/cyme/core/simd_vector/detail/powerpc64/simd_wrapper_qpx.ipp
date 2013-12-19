@@ -216,7 +216,7 @@ namespace numeric{
 
     template<>
     inline  simd_trait<double,memory::qpx>::register_type _mm_twok<double,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
-        boost::uint32_t n;
+        boost::int32_t n;
         for(int i=0; i<4; ++i){
             ieee754 u;
             u.d = 0;

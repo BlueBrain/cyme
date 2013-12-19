@@ -6,6 +6,8 @@
 
 #include "cyme/cyme.hpp"
 
+//#include <boost/math/tools/test.hpp>
+
 //#include "utils/timer.h"
 
 #include <boost/chrono.hpp>
@@ -57,7 +59,7 @@ template<class Ba>
 void init(Ba& block_a){
     for(int i=0; i<block_a.size(); ++i)
         for(int j=0; j<block_a.size_block(); ++j){
-            typename Ba::value_type random = 100*drand48();
+            typename Ba::value_type random = -100*drand48();
             block_a(i,j) = random;
         }
 }
@@ -66,7 +68,7 @@ template<class Ba, class Bb>
 void init(Ba& block_a, Bb& block_b){
     for(int i=0; i<block_a.size(); ++i)
         for(int j=0; j<block_a.size_block(); ++j){
-            typename Ba::value_type random = 100*drand48();
+            typename Ba::value_type random = -100*drand48();
             block_a(i,j) = random;
             block_b(i,j) = random;
         }
@@ -217,15 +219,31 @@ private:
 };
 
 
-int main(int argc, char* argv[]){
-     std::cout.precision(14);
+typedef union {
+    double d;
+    boost::uint64_t ll;
+} ieee754;
 
-    stack s;
-    cyme::vector<Na, memory::AoSoA>  a(0xf,0); // pack 16384 synapse, AoSoA
-    cyme::vector<Na, memory::AoS>  b(0xf,0); // pack 16384 synapse, AoSoA
+inline double uint642dp(boost::uint64_t ll) {
+    ieee754 tmp;
+    tmp.ll=ll;
+    return tmp.d;
+}
+
+int main(int argc, char* argv[]){
+    int n = -7;
+   double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52);
+     std::cout.precision(16);
+    int size = 0xf;
+    cyme::vector<Na, memory::AoSoA>  a(size,0); // pack 16384 synapse, AoSoA
+    cyme::vector<Na, memory::AoS>  b(size,0); // pack 16384 synapse, AoSoA
 
 
     init(a,b);
+
+    std::vector<double> res_a(size);
+    std::vector<double> res_b(size);
+    std::vector<double> res_c(size);
 
     for(cyme::vector<Na, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
         (*it)[0] = exp((*it)[1]);
@@ -233,8 +251,26 @@ int main(int argc, char* argv[]){
     for(cyme::vector<Na, memory::AoS>::iterator it = b.begin(); it < b.end(); ++it)
         (*it)[0] = exp((*it)[1]);
 
+
     for(int i = 0; i < a.size(); ++i)
         std::cout << a(i,1) << " " << a(i,0)<< " " << b(i,1) << " "  << b(i,0) << std::endl;
+
+/*
+    double error_rms(0);
+    for(int i = 0; i < a.size(); ++i){
+        res_a[i] = a(i,0);
+        res_b[i] = b(i,0);
+        double err = fabs(res_a[i]-res_b[i])/res_b[i]; 
+        error_rms = err*err; 
+    }
+    
+    error_rms /= res_b.size();
+    error_rms = sqrt(error_rms);
+    
+//    std::vector<double>::iterator rms = std::max_element(res_c.begin(), res_c.end());
+ 
+    std::cout << error_rms << std::endl;
+*/
     
 
 }

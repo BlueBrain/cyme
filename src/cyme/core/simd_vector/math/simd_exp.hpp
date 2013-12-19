@@ -98,8 +98,8 @@ namespace numeric{
             vec_simd<T,O> c2(1.42860682030941723212E-6);
 
 #ifdef __FMA__
-            x = mulsub(p,c1,x);
-            x = mulsub(p,c2,x);
+            x = negatemuladd(p,c1,x);
+            x = negatemuladd(p,c2,x);
 #else
             x -= p*c1;
             x -= p*c2; // this corection I do not know ><
