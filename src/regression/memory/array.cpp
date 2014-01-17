@@ -223,6 +223,55 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_minusequal, T, floating_point_tortu
     check(block_a, block_b);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_minus_basic_type, T, floating_point_torture_list) {
+    memory::block_a<TYPE,M,N,memory::AoS> block_a;
+    memory::block_a<TYPE,M,N,memory::AoSoA> block_b;
+
+    init(block_a, block_b);
+
+    TYPE one(1);
+
+    typename memory::block_a<TYPE,M,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = (*it_AoS)[0] - one;
+
+    typename memory::block_a<TYPE,M,N,memory::AoSoA>::iterator it_AoSoA = block_b.begin();
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = (*it_AoSoA)[0] - one;
+
+    check(block_a, block_b);
+
+    it_AoS = block_a.begin();
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = one - (*it_AoS)[0];
+
+    it_AoSoA = block_b.begin();
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = one - (*it_AoSoA)[0];
+
+    check(block_a, block_b);
+
+    it_AoS = block_a.begin();
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] =  -one - (*it_AoS)[0];
+
+    it_AoSoA = block_b.begin();
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = -one - (*it_AoSoA)[0];
+
+    check(block_a, block_b);
+
+    it_AoS = block_a.begin();
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = -(*it_AoS)[0] - one;
+
+    it_AoSoA = block_b.begin();
+    for(; it_AoSoA != block_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = -(*it_AoSoA)[0] -one;
+
+    check(block_a, block_b);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_multiplyequal, T, floating_point_torture_list) {
     memory::block_a<TYPE,M,N,memory::AoS> block_a;
     memory::block_a<TYPE,M,N,memory::AoSoA> block_b;

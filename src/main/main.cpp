@@ -75,7 +75,7 @@ void init(Ba& block_a, Bb& block_b){
 }
 
 template<class Ba, class Bb>
-void check(Ba const & block_a, Bb const & block_b){
+void check(Ba & block_a, Bb & block_b){
     std::cout.precision(2*sizeof(typename Ba::value_type));
 
     for(int i=0; i<block_a.size(); ++i)
@@ -101,14 +101,16 @@ struct Na{
 
     template<class iterator, memory::order O>
     static inline void cnrn_functions(iterator it){
-//               (*it)[0]  = (*it)[1] - (*it)[2] + (*it)[3];
-               (*it)[0]  = exp((*it)[1]);
-                
+
+//        (*it)[9] = exp(((*it)[16]-35.0)/9.0);
+        (*it)[9] =(*it)[16]-35;
+
+
 /*
         cnrn_initmodel(it);
         cnrn_cur<iterator,O>(it);
-        cnrn_state(it);
-*/
+ */
+//        cnrn_state(it);
     }
 
     template<class iterator>
@@ -219,58 +221,21 @@ private:
 };
 
 
-typedef union {
-    double d;
-    boost::uint64_t ll;
-} ieee754;
-
-inline double uint642dp(boost::uint64_t ll) {
-    ieee754 tmp;
-    tmp.ll=ll;
-    return tmp.d;
-}
-
 int main(int argc, char* argv[]){
-    int n = -7;
-   double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52);
-     std::cout.precision(16);
-    int size = 0xf;
-    cyme::vector<Na, memory::AoSoA>  a(size,0); // pack 16384 synapse, AoSoA
-    cyme::vector<Na, memory::AoS>  b(size,0); // pack 16384 synapse, AoSoA
+    stack s;
 
+    pack<Na,cyme::vector<Na, memory::AoSoA> > a(0x4,0); // pack 16384 synapse, AoSoA
+    pack<Na,cyme::vector<Na, memory::AoS> > b(0x4,0); // pack 16384 synapse, AoSoA
 
     init(a,b);
 
-    std::vector<double> res_a(size);
-    std::vector<double> res_b(size);
-    std::vector<double> res_c(size);
+    s.push_back(boost::bind(&pack<Na>::execution,&a)); // fill up the stack
+    s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&b)); // fill up the stack
 
-    for(cyme::vector<Na, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
-        (*it)[0] = exp((*it)[1]);
-
-    for(cyme::vector<Na, memory::AoS>::iterator it = b.begin(); it < b.end(); ++it)
-        (*it)[0] = exp((*it)[1]);
-
-
-    for(int i = 0; i < a.size(); ++i)
-        std::cout << a(i,1) << " " << a(i,0)<< " " << b(i,1) << " "  << b(i,0) << std::endl;
-
-/*
-    double error_rms(0);
-    for(int i = 0; i < a.size(); ++i){
-        res_a[i] = a(i,0);
-        res_b[i] = b(i,0);
-        double err = fabs(res_a[i]-res_b[i])/res_b[i]; 
-        error_rms = err*err; 
-    }
+    boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+    s.flush(); // execute the stack
+    boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
+    std::cout << " sec " << sec.count() << std::endl;
     
-    error_rms /= res_b.size();
-    error_rms = sqrt(error_rms);
-    
-//    std::vector<double>::iterator rms = std::max_element(res_c.begin(), res_c.end());
- 
-    std::cout << error_rms << std::endl;
-*/
-    
-
+    check(a,b);
 }

@@ -37,8 +37,12 @@ namespace numeric{
     template<class T, memory::simd O, std::size_t n> // Remez, series ...
     struct my_log{
         static inline vec_simd<T,O> log(vec_simd<T,O> x){
-            std::cout << " TO DO " << std::endl;
-            return x;
+            T tmp[8] __attribute__((aligned(64)));
+            x.store(tmp);
+            for(int i=0; i<8; ++i)
+                tmp[i] = std::log(tmp[i]);
+            std::cout << " you're using system log, not efficient, Code me ! (simd_log.hpp) " << std::endl;
+            return vec_simd<T,O>(tmp);
         }
     };
     

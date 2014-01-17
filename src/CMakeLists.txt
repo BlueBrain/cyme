@@ -18,8 +18,8 @@ set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options a
 if(NOT MACHINE_CONFIG)
 #    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3  -std=c++11 -stdlib=libc++  " CACHE STRING "Compiler flags for Release compiles.")
 #    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64   -std=c++11 -stdlib=libc++  " CACHE STRING "Compiler flags for Debug compiles.")
-    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3  " CACHE STRING "Compiler flags for Release compiles.")
-    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64  " CACHE STRING "Compiler flags for Debug compiles.")
+    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3 -mavx  " CACHE STRING "Compiler flags for Release compiles.")
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64 -mavx  " CACHE STRING "Compiler flags for Debug compiles.")
 endif(NOT MACHINE_CONFIG)
 
 ########################################################################
@@ -95,10 +95,10 @@ endif(CYME_MATH)
 ########################################################################
 
 #this depends of the associated module
-set(Boost_NO_SYSTEM_PATHS TRUE)
+#set(Boost_NO_SYSTEM_PATHS TRUE)
 set(BOOST_DIR $ENV{BOOST_DIR} CACHE PATH "Path to the Boost installation (or to the Boost source)")
 set(BOOST_ROOT ${BOOST_DIR})
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+#set(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
 find_package (Boost 1.54 COMPONENTS unit_test_framework system chrono)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)

@@ -113,11 +113,18 @@ namespace numeric{
         return operator+(static_cast<T>(s),b);
     }
 
+    // TIM FYI A-B != B-A
     //subtraction of scalar/vector, lambda-v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_sub<T,O,vec_scalar<T,O>,R2> >
     operator -(double const& s, vec<T,O,R2> const& b){
         return vec<T,O,vec_sub<T,O,vec_scalar<T,O>, R2> >(vec_sub<T,O,vec_scalar<T,O>,R2>(vec_scalar<T,O>(s),b.rep()));
+    }
+
+    template<class T, memory::simd O, class R2>
+    inline vec<T,O, vec_sub<T,O,R2,vec_scalar<T,O> > >
+    operator -(vec<T,O,R2> const& b,double const& s){
+        return vec<T,O,vec_sub<T,O,R2,vec_scalar<T,O> > >(vec_sub<T,O,R2,vec_scalar<T,O> >(b.rep(),vec_scalar<T,O>(s)));
     }
 
     //subtraction of scalar/vector, lambda-v for int
@@ -127,18 +134,11 @@ namespace numeric{
         return operator-(static_cast<T>(s),b);// CHECK IF NO COPY
     }
 
-    //v - lambda(double)
-    template<class T, memory::simd O, class R2>
-    inline vec<T,O, vec_sub<T,O,vec_scalar<T,O>,R2> >
-    operator -(vec<T,O,R2> const& b, double const& s){
-        return operator-(s,b);// CHECK IF NO COPY
-    }
-
     //v - lambda(int)
     template<class T, memory::simd O, class R2>
-    inline vec<T,O, vec_sub<T,O,vec_scalar<T,O>,R2> >
+    inline vec<T,O, vec_sub<T,O,R2,vec_scalar<T,O> > >
     operator -(vec<T,O,R2> const& b, int const& s){
-        return operator-(static_cast<T>(s),b);
+        return operator-(b,static_cast<T>(s));
     }
 
     //multiplication of scalar/vector, lambda*v for double, partial specialization are impossible on a single function
