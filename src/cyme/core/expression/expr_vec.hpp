@@ -39,20 +39,20 @@ namespace numeric{
      /* helper traits class to select how to refer to an ''expression template node'' * - in general: by reference
      * - for scalars: by value
      */
+    //forward declaration
     template<class T, memory::simd O>
     class vec_scalar;
 
     //primary template, generic
     template<class T, memory::simd O>
     struct vec_traits{
-        typedef T const exp_ref;
-        typedef T const log_ref;
+        typedef T const value_type;
     };
 
     //partial specialization for scalars
     template<class T, memory::simd O>
     struct vec_traits< vec_scalar<T,O>, O>{
-        typedef vec_scalar<T,O> exp_ref;
+        typedef vec_scalar<T,O> value_type;
     };
     /* \endcond */
 
@@ -61,7 +61,7 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1>
     class vec_exp{
-        typename vec_traits<OP1,O>::exp_ref op1;
+        typename vec_traits<OP1,O>::value_type op1;
 
     public:
         inline vec_exp(OP1 const& a):op1(a){
@@ -93,8 +93,8 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_add{
-        typename vec_traits<OP1,O>::exp_ref op1;
-        typename vec_traits<OP2,O>::exp_ref op2;
+        typename vec_traits<OP1,O>::value_type op1;
+        typename vec_traits<OP2,O>::value_type op2;
 
     public:
         inline vec_add(OP1 const& a, OP2 const& b):op1(a), op2(b){
@@ -110,8 +110,8 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_sub{
-        typename vec_traits<OP1,O>::exp_ref op1;
-        typename vec_traits<OP2,O>::exp_ref op2;
+        typename vec_traits<OP1,O>::value_type op1;
+        typename vec_traits<OP2,O>::value_type op2;
 
     public:
         inline vec_sub(OP1 const& a, OP2 const& b):op1(a), op2(b){
@@ -127,7 +127,7 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1>
     class vec_neg{
-        typename vec_traits<OP1,O>::exp_ref op1;
+        typename vec_traits<OP1,O>::value_type op1;
 
     public:
         inline vec_neg(OP1 const& a):op1(a){
@@ -143,8 +143,8 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_mul{
-        typename vec_traits<OP1,O>::exp_ref op1;
-        typename vec_traits<OP2,O>::exp_ref op2;
+        typename vec_traits<OP1,O>::value_type op1;
+        typename vec_traits<OP2,O>::value_type op2;
     public:
 
         inline vec_simd<T,O> operator()() const{ 
@@ -155,12 +155,12 @@ namespace numeric{
         }
 
         //fma/s only
-        inline const typename vec_traits<OP1,O>::exp_ref& getop1() const{
+        inline const typename vec_traits<OP1,O>::value_type& getop1() const{
              return op1;
         }
 
         //fma/s only
-        inline const typename vec_traits<OP2,O>::exp_ref& getop2() const{
+        inline const typename vec_traits<OP2,O>::value_type& getop2() const{
              return op2;
         }
     };    
@@ -171,9 +171,9 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1, class OP2, class OP3>
     class vec_muladd{
-        typename vec_traits<OP1,O>::exp_ref op1; 
-        typename vec_traits<OP2,O>::exp_ref op2;
-        typename vec_traits<OP3,O>::exp_ref op3;
+        typename vec_traits<OP1,O>::value_type op1; 
+        typename vec_traits<OP2,O>::value_type op2;
+        typename vec_traits<OP3,O>::value_type op3;
 
     public:
 
@@ -190,10 +190,10 @@ namespace numeric{
      */
     template<class T, memory::simd O, class OP1, class OP2, class OP3, class OP4>
     class vec_mul_add_mul{
-        typename vec_traits<OP1,O>::exp_ref op1; 
-        typename vec_traits<OP2,O>::exp_ref op2;
-        typename vec_traits<OP3,O>::exp_ref op3;
-        typename vec_traits<OP4,O>::exp_ref op4;
+        typename vec_traits<OP1,O>::value_type op1; 
+        typename vec_traits<OP2,O>::value_type op2;
+        typename vec_traits<OP3,O>::value_type op3;
+        typename vec_traits<OP4,O>::value_type op4;
 
     public:
 
@@ -210,10 +210,10 @@ namespace numeric{
      */
     template<class T, memory::simd O, class OP1, class OP2, class OP3, class OP4>
     class vec_mul_sub_mul{
-        typename vec_traits<OP1,O>::exp_ref op1;
-        typename vec_traits<OP2,O>::exp_ref op2;
-        typename vec_traits<OP3,O>::exp_ref op3;
-        typename vec_traits<OP4,O>::exp_ref op4;
+        typename vec_traits<OP1,O>::value_type op1;
+        typename vec_traits<OP2,O>::value_type op2;
+        typename vec_traits<OP3,O>::value_type op3;
+        typename vec_traits<OP4,O>::value_type op4;
 
     public:
 
@@ -230,9 +230,9 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1, class OP2, class OP3>
     class vec_mulsub{
-        typename vec_traits<OP1,O>::exp_ref op1;
-        typename vec_traits<OP2,O>::exp_ref op2;
-        typename vec_traits<OP3,O>::exp_ref op3;
+        typename vec_traits<OP1,O>::value_type op1;
+        typename vec_traits<OP2,O>::value_type op2;
+        typename vec_traits<OP3,O>::value_type op3;
 
     public:
 
@@ -251,9 +251,9 @@ namespace numeric{
      */
     template<class T, memory::simd O, class OP1, class OP2, class OP3>
     class vec_negate_muladd{
-        typename vec_traits<OP1,O>::exp_ref op1;
-        typename vec_traits<OP2,O>::exp_ref op2;
-        typename vec_traits<OP3,O>::exp_ref op3;
+        typename vec_traits<OP1,O>::value_type op1;
+        typename vec_traits<OP2,O>::value_type op2;
+        typename vec_traits<OP3,O>::value_type op3;
 
     public:
 
@@ -270,8 +270,8 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_div{
-        typename vec_traits<OP1,O>::exp_ref op1; // I made distinction between operands it can be scalar or vector
-        typename vec_traits<OP2,O>::exp_ref op2;
+        typename vec_traits<OP1,O>::value_type op1; // I made distinction between operands it can be scalar or vector
+        typename vec_traits<OP2,O>::value_type op2;
     public:
 
         inline vec_simd<T,O> operator()() const{

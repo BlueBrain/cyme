@@ -37,7 +37,7 @@ namespace numeric{
     template<class T, memory::simd O, std::size_t n> // Remez, series ...
     struct my_log{
         static inline vec_simd<T,O> log(vec_simd<T,O> x){
-            T tmp[8] __attribute__((aligned(64)));
+            T tmp[8] __attribute__((aligned(64))); // temporary fix until I develop ny own version
             x.store(tmp);
             for(int i=0; i<8; ++i)
                 tmp[i] = std::log(tmp[i]);

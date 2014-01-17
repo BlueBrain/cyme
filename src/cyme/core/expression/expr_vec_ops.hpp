@@ -113,7 +113,7 @@ namespace numeric{
         return operator+(static_cast<T>(s),b);
     }
 
-    // TIM FYI A-B != B-A
+    // Tim to Tim FYI A-B != B-A
     //subtraction of scalar/vector, lambda-v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_sub<T,O,vec_scalar<T,O>,R2> >
@@ -169,7 +169,7 @@ namespace numeric{
         return operator*(static_cast<T>(s),b);
     }
 
-    // DIVISION IS NOT COMMUTATIVE A/B != B/A !!!!!!!!!!!!!!!!!!!!!!!!!
+    // Tim to Tim FYI A/B != B/A
     //division of scalar/vector, lambda*v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_div<T,O,vec_scalar<T,O>,R2> >
