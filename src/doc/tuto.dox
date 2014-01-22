@@ -1,0 +1,20 @@
+/*!
+
+\page tutorial
+
+\section Initialization 
+
+In this first tutorial, we create an instance of a container. For the beginning,
+we defined structure, here a channel, we are going to work.
+
+	template<class T>
+	struct channel{
+	    typedef T value_type;
+	    static const int value_size = 18;
+	};
+
+
+
+
+
+*/

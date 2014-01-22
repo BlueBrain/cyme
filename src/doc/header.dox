@@ -1,0 +1,75 @@
+/*!
+
+\page Page2 Headers and Library
+
+\section header headers and library
+
+The cyme library is an include library. It does not require any link, except for advanced functionalities (specialized math library from vendor)
+
+The include is cyme/cyme.hpp
+
+    #include "cyme/cyme.hpp" 
+
+If cyme has been installed to a non-standard location then it may be necessary to use -I compiler flags to point to the right directories.
+Unfortunately, for now, cyme can not detect the platform your are compiling. Therefore, you have to specify a series of flags of compilation
+specific to your target platform. As usual you should add optimisation flag e.g. -O3.
+
+<TABLE BORDER="1">
+<CAPTION> Flags and options of compilation </CAPTION>
+ <TR>
+ <TH>                  </TH>
+ <TH> X86 - SSE4       </TH>
+ <TH> X86 - AVX        </TH>
+ <TH> BG/Q -  QPX      </TH>
+ <TH> Intel - MIC      </TH>
+ </TR>
+ <TR>
+ <TH> needed Flags  </TH>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=sse -msse4  </TD>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=avx -mavx   </TD>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=qpx         </TD>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=mic -mmic   </TD>
+ </TR>
+</TABLE>
+
+cyme have been tested with 4 compilers GCC (>4.7), CLANG (3.2), ICC (14.0) and XLC (12.1). 
+For AoS performance are good whatever the compiler,
+For the AoSoA memory layout, performance are excellent with GCC/CLANG, medium with intel, and bad with xlc.
+It demonstrated the abilities of the compiler to construct/simplify the DAG  with the expression template method.
+
+<TABLE BORDER="1">
+<CAPTION> Compiler performance  </CAPTION>
+ <TR>
+ <TH>                  </TH>
+ <TH> GCC              </TH>
+ <TH> CLANG            </TH>
+ <TH> XLC              </TH>
+ <TH> ICC              </TH>
+ </TR>
+ <TR>
+ <TH> Cyme:AoSoA </TH>
+ <TD  align="center" bgcolor=#1D9A2F> excellent   </TD>
+ <TD  align="center" bgcolor=#1D9A2F> good   </TD>
+ <TD  align="center" bgcolor=#CF2E31> bad    </TD>
+ <TD  align="center" bgcolor=#E3BD1C> medium </TD>
+ </TR>
+ <TR>
+ <TH> Cyme:AoS </TH>
+ <TD  align="center" bgcolor=#1D9A2F> good   </TD>
+ <TD  align="center" bgcolor=#1D9A2F> good   </TD>
+ <TD  align="center" bgcolor=#1D9A2F> excellent </TD>
+ <TD  align="center" bgcolor=#1D9A2F> excellent </TD>
+ </TR>
+</TABLE>
+
+If the library is installed in the standard location, for AVX on x86,
+
+    g++  -D__CYME_SIMD_VALUE__=avx -mavx -O3 my_program.cpp 
+                            
+
+Moreover, if you performed operations with specialised library, it will necessitate additional link to the corresponding one (IBM simd_mass per example), e.g.
+
+    g++  -D__CYME_SIMD_VALUE__=avx -mavx -O3 my_program.cpp -lsimd_mass
+
+
+*/
