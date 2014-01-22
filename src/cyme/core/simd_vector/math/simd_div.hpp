@@ -55,7 +55,7 @@ namespace numeric{
     };
 
     /**
-     \brief free function based on Newton-Raphson algo <3, ^_^'
+     \brief function object calling Newton-Raphson algo <3, ^_^'
      */
     template<class T,memory::simd O>
     struct NewtonRaphson_div{
@@ -65,6 +65,9 @@ namespace numeric{
         }
     };
 
+    /**
+     \brief function object calling vendor algo
+     */
     template<class T,memory::simd O>
     struct Vendor_div{
         static inline vec_simd<T,O> div(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
@@ -74,6 +77,9 @@ namespace numeric{
         }
     };    
 
+    /**
+    \brief selector for the division algorithm (vendor or Newton-Raphson)
+    */
     template<class T, memory::simd O, class Solver = NewtonRaphson_div<T,O> >
     struct Helper_div{
         static inline  vec_simd<T,O> div (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs

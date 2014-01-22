@@ -30,7 +30,7 @@
 #define CYME_SIMD_H
 
 namespace memory{
-    /* \cond I do not need this part in the doc*/
+    /** \cond I do not need this part in the doc*/
     enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpx = 32, mic = 64}; //sizeof(void*) = 8 on 64 bits machine
 
 // In C++0x the macro __cplusplus will be set to a value that differs from (is greater than) the current 199711L (ISO rules)
@@ -56,7 +56,7 @@ namespace memory{
     struct stride<T,AoSoA>{
         static inline std::size_t helper_stride(){return __GETSIMD__()/sizeof(T);}
     };
-    /* \endcond I do not need this part in the doc*/
+    /** \endcond I do not need this part in the doc*/
     
 } //end namespace
 

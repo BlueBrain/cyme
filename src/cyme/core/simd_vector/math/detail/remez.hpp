@@ -31,12 +31,14 @@
 
 
 namespace numeric{
+    /** \cond */
     //just encapsulate the number of coeff
     struct coeff_remez_number{
         static const std::size_t value = 11;
     };
 
     // no C++ 11, so no constexpr into structure for double/float, ^.^ just partial specialization
+    // These coeffs are obtained with an external program
     template<class T, std::size_t n>
     struct coeff_remez;
 

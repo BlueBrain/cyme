@@ -34,7 +34,7 @@
 
 namespace memory{
 
-    /* \cond I do not need this part in the doc*/
+    /** \cond I do not need this part in the doc*/
     // declaration for the partial specialization onlye
     // M = #element into the mechanism, N = #number of synapse, Order SoA or SoAoS
     // or M size of block_a, N number of block_a
@@ -169,15 +169,10 @@ namespace memory{
 }
 
 namespace cyme {
-    /*
+    /**
      \brief  This class facilitates the creation of an array of synapses (or whatever), the condition the class
-     must encapsulate the basic type (value_type) and the size (value_size) of the basic object under the form:
-     template <class T>
-     class example{
-     typedef T value_type;
-     static const int value_size = 5;
-     }
-     */
+     must encapsulate the basic type (value_type) and the size (value_size) of the basic object 
+    */
     template<class T, std::size_t N, memory::order O>
     class array : public memory::block_a<typename T::value_type, T::value_size, N, O>{
     public:

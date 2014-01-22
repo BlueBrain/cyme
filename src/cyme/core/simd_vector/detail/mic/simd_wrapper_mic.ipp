@@ -31,206 +31,285 @@
 
 namespace numeric{
 
-    template<>
-    inline  simd_trait<int,memory::mic>::register_type _mm_load1<int,memory::mic>( simd_trait<int,memory::mic>::register_type xmm0, const  simd_trait<int,memory::mic>::value_type a){
-        return xmm0;
-    }
-
-    /*  -------------------------------------------------------------------------------------------------------------------- double */
+    /**
+     \brief Broadcast double-precision (64-bit) floating-point value a to all elements of dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_load1<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::value_type a){
         return _mm512_set1_pd(a);
     }
-   
+
+    /**
+     \brief Load 512-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 64-byte boundary or a general-protection exception will be generated.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_load<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::const_pointer a){
         return _mm512_load_pd(a);
     }
 
+    /**
+      \brief   Store 512-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from a into memory. mem_addr must be aligned on a 64-byte boundary or a general-protection exception will be generated.
+     */
     template<>
     void _mm_store<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::pointer a){
         _mm512_store_pd(a,xmm0); 
     }
-   
+
+    /**
+     \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_mul<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
         return _mm512_mul_pd(xmm0, xmm1);
     }
-   
+
+    /**
+     \brief Divide packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_div<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
         return _mm512_div_pd(xmm0, xmm1);
     }
    
+    /**
+     \brief Add packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_add<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
         return _mm512_add_pd(xmm0, xmm1);
     }
 
+    /**
+     \brief Substract packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_sub<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1){
         return _mm512_sub_pd(xmm0, xmm1);
     }
 
+    /**
+     \brief not use
+     */
     template<>
     inline  simd_trait<double,memory::mic>::register_type _mm_neg<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
         return (xmm0);
     };
 
+    /**
+     \brief not use
+     */
     template<>
     inline  simd_trait<int,memory::mic>::register_type _mm_floor<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
         return (xmm0);
     };
 
+    /**
+     \brief not use
+     */
     template<>
     inline  simd_trait<double,memory::mic>::register_type _mm_cast<double,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
         return  (xmm0);
     };
 
+    /**
+     \brief not use
+     */
     template<>
     inline  simd_trait<double,memory::mic>::register_type _mm_twok<double,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
         return  (xmm0);
     };
 
-    template<>
-    inline  simd_trait<double,memory::mic>::register_type _mm_min<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0, simd_trait<double,memory::mic>::register_type xmm1){
-        return _mm512_min_pd(xmm0,xmm1);
-    };
-
-    template<>
-    inline  simd_trait<double,memory::mic>::register_type _mm_max<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0, simd_trait<double,memory::mic>::register_type xmm1){
-        return _mm512_max_pd(xmm0,xmm1);
-    };
-
+    /**
+    \brief Compute the exponential value of e raised to the power of packed double-precision (64-bit) floating-point elements in xmm0, and store the results in dst.
+    */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_exp<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0){
         return _mm512_exp_pd(xmm0);
     }
 
+    /**
+     \brief   Compute the logarithm value of e raised to the power of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_log<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0){
         return _mm512_log_pd(xmm0);
     }
 
+    /**
+     \brief not use
+     */
     template<>
     inline simd_trait<double,memory::mic>::register_type _mm_rec<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
         return (xmm0);
     };
 
+    /**
+     \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, add the intermediate result to packed elements in xmm2, and store the results in dst.
+     */
    template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_fma<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
         return _mm512_fmadd_pd(xmm0, xmm1, xmm2);
     }
 
+    /**
+     \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the intermediate result, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_fms<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
         return _mm512_fmsub_pd(xmm0, xmm1, xmm2);
     }
 
+    /**
+    \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the negated intermediate result, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_nfms<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
         return _mm512_fnmsub_pd(xmm0, xmm1, xmm2);
     }
 
+    /**
+    \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, add the negated intermediate result to packed elements in xmm2, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<double,memory::mic>::register_type _mm_nfma<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::register_type xmm1, typename simd_trait<double,memory::mic>::register_type xmm2){
         return _mm512_fnmadd_pd(xmm0, xmm1, xmm2);
     }
 
     /*  -------------------------------------------------------------------------------------------------------------------- float */
+    /**
+     \brief Broadcast single-precision (32-bit) floating-point value a to all elements of dst.
+     */
     template<>
     typename simd_trait<float,memory::mic>::register_type _mm_load1<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::value_type a){
         return _mm512_set1_ps(a);
     }
-   
+
+    /**
+     \brief Load 512-bits (composed of 16 packed single-precision (32-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 64-byte boundary or a general-protection exception will be generated.
+     */
     template<>
     typename simd_trait<float,memory::mic>::register_type _mm_load<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>    ::const_pointer a){
         return _mm512_load_ps(a);
     }
 
+    /**
+     \brief Store 512-bits (composed of 16 packed single-precision (32-bit) floating-point elements) from a into memory. mem_addr must be aligned on a 64-byte boundary or a general-protection exception will be generated.
+     */
     template<>
     void _mm_store<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::pointer a){
         _mm512_store_ps(a,xmm0); 
     }
-   
+
+    /**
+      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_mul<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
         return _mm512_mul_ps(xmm0, xmm1);
     }
-   
+
+    /**
+     \brief Divide packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_div<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
         return _mm512_div_ps(xmm0, xmm1);
     }
-   
+
+    /**
+     \brief Add packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_add<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
         return _mm512_add_ps(xmm0, xmm1);
     }
 
+
+    /**
+     \brief Substract packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_sub<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1){
         return _mm512_sub_ps(xmm0, xmm1);
     }
 
+    /**
+     \brief not use
+     */
     template<>
     inline  simd_trait<float,memory::mic>::register_type _mm_neg<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
 
         return (xmm0);
     };
 
+    /**
+     \brief not use
+     */
     template<>
     inline  simd_trait<int,memory::mic>::register_type _mm_floor<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
         return (xmm0);
     };
 
+    /**
+     \brief not use
+     */
     template<>
     inline  simd_trait<float,memory::mic>::register_type _mm_cast<float,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
         return  (xmm0);
     };
 
+    /**
+     \brief not use
+     */
     template<>
     inline  simd_trait<float,memory::mic>::register_type _mm_twok<float,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
         return  (xmm0);
     };
 
-    template<>
-    inline  simd_trait<float,memory::mic>::register_type _mm_min<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0, simd_trait<float,memory::mic>::register_type xmm1){
-        return _mm512_min_ps(xmm0,xmm1);
-    };
 
-    template<>
-    inline  simd_trait<float,memory::mic>::register_type _mm_max<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0, simd_trait<float,memory::mic>::register_type xmm1){
-        return _mm512_max_ps(xmm0,xmm1);
-    };
-
-
-
+    /**
+     \brief not use
+     */
     template<>
     inline simd_trait<float,memory::mic>::register_type _mm_rec<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
         return _mm512_rcp23_ps(xmm0);
     };
 
+    /**
+     \brief Compute the exponential value of e raised to the power of packed float-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_exp<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0){
         return _mm512_exp_ps(xmm0);
     }
-    
+
+    /**
+     \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, add the intermediate result to packed elements in xmm2, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_fma<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
         return _mm512_fmadd_ps(xmm0, xmm1, xmm2);
     }
 
+    /**
+     \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the intermediate result, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_fms<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
         return _mm512_fmsub_ps(xmm0, xmm1, xmm2);
     }
 
+    /**
+     \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the negated intermediate result, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_nfms<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
         return _mm512_fnmsub_ps(xmm0, xmm1, xmm2);
     }
 
+    /**
+     \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, add the negated intermediate result to packed elements in xmm2, and store the results in dst.
+     */
     template<>
     inline typename simd_trait<float,memory::mic>::register_type _mm_nfma<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::register_type xmm1, typename simd_trait<float,memory::mic>::register_type xmm2){
         return _mm512_fnmadd_ps(xmm0, xmm1, xmm2);

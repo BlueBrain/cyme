@@ -39,11 +39,10 @@
 #include <boost/simd/include/functions/aligned_store.hpp>
 */
 namespace memory{
-     /* \cond I do not need this part in the doc*/
+     /** \brief  Basic subblock of memory for the cyme container*/
      template <class T, std::size_t Size, order O>
      class storage;
-     /* \endcond I do not need this part in the doc*/
-    
+
      /**
      \brief subblock of memory needed by the block class, AoS specialization
      */

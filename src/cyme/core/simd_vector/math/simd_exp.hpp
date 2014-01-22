@@ -32,6 +32,11 @@
 #include "core/simd_vector/math/detail/remez.hpp"
 
 namespace numeric{
+
+
+    /**
+     \brief Implementation of e^y using recursive template, as the factorial
+     */
     template<class T, memory::simd O, std::size_t n>
     struct helper_remez_exp{
         static inline vec_simd<T,O> exp(vec_simd<T,O> const& a){
@@ -43,6 +48,9 @@ namespace numeric{
         }
     };
 
+    /**
+     \brief Implementation of e^y using recursive template, final specialization
+     */
     template<class T, memory::simd O>
     struct helper_remez_exp<T,O,0>{
         static inline vec_simd<T,O> exp(vec_simd<T,O> const& a){
@@ -50,32 +58,34 @@ namespace numeric{
         }
     };
 
+    /**
+     \cond
+     */
     template<class T, memory::simd O,std::size_t n>
     struct Remez_exp{
-        /** fn template<std::size_t T, std::size_t n> Pade_exp  
-            \brief clean wrapper of the Remez approximat method
-        */
         static inline vec_simd<T,O> exp(vec_simd<T,O> const& a){
             return helper_remez_exp<T,O,n>::exp(a);
         }
     };
-    
-    template<class T, memory::simd O,std::size_t n>
-    struct Pad_exp{
-        /** fn template<std::size_t T, std::size_t n> Pade_exp  
-            \brief clean wrapper of the Pade approximat method 
-        */
-        static inline vec_simd<T,O> exp(vec_simd<T,O> const& a){
-            std::cout << " Pade, not implemented TO DO " << std::endl;
-            vec_simd<T,O> tmp(0.0);
-            return tmp;
-        }
-    };
-    
+    /**
+     \endcond
+     */
 
-    /** \class template<std::size_t T, std::size_t n, class Solver> exp  
-        \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
+
+    /** \brief implementation of the exp,the algorithm is based on e^x = 2^k e^y, where k is unsigned integer and y belongs to [0,log 2].
+               e^y is determined using a Pade approximation of the order n with an third value program.
+               The algo does:
+                    x = y + k*log(2)
+                    x/log(2) = y/log(2) + k
+                    floor(x/log(2)) =floor(y/log(2)) + floor(k)
+                    floor(x/log(2)) = k
+     
+               We get k so easy y.
+     
+               e^y simply calculates with the approximation
+               2^k use the internal representation of the floating point number
     */
+    
     template<class T, memory::simd O, std::size_t n = coeff_remez_number::value, class Solver = Remez_exp<T,O,n> > // Remez, series ...
     struct my_exp{
         static inline vec_simd<T,O> exp(vec_simd<T,O> x){
@@ -105,14 +115,20 @@ namespace numeric{
             return x;
         }
     };
-    
+
+    /**
+     \brief function object for the vendor exponential algorithm
+     */
     template<class T, memory::simd O, std::size_t n>
     struct Vendor_exp{
         static inline vec_simd<T,O> exp(vec_simd<T,O> const& a){
             return exp_v(a); /* call vendor wrapper */
         }
     };
-    
+
+    /**
+     \brief selector for the exponential algorithm (vendor or my implementation)
+     */
     template<class T, memory::simd O, std::size_t n = coeff_remez_number::value, class Solver = my_exp<T,O,n> > // my_exp ou vendor
     struct Selector_exp{
          static inline vec_simd<T,O> exp(vec_simd<T,O> x){
@@ -122,7 +138,7 @@ namespace numeric{
     };
     
     /**  
-        \brief final wrapper for the exp, pade approximant with n = 14 (maximum value before pb), remez calculate with n=20
+        \brief final wrapper for the exp
     */
     template<class T,memory::simd O>
     inline vec_simd<T,O> exp(const vec_simd<T,O>& rhs){

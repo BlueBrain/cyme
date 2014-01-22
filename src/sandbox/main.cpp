@@ -6,6 +6,7 @@
 
 #include "cyme/cyme.hpp"
 
+#include "iacaMarks.h"
 //#include <boost/math/tools/test.hpp>
 
 //#include "utils/timer.h"
@@ -120,8 +121,10 @@ struct Na{
     template<class iterator>
     static inline void cnrn_states(iterator it){
         cnrn_rates(it);
+        IACA_START
         (*it)[3] += (1.-exp(dt*(-1.0/(*it)[7] )))*(-((*it)[6] /(*it)[7]) /(-1.0/(*it)[7]) -(*it)[3]);
-        (*it)[4] += (1.-exp(dt*(-1.0/(*it)[11])))*(-((*it)[10]/(*it)[11])/(-1.0/(*it)[11])-(*it)[4]);
+      //  (*it)[4] += (1.-exp(dt*(-1.0/(*it)[11])))*(-((*it)[10]/(*it)[11])/(-1.0/(*it)[11])-(*it)[4]);
+        IACA_END
     }
 
     template<class iterator, memory::order O>
@@ -216,12 +219,12 @@ private:
 int main(int argc, char* argv[]){
     stack s;
 
-    pack<Na,cyme::vector<Na, memory::AoS> > a(0xffffff,0); // pack 16384 synapse, AoSoA
+    pack<Na,cyme::vector<Na, memory::AoSoA> > a(0xffffff,0); // pack 16384 synapse, AoSoA
 //  pack<Na,cyme::vector<Na, memory::AoS> > b(1024,0); // pack 16384 synapse, AoSoA
 
     init(a);
 
-    s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&a)); // fill up the stack
+    s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoSoA> >::execution,&a)); // fill up the stack
 //  s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&b)); // fill up the stack
 
     boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();

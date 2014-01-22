@@ -34,6 +34,10 @@
 #include "memory/detail/storage.hpp"
 
 namespace memory{
+
+    /**
+     \brief block_v of the memory utilized by both memory layout
+     */
     template<class T, std::size_t M,  memory::order O>
     class block_v{
     };
@@ -105,6 +109,10 @@ namespace memory{
         }
     };
 
+    /**
+     \brief block_v of the memory (partial specialization AoSoA) is instantiated following  AoSoA layout
+     T is the type, M the size of the subblock_v and N the total number of subblock_v. 
+     */
     template<class T, std::size_t M>
     class block_v<T,M,AoSoA> : public std::vector<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>, memory::Allocator<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA> > >{
     public:
@@ -203,14 +211,9 @@ namespace memory{
 } //end namespace memory
 
 namespace cyme {
-    /*
+    /**
      \brief  This class facilitates the creation of an array of synapses (or whatever), the condition the class
      must encapsulate the basic type (value_type) and the size (value_size) of the basic object under the form:
-     template <class T>
-     class example{
-     typedef T value_type;
-     static const int value_size = 5;
-     }
      */
     template<class T, memory::order O>
     class vector : public memory::block_v<typename T::value_type,  T::value_size, O>{

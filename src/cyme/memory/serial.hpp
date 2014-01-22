@@ -30,17 +30,19 @@
 
 namespace cyme{
 
-    /*
-       The serail calss provides a solution for temporary object into mechanism.
+    /**
+       \brief The serial class provides a solution for temporary object into mechanism.
        it the order is AoS, it will provide a basic float/double, else it encapsulates
        a SIMD vector. Note for AoSoA version: is serial = ... , it will generates the
        the tree but it will not save the data into memory.
     */
-
     template<class T, memory::order O>
     class serial{
     };
 
+    /**
+     \brief The serial class for AoS layout
+    */
     template<class T>
     struct serial<T,memory::AoS>{
         typedef T value_type;
@@ -75,6 +77,9 @@ namespace cyme{
         T a;
     };
 
+    /**
+     \brief The serial class for AoSoA layout
+     */
     template<class T>
     struct serial<T,memory::AoSoA>{
         typedef T value_type;
