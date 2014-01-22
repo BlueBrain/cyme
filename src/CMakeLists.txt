@@ -118,7 +118,7 @@ include_directories ("${PROJECT_BINARY_DIR}")
 include_directories ("${PROJECT_SOURCE_DIR}")
 
 if(CYME_MAIN)
-add_subdirectory(main/)
+add_subdirectory(sandbox/)
 endif(CYME_MAIN)
 #include_directories ("${PROJECT_SOURCE_DIR}/memory/")
 

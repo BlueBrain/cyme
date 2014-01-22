@@ -91,21 +91,17 @@ void print( boost::accumulators::accumulator_set<double, stats<tag::mean, tag::v
                            << ", standard deviation " << sqrt(extract_result< tag::variance >(acc)) << std::endl;
 }
 
-
 static double dt = 0.01;
-
-
 
 struct Na{
     typedef double  value_type;
 
     template<class iterator, memory::order O>
     static inline void cnrn_functions(iterator it){
-
 /*
         cnrn_initmodel(it);
         cnrn_cur<iterator,O>(it);
- */
+*/
         cnrn_state(it);
     }
 
@@ -220,18 +216,18 @@ private:
 int main(int argc, char* argv[]){
     stack s;
 
-    pack<Na,cyme::vector<Na, memory::AoSoA> > a(0x4,0); // pack 16384 synapse, AoSoA
-    pack<Na,cyme::vector<Na, memory::AoS> > b(0x4,0); // pack 16384 synapse, AoSoA
+    pack<Na,cyme::vector<Na, memory::AoS> > a(0xffffff,0); // pack 16384 synapse, AoSoA
+//  pack<Na,cyme::vector<Na, memory::AoS> > b(1024,0); // pack 16384 synapse, AoSoA
 
-    init(a,b);
+    init(a);
 
-    s.push_back(boost::bind(&pack<Na>::execution,&a)); // fill up the stack
-    s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&b)); // fill up the stack
+    s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&a)); // fill up the stack
+//  s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&b)); // fill up the stack
 
     boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
     s.flush(); // execute the stack
     boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
     std::cout << " sec " << sec.count() << std::endl;
     
-    check(a,b);
+//  check(a,b);
 }
