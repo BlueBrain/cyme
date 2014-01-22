@@ -366,6 +366,111 @@ Memory layout:
 
 \end{frame}
 
+
+
+
+
+
+
+
+\begin{frame}[fragile]
+
+\begin{tikzpicture}[scale=1.2]
+
+\vspace{0.5cm}
+
+              \draw (-0.35,0.35) node[below]{AoS} ;
+              \draw (-0.5,-0.65) node[below]{AoSoA} ;
+
+       \foreach \x in {0.0,1,...,4} {
+          \path[fill=C0] (\x,0) rectangle ++(0.2,0.2); 
+          \path[fill=C1] (\x+0.2,0) rectangle ++(0.2,0.2); 
+          \path[fill=C2] (\x+0.4,0) rectangle ++(0.2,0.2); 
+          \path[fill=C3] (\x+0.6,0) rectangle ++(0.2,0.2); 
+          \path[fill=C4] (\x+0.8,0) rectangle ++(0.2,0.2);
+      }  
+      
+      
+      \draw [>=stealth,<-] (3.1,-0.1)--(4.1,-0.4) ;      
+      \draw [>=stealth,<-] (0.7,-0.7)--(4.1,-0.4) ;      
+      \draw (4.6,-0.1) node[below]{ a(3,0)} ;
+
+
+
+       AoSoA layout.
+       \path[fill=C0] (0,-1) rectangle ++(0.8,0.2);              
+       \path[fill=C1] (0.8,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C2] (1.6,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C3] (2.4,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C4] (3.2,-1) rectangle ++(0.8,0.2);  
+       \path[fill=C0] (4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C1] (4.8,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C2] (5.6,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C3] (6.4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C4] (7.2,-1) rectangle ++(0.2,0.2); 
+       \draw[xstep=.8,ystep=.2,help lines] (0,-1) grid (8,-0.8); 
+       \draw[step=.2,help lines] (0,0) grid (5,0.2); 
+       
+
+      \path[fill=black] (0.6,-1) rectangle ++(0.2,0.2);              
+      \path[fill=black] (3,0) rectangle ++(0.2,0.2);        
+
+
+\end{tikzpicture}
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+\begin{tikzpicture}[scale=1.2]
+
+\vspace{0.5cm}
+
+              \draw (-0.35,0.35) node[below]{AoS} ;
+              \draw (-0.5,-0.65) node[below]{AoSoA} ;
+
+       \foreach \x in {0.0,1,...,4} {
+          \path[fill=C0] (\x,0) rectangle ++(0.2,0.2); 
+          \path[fill=C1] (\x+0.2,0) rectangle ++(0.2,0.2); 
+          \path[fill=C2] (\x+0.4,0) rectangle ++(0.2,0.2); 
+          \path[fill=C3] (\x+0.6,0) rectangle ++(0.2,0.2); 
+          \path[fill=C4] (\x+0.8,0) rectangle ++(0.2,0.2);
+      }  
+      
+      
+      \draw [>=stealth,<-] (0.3,-0.1)--(4.1,-0.4) ;      
+      \draw [>=stealth,<-] (1.1,-0.7)--(4.1,-0.4) ;      
+      \draw (4.6,-0.1) node[below]{ (*it)[1]} ;
+
+
+
+       AoSoA layout.
+       \path[fill=C0] (0,-1) rectangle ++(0.8,0.2);              
+       \path[fill=C1] (0.8,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C2] (1.6,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C3] (2.4,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C4] (3.2,-1) rectangle ++(0.8,0.2);  
+       \path[fill=C0] (4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C1] (4.8,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C2] (5.6,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C3] (6.4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C4] (7.2,-1) rectangle ++(0.2,0.2); 
+       \draw[xstep=.8,ystep=.2,help lines] (0,-1) grid (8,-0.8); 
+       \draw[step=.2,help lines] (0,0) grid (5,0.2); 
+       
+
+      \path[fill=black] (0.8,-1) rectangle ++(0.8,0.2);              
+      \path[fill=black] (0.2,0) rectangle ++(0.2,0.2);        
+
+
+\end{tikzpicture}
+
+
+\end{frame}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%% EXP 5
 
 \subsection*{Generic syntax}

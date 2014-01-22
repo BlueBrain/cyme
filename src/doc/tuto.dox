@@ -2,19 +2,77 @@
 
 \page tutorial
 
-\section Initialization 
+\section tuto1 Initialization and memory layout
 
 In this first tutorial, we create an instance of a container. For the beginning,
-we defined structure, here a channel, we are going to work.
+we define a structure, here a channel of 5 elements.
 
-	template<class T>
-	struct channel{
-	    typedef T value_type;
-	    static const int value_size = 18;
-	};
+    template<class T>
+    struct channel{
+        typedef T value_type;
+        static const int value_size = 5;
+    };
 
+then we declare a cyme::array of 5 elements with a memory layout AoS:
 
+    cyme::array<channel<float>,5, memory::AoS> a;
 
+If we prefer the memory layout AoSoS, we modify the declaration by:
 
+    cyme::array<channel<float>,5, memory::AoSoA> a;
 
+For the memory the difference is fondamental. In the first case element are consecutive one after one, where 
+in the second case they are interleaved on the size of the SIMD register desired. 
+
+\image html memoryAoS_AoSoA.tiff Memory layout of the container in function of the declaration memory::AoS or memory::AoSoA  
+
+For the initialization, the bracket operator (i,j) is implemented. For both memory layout it will pick up element following the AoS layout ideology. 
+We make this choice as it is easier for user to represent and manipulate AoS layout. 
+
+\image html memory_access.tiff Memory access following the AoS ideology 
+
+Thus we can write :
+
+     cyme::array<channel<float>,5, memory::AoS> a; 
+     cyme::array<channel<float>,5, memory::AoSoA> b; 
+
+     a(3,0) = 3.4; 
+     b(3,0) = 3.4; 
+    
+\section tuto2 Iterator and memory manipulation 
+
+Based on the std::vector and std::array, cyme allows iterator mechanism it is the main advantage of the library. As usual, the iterator manipulates the memory:
+for the AoS layout, a simple iteration, move from one element to the next element. For the AoSoA, it will move for the next element which 4 times « bigger », it one iteration
+we move to the end of the container contrary to 4 for the AoS layout.  
+
+\image html iterator.tiff Manipulation into the container with the iterator
+    
+Thus we can write
+  
+    for(typename cyme::array<channel<float>,5, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
+        I do something 
+      
+A second operator [i] completes the first one (i,j), it manipulates the memory with scalar access for AoS but with « vectorial access » with AoSoA.  
+When we request an element from the iterator with AoS layout, it manipulate one element of data, and 4 for the AoSoA layout, using SIMD register
+
+\image html iterator2.tiff Manipulation of the data with the iterator
+
+Thus we can rewrite a new initialization as
+
+    for(typename cyme::array<channel<float>,5, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
+        (*it)[1] = 3.4;
+
+In 2 steps with the AoSoA layout the initialization is done, against  5 steps for AoS layout. In both case the algorithm is generic.
+ 
+\section tuto3 Computation 
+  
+The last tutorial shows how perform operation, we simply request data from the iterator and perform operation like usual. But with the AoSoA layout,
+we can compute our operations 4 times faster.
+
+    for(typename cyme::array<channel<float>,5, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
+        (*it)[0] = (*it)[1]*(*it)[2]+(*it)[3]/1.2;
+
+During the compilation the cyme framework will generate the DAG of this expression to obtain the best SIMD possible without useless copy.
+
+\image html DAG.tiff Construction of the corresponding DAG with SIMD for the AoSoA memory layout
 */
