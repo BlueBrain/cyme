@@ -119,18 +119,6 @@ namespace numeric{
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_twok(typename simd_trait<int,O>::register_type xmm0);
 
-    /**
-     \brief free function min between two vectors
-     */
-    template<class T, memory::simd O>
-    inline typename simd_trait<T,O>::register_type _mm_min(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
-
-    /**
-     \brief free function max between two vectors
-     */
-    template<class T, memory::simd O>
-    inline typename simd_trait<T,O>::register_type _mm_max(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::register_type xmm1);
-
 #ifdef __FMA__ // This macro is a compiler one
     /**
     \brief free function (wrapper) for the FMA between three registers
