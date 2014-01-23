@@ -60,7 +60,7 @@ It demonstrated the abilities of the compiler to construct/simplify the DAG  wit
  </TR>
 </TABLE>
 
-If the library is installed in the standard location, for AVX on x86,
+If the library is installed in the standard location, for AVX on x86, you will compile,
 
     g++  -D__CYME_SIMD_VALUE__=avx -mavx -O3 my_program.cpp 
                             

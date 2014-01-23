@@ -1,6 +1,6 @@
 /*!
 
-\page Tutorials
+\page Page3 Tutorials
 
 \section tuto1 Initialization and memory layout
 
@@ -74,9 +74,6 @@ we can compute our operations 4 times faster.
        (*it)[0] = (*it)[1]*(*it)[2]+(*it)[3]/1.2;
 
 During the compilation the cyme framework will generate the DAG of this expression to obtain the best SIMD possible without useless copy.
-
-\image html DAG.tiff Construction of the corresponding DAG with SIMD for the AoSoA memory layout
-
 The framework is more and less compatible with C++ features specially algorithm concept. The previous example my be rewritten using a functor and std::for_each
 
     template<class T>
@@ -96,6 +93,47 @@ Alternatively with c++11 using lambda function,
 Other algorithms work well as std::fill but can differ for the representation as std::generate (iterators are not the same).
 Until now containers can be mix, but algorithms mixing containers (AoS - AoSoA) are not possible as std::transform.
 
+\section tuto4 Code
 
+We summarize on a basic example
+
+    #include <iostream>
+    #include <algorithm>
+    #include <boost/chrono.hpp>
+   
+    #include "cyme/cyme.hpp"
+   
+   
+    template<class T>
+    struct synapse{
+        typedef T value_type;
+        static const int value_size = 18;
+    };
+   
+    template<class T>
+    struct f_compute{
+        void operator()(typename T::storage_type& S ){
+             S[0] = exp(S[1])*S[2]+exp(S[3])/1.2;
+        }
+    };
+   
+    template<class T>
+    struct f_init{
+        void operator()(typename T::storage_type& S ){
+            for(int i=0;i <T::size_block(); ++i)
+                S[i] = drand48();
+        }
+    };
+   
+    int main(int argc, char* argv[]){
+       typedef  cyme::vector<synapse<double>, memory::AoS> my_vector; 
+       my_vector b(0xfffff,0);
+       std::for_each(b.begin(), b.end(), f_init<my_vector>() );
+   
+       boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+           std::for_each(b.begin(), b.end(), f_compute<my_vector>() );
+       boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
+   
+       std::cout << " sec " << sec.count() << std::endl; }
 
 */

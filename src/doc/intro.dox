@@ -5,7 +5,7 @@
 \section Introduction
 	
 The main purpose of the cyme framework is to facilitate SIMD programming, without any fastidious intrinsics SIMD.
-To achieve the performance, cyme is composed of two parts: containers (inspired from equivalent in the STL. 
+To achieve the performance, cyme is composed of two parts: containers (inspired from equivalent in the STL). 
 And a powerful core engine than produces SIMD code. 
 
 The cyme framework supports two kinds of container cyme::vector and cyme::array simulating the same behaviour than their STD equivalent.
