@@ -57,7 +57,7 @@ namespace numeric{
     /* \endcond */
 
     /**
-    \brief this class participate to the tree creation by recursive process, wrap exp e.g exp((*it)[0])
+    \brief this class participates to the tree creation by recursive process, wrap exp e.g exp((*it)[0])
     */
     template<class T, memory::simd O, class OP1>
     class vec_exp{
@@ -73,7 +73,7 @@ namespace numeric{
     };
 
     /**
-    \brief this class participate to the tree creation by recursive process, wrap log e.g log((*it)[0])
+    \brief this class participates to the tree creation by recursive process, wrap log e.g log((*it)[0])
     */
     template<class T, memory::simd O, class OP1>
     class vec_log{
@@ -89,7 +89,7 @@ namespace numeric{
     };
 
     /**
-      \brief this class participate to the tree creation by recursive process, wrap addition e.g (*it)[0] + (*it)[1]
+      \brief this class participates to the tree creation by recursive process, wrap addition e.g (*it)[0] + (*it)[1]
     */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_add{
@@ -106,7 +106,7 @@ namespace numeric{
     };
 
     /** 
-      \brief this class participate to the tree creation by recursive process, wrap subtraction (*it)[0] - (*it)[1]
+      \brief this class participates to the tree creation by recursive process, wrap subtraction (*it)[0] - (*it)[1]
     */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_sub{
@@ -123,7 +123,7 @@ namespace numeric{
     };
 
     /** 
-      \brief this class participate to the tree creation by recursive process, wrap negation -(*it)[1], not optimal FIX ME 
+      \brief this class participates to the tree creation by recursive process, wrap negation -(*it)[1], not optimal FIX ME 
     */
     template<class T, memory::simd O, class OP1>
     class vec_neg{
@@ -139,7 +139,7 @@ namespace numeric{
     };
 
     /** 
-      \brief this class participate to the tree creation by recursive process, wrap subtraction (*it)[0] * (*it)[1]
+      \brief this class participates to the tree creation by recursive process, wrap subtraction (*it)[0] * (*it)[1]
     */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_mul{
@@ -166,7 +166,7 @@ namespace numeric{
     };    
     
     /** 
-      \brief this class participate to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]
+      \brief this class participates to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]
       \warning it is experimental
     */
     template<class T, memory::simd O, class OP1, class OP2, class OP3>
@@ -185,7 +185,7 @@ namespace numeric{
     };
 
     /**
-     \brief this class participate to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]*(*it)[3]
+     \brief this class participates to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]*(*it)[3]
      \warning it is experimental
      */
     template<class T, memory::simd O, class OP1, class OP2, class OP3, class OP4>
@@ -205,7 +205,7 @@ namespace numeric{
     };
 
     /**
-     \brief this class participate to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]*(*it)[3]
+     \brief this class participates to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]*(*it)[3]
      \warning it is experimental
      */
     template<class T, memory::simd O, class OP1, class OP2, class OP3, class OP4>
@@ -225,7 +225,7 @@ namespace numeric{
     };
 
     /** 
-      \brief this class participate to the tree creation by recursive process, wrap fms (*it)[0]*(*it)[1] - (*it)[2]
+      \brief this class participates to the tree creation by recursive process, wrap fms (*it)[0]*(*it)[1] - (*it)[2]
       \warning it is experimental
     */
     template<class T, memory::simd O, class OP1, class OP2, class OP3>
@@ -245,7 +245,7 @@ namespace numeric{
 
 
     /**
-     \brief this class participate to the tree creation by recursive process, help to wrap fms (*it)[2] - (*it)[0]*(*it)[1]
+     \brief this class participates to the tree creation by recursive process, help to wrap fms (*it)[2] - (*it)[0]*(*it)[1]
      As (*it)[2] - (*it)[0]*(*it)[1], it exists an operator for this at least on X86
      \warning it is experimental
      */
@@ -266,7 +266,7 @@ namespace numeric{
 
 
     /** 
-      \brief this class participate to the tree creation by recursive process, wrap division (*it)[0] * (*it)[1]
+      \brief this class participates to the tree creation by recursive process, wrap division (*it)[0] * (*it)[1]
     */
     template<class T, memory::simd O, class OP1, class OP2>
     class vec_div{
@@ -282,7 +282,7 @@ namespace numeric{
     };
 
     /** 
-      \brief this class participate to the tree creation by recursive process, wrap scalar operations it return a vector
+      \brief this class participates to the tree creation by recursive process, wrap scalar operations it return a vector
     */
     template<class T, memory::simd O>
     class vec_scalar{

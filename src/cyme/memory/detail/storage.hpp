@@ -64,7 +64,7 @@ namespace memory{
          /**
          \brief Default constructor, the subblock is set up to a desired value
          */
-         explicit storage(value_type value);
+         storage(value_type value);
          /**
          \brief write access operator, only use to a direct access to the datas
          */
@@ -110,7 +110,7 @@ namespace memory{
          /**
          \brief Default constructor, the subblock is set up to a desired value
          */
-         explicit storage(value_type value);
+         storage(value_type value);
          /**
          \brief write access operator, only use to a direct access to the datas
          */
