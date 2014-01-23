@@ -117,20 +117,6 @@ namespace numeric{
         return nrv;
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O> min(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv;
-        nrv.xmm = _mm_min<typename simd_trait<T,O>::value_type,O>(lhs.xmm,rhs.xmm);
-        return nrv;
-    }
-
-    template<class T, memory::simd O>
-    vec_simd<T,O> max(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv;
-        nrv.xmm = _mm_max<typename simd_trait<T,O>::value_type,O>(lhs.xmm,rhs.xmm);
-        return nrv;
-    }
-
 #ifdef __FMA__
     template<class T, memory::simd O>
     void vec_simd<T,O>::ma(const vec_simd& lhs, const vec_simd& rhs){
