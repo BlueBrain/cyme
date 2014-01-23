@@ -35,7 +35,7 @@ namespace numeric{
      \brief Broadcast double-precision (64-bit) floating-point value a to all elements of dst.
      */
     template<>
-    inline typename simd_trait<double,memory::mic>::register_type _mm_load1<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::value_type a){
+    inline typename simd_trait<double,memory::mic>::register_type _mm_load1<double,memory::mic>(typename simd_trait<double,memory::mic>::value_type a){
         return _mm512_set1_pd(a);
     }
 
@@ -43,7 +43,7 @@ namespace numeric{
      \brief Load 512-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 64-byte boundary or a general-protection exception will be generated.
      */
     template<>
-    inline typename simd_trait<double,memory::mic>::register_type _mm_load<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::const_pointer a){
+    inline typename simd_trait<double,memory::mic>::register_type _mm_load<double,memory::mic>(typename simd_trait<double,memory::mic>::const_pointer a){
         return _mm512_load_pd(a);
     }
 
@@ -180,7 +180,7 @@ namespace numeric{
      \brief Broadcast single-precision (32-bit) floating-point value a to all elements of dst.
      */
     template<>
-    typename simd_trait<float,memory::mic>::register_type _mm_load1<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>::value_type a){
+    typename simd_trait<float,memory::mic>::register_type _mm_load1<float,memory::mic>(typename simd_trait<float,memory::mic>::value_type a){
         return _mm512_set1_ps(a);
     }
 
@@ -188,7 +188,7 @@ namespace numeric{
      \brief Load 512-bits (composed of 16 packed single-precision (32-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 64-byte boundary or a general-protection exception will be generated.
      */
     template<>
-    typename simd_trait<float,memory::mic>::register_type _mm_load<float,memory::mic>(typename simd_trait<float,memory::mic>::register_type xmm0, typename simd_trait<float,memory::mic>    ::const_pointer a){
+    typename simd_trait<float,memory::mic>::register_type _mm_load<float,memory::mic>(typename simd_trait<float,memory::mic>    ::const_pointer a){
         return _mm512_load_ps(a);
     }
 

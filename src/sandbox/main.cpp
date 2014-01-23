@@ -29,7 +29,7 @@ struct f_init{
 
 int main(int argc, char* argv[]){
 
-    typedef  cyme::vector<synapse<float>, memory::AoSoA> my_vector;
+    typedef  cyme::vector<synapse<double>, memory::AoS> my_vector;
     my_vector b(0xfffff,0);
     std::for_each(b.begin(), b.end(), f_init<my_vector>() );
 

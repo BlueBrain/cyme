@@ -74,7 +74,7 @@ namespace numeric{
 #endif
 
 #ifdef __MIC__
-    #include "controller/simd_vector/detail/mic/trait_mic.ipp"
+    #include "core/simd_vector/detail/mic/trait_mic.ipp"
 #endif
 
 #endif
