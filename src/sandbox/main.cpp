@@ -1,13 +1,10 @@
-
 #include <iostream>
+#include <algorithm>
+#include <boost/chrono.hpp>
 
 #include "cyme/cyme.hpp"
 
 //#include "iacaMarks.h"
-
-#include <boost/chrono.hpp>
-
-#include <algorithm>
 
 template<class T>
 struct synapse{
@@ -15,40 +12,33 @@ struct synapse{
     static const int value_size = 18;
 };
 
-template<class Ba>
-void init(Ba& block_a){
-    for(int i=0; i<block_a.size(); ++i)
-        for(int j=0; j<block_a.size_block(); ++j){
-            typename Ba::value_type random = -100*drand48();
-            block_a(i,j) = random;
-        }
-}
-
 template<class T>
-struct functor{
+struct f_compute{
     void operator()(typename T::storage_type& S ){
-         S[0] = exp(S[1])*S[2]+S[3]/1.2;
+         S[0] = exp(S[1])*S[2]+exp(S[3])/1.2;
     }
 };
 
+template<class T>
+struct f_init{
+    void operator()(typename T::storage_type& S ){
+        for(int i=0;i <T::size_block(); ++i)
+            S[i] = drand48();
+    }
+};
 
 int main(int argc, char* argv[]){
 
     typedef  cyme::vector<synapse<float>, memory::AoSoA> my_vector;
     my_vector b(0xfffff,0);
-
-    init(b);
+    std::for_each(b.begin(), b.end(), f_init<my_vector>() );
 
     boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
-    std::for_each(b.begin(), b.end(), functor<my_vector>() );
-    std::fill(b.begin(), b.end(),3.0 );
-    std::generate(b.begin(), b.end(), std::rand );
-
-
-// C++11 version - std::for_each(b.begin(), b.end(), [](my_vector::storage_type& S){S[0] = exp(S[1])*S[2]+S[3]/1.2; } );
-
-
+        std::for_each(b.begin(), b.end(), f_compute<my_vector>() );
     boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-    std::cout << " sec " << sec.count() << std::endl;
 
+    std::cout << " sec " << sec.count() << std::endl;
 }
+
+// C++11 version 
+// std::for_each(b.begin(), b.end(), [](my_vector::storage_type& S){S[0] = exp(S[1])*S[2]+S[3]/1.2; } );

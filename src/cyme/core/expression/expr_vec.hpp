@@ -46,7 +46,7 @@ namespace numeric{
     //primary template, generic
     template<class T, memory::simd O>
     struct vec_traits{
-        typedef T const value_type;
+        typedef T const& value_type;
     };
 
     //partial specialization for scalars
