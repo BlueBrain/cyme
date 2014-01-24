@@ -26,12 +26,12 @@ specific to your target platform. As usual you should add optimisation flag e.g.
  <TD  align="center">  -D__CYME_SIMD_VALUE__=sse -msse4  </TD>
  <TD  align="center">  -D__CYME_SIMD_VALUE__=avx -mavx   </TD>
  <TD  align="center">  -D__CYME_SIMD_VALUE__=qpx         </TD>
- <TD  align="center">  -D__CYME_SIMD_VALUE__=mic -mmic   </TD>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=mic -D__FMA__ -mmic   </TD>
  </TR>
 </TABLE>
 
 cyme have been tested with 4 compilers GCC (>4.6), CLANG (3.2), ICC (14.0) and XLC (12.1). 
-For AoS performance are good whatever the compiler.
+For AoS, the performances are good whatever the compiler.
 For the AoSoA memory layout, performance are excellent with GCC/CLANG, medium with intel, and bad with xlc.
 It demonstrated the abilities of the compiler to construct/simplify the DAG  with the expression template method.
 
@@ -60,7 +60,7 @@ It demonstrated the abilities of the compiler to construct/simplify the DAG  wit
  </TR>
 </TABLE>
 
-If the library is installed in the standard location, for AVX on x86, you will compile,
+If the library is installed in the standard location, for AVX on x86, you will compile by
 
     g++  -D__CYME_SIMD_VALUE__=avx -mavx -O3 my_program.cpp 
                             

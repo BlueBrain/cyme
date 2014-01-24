@@ -1,0 +1,31 @@
+/*!
+
+\page Page4 How does it work ?
+
+
+Cyme utilizes a method of programming named expression template, developed by Vandervoorde and Jousuttis 2002. (Text from their book)
+
+The key to resolve our problem is not to attempts to evaluate part of an expression until the whole expression has been seen, until the assignment operator is invoked. Thus, before the evaluation we must record which operations are being applied to which objects. The 
+operations are determined at compile time and can therefore be encoded in template argument. For the expression
+
+    (*it)[1]*(*it)[2]+(*it)[3]/1.2;   
+    
+is equivalent to 
+
+     V_Add< 
+             V_Mul< 
+                 Vec<double>(1), Vec<double>(2) 
+             >
+        ,
+             V_Div<
+                 Vec<double>(3), Scalar(1.2) 
+             >
+        >        
+
+By creating this structure, we may recognize a prefix representation for the syntax tree.
+This nested template-id represents the operations involved and the types of the objects to which operations should be applied. Vec and scalar represents placeholder for a scalar and SIMD register. 
+
+\image html DAG.tiff Construction of the corresponding DAG during the compilation
+
+
+*/

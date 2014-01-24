@@ -4,7 +4,7 @@
 
 \section tuto1 Initialization and memory layout
 
-In this first tutorial, we create an instance of cyme container. For the beginning,
+In this first tutorial, we create an instance of a cyme container. For the beginning,
 we need and define a structure of 5 elements (here a channel).
 
     template<class T>
@@ -50,7 +50,7 @@ Thus we can write
     for(typename cyme::array<channel<float>,5, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
         I do something 
       
-A second operator [i] completes the first one (i,j), it access the memory with scalar access for AoS but with « vectorial access » with AoSoA.  
+A second operator [i] completes the first one (i,j), it reads the memory with « scalar access » for AoS but with « vectorial access » with AoSoA.  
 When we request an element from the iterator with AoS layout, we manipulate one element of data, and four for the AoSoA layout with the help
 of SIMD technology.
 
@@ -65,7 +65,7 @@ In 2 steps with the AoSoA layout the initialization is done, against  5 steps fo
  
 \section tuto3 Computation 
   
-The last tutorial  performs operations. We simply request data from the iterator and perform operation like usual. But with the AoSoA layout,
+The last tutorial  operations. We simply request data from the iterator and execute operations. But with the AoSoA layout,
 we can compute our operations 4 times faster.
 
     cyme::array<synapse<float>,5, memory::AoSoA> b;
@@ -73,7 +73,6 @@ we can compute our operations 4 times faster.
     for(cyme::array<synapse<float>,5, memory::AoSoA>::iterator it = b.begin(); it < b.end(); ++it)
        (*it)[0] = (*it)[1]*(*it)[2]+(*it)[3]/1.2;
 
-During the compilation the cyme framework will generate the DAG of this expression to obtain the best SIMD possible without useless copy.
 The framework is more and less compatible with C++ features specially algorithm concept. The previous example my be rewritten using a functor and std::for_each
 
     template<class T>
