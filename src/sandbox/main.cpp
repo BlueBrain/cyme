@@ -1,6 +1,8 @@
 #include <iostream>
 #include <algorithm>
 #include <boost/chrono.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/mpl/vector.hpp>
 
 #include "cyme/cyme.hpp"
 
@@ -15,7 +17,10 @@ struct synapse{
 template<class T>
 struct f_compute{
     void operator()(typename T::storage_type& S ){
-         S[0] = exp(S[1])*S[2]+exp(S[3])/1.2;
+// C++11 version 
+// std::for_each(b.begin(), b.end(), [](my_vector::storage_type& S){S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]; } );
+        S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]);
+        S[4] += (1.-exp(0.1*(-1./S[11])))*((S[10]/S[11])/(1./S[11])-S[4]);
     }
 };
 
@@ -27,18 +32,30 @@ struct f_init{
     }
 };
 
+typedef  cyme::vector<synapse<float>, memory::AoS> Vec_f_AoS;
+typedef  cyme::vector<synapse<float>, memory::AoSoA> Vec_f_AoSoA;
+typedef  cyme::vector<synapse<double>, memory::AoS> Vec_d_AoS;
+typedef  cyme::vector<synapse<double>, memory::AoSoA> Vec_d_AoSoA; 
+
+typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_f_AoSoA > vector_list;
+
+struct test_case{
+
+    template <class T>
+    void operator()(T const&){
+
+        T v(0xffffff,0);
+        std::for_each(v.begin(), v.end(), f_init<T>() );
+        
+        boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+            std::for_each(v.begin(), v.end(), f_compute<T>() );
+        boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
+        
+        std::cout << " sec " << sec.count() << std::endl;
+    }
+};
+
+
 int main(int argc, char* argv[]){
-
-    typedef  cyme::vector<synapse<double>, memory::AoS> my_vector; 
-    my_vector b(0xfffff,0);
-    std::for_each(b.begin(), b.end(), f_init<my_vector>() );
-
-    boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
-        std::for_each(b.begin(), b.end(), f_compute<my_vector>() );
-    boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-
-    std::cout << " sec " << sec.count() << std::endl;
+     boost::mpl::for_each<vector_list>(test_case());
 }
-
-// C++11 version 
-// std::for_each(b.begin(), b.end(), [](my_vector::storage_type& S){S[0] = exp(S[1])*S[2]+S[3]/1.2; } );
