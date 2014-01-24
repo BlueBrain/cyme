@@ -35,7 +35,7 @@ namespace numeric{
      */
     template<>
     inline  simd_trait<double,memory::avx>::register_type _mm_load1<double,memory::avx>(simd_trait<double,memory::avx>::value_type a){
-        return _mm256_broadcast_sd(&a);
+        return _mm256_set1_pd(a); // C - _mm256_broadcast_sd causes me a severe issue of perf into the e^y of the exp with clang, I do not know why ...
     }
 
     /**
@@ -201,7 +201,7 @@ namespace numeric{
      */
     template<>
      simd_trait<float,memory::avx>::register_type _mm_load1<float,memory::avx>(simd_trait<float,memory::avx>::value_type a){
-        return _mm256_broadcast_ss(&a);
+        return _mm256_set1_ps(a);
     }
    
     /**
@@ -321,7 +321,7 @@ namespace numeric{
     /**
       \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, add the intermediate result to packed elements in xmm2, and store the results in dst.
      */
-plate<>
+    template<>
     inline simd_trait<float,memory::avx>::register_type _mm_fma<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0,
                                                                                    simd_trait<float,memory::avx>::register_type xmm1,
                                                                                    simd_trait<float,memory::avx>::register_type xmm2){
