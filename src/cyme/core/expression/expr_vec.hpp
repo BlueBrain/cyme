@@ -77,7 +77,7 @@ namespace numeric{
     */
     template<class T, memory::simd O, class OP1>
     class vec_log{
-        typename vec_traits<OP1,O>::log_ref op1;
+        typename vec_traits<OP1,O>::value_type op1;
 
     public:
         inline vec_log(OP1 const& a):op1(a){

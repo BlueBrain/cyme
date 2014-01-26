@@ -30,8 +30,10 @@ template<class T>
 static inline void cnrn_states(typename T::storage_type& S){
     typedef typename T::value_type value_type; //basic float or double
     cnrn_rates<T>(S);
+//    IACA_START
     S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]);
     S[4] += (1.-exp(0.1*(-1./S[11])))*((S[10]/S[11])/(1./S[11])-S[4]);
+//    IACA_END
 }
 
 template<class T>
@@ -54,14 +56,15 @@ typedef  cyme::vector<synapse<float>, memory::AoSoA> Vec_f_AoSoA;
 typedef  cyme::vector<synapse<double>, memory::AoS> Vec_d_AoS;
 typedef  cyme::vector<synapse<double>, memory::AoSoA> Vec_d_AoSoA; 
 
-typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
+//typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
+typedef boost::mpl::vector<Vec_d_AoSoA > vector_list;
 
 struct test_case{
 
     template <class T>
     void operator()(T const&){
 
-        T v(0xffffff,0);
+        T v(0xff,0);
         std::for_each(v.begin(), v.end(), f_init<T>() );
         
         boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
