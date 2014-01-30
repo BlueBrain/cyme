@@ -121,13 +121,8 @@ namespace memory{
          inline const_reference operator()(size_type i) const;
 
          inline numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i);
-         inline const numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
 
-         /*
-         inline  boost::simd::pack<T> operator[](size_type i);
-         inline  const boost::simd::pack<T> operator[](size_type i) const;
-         inline  T* store(size_type i);
-         */
+         inline const numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
 
          private:
          value_type data[Size]; // need for std algo

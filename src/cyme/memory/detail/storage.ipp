@@ -101,22 +101,5 @@ namespace memory{
     const numeric::vec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
         return numeric::vec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
-    
-/* boost simd support
-    template <class T, std::size_t Size>
-    boost::simd::pack<T> storage<T, Size, AoSoA>::operator[](size_type i){
-        return boost::simd::pack<T>(&data[i*stride<T,AoSoA>::helper_stride()]);
-    }
-
-    template <class T, std::size_t Size>
-    const boost::simd::pack<T> storage<T, Size, AoSoA>::operator[](size_type i) const{
-        return boost::simd::pack<T>(&data[i*stride<T,AoSoA>::helper_stride()]);
-    }
-
-    template <class T, std::size_t Size>
-    T* storage<T, Size, AoSoA>::store(std::size_t i){
-        return &data[i*stride<T,AoSoA>::helper_stride()];
-    }
-*/
 } //end namespace
 #endif 
