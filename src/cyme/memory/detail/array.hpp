@@ -94,14 +94,12 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
         }
 
         // operator[]
-        reference operator[](size_type i) 
-        { 
+        reference operator[](size_type i) {
             BOOST_ASSERT_MSG( i < N, "out of range" );
             return elems[i];
         }
         
-        const_reference operator[](size_type i) const 
-        {     
+        const_reference operator[](size_type i) const {
             BOOST_ASSERT_MSG( i < N, "out of range" );
             return elems[i]; 
         }
@@ -111,23 +109,19 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
         const_reference at(size_type i) const { rangecheck(i); return elems[i]; }
     
         // front() and back()
-        reference front() 
-        { 
+        reference front() {
             return elems[0]; 
         }
         
-        const_reference front() const 
-        {
+        const_reference front() const {
             return elems[0];
         }
         
-        reference back() 
-        { 
+        reference back() {
             return elems[N-1]; 
         }
         
-        const_reference back() const 
-        { 
+        const_reference back() const {
             return elems[N-1]; 
         }
 
@@ -207,8 +201,7 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
     }
 
     template<class T, std::size_t N>
-    std::size_t hash_value(const array<T,N>& arr)
-    {
+    std::size_t hash_value(const array<T,N>& arr) {
         return boost::hash_range(arr.begin(), arr.end());
     }
 
