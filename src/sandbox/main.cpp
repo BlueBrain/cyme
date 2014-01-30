@@ -56,15 +56,23 @@ typedef  cyme::vector<synapse<float>, memory::AoSoA> Vec_f_AoSoA;
 typedef  cyme::vector<synapse<double>, memory::AoS> Vec_d_AoS;
 typedef  cyme::vector<synapse<double>, memory::AoSoA> Vec_d_AoSoA; 
 
+typedef  cyme::array<synapse<float>, 128,memory::AoS> Ar_f_AoS;
+typedef  cyme::array<synapse<float>, 128,memory::AoSoA> Ar_f_AoSoA;
+typedef  cyme::array<synapse<double>, 128,memory::AoS> Ar_d_AoS;
+typedef  cyme::array<synapse<double>, 128,memory::AoSoA> Ar_d_AoSoA;
+
+
 //typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
-typedef boost::mpl::vector<Vec_d_AoSoA > vector_list;
+typedef boost::mpl::vector< Ar_f_AoS, Ar_f_AoSoA, Ar_d_AoS, Ar_d_AoSoA > vector_list;
+
+//typedef boost::mpl::vector<Ar_d_AoSoA > vector_list;
 
 struct test_case{
 
     template <class T>
     void operator()(T const&){
 
-        T v(0xff,0);
+        T v(0);
         std::for_each(v.begin(), v.end(), f_init<T>() );
         
         boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();

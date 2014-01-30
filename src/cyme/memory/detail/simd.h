@@ -33,13 +33,7 @@ namespace memory{
     /** \cond I do not need this part in the doc*/
     enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpx = 32, mic = 64}; //sizeof(void*) = 8 on 64 bits machine
 
-// In C++0x the macro __cplusplus will be set to a value that differs from (is greater than) the current 199711L (ISO rules)
-// Be carefull could change in the futur ...
-#if (__cplusplus > 199711L)
-    constexpr static simd __GETSIMD__() {return __CYME_SIMD_VALUE__;} //default value, given by pp e.g. -Dsse,
-#else
-    #define __GETSIMD__() __CYME_SIMD_VALUE__ // This is a shame but I can not use c++11
-#endif
+    #define __GETSIMD__() __CYME_SIMD_VALUE__ 
 
     enum order {AoS, AoSoA};
     
