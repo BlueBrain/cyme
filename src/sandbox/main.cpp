@@ -72,7 +72,7 @@ struct test_case{
     template <class T>
     void operator()(T const&){
 
-        T v(0xffff,0);
+        T v(0xffffff,0);
         std::for_each(v.begin(), v.end(), f_init<T>() );
         
         boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
