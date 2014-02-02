@@ -6,7 +6,7 @@
 
 #include "cyme/cyme.hpp"
 
-//#include "iacaMarks.h"
+#include "iacaMarks.h"
 
 template<class T>
 struct synapse{
@@ -30,10 +30,10 @@ template<class T>
 static inline void cnrn_states(typename T::storage_type& S){
     typedef typename T::value_type value_type; //basic float or double
     cnrn_rates<T>(S);
-//    IACA_START
+    IACA_START
     S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]);
     S[4] += (1.-exp(0.1*(-1./S[11])))*((S[10]/S[11])/(1./S[11])-S[4]);
-//    IACA_END
+    IACA_END
 }
 
 template<class T>
