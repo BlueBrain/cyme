@@ -50,7 +50,7 @@ namespace numeric{
 
     template <>
     struct simd_trait<int, memory::mic> : trait<int>{
-        typedef __m512i register_type;
+        typedef __m512 register_type; 
     };
 
     /**
@@ -66,7 +66,7 @@ namespace numeric{
      */
     template<>
     struct div_recursion<double, memory::mic>{
-        static const std::size_t value = 1; // card([0-2])=3, should be 3
+        static const std::size_t value = 3; // card([0-2])=3, should be 3
     };
 }
 #endif

@@ -88,36 +88,37 @@ namespace numeric{
     }
 
     /**
-     \brief not use
-     */
+        \brief Negate packed double-precision (64-bit) floating-point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
+    */
     template<>
     inline  simd_trait<double,memory::mic>::register_type _mm_neg<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
-        return (xmm0);
-    };
+        return _mm512_castsi512_pd(_mm512_xor_si512(_mm512_castpd_si512(xmm0),_mm512_set1_epi64(0x8000000000000000)));
+    }
 
     /**
-     \brief not use
+     \brief Round the packed double-precision (32-bit) floating-point elements in xmm0 down to an integer value, and store the results as packed single precision (32-bits).
      */
     template<>
     inline  simd_trait<int,memory::mic>::register_type _mm_floor<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
-        return (xmm0);
-    };
+        return _mm512_cvtpd_pslo(_mm512_floor_pd(xmm0)); 
+    }
 
     /**
-     \brief not use
+     \brief Convert packedi single precision (32-bit) in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
      */
     template<>
     inline  simd_trait<double,memory::mic>::register_type _mm_cast<double,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
-        return  (xmm0);
-    };
+        return _mm512_cvtpslo_pd(xmm0); 
+    }
 
     /**
-     \brief not use
+     \brief Compute 2^k packed integer (64-bit) elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dest.
+     \warning performed with float exponent, precision so so
      */
     template<>
     inline  simd_trait<double,memory::mic>::register_type _mm_twok<double,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
-        return  (xmm0);
-    };
+        return _mm512_cvtpslo_pd(_mm512_castsi512_ps(_mm512_sllv_epi32(_mm512_add_epi32(_mm512_cvtfxpnt_round_adjustps_epi32(xmm0, _MM_ROUND_MODE_TOWARD_ZERO, _MM_EXPADJ_NONE),_mm512_set1_epi32(127)),_mm512_set1_epi32(23)))); // hum ... calculate 2^n with float too much
+    }
 
     /**
     \brief Compute the exponential value of e raised to the power of packed double-precision (64-bit) floating-point elements in xmm0, and store the results in dst.
@@ -135,12 +136,13 @@ namespace numeric{
         return _mm512_log_pd(xmm0);
     }
 
-    /**
-     \brief not use
-     */
+   /**
+     \brief Compute the approximate reciprocal of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst. The maximum relative error for this approximation is less than 1.5*2^-12.
+      \warning using float, rcp is not implemented for double, precision not good !
+    */
     template<>
     inline simd_trait<double,memory::mic>::register_type _mm_rec<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
-        return (xmm0);
+        return _mm512_cvtpslo_pd(_mm512_rcp23_ps(_mm512_cvtpd_pslo(xmm0)));
     };
 
     /**
@@ -234,42 +236,41 @@ namespace numeric{
     }
 
     /**
-     \brief not use
-     */
+        \brief Negate packed double-precision (32-bit) floating-point elements in xmm0 to packed double-precision (32-bit) floating-point elements, and store the results in dst.
+    */
     template<>
     inline  simd_trait<float,memory::mic>::register_type _mm_neg<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
-
-        return (xmm0);
+        return _mm512_castsi512_ps(_mm512_xor_si512( _mm512_castps_si512(xmm0),_mm512_set1_epi32(0x80000000))); //right if the number fill up into the mantissa ....
     };
 
     /**
-     \brief not use
+     \brief Floor the packed double-precision (32-bit) floating-point elements in xmm0 down to an integer value, and store the results as packed single precision (32-bits).
      */
     template<>
     inline  simd_trait<int,memory::mic>::register_type _mm_floor<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
-        return (xmm0);
+        return _mm512_floor_ps(xmm0);
     };
-
+ 
+    
     /**
-     \brief not use
+     \brief Nothing 
      */
     template<>
     inline  simd_trait<float,memory::mic>::register_type _mm_cast<float,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
-        return  (xmm0);
+        return xmm0;
     };
 
     /**
-     \brief not use
-     */
+     \brief Compute 2^k packed integer (32-bit) elements in xmm0 to packed single-precision (32-bit) floating-point elements, and store the results in dest.
+    */
     template<>
     inline  simd_trait<float,memory::mic>::register_type _mm_twok<float,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
-        return  (xmm0);
+        return _mm512_castsi512_ps(_mm512_sllv_epi32(_mm512_add_epi32(_mm512_cvtfxpnt_round_adjustps_epi32(xmm0, _MM_ROUND_MODE_TOWARD_ZERO, _MM_EXPADJ_NONE),_mm512_set1_epi32(127)),_mm512_set1_epi32(23)));
     };
 
-
     /**
-     \brief not use
-     */
+    \brief Approximates the reciprocals of the float32 vector v2 elements to 23 bits of accuracy.
+    */
     template<>
     inline simd_trait<float,memory::mic>::register_type _mm_rec<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
         return _mm512_rcp23_ps(xmm0);
