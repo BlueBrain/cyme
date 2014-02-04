@@ -314,8 +314,8 @@ which layout ? Which container ?
 \begin{frame}[fragile]
 Containers with two data layout
  \begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
-      vector<object,double,AoS> block_AoS;       
-      vector<object,double,AoSoA>    block_AoSoA;
+      cyme::vector<object,double,AoS> vec_AoS;       
+      cyme::vector<object,double,AoSoA>    vec_AoSoA;
 \end{lstlisting}
 
 \hspace{1cm}
@@ -377,7 +377,7 @@ Memory layout:
 \subsection*{Bracket operator (i,j) and [i]}
 \begin{frame}[fragile]
 
-AoS ideology, easier to represent in mind
+AoS ideology, easier to represent in mind, bracket operator (i,j)
 
 \vspace{0.5cm}
 
@@ -486,8 +486,8 @@ Iterator and bracket [i] operator,
 \centering
 Generic syntax: 
  \begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
-      cyme:vector<object,double,AoSoA/AoS> block;
-      typename block<object,double,AoSoA/AoS>::iterator it;
+      cyme::vector<object,double,AoSoA/AoS> vec;
+      typename vec<object,double,AoSoA/AoS>::iterator it;
       for(it = block.begin();it != block.end();++it){...}
 \end{lstlisting}
 
@@ -544,9 +544,9 @@ $\boxed{a[0] = a[1]  \times a[2]  +a[3]/1.2}$
 %\hrulefill
 
 \begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
-      cyme::vector<object,AoSoA/AoS> block;
+      cyme::vector<object,AoSoA/AoS> vec;
       typename cyme::vector<object,AoSoA/AoS>::iterator it;
-      for(it = block.begin();it != block.end(); ++it)
+      for(it = vec();it != vec(); ++it)
           (*it)[0] = (*it)[1]x(*it)[2]+(*it)[3]/1.2;
 \end{lstlisting}
 \vspace{0.5cm}
