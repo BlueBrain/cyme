@@ -124,8 +124,9 @@ namespace numeric{
      */
     template<>
     inline  simd_trait<double,memory::avx>::register_type _mm_twok<double,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
-        // PLEASE TUNE ME
+        // ORIGINAL
         // ((int + 127) << 23) <=> int to float
+
         __m128i imm0 =  _mm_shuffle_epi32(_mm_slli_epi32(_mm_add_epi32(_mm256_castsi256_si128(xmm0), _mm_set1_epi32(1023)), 20), _MM_SHUFFLE(1,3,0,2));
         __m128i imm1 =  _mm_slli_epi64(imm0,32);
         imm0 =  _mm_srli_epi64(imm0,32); //mask will be slower because mov + broadcast + and, I need to mask 6 instructions
@@ -133,6 +134,9 @@ namespace numeric{
         xmm0 =   _mm256_insertf128_si256(xmm0, imm0,0);
         xmm0 =   _mm256_insertf128_si256(xmm0, imm1,1);
         return  _mm256_castsi256_pd(xmm0);
+
+        // TUNE VERSION, ok if |x| < 89 
+        // return _mm256_cvtps_pd(_mm_castsi128_ps(_mm_shuffle_epi32(_mm_slli_epi32(_mm_add_epi32(_mm256_castsi256_si128(xmm0), _mm_set1_epi32(127)), 23), _MM_SHUFFLE(1,3,0,2))));
     }
 
 
