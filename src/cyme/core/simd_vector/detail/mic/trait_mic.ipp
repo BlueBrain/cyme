@@ -50,7 +50,7 @@ namespace numeric{
 
     template <>
     struct simd_trait<int, memory::mic> : trait<int>{
-        typedef __m512 register_type; 
+        typedef __m512i register_type; 
     };
 
     /**

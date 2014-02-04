@@ -100,7 +100,7 @@ namespace numeric{
      */
     template<>
     inline  simd_trait<int,memory::mic>::register_type _mm_floor<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
-        return _mm512_cvtpd_pslo(_mm512_floor_pd(xmm0)); 
+        return  _mm512_castpd_si512(_mm512_floor_pd(xmm0)); 
     }
 
     /**
@@ -108,7 +108,7 @@ namespace numeric{
      */
     template<>
     inline  simd_trait<double,memory::mic>::register_type _mm_cast<double,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
-        return _mm512_cvtpslo_pd(xmm0); 
+        return _mm512_castsi512_pd(xmm0); 
     }
 
     /**
@@ -117,7 +117,22 @@ namespace numeric{
      */
     template<>
     inline  simd_trait<double,memory::mic>::register_type _mm_twok<double,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
-        return _mm512_cvtpslo_pd(_mm512_castsi512_ps(_mm512_sllv_epi32(_mm512_add_epi32(_mm512_cvtfxpnt_round_adjustps_epi32(xmm0, _MM_ROUND_MODE_TOWARD_ZERO, _MM_EXPADJ_NONE),_mm512_set1_epi32(127)),_mm512_set1_epi32(23)))); // hum ... calculate 2^n with float too much
+/*       for debug
+         #include <micvec.h>
+         __declspec(align(64)) Is32vec16  test;
+         test = Is32vec16(tmp0);
+         std::cout<< std::hex << test << std::endl;
+ hybrid float/double _mm512_cvtpslo_pd(_mm512_castsi512_ps(_mm512_sllv_epi32(_mm512_add_epi32(_mm512_cvtfxpnt_round_adjustps_epi32(xmm0, _MM_ROUND_MODE_TOWARD_ZERO, _MM_EXPADJ_NONE),_mm512_set1_epi32(127)),_mm512_set1_epi32(23)))); // hum ... calculate 2^n with float too much
+*/
+          __m512i tmp0 =  _mm512_cvtfxpnt_roundpd_epu32lo(_mm512_castsi512_pd(xmm0), _MM_ROUND_MODE_TOWARD_ZERO); // double to uint32  A B C D - E F G H - 0 0 0 0 - 0 0 0 0
+         tmp0 = _mm512_permute4f128_epi32(tmp0,_MM_PERM_BBAA);    // fill second part of the register by copy, there are empty A B C D -  A B C D - E F G H - E F G H 
+         tmp0 = _mm512_mask_swizzle_epi32(tmp0,0xF0F,tmp0,_MM_SWIZ_REG_CDAB);   // reshuffling step1 B A D C - A B C D - F E H G - E F G H   
+         tmp0 = _mm512_mask_swizzle_epi32(tmp0,0xFFFF,tmp0,_MM_SWIZ_REG_DACB);  // step2 A D B C - B C A D - E H F G - F G E H 
+         tmp0 = _mm512_mask_swizzle_epi32(tmp0,0xF0F,tmp0,_MM_SWIZ_REG_CDAB);   // step3 D A C B - B C A D - H E G F - F G E H // This 3 steps equivalent to >>32
+         tmp0 = _mm512_mask_and_epi32(_mm512_setzero_epi32(),0xAAAA,tmp0, _mm512_set1_epi32(0xffffffff)); // 0 A 0 B 0 C 0 D 0 E 0 F 0 G 0 H
+         tmp0 = _mm512_mask_add_epi32(_mm512_setzero_epi32(),0xAAAA,tmp0,_mm512_set1_epi32(1023)); // Preparing double: classic + 1023
+         tmp0 = _mm512_mask_slli_epi32(_mm512_setzero_epi32(),0xAAAA,tmp0,20); // preparing double nexf >>20
+         return _mm512_castsi512_pd(tmp0); // switch 32bit representation to double
     }
 
     /**
@@ -248,16 +263,15 @@ namespace numeric{
      */
     template<>
     inline  simd_trait<int,memory::mic>::register_type _mm_floor<float,memory::mic>(simd_trait<float,memory::mic>::register_type xmm0){
-        return _mm512_floor_ps(xmm0);
+        return  _mm512_castps_si512(_mm512_floor_ps(xmm0)); 
     };
- 
     
     /**
      \brief Nothing 
      */
     template<>
     inline  simd_trait<float,memory::mic>::register_type _mm_cast<float,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
-        return xmm0;
+        return _mm512_castsi512_ps(xmm0); 
     };
 
     /**
@@ -265,7 +279,7 @@ namespace numeric{
     */
     template<>
     inline  simd_trait<float,memory::mic>::register_type _mm_twok<float,memory::mic>(simd_trait<int,memory::mic>::register_type xmm0){
-        return _mm512_castsi512_ps(_mm512_sllv_epi32(_mm512_add_epi32(_mm512_cvtfxpnt_round_adjustps_epi32(xmm0, _MM_ROUND_MODE_TOWARD_ZERO, _MM_EXPADJ_NONE),_mm512_set1_epi32(127)),_mm512_set1_epi32(23)));
+        return _mm512_castsi512_ps(_mm512_sllv_epi32(_mm512_add_epi32(_mm512_cvtfxpnt_round_adjustps_epi32(_mm512_castsi512_ps(xmm0), _MM_ROUND_MODE_TOWARD_ZERO, _MM_EXPADJ_NONE),_mm512_set1_epi32(127)),_mm512_set1_epi32(23)));
     };
 
     /**
