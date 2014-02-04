@@ -68,7 +68,7 @@
  void init(Ba& block_a, Bb& block_b){
      for(int i=0; i<block_a.size(); ++i)
          for(int j=0; j<block_a.size_block(); ++j){
-             typename Ba::value_type random = 100*drand48();
+             typename Ba::value_type random = -100*drand48();
              block_a(i,j) = random;
              block_b(i,j) = random;
          }
@@ -103,8 +103,9 @@
          cnrn_initmodel(it);
          cnrn_cur<iterator,O>(it);
 R*/
-         cnrn_states(it);
+       //cnrn_states(it);
  
+         (*it)[8]  = exp((*it)[16]);
      }
  
      template<class iterator>

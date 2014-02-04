@@ -124,7 +124,7 @@ namespace numeric{
          std::cout<< std::hex << test << std::endl;
  hybrid float/double _mm512_cvtpslo_pd(_mm512_castsi512_ps(_mm512_sllv_epi32(_mm512_add_epi32(_mm512_cvtfxpnt_round_adjustps_epi32(xmm0, _MM_ROUND_MODE_TOWARD_ZERO, _MM_EXPADJ_NONE),_mm512_set1_epi32(127)),_mm512_set1_epi32(23)))); // hum ... calculate 2^n with float too much
 */
-          __m512i tmp0 =  _mm512_cvtfxpnt_roundpd_epu32lo(_mm512_castsi512_pd(xmm0), _MM_ROUND_MODE_TOWARD_ZERO); // double to uint32  A B C D - E F G H - 0 0 0 0 - 0 0 0 0
+          __m512i tmp0 = _mm512_cvtfxpnt_roundpd_epi32lo(_mm512_castsi512_pd(xmm0), _MM_ROUND_MODE_TOWARD_ZERO); // double to uint32  A B C D - E F G H - 0 0 0 0 - 0 0 0 0
          tmp0 = _mm512_permute4f128_epi32(tmp0,_MM_PERM_BBAA);    // fill second part of the register by copy, there are empty A B C D -  A B C D - E F G H - E F G H 
          tmp0 = _mm512_mask_swizzle_epi32(tmp0,0xF0F,tmp0,_MM_SWIZ_REG_CDAB);   // reshuffling step1 B A D C - A B C D - F E H G - E F G H   
          tmp0 = _mm512_mask_swizzle_epi32(tmp0,0xFFFF,tmp0,_MM_SWIZ_REG_DACB);  // step2 A D B C - B C A D - E H F G - F G E H 
