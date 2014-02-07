@@ -28,10 +28,10 @@ endif(NOT MACHINE_CONFIG)
 #
 ########################################################################
 
-project (cyme) 
+project (cyme)
 set (CYME_VERSION_MAJOR 0)
 set (CYME_VERSION_MINOR 1)
-	
+
 ########################################################################
 #
 #
@@ -95,10 +95,10 @@ endif(CYME_MATH)
 ########################################################################
 
 #this depends of the associated module
-#set(Boost_NO_SYSTEM_PATHS TRUE)
-set(BOOST_DIR $ENV{BOOST_DIR} CACHE PATH "Path to the Boost installation (or to the Boost source)")
-set(BOOST_ROOT ${BOOST_DIR})
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+set(Boost_NO_SYSTEM_PATHS TRUE)
+#set(BOOST_DIR $ENV{BOOST_DIR} CACHE PATH "Path to the Boost installation (or to the Boost source)")
+#set(BOOST_ROOT ${BOOST_DIR})
+#set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 find_package (Boost 1.54 COMPONENTS unit_test_framework system chrono)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
