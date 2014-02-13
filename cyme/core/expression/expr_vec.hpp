@@ -32,7 +32,7 @@
 namespace numeric{
      /* \cond */
     /* 
-     *  this works modelizes template expression method to parse a series of basic operations into a three (during compile time). Therefore I limited
+     *  this works template expressions to parse a series of basic operations into a tree (during compile time). Therefore I limited
      *  the number of local copy to the minimum. Directly inspired (copy/past and modify ^_^) from C++ template the complete guide, chapter XVIII
      */
 

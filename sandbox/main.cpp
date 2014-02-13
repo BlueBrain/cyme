@@ -28,7 +28,7 @@ static inline void cnrn_rates(typename T::storage_type& S){
 
 template<class T>
 static inline void cnrn_states(typename T::storage_type& S){
-    typedef typename T::value_type value_type; //basic float or double
+    //typedef typename T::value_type value_type; //basic float or double
     cnrn_rates<T>(S);
 //  IACA_START
     S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]);
@@ -64,21 +64,40 @@ typedef  cyme::array<synapse<double>, 128,memory::AoSoA> Ar_d_AoSoA;
 
 typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
 //typedef boost::mpl::vector< Ar_f_AoS, Ar_f_AoSoA, Ar_d_AoS, Ar_d_AoSoA > vector_list;
-
 //typedef boost::mpl::vector<Vec_d_AoSoA > vector_list;
+
+#ifdef _OPENMP
+// OpenMP implementation of std::for_each
+// requires that Iterator is a random access input iterator because the
+// predicate on an OpenMP for loop must be relative (<, <=, >, ... etc)  
+template<typename Iterator, typename Functor>
+Functor
+omp_for_each(Iterator first, Iterator last, Functor f) {
+    #pragma omp parallel for private(f)
+    for(Iterator it=first; it<last; ++it) {
+	f(*it);
+    }
+
+    return f;
+}
+#endif
 
 struct test_case{
 
     template <class T>
     void operator()(T const&){
 
-        T v(0xffffff,0);
+	const std::size_t N(0xffffff);
+        T v(N,0);
         std::for_each(v.begin(), v.end(), f_init<T>() );
         
         boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
-            std::for_each(v.begin(), v.end(), f_compute<T>() );
+#ifdef _OPENMP
+    	omp_for_each(v.begin(), v.end(), f_compute<T>() );
+#else
+    	std::for_each(v.begin(), v.end(), f_compute<T>() );
+#endif
         boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-        
         std::cout << "float: " << sizeof(typename T::value_type) << "[Byte], "  << " sec " << sec.count() << std::endl;
     }
 };

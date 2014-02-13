@@ -117,11 +117,12 @@ namespace memory{
     class block_v<T,M,AoSoA> : public std::vector<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>, memory::Allocator<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA> > >{
     public:
         typedef std::size_t                                               size_type;
+	static const size_type 	storage_width = __GETSIMD__()/sizeof(T)*M;
         typedef T                                                         value_type;
         typedef value_type&                                               reference;
         typedef const value_type&                                         const_reference;
-        typedef storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>                storage_type;
-        typedef std::vector<storage_type, memory::Allocator<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA> > >   base_type;                  //default template seems impossible on partial specialization
+        typedef storage<T,storage_width,AoSoA>                storage_type;
+        typedef std::vector<storage_type, memory::Allocator<storage<T,storage_width,AoSoA> > >   base_type;                  //default template seems impossible on partial specialization
         typedef typename  base_type::iterator                             iterator;
 
         explicit block_v(const size_type size, const value_type value)
@@ -137,7 +138,7 @@ namespace memory{
            // BOOST_ASSERT_MSG( i < size(), "out of range: block_v AoS i" );
             BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
-            return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
+            return base_type::operator[]((i*M+j)/storage_width) //(i)
             (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
         }
 

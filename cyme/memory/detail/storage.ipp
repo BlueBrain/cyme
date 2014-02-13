@@ -45,13 +45,15 @@ namespace memory{
     }
 
     template <class T, std::size_t Size>
-    typename storage<T, Size, AoS>::reference storage<T, Size, AoS>::operator()(size_type i){
+    typename storage<T, Size, AoS>::reference
+    storage<T, Size, AoS>::operator()(size_type i){
         BOOST_ASSERT_MSG( i < Size, "out of range" );
         return data[i];
     }
 
     template <class T, std::size_t Size>
-    typename storage<T, Size, AoS>::const_reference storage<T, Size, AoS>::operator()(size_type i) const{
+    typename storage<T, Size, AoS>::const_reference
+    storage<T, Size, AoS>::operator()(size_type i) const{
         BOOST_ASSERT_MSG( i < Size, "out of range" );
         return data[i];
     }
@@ -81,19 +83,22 @@ namespace memory{
     }
 
     template <class T, std::size_t Size>
-    typename storage<T, Size, AoSoA>::reference storage<T, Size, AoSoA>::operator()(size_type i){
+    typename storage<T, Size, AoSoA>::reference
+    storage<T, Size, AoSoA>::operator()(size_type i){
         BOOST_ASSERT_MSG( i < Size, "out of range" );
         return data[i];
     }
 
     template <class T, std::size_t Size>
-    typename storage<T, Size, AoSoA>::const_reference storage<T, Size, AoSoA>::operator()(size_type i) const{
+    typename storage<T, Size, AoSoA>::const_reference
+    storage<T, Size, AoSoA>::operator()(size_type i) const{
         BOOST_ASSERT_MSG( i < Size, "out of range" );
         return data[i];
     }
 
     template <class T, std::size_t Size>
-    numeric::vec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i){
+    numeric::vec<T,memory::__GETSIMD__()>
+    storage<T, Size, AoSoA>::operator[](size_type i){
         return numeric::vec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 
