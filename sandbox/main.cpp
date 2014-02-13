@@ -39,7 +39,7 @@ static inline void cnrn_states(typename T::storage_type& S){
 template<class T>
 struct f_compute{
     void operator()(typename T::storage_type& S ){
-       cnrn_states<T>(S); 
+       cnrn_states<T>(S);
     }
 };
 
@@ -54,7 +54,7 @@ struct f_init{
 typedef  cyme::vector<synapse<float>, memory::AoS> Vec_f_AoS;
 typedef  cyme::vector<synapse<float>, memory::AoSoA> Vec_f_AoSoA;
 typedef  cyme::vector<synapse<double>, memory::AoS> Vec_d_AoS;
-typedef  cyme::vector<synapse<double>, memory::AoSoA> Vec_d_AoSoA; 
+typedef  cyme::vector<synapse<double>, memory::AoSoA> Vec_d_AoSoA;
 
 typedef  cyme::array<synapse<float>, 128,memory::AoS> Ar_f_AoS;
 typedef  cyme::array<synapse<float>, 128,memory::AoSoA> Ar_f_AoSoA;
@@ -69,13 +69,13 @@ typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vec
 #ifdef _OPENMP
 // OpenMP implementation of std::for_each
 // requires that Iterator is a random access input iterator because the
-// predicate on an OpenMP for loop must be relative (<, <=, >, ... etc)  
+// predicate on an OpenMP for loop must be relative (<, <=, >, ... etc)
 template<typename Iterator, typename Functor>
 Functor
 omp_for_each(Iterator first, Iterator last, Functor f) {
     #pragma omp parallel for private(f)
     for(Iterator it=first; it<last; ++it) {
-	f(*it);
+        f(*it);
     }
 
     return f;
@@ -87,15 +87,15 @@ struct test_case{
     template <class T>
     void operator()(T const&){
 
-	const std::size_t N(0xffffff);
+    const std::size_t N(0xffffff);
         T v(N,0);
         std::for_each(v.begin(), v.end(), f_init<T>() );
-        
+
         boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
 #ifdef _OPENMP
-    	omp_for_each(v.begin(), v.end(), f_compute<T>() );
+        omp_for_each(v.begin(), v.end(), f_compute<T>() );
 #else
-    	std::for_each(v.begin(), v.end(), f_compute<T>() );
+        std::for_each(v.begin(), v.end(), f_compute<T>() );
 #endif
         boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
         std::cout << "float: " << sizeof(typename T::value_type) << "[Byte], "  << " sec " << sec.count() << std::endl;
