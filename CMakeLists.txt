@@ -69,7 +69,7 @@ find_package (SIMD)
 find_package (FMA)
 
 if(CYME_SSE4_1_FOUND)
-CHECK_CXX_COMPILER_FLAG("-msse4_1" SSE4_1_FLAG)
+CHECK_CXX_COMPILER_FLAG("-msse4.1" SSE4_1_FLAG)
 if(SSE4_1_FLAG)
     SET(CMAKE_REQUIRED_FLAGS "-msse4.1")
     CHECK_CXX_SOURCE_COMPILES("#include <smmintrin.h> \n int main () {__m128d xmm; _mm_ceil_pd(xmm);};" SSE4_1_COMPILATION)
