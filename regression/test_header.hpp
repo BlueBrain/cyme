@@ -35,10 +35,10 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <algorithm>  
+#include <algorithm>
 #include "cyme/cyme.hpp"
 #include <boost/mpl/list.hpp>
-#include <boost/cstdint.hpp> 
+#include <boost/cstdint.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/lexical_cast.hpp>
@@ -52,8 +52,8 @@
 namespace cyme {
     namespace test {
 
-    static boost::random::uniform_real_distribution<float>    Randomfloat  = boost::random::uniform_real_distribution<float>(-70,70); 
-    static boost::random::uniform_real_distribution<double>   Randomdouble = boost::random::uniform_real_distribution<double>(-700,700); 
+    static boost::random::uniform_real_distribution<float>    Randomfloat  = boost::random::uniform_real_distribution<float>(-70,70);
+    static boost::random::uniform_real_distribution<double>   Randomdouble = boost::random::uniform_real_distribution<double>(-700,700);
     static boost::random::mt19937    rng;
 
     template<class T>
@@ -63,7 +63,7 @@ namespace cyme {
     float GetRandom<float>(){
         return Randomfloat(rng);
     }
-   
+
     template<>
     double GetRandom<double>(){
         return Randomdouble(rng);
@@ -91,7 +91,7 @@ namespace cyme {
         typedef T value_type;
         static const std::size_t n = m;
         static const std::size_t size = 16/sizeof(T); // for SIMD SSE
-        static const memory::order order = o; 
+        static const memory::order order = o;
     };
 
     template<class T, std::size_t M, std::size_t N, memory::order O>
@@ -99,7 +99,7 @@ namespace cyme {
         typedef T value_type;
         static const std::size_t m = M;
         static const std::size_t n = N;
-        static const memory::order order = O; 
+        static const memory::order order = O;
     };
 
     typedef boost::mpl::list<boost::int32_t,boost::int64_t,float,double> full_test_types;
@@ -121,17 +121,17 @@ namespace cyme {
                                 data_block<double,3,3,memory::AoS>,
                                 data_block<float,4,3,memory::AoSoA>,
                                 data_block<double,5,3,memory::AoSoA>,
-                                
+
                                 data_block<float,2,4,memory::AoSoA>,
                                 data_block<double,3,4,memory::AoS>,
                                 data_block<float,4,4,memory::AoSoA>,
                                 data_block<double,5,4,memory::AoSoA>,
-                                
+
                                 data_block<float,2,5,memory::AoSoA>,
                                 data_block<double,3,5,memory::AoS>,
                                 data_block<float,4,5,memory::AoSoA>,
                                 data_block<double,5,5,memory::AoSoA>,
-                                
+
                                 data_block<float,2,6,memory::AoSoA>,
                                 data_block<double,3,6,memory::AoS>,
                                 data_block<float,4,6,memory::AoSoA>,

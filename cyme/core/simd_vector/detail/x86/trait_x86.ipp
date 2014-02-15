@@ -29,7 +29,11 @@
 #ifndef CYME_TRAIT_X86_IPP
 #define CYME_TRAIT_X86_IPP
 
-#include <immintrin.h> //type SIMD, memory::sse and memory::avx
+#ifdef __AVX__
+#include <immintrin.h> //type SIMD, memory::memory::avx
+#else
+#include <smmintrin.h> //type SIMD, memory::sse4.11
+#endif
 
 namespace numeric{
 

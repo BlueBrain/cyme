@@ -149,18 +149,6 @@ namespace numeric{
     inline vec_simd<int,O> floor(vec_simd<T,O>& rhs);
 
     /**
-     \brief return the min between two vector
-     */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> min(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs);
-
-    /**
-     \brief return the min between two vector
-     */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> max(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs);
-
-    /**
     \brief free function for call the vendor exponential, this function uses the return value optimization
     */
     template<class T,memory::simd O>

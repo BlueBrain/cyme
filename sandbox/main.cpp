@@ -1,5 +1,7 @@
 #include <iostream>
 #include <algorithm>
+
+#include <boost/preprocessor/stringize.hpp>
 #include <boost/chrono.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/vector.hpp>
@@ -28,7 +30,6 @@ static inline void cnrn_rates(typename T::storage_type& S){
 
 template<class T>
 static inline void cnrn_states(typename T::storage_type& S){
-    //typedef typename T::value_type value_type; //basic float or double
     cnrn_rates<T>(S);
 //  IACA_START
     S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]);
@@ -87,7 +88,7 @@ struct test_case{
     template <class T>
     void operator()(T const&){
 
-    const std::size_t N(0xffffff);
+	const std::size_t N(0xfffff);
         T v(N,0);
         std::for_each(v.begin(), v.end(), f_init<T>() );
 
@@ -101,7 +102,6 @@ struct test_case{
         std::cout << "float: " << sizeof(typename T::value_type) << "[Byte], "  << " sec " << sec.count() << std::endl;
     }
 };
-
 
 int main(int argc, char* argv[]){
      boost::mpl::for_each<vector_list>(test_case());
