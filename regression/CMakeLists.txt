@@ -22,7 +22,7 @@ endfunction(compiler_flag)
 #loop over tests
 function(test_arch_dependence flag_ simd_ test_)
     add_executable(${test_}_test_${simd_} ${test_}.cpp)
-    SET_TARGET_PROPERTIES(${test_}_test_${simd_} PROPERTIES COMPILE_FLAGS "${flag_} -D__CYME_SIMD_VALUE__=${simd_}" ${CYME_FMA_FLAGS})
+    SET_TARGET_PROPERTIES(${test_}_test_${simd_} PROPERTIES COMPILE_FLAGS "${flag_} -D__CYME_SIMD_VALUE__=${simd_} ${CYME_FMA_FLAGS}")
     target_link_libraries(${test_}_test_${simd_} ${Boost_LIBRARIES} ${CYME_TIME})
     add_test(${test_}_test_${simd_} ${test_}_test_${simd_})
 endfunction(test_arch_dependence)
