@@ -26,16 +26,30 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_CYME_HPP
-#define CYME_CYME_HPP
+#ifndef CYME_UNROLL_FMA_HPP
+#define CYME_UNROLL_FMA_HPP
 
-#include <math.h> // exp system
-#include <cmath> // log system
-#include "core/simd_vector/simd_vec.hpp" // simd vector
-#include "core/unroll_vector/unroll_vec.hpp" // unroll vector
-#include "core/expression/expr_vec.hpp" // template expression
-#include "memory/serial.hpp" // container
-#include "memory/array.hpp"  // container
-#include "memory/vector.hpp" // container
+namespace numeric{
+    /**
+    \brief free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb
+    */
+    template<class T,memory::simd O, int N>
+    inline vec_unroll<T,O,N> muladd(const vec_unroll<T,O,N>& lhs, const vec_unroll<T,O,N>& mhs, const vec_unroll<T,O,N>& rhs){
+        vec_unroll<T,O,N> nrv(lhs);
+        nrv.ma(mhs,rhs);
+        return nrv;
+    }
+
+    /**
+     \brief free function nFMA 
+     */
+    template<class T,memory::simd O, int N>
+    inline vec_unroll<T,O,N> negatemuladd(const vec_unroll<T,O,N>& lhs, const vec_unroll<T,O,N>& mhs, const vec_unroll<T,O,N>& rhs){
+        vec_unroll<T,O,N> nrv(lhs);
+        nrv.nma(mhs,rhs);
+        return nrv;
+    }
+} //end namespace
 
 #endif
+

@@ -17,7 +17,7 @@ struct synapse{
 };
 
 template<class T>
-static inline void cnrn_rates(typename T::storage_type& S){
+static inline void cnrn_rates(typename T::storage_type& S) __attribute__((always_inline)) {
     S[8]  = (0.182*(S[16]+35.0)) / (1.-(exp((-35.0 - S[16])/9.0)));
     S[9]  = (-0.124*(S[16]+35.0))/ (1.-(exp((S[16]+35.0)/9.0)));
     S[6]  = S[8]/(S[8]+S[9]);
@@ -29,9 +29,10 @@ static inline void cnrn_rates(typename T::storage_type& S){
 };
 
 template<class T>
-static inline void cnrn_states(typename T::storage_type& S){
+static inline void cnrn_states(typename T::storage_type& S) __attribute__((always_inline)) {
     cnrn_rates<T>(S);
 //  IACA_START
+  //    S[0]  = exp(S[1]);
     S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]);
     S[4] += (1.-exp(0.1*(-1./S[11])))*((S[10]/S[11])/(1./S[11])-S[4]);
 //  IACA_END
@@ -48,7 +49,7 @@ template<class T>
 struct f_init{
     void operator()(typename T::storage_type& S ){
         for(int i=0;i <T::size_block(); ++i)
-            S[i] = drand48();
+            S[i] = 4.0; //drand48();
     }
 };
 
@@ -63,7 +64,7 @@ typedef  cyme::array<synapse<double>, 128,memory::AoS> Ar_d_AoS;
 typedef  cyme::array<synapse<double>, 128,memory::AoSoA> Ar_d_AoSoA;
 
 
-typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
+typedef boost::mpl::vector<Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
 //typedef boost::mpl::vector< Ar_f_AoS, Ar_f_AoSoA, Ar_d_AoS, Ar_d_AoSoA > vector_list;
 //typedef boost::mpl::vector<Vec_d_AoSoA > vector_list;
 

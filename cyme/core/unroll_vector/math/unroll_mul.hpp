@@ -26,16 +26,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_CYME_HPP
-#define CYME_CYME_HPP
+#ifndef CYME_UNROLL_MUL_HPP
+#define CYME_UNROLL_MUL_HPP
 
-#include <math.h> // exp system
-#include <cmath> // log system
-#include "core/simd_vector/simd_vec.hpp" // simd vector
-#include "core/unroll_vector/unroll_vec.hpp" // unroll vector
-#include "core/expression/expr_vec.hpp" // template expression
-#include "memory/serial.hpp" // container
-#include "memory/array.hpp"  // container
-#include "memory/vector.hpp" // container
-
+namespace numeric{
+    /**
+    \brief free function * operator between two vectors, this function uses the return value optimization
+    */
+    template<class T,memory::simd O, int N>
+    inline vec_unroll<T,O,N> operator* (const vec_unroll<T,O,N>& lhs, const vec_unroll<T,O,N>& rhs){
+        vec_unroll<T,O, N> nrv(lhs);
+        nrv *= rhs;
+        return nrv;
+    }
+}
 #endif
+

@@ -26,16 +26,30 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_CYME_HPP
-#define CYME_CYME_HPP
+#ifndef CYME_UNROLL_FMS_HPP
+#define CYME_UNROLL_FMS_HPP
 
-#include <math.h> // exp system
-#include <cmath> // log system
-#include "core/simd_vector/simd_vec.hpp" // simd vector
-#include "core/unroll_vector/unroll_vec.hpp" // unroll vector
-#include "core/expression/expr_vec.hpp" // template expression
-#include "memory/serial.hpp" // container
-#include "memory/array.hpp"  // container
-#include "memory/vector.hpp" // container
+namespace numeric{
+    /**
+    \brief free function FMS between 3 vectors, only a*b - c, - is not commutative
+    */
+    template<class T,memory::simd O, int N>
+    inline vec_unroll<T,O,N> mulsub(const vec_unroll<T,O,N>& lhs, const vec_unroll<T,O,N>& mhs, const vec_unroll<T,O,N>& rhs){
+        vec_unroll<T,O,N> nrv(lhs);
+        nrv.ms(mhs,rhs);
+        return nrv;
+    }
+
+    /**
+     \brief free function nFMA 
+     */
+    template<class T,memory::simd O, int N>
+    inline vec_unroll<T,O,N> negatemulsub(const vec_unroll<T,O,N>& lhs, const vec_unroll<T,O,N>& mhs, const vec_unroll<T,O,N>& rhs){
+        vec_unroll<T,O,N> nrv(lhs);
+        nrv.nms(mhs,rhs);
+        return nrv;
+    }
+} //end namespace
 
 #endif
+
