@@ -30,14 +30,10 @@
 #define CYME_SIMD_H
 
 namespace memory{
-    struct unroll{
-        const static int factor = 4;
-    };
-    
     /** \cond I do not need this part in the doc*/
-    enum simd {normal = sizeof(void*), sse = 16*unroll::factor, avx = 32*unroll::factor, qpx = 32*unroll::factor, mic = 64*unroll::factor}; //sizeof(void*) = 8 on 64 bits machine
+    enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpx = 32, mic = 64}; //sizeof(void*) = 8 on 64 bits machine
 
-    #define __GETSIMD__() __CYME_SIMD_VALUE__
+    #define __GETSIMD__() __CYME_SIMD_VALUE__ 
 
     enum order {AoS, AoSoA};
     

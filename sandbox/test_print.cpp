@@ -105,7 +105,7 @@ R*/
      }
 
      template<class iterator>
-     static inline void cnrn_rates(iterator it) __attribute__((always_inline)) {
+     static inline void cnrn_rates(iterator it){
          (*it)[8]  = (0.182*((*it)[16]+35.0)) / (1.0 - (exp((-(*it)[16]-35.0)/9.0)));
          (*it)[9]  = (-0.124*((*it)[16]+35.0))/ (1.0 - (exp(((*it)[16]+35.0)/9.0)));
          (*it)[6]  = (*it)[8]/((*it)[8]+(*it)[9]);
@@ -117,10 +117,10 @@ R*/
      };
 
      template<class iterator>
-     static inline void cnrn_states(iterator it) __attribute__((always_inline)) {
-       cnrn_rates(it);
-       (*it)[3] += (1.-exp(dt*(-1.0/(*it)[7] )))*(-((*it)[6] /(*it)[7]) /(-1.0/(*it)[7]) -(*it)[3]);
-       (*it)[4] += (1.-exp(dt*(-1.0/(*it)[11])))*(-((*it)[10]/(*it)[11])/(-1.0/(*it)[11])-(*it)[4]);
+     static inline void cnrn_states(iterator it){
+//     cnrn_rates(it);
+     (*it)[3] += (1.-exp(dt*(-1.0/(*it)[7] )))*(-((*it)[6] /(*it)[7]) /(-1.0/(*it)[7]) -(*it)[3]);
+     (*it)[4] += (1.-exp(dt*(-1.0/(*it)[11])))*(-((*it)[10]/(*it)[11])/(-1.0/(*it)[11])-(*it)[4]);
      }
 
      template<class iterator, memory::order O>
@@ -215,19 +215,19 @@ R*/
  int main(int argc, char* argv[]){
      stack s;
 
-     pack<Na,cyme::vector<Na, memory::AoSoA> > a(0xfffff,0); // pack 16384 synapse, AoSoA
-     pack<Na,cyme::vector<Na, memory::AoS> > b(0xfffff,0); // pack 16384 synapse, AoSoA
+     pack<Na,cyme::vector<Na, memory::AoSoA> > a(32,0); // pack 16384 synapse, AoSoA
+     pack<Na,cyme::vector<Na, memory::AoS> > b(32,0); // pack 16384 synapse, AoSoA
 
      init(a,b);
 
      s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoSoA> >::execution,&a)); // fill up the stack
-   //  s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&b)); // fill up the stack
+     s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&b)); // fill up the stack
 
      boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
      s.flush(); // execute the stack
      boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
      std::cout << " sec " << sec.count() << std::endl;
 
- //    check(a,b);
+     check(a,b);
  }
 

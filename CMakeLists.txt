@@ -159,7 +159,6 @@ endif(CYME_MATH)
 #
 ########################################################################
 
-set(Boost_USE_STATIC_LIBS   ON)
 find_package (Boost REQUIRED unit_test_framework system chrono)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
