@@ -32,7 +32,6 @@
 #include <math.h> // exp system
 #include <cmath> // log system
 #include "core/simd_vector/simd_vec.hpp" // simd vector
-#include "core/unroll_vector/unroll_vec.hpp" // unroll vector
 #include "core/expression/expr_vec.hpp" // template expression
 #include "memory/serial.hpp" // container
 #include "memory/array.hpp"  // container

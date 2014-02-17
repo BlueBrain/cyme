@@ -94,8 +94,8 @@ namespace cyme{
          \brief copy constructor create the tree with bracket operator call 
                  not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
          */
-        template<class T2, memory::simd O, int N, class Rep>
-        serial(numeric::vec<T2,O,N,Rep > const& rhs){
+        template<class T2, memory::simd O, class Rep>
+        serial(numeric::vec<T2,O,Rep > const& rhs){
             a.rep()() = rhs.rep()(); 
         }
 

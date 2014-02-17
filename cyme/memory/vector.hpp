@@ -117,7 +117,7 @@ namespace memory{
     class block_v<T,M,AoSoA> : public std::vector<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>, memory::Allocator<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA> > >{
     public:
         typedef std::size_t                                               size_type;
-    	static const size_type 	storage_width = __GETSIMD__()/sizeof(T)*M;
+	static const size_type 	storage_width = __GETSIMD__()/sizeof(T)*M;
         typedef T                                                         value_type;
         typedef value_type&                                               reference;
         typedef const value_type&                                         const_reference;

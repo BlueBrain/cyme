@@ -51,7 +51,7 @@ namespace numeric{
      */
     template<>
     void _mm_store<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::pointer a){
-        _mm256_store_pd(a,xmm0);
+        _mm256_store_pd(a,xmm0); 
     }
 
     /**
@@ -213,7 +213,7 @@ namespace numeric{
      */
     template<>
      simd_trait<float,memory::avx>::register_type _mm_load<float,memory::avx>(simd_trait<float,memory::avx>::const_pointer a){
-        return _mm256_loadu_ps(a);
+        return _mm256_load_ps(a);
     }
 
     /**
@@ -221,7 +221,7 @@ namespace numeric{
      */
     template<>
     void _mm_store<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0,  simd_trait<float,memory::avx>::pointer a){
-        _mm256_storeu_ps(a,xmm0);
+        _mm256_store_ps(a,xmm0); 
     }
 
     /**
