@@ -159,7 +159,7 @@ endif(CYME_MATH)
 #
 ########################################################################
 
-set(Boost_NO_SYSTEM_PATHS TRUE)
+#set(Boost_NO_SYSTEM_PATHS TRUE)
 set(BOOST_MIN_VERSION "1.49.0")
 find_package (Boost ${BOOST_MIN_VERSION} REQUIRED unit_test_framework system chrono)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
