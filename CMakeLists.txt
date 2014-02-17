@@ -77,7 +77,7 @@ if(SSE4_1_FLAG)
     if(SSE4_1_FLAG AND SSE4_1_COMPILATION AND SSE4_1_RUN)
        set(CYME_SIMD_FLAGS "-msse4.1")
        set(SIMD_TECH_PP sse)
-       set(SIMD_LIST_TEST " sse ")
+       set(SIMD_TECH_TEST sse)
     else(SSE4_1_FLAG AND SSE4_1_COMPILATION AND SSE4_1_RUN)
        message(" -- Your machine does not support at least SSE 4.1, Cyme can not work")
     endif(SSE4_1_FLAG AND SSE4_1_COMPILATION AND SSE4_1_RUN)
@@ -93,7 +93,7 @@ if(AVX1_0_FLAG)
     if(AVX1_0_FLAG AND AVX1_0_COMPILATION AND AVX1_0_RUN)
        set(CYME_SIMD_FLAGS "-mavx")
        set(SIMD_TECH_PP avx)
-       set(SIMD_LIST_TEST ${SIMD_LIST_TEST} " avx " CACHE STRING "SIMD technology for testing" )
+       set(SIMD_LIST_TEST ${SIMD_TECH_TEST} " avx " CACHE STRING "SIMD technology for testing" )
     endif(AVX1_0_FLAG AND AVX1_0_COMPILATION AND AVX1_0_RUN)
 endif(AVX1_0_FLAG)
 endif(CYME_AVX1_0_FOUND)
@@ -159,15 +159,9 @@ endif(CYME_MATH)
 #
 ########################################################################
 
-<<<<<<< HEAD
 set(Boost_USE_STATIC_LIBS   ON)
 find_package (Boost REQUIRED unit_test_framework system chrono)
 #find_package (Boost 1.54 COMPONENTS unit_test_framework)
-=======
-#find_package (Boost REQUIRED unit_test_framework system chrono)
-set(Boost_NO_SYSTEM_PATHS TRUE)
-find_package (Boost 1.49 COMPONENTS unit_test_framework)
->>>>>>> 2d68928...  Fix cmake for sse4.1
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 #boost test has a dependency with system time
