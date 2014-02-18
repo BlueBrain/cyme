@@ -17,6 +17,14 @@ function(compiler_flag techno_ test_)
          set(flag  "-mavx")
          test_arch_dependence(${flag} ${simd_test} ${test_})
      endif (CYME_TRUE)
+
+     STRING(REGEX REPLACE "^.*(qpx).*$" "\\1" CYME_THERE ${techno_})
+     STRING(COMPARE EQUAL "qpx" "${CYME_THERE}" CYME_TRUE)
+     IF (CYME_TRUE)
+         set(simd_test "qpx")
+         test_arch_dependence(" " ${simd_test} ${test_})
+         #no flag for BG/Q
+     endif (CYME_TRUE)
 endfunction(compiler_flag)
 
 #loop over tests

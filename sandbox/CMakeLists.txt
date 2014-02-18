@@ -14,6 +14,15 @@ function(compil_flag techno_ main_)
          set(flag  "-mavx")
          make_program(${main_} ${flag} "avx1.0")
      endif (CYME_TRUE)
+
+     STRING(REGEX REPLACE "^.*(qpx).*$" "\\1" CYME_THERE ${techno_})
+     STRING(COMPARE EQUAL "qpx" "${CYME_THERE}" CYME_TRUE)
+     IF (CYME_TRUE)
+         set(simd_test "qpx")
+         make_program(${main_} " " "qpx")
+     endif (CYME_TRUE)
+
+
 endfunction(compil_flag)
 
 function(make_program main_ flag_ simd_)

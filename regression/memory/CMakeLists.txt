@@ -1,4 +1,5 @@
-add_definitions (-DBOOST_TEST_DYN_LINK -Wno-unused-variable)
+#add_definitions (-DBOOST_TEST_DYN_LINK -Wno-unused-variable)
+add_definitions (-Wno-unused-variable)
 
 #list tests
 set(tests alignment array array_algo vector serial)
