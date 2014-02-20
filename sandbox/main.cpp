@@ -17,7 +17,7 @@ struct synapse{
 };
 
 template<class T>
-static inline void cnrn_rates(typename T::storage_type& S){
+static inline void cnrn_rates(T& S){
     S[8]  = (0.182*(S[16]+35.0)) / (1.-(exp((-35.0 - S[16])/9.0)));
     S[9]  = (-0.124*(S[16]+35.0))/ (1.-(exp((S[16]+35.0)/9.0)));
     S[6]  = S[8]/(S[8]+S[9]);
@@ -29,7 +29,7 @@ static inline void cnrn_rates(typename T::storage_type& S){
 };
 
 template<class T>
-static inline void cnrn_states(typename T::storage_type& S){
+static inline void cnrn_states(T& S){
     cnrn_rates<T>(S);
 //  IACA_START
     S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]);
@@ -39,15 +39,15 @@ static inline void cnrn_states(typename T::storage_type& S){
 
 template<class T>
 struct f_compute{
-    void operator()(typename T::storage_type& S ){
+    void operator()(T& S ){
        cnrn_states<T>(S);
     }
 };
 
 template<class T>
 struct f_init{
-    void operator()(typename T::storage_type& S ){
-        for(int i=0;i <T::size_block(); ++i)
+    void operator()(T& S ){
+        for(int i=0;i <T::size; ++i)
             S[i] = drand48();
     }
 };
@@ -88,15 +88,16 @@ struct test_case{
     template <class T>
     void operator()(T const&){
 
+        typedef typename T::storage_type storage_type;
         const std::size_t N(0xfffff);
         T v(N,0);
-        std::for_each(v.begin(), v.end(), f_init<T>() );
+        std::for_each(v.begin(), v.end(), f_init<storage_type>() );
 
         boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
 #ifdef _OPENMP
-        omp_for_each(v.begin(), v.end(), f_compute<T>() );
+        omp_for_each(v.begin(), v.end(), f_compute<storage_type>() );
 #else
-        std::for_each(v.begin(), v.end(), f_compute<T>() );
+        std::for_each(v.begin(), v.end(), f_compute<storage_type>() );
 #endif
         boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
         std::cout << "float: " << sizeof(typename T::value_type) << "[Byte], "  << " sec " << sec.count() << std::endl;

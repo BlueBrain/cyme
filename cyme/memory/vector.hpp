@@ -111,7 +111,7 @@ namespace memory{
 
     /**
      \brief block_v of the memory (partial specialization AoSoA) is instantiated following  AoSoA layout
-     T is the type, M the size of the subblock_v and N the total number of subblock_v. 
+     T is the type, M the size of the subblock_v and N the total number of subblock_v.
      */
     template<class T, std::size_t M>
     class block_v<T,M,AoSoA> : public std::vector<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>, memory::Allocator<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA> > >{
@@ -134,7 +134,7 @@ namespace memory{
         }
 
         inline reference operator()(size_type i, size_type j){
-           // nothing on i as the original size is destroyed in the constructor 
+           // nothing on i as the original size is destroyed in the constructor
            // BOOST_ASSERT_MSG( i < size(), "out of range: block_v AoS i" );
             BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
@@ -143,7 +143,7 @@ namespace memory{
         }
 
         inline const_reference operator()(size_type i, size_type j) const{
-           // nothing on i as the original size is destroyed in the constructor 
+           // nothing on i as the original size is destroyed in the constructor
             BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
