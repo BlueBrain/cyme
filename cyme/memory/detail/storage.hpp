@@ -49,7 +49,7 @@ namespace memory{
      template <class T, std::size_t Size>
      class storage<T,Size,AoS>{
          public:
-         
+
          typedef std::size_t       size_type;
          typedef T                 value_type;
          typedef value_type*       pointer;
@@ -88,14 +88,14 @@ namespace memory{
          */
          value_type data[Size];
      };
-    
+
      /**
      \brief subblock of memory needed by the block class, AoSoA specialization
      */
      template <class T, std::size_t Size>
      class storage<T,Size,AoSoA>{
          public:
-         
+
          typedef std::size_t       size_type;
          typedef T                 value_type;
          typedef value_type*       pointer;
@@ -126,7 +126,7 @@ namespace memory{
 
          private:
          value_type data[Size]; // need for std algo
-     };    
+     };
 } //end namespace
 
 #include "memory/detail/storage.ipp"

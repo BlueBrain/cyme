@@ -79,13 +79,13 @@ namespace numeric{
                     x/log(2) = y/log(2) + k
                     floor(x/log(2)) =floor(y/log(2)) + floor(k)
                     floor(x/log(2)) = k
-     
+
                We get k so easy y.
-     
+
                e^y simply calculates with the approximation
                2^k use the internal representation of the floating point number
     */
-    
+
     template<class T, memory::simd O, std::size_t n = coeff_remez_number::value, class Solver = Remez_exp<T,O,n> > // Remez, series ...
     struct my_exp{
         static inline vec_simd<T,O> exp(vec_simd<T,O> x){
@@ -136,8 +136,8 @@ namespace numeric{
                return x;
          }
     };
-    
-    /**  
+
+    /**
         \brief final wrapper for the exp
     */
     template<class T,memory::simd O>

@@ -88,7 +88,7 @@ struct test_case{
     template <class T>
     void operator()(T const&){
 
-	const std::size_t N(0xfffff);
+        const std::size_t N(0xfffff);
         T v(N,0);
         std::for_each(v.begin(), v.end(), f_init<T>() );
 

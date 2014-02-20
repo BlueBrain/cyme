@@ -41,7 +41,7 @@ namespace numeric{
     }
 
     /**
-     \brief free function nFMA 
+     \brief free function nFMA
      */
     template<class T,memory::simd O>
     inline vec_simd<T,O> negatemuladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){

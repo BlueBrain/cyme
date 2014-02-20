@@ -44,7 +44,7 @@ namespace numeric{
     struct simd_trait<float, memory::sse> : trait<float>{
         typedef __m128 register_type;
     };
-   
+
     /**
         \brief Specialization trait for double with SSE SIMD
     */
@@ -86,7 +86,7 @@ namespace numeric{
     struct div_recursion<double, memory::avx>{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
-#ifdef __AVX__ 
+#ifdef __AVX__
     /** 
         \brief Specialization trait for float with AVX SIMD 
     */
@@ -94,7 +94,7 @@ namespace numeric{
     struct simd_trait<float,memory::avx> : trait<float>{
         typedef __m256 register_type;
     };
-   
+
     /**
         \brief Specialization trait for double with AVX SIMD
     */

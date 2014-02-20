@@ -138,7 +138,7 @@ namespace numeric{
         }
     };
 
-    /** 
+    /**
       \brief this class participates to the tree creation by recursive process, wrap subtraction (*it)[0] * (*it)[1]
     */
     template<class T, memory::simd O, class OP1, class OP2>
@@ -163,9 +163,9 @@ namespace numeric{
         inline const typename vec_traits<OP2,O>::value_type& getop2() const{
              return op2;
         }
-    };    
-    
-    /** 
+    };
+
+    /**
       \brief this class participates to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]
       \warning it is experimental
     */

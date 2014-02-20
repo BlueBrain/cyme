@@ -52,7 +52,7 @@ namespace numeric{
      */
     template<>
     void _mm_store<double,memory::mic>(typename simd_trait<double,memory::mic>::register_type xmm0, typename simd_trait<double,memory::mic>::pointer a){
-        _mm512_store_pd(a,xmm0); 
+        _mm512_store_pd(a,xmm0);
     }
 
     /**
@@ -100,7 +100,7 @@ namespace numeric{
      */
     template<>
     inline  simd_trait<int,memory::mic>::register_type _mm_floor<double,memory::mic>(simd_trait<double,memory::mic>::register_type xmm0){
-        return  _mm512_castpd_si512(_mm512_floor_pd(xmm0)); 
+        return  _mm512_castpd_si512(_mm512_floor_pd(xmm0));
     }
 
     /**

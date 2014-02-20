@@ -98,7 +98,7 @@ namespace numeric{
     operator +(int const& s, vec<T,O,R2> const& b){
         return operator+(static_cast<T>(s),b);// CHECK IF NO COPY
     }
-    
+
     //v + lambda(double)
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_add<T,O,vec_scalar<T,O>,R2> >
@@ -154,7 +154,7 @@ namespace numeric{
     operator *(int const& s, vec<T,O,R2> const& b){
         return operator*(static_cast<T>(s),b); 
     }
-    
+
     //v * lambda(double)
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_mul<T,O,vec_scalar<T,O>,R2> >
@@ -183,7 +183,7 @@ namespace numeric{
     operator /(int const& s, vec<T,O,R2> const& b){
         return operator/(static_cast<T>(s),b); 
     }
-    
+
     //v / lambda(double)
     template<class T, memory::simd O, class R2>
     inline vec<T,O, vec_div<T,O,R2,vec_scalar<T,O> > >

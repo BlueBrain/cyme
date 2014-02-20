@@ -330,7 +330,7 @@ namespace numeric{
             double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52); 
             xmm0 = vec_insert(d,xmm0,i);
         }
-        return xmm0; 
+        return xmm0;
     }
 
 #ifdef __FMA__
@@ -374,6 +374,6 @@ namespace numeric{
         return vec_nmadd(xmm0, xmm1, xmm2); // QPX != AVX for this operations, add <-> sub
     };
 #endif
-} //end namespace 
+} //end namespace
 
-#endif 
+#endif

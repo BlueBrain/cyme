@@ -40,7 +40,7 @@ namespace memory{
 
     template <class T, std::size_t Size>
     storage<T, Size, AoS>::storage(value_type value){
-        for(size_type i=0; i<Size; ++i) 
+        for(size_type i=0; i<Size; ++i)
             this->data[i] = value;
     }
 
@@ -78,7 +78,7 @@ namespace memory{
 
     template <class T, std::size_t Size>
     storage<T, Size, AoSoA>::storage(value_type value){
-        for(size_type i=0; i<Size; ++i) 
+        for(size_type i=0; i<Size; ++i)
             this->data[i] = value;
     }
 

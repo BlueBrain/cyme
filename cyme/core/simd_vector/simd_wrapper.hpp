@@ -36,7 +36,7 @@ namespace numeric{
     */
     template<class T, memory::simd O>
     inline typename simd_trait<T,O>::register_type _mm_load1(const typename simd_trait<T,O>::value_type a);
-   
+
     /**
     \brief free function (wrapper) for loading data from memory (pointer) into register
     \warning The data must be  aligned else segfault
@@ -47,7 +47,7 @@ namespace numeric{
     /**
     \brief free function (wrapper) for storing the data in the memory (pointer)
     \warning The data must be  aligned else segfault
-    */   
+    */
     template<class T, memory::simd O>
     inline void _mm_store(typename simd_trait<T,O>::register_type xmm0, typename simd_trait<T,O>::pointer a);
 
@@ -147,9 +147,9 @@ namespace numeric{
 #endif
 } //end namespace 
 
-#ifdef __SSE__ 
+#ifdef __SSE__
     #include "core/simd_vector/detail/x86/simd_wrapper_sse.ipp"
-#endif 
+#endif
 
 #ifdef __AVX__
     #include "core/simd_vector/detail/x86/simd_wrapper_avx.ipp"
@@ -157,10 +157,10 @@ namespace numeric{
 
 #ifdef _ARCH_QP
     #include "core/simd_vector/detail/powerpc64/simd_wrapper_qpx.ipp"
-#endif 
+#endif
 
 #ifdef __MIC__
     #include "core/simd_vector/detail/mic/simd_wrapper_mic.ipp"
-#endif 
+#endif
 
-#endif 
+#endif

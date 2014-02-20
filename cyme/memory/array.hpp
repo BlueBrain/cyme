@@ -58,21 +58,21 @@ namespace memory{
         typedef storage<T,M,AoS>               storage_type;
         typedef boost::array<storage_type,N>   base_type; //default template seems impossible on partial specialization
         typedef typename  base_type::iterator  iterator;
-       
+
         /**
         \brief Default constructor, the block_a is set up to 0
         */
         explicit block_a(){
             std::fill(base_type::begin(),base_type::end(),storage_type());
         }
-        
+
         /**
         \brief set up the block_a to the desired value
         */
         block_a(value_type value){
             std::fill(base_type::begin(),base_type::end(),storage_type(value));
         }
-        
+
         /**
         \brief return the value of the block_a i, element j, write only
         */
@@ -97,7 +97,7 @@ namespace memory{
         static inline size_type size_block() {
             return M;
         }
-    
+
     };
 
     /**

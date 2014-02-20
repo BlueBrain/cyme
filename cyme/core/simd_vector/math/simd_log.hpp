@@ -66,8 +66,8 @@ namespace numeric{
                return x;
          }
     };
-    
-    /**   
+
+    /**
         \brief final wrapper for the log
     */
     template<class T,memory::simd O>

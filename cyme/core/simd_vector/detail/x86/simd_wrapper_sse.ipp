@@ -51,7 +51,7 @@ namespace numeric{
      */
     template<>
     void _mm_store<double,memory::sse>( simd_trait<double,memory::sse>::register_type xmm0,  simd_trait<double,memory::sse>::pointer a){
-        _mm_store_pd(a,xmm0); 
+        _mm_store_pd(a,xmm0);
     }
 
     /**

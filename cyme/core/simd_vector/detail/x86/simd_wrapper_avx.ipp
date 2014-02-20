@@ -157,7 +157,7 @@ namespace numeric{
         return _mm256_log_pd(xmm0);
     }
 #endif
-    
+
 #ifdef __FMA__
     /**
      \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, add the intermediate result to packed elements in xmm2, and store the results in dst.
@@ -362,6 +362,6 @@ namespace numeric{
         return _mm256_fnmsub_ps(xmm0, xmm1, xmm2);
     }
 #endif //end FMA
-} //end namespace 
+} //end namespace
 
 #endif

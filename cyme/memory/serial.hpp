@@ -73,7 +73,7 @@ namespace cyme{
         inline const value_type& operator ()() const{
             return a;
         }
-    
+
         T a;
     };
 
@@ -83,7 +83,7 @@ namespace cyme{
     template<class T>
     struct serial<T,memory::AoSoA>{
         typedef T value_type;
-        typedef numeric::vec<value_type,memory::__GETSIMD__()> base_type;        
+        typedef numeric::vec<value_type,memory::__GETSIMD__()> base_type;
 
         /**
          \brief constructor
@@ -96,15 +96,15 @@ namespace cyme{
          */
         template<class T2, memory::simd O, class Rep>
         serial(numeric::vec<T2,O,Rep > const& rhs){
-            a.rep()() = rhs.rep()(); 
+            a.rep()() = rhs.rep()();
         }
 
         /**
-        \brief normal situation initialize serial by vector returned by the iteratos serial = (*it)[1];  
+        \brief normal situation initialize serial by vector returned by the iteratos serial = (*it)[1];
         */
         inline serial& operator=(base_type b){
-            a.rep()() = b.rep()(); 
-            return *this; 
+            a.rep()() = b.rep()();
+            return *this;
         }
 
         /**

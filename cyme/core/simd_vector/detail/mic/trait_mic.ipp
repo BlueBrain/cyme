@@ -39,7 +39,7 @@ namespace numeric{
     struct simd_trait<float, memory::mic> : trait<float>{
         typedef __m512 register_type;
     };
-   
+
     /**
         \brief Specialization trait for double with MIC SIMD
     */
