@@ -1,4 +1,5 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
+
 
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
@@ -68,6 +69,7 @@ option (CYME_DOCUMENTATION "Use Doxygen to create the HTML/LATEX based API docum
 find_package (SIMD)
 find_package (FMA)
 find_package (MIC)
+find_package (SLURM)
 
 if(MIC_NATIVE_FOUND)
    set(SIMD_TECH "mic" CACHE STRING "SIMD technology for the sandbox: sse, avx, qpx and mic")

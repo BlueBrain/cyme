@@ -37,9 +37,9 @@ namespace numeric{
     template<class T, memory::simd O, std::size_t n> // Remez, series ...
     struct my_log{
         static inline vec_simd<T,O> log(vec_simd<T,O> x){
-            T tmp[8] __attribute__((aligned(64))); // temporary fix until I develop my own version
+            T tmp[O/sizeof(T)] __attribute__((aligned(static_cast<int>(O)))); // temporary fix until I develop my own version
             x.store(tmp);
-            for(int i=0; i<8; ++i)
+            for(int i=0; i<O/sizeof(T); ++i)
                 tmp[i] = std::log(tmp[i]);
             std::cout << " you're using system log, not efficient, Code me ! (simd_log.hpp) " << std::endl;
             return vec_simd<T,O>(tmp);
