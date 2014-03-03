@@ -29,7 +29,7 @@
 #ifndef CYME_TRAIT_MIC_IPP
 #define CYME_TRAIT_MIC_IPP
 
-#include <zmmintrin.h> //for rcp
+#include <immintrin.h> //for rcp
 
 namespace numeric{
     /** \cond I do not need this part in the doc
