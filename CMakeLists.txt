@@ -92,7 +92,7 @@ else(MIC_NATIVE_FOUND)
        endif(SSE4_1_FLAG AND SSE4_1_COMPILATION AND SSE4_1_RUN)
    endif(SSE4_1_FLAG)
    endif(CYME_SSE4_1_FOUND)
-  
+
    if(CYME_AVX1_0_FOUND)
    CHECK_CXX_COMPILER_FLAG("-mavx" AVX1_0_FLAG)
    if(AVX1_0_FLAG)
@@ -121,8 +121,7 @@ if(CYME_FMA_FOUND)
         CHECK_CXX_COMPILER_FLAG("-mfma" FMA_FLAG)
         SET(CMAKE_REQUIRED_FLAGS "-msse4.1 -mfma")
         CHECK_CXX_SOURCE_COMPILES("#include <immintrin.h> \n int main () {__m128d xmm; _mm_fmadd_pd(xmm,xmm,xmm);};" FMA_COMPILATION)
-   
-CHECK_CXX_SOURCE_RUNS("#include <immintrin.h> \n int main () {__m128d xmm; _mm_fmadd_pd(xmm,xmm,xmm);};" FMA_RUN)
+        CHECK_CXX_SOURCE_RUNS("#include <immintrin.h> \n int main () {__m128d xmm; _mm_fmadd_pd(xmm,xmm,xmm);};" FMA_RUN)
         if(FMA_FLAG AND FMA_COMPILATION AND FMA_RUN)
            set(CYME_FMA_FLAGS "-mfma")
         endif(FMA_FLAG AND FMA_COMPILATION AND FMA_RUN)
