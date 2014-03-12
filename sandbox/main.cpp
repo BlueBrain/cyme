@@ -46,8 +46,8 @@ struct f_compute{
 
 template<class T>
 struct f_init{
-    void operator()(T& S ){
-        for(int i=0;i <T::size; ++i)
+    void operator()(typename T::storage_type& S ){
+        for(int i=0;i <T::size_block(); ++i)
             S[i] = drand48();
     }
 };
@@ -91,7 +91,7 @@ struct test_case{
         typedef typename T::storage_type storage_type;
         const std::size_t N(0xfffff);
         T v(N,0);
-        std::for_each(v.begin(), v.end(), f_init<storage_type>() );
+        std::for_each(v.begin(), v.end(), f_init<T>() );
 
         boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
 #ifdef _OPENMP
