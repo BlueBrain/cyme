@@ -39,7 +39,7 @@ namespace numeric{
         static inline vec_simd<T,O> log(vec_simd<T,O> x){
             T tmp[O/sizeof(T)] __attribute__((aligned(static_cast<int>(O)))); // temporary fix until I develop my own version
             x.store(tmp);
-            for(int i=0; i<O/sizeof(T); ++i)
+            for(size_t i=0; i<O/sizeof(T); ++i)
                 tmp[i] = std::log(tmp[i]);
             std::cout << " you're using system log, not efficient, Code me ! (simd_log.hpp) " << std::endl;
             return vec_simd<T,O>(tmp);

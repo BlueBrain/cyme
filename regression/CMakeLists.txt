@@ -1,4 +1,5 @@
 set(CYME_TEST_LIBRARIES ${Boost_LIBRARIES})
+unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY) #unset value to avoid pb
 
 #check techno supported and give needed compil flag
 function(compiler_flag techno_ test_)

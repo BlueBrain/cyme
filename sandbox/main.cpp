@@ -47,7 +47,7 @@ struct f_compute{
 template<class T>
 struct f_init{
     void operator()(typename T::storage_type& S ){
-        for(int i=0;i <T::size_block(); ++i)
+        for(std::size_t i=0;i <T::size_block(); ++i)
             S[i] = drand48();
     }
 };
@@ -104,6 +104,6 @@ struct test_case{
     }
 };
 
-int main(int argc, char* argv[]){
+int main(){
      boost::mpl::for_each<vector_list>(test_case());
 }

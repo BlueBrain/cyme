@@ -53,7 +53,7 @@ namespace numeric{
      */
     template<class T, memory::simd O>
     struct helper_remez_exp<T,O,0>{
-        static inline vec_simd<T,O> exp(vec_simd<T,O> const& a){
+        static inline vec_simd<T,O> exp(vec_simd<T,O> const& ){
             return vec_simd<T,O>(coeff_remez<T,coeff_remez_number::value>::coeff());
         }
     };

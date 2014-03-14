@@ -62,8 +62,8 @@
 
  template<class Ba, class Bb>
  void init(Ba& block_a, Bb& block_b){
-     for(int i=0; i<block_a.size(); ++i)
-         for(int j=0; j<block_a.size_block(); ++j){
+     for(size_t i=0; i<block_a.size(); ++i)
+         for(size_t j=0; j<block_a.size_block(); ++j){
              typename Ba::value_type random = -100*std::pow(-1,rand())*drand48();
              block_a(i,j) = random;
              block_b(i,j) = random;
@@ -74,8 +74,8 @@
  void check(Ba & block_a, Bb & block_b){
      std::cout.precision(2*sizeof(typename Ba::value_type));
 
-     for(int i=0; i<block_a.size(); ++i)
-         for(int j=0; j<block_a.size_block(); ++j)
+     for(size_t i=0; i<block_a.size(); ++i)
+         for(size_t j=0; j<block_a.size_block(); ++j)
              std::cout << block_a(i,j)  << " " << block_b(i,j) << " " << block_a(i,j) - block_b(i,j) << std::endl;
  }
 
@@ -164,7 +164,7 @@ R*/
  public:
      typedef typename mechanism::value_type value_type;
 
-     explicit pack(int size, int value):cont(size,value){ // vector constructor
+     explicit pack(int s, int value):cont(s,value){ // vector constructor
      }
 
      explicit pack():cont(){ // array constructor
@@ -212,7 +212,7 @@ R*/
  };
 
 
- int main(int argc, char* argv[]){
+ int main(){
      stack s;
 
      pack<Na,cyme::vector<Na, memory::AoSoA> > a(32,0); // pack 16384 synapse, AoSoA

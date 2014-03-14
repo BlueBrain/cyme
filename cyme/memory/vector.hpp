@@ -61,8 +61,8 @@ namespace memory{
         /**
          \brief Default constructor, the block_v is set up to 0
          */
-        explicit block_v(const size_type size, const value_type value)
-        :base_type(size,storage_type(value)){
+        explicit block_v(const size_type size_, const value_type value_)
+        :base_type(size_,storage_type(value_)){
         }
 
         block_v(block_v<T,M,AoS>const& v):base_type(v.size()){
@@ -125,8 +125,8 @@ namespace memory{
         typedef std::vector<storage_type, memory::Allocator<storage<T,storage_width,AoSoA> > >   base_type;                  //default template seems impossible on partial specialization
         typedef typename  base_type::iterator                             iterator;
 
-        explicit block_v(const size_type size, const value_type value)
-        :base_type(size/(__GETSIMD__()/sizeof(T))+1, storage_type(value)),size_cyme(size){
+        explicit block_v(const size_type size_, const value_type value_)
+        :base_type(size_/(__GETSIMD__()/sizeof(T))+1, storage_type(value_)),size_cyme(size_){
         }
 
         block_v(block_v<T,M,AoSoA >const& v):base_type(v.size()),size_cyme(v.size()){
@@ -222,8 +222,8 @@ namespace cyme {
         const static memory::order order_value = O;
         typedef typename T::value_type value_type;
 
-        explicit vector(const size_t size = 1, const value_type value = value_type())
-        :memory::block_v<value_type, T::value_size, O>(size, value){
+        explicit vector(const size_t size_ = 1, const value_type value_ = value_type())
+        :memory::block_v<value_type, T::value_size, O>(size_, value_){
         }
 
         vector(vector const& a):memory::block_v<typename T::value_type,  T::value_size, O>(a){

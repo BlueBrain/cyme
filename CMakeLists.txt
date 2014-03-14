@@ -1,3 +1,7 @@
+#@author Ewart
+#@date 2013-13-03
+#@remarks Copyright BBP/EPFL 2005-2014; All rights reserved
+
 cmake_minimum_required (VERSION 2.8)
 
 
@@ -26,15 +30,6 @@ if(NOT MACHINE_CONFIG)
     set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64" CACHE STRING "Compiler flags for Debug compiles.")
 endif(NOT MACHINE_CONFIG)
 
-######################################################################
-#
-# CMake Modules Buildyard
-#
-######################################################################
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake
-  ${CMAKE_SOURCE_DIR}/CMake/common)
-
 ########################################################################
 #
 # Project and version information
@@ -43,11 +38,28 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake
 
 project (cyme)
 
-set(RELEASE_VERSION 1) # OFF or ABI version
-set(LAST_RELEASE 1_0.0)
+set(RELEASE_VERSION OFF) # OFF or ABI version
+set(LAST_RELEASE 0.9.0)
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "0")
 set(VERSION_PATCH "0")
+
+######################################################################
+#
+# CMake Modules Buildyard and description
+#
+######################################################################
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake
+  ${CMAKE_SOURCE_DIR}/CMake/common)
+include(GitExternal)
+
+set(CYME_DESCRIPTION "SIMD computation over user cyme container")
+set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
+
+set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
+
+include(Common)
 
 ########################################################################
 #
@@ -178,7 +190,6 @@ endif(CYME_MATH)
 ########################################################################
 
 #set(Boost_NO_SYSTEM_PATHS TRUE)
-set(Boost_USE_STATIC_LIBS   ON)
 set(BOOST_MIN_VERSION "1.49.0")
 find_package (Boost ${BOOST_MIN_VERSION} REQUIRED unit_test_framework system chrono)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
