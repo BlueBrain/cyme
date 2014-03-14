@@ -70,7 +70,7 @@ set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common
 option (CYME_MAIN "Build the main (sandbox)" ON)
 option (CYME_TESTS "Build the CYMEE regression tests" OFF)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
-option (CYME_DOCUMENTATION "Use Doxygen to create the HTML/LATEX based API documentation" OFF)
+option (CYME_MIC_HOST "Check if MIC is install" OFF)
 
 ########################################################################
 #
@@ -80,8 +80,11 @@ option (CYME_DOCUMENTATION "Use Doxygen to create the HTML/LATEX based API docum
 
 find_package (SIMD)
 find_package (FMA)
-find_package (MIC)
 find_package (SLURM)
+
+if(CYME_MIC_HOST)
+   find_package (MIC)
+endif(CYME_MIC_HOST)
 
 if(MIC_NATIVE_FOUND)
    set(SIMD_TECH "mic" CACHE STRING "SIMD technology for the sandbox: sse, avx, qpx and mic")
@@ -160,15 +163,6 @@ include_directories ("${PROJECT_SOURCE_DIR}/cyme")
 
 ########################################################################
 #
-# Options
-#
-########################################################################
-
-# Look for modules
-#SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
-########################################################################
-#
 # math library
 #
 ########################################################################
@@ -223,29 +217,6 @@ if(CYME_TESTS)
     enable_testing()
     add_subdirectory (regression)
 endif(CYME_TESTS)
-
-########################################################################
-#
-# Documentation
-#
-########################################################################
-
-if(CYME_DOCUMENTATION)
-  FIND_PACKAGE(Doxygen)
-  if (NOT DOXYGEN_FOUND)
-    message(FATAL_ERROR
-      "Doxygen is needed to build the documentation. Please install it correctly")
-  endif()
-  #-- Configure the Template Doxyfile for our specific project
-  configure_file(Doxyfile.in
-                 ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
-  #-- Add a custom target to run Doxygen when ever the project is built
-  add_custom_target (doc
-                     COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
-                     SOURCES ${PROJECT_BINARY_DIR}/Doxyfile)
-  # IF you want the documentation to be generated EVERY time you build the project
-  # then add the 'ALL' keyword after "doc" from the above command.
-endif()
 
 ########################################################################
 #
