@@ -57,7 +57,7 @@ include(GitExternal)
 set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
 include(Common)
-#include(FindPackages)
+include(FindPackages)
 
 set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
 
