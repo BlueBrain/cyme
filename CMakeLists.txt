@@ -4,7 +4,7 @@
 
 cmake_minimum_required (VERSION 2.8)
 
-
+# for SIMD detection
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceRuns)
@@ -56,10 +56,10 @@ include(GitExternal)
 
 set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
+include(Common)
+#include(FindPackages)
 
 set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
-
-include(Common)
 
 ########################################################################
 #
@@ -68,7 +68,7 @@ include(Common)
 ########################################################################
 
 option (CYME_MAIN "Build the main (sandbox)" ON)
-option (CYME_TESTS "Build the CYMEE regression tests" ON)
+option (CYME_TESTS "Build the CYMEE regression tests" OFF)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_DOCUMENTATION "Use Doxygen to create the HTML/LATEX based API documentation" OFF)
 
@@ -165,8 +165,7 @@ include_directories ("${PROJECT_SOURCE_DIR}/cyme")
 ########################################################################
 
 # Look for modules
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
+#SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 ########################################################################
 #
@@ -255,3 +254,6 @@ endif()
 ########################################################################
 
 install(DIRECTORY cyme DESTINATION include FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.ipp")
+
+include(CPackConfig)
+include(DoxygenRule)
