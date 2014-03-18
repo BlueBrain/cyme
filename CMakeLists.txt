@@ -58,10 +58,12 @@ include(GitExternal)
 
 set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
+#Boost selection
+set(BOOST_MIN_VERSION "1.49.0") #old is bad
+#set(Boost_NO_SYSTEM_PATHS TRUE) # useless on x86 maybe need it on BG/Q
 set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
 include(Common)
 include(FindPackages)
-
 
 ########################################################################
 #
@@ -183,11 +185,6 @@ endif(CYME_MATH)
 # Find BOOST dependencies
 #
 ########################################################################
-
-#set(Boost_NO_SYSTEM_PATHS TRUE)
-set(BOOST_MIN_VERSION "1.49.0")
-find_package (Boost ${BOOST_MIN_VERSION} REQUIRED unit_test_framework system chrono)
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 #boost test has a dependency with system time
 IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
