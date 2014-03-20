@@ -46,6 +46,7 @@ namespace numeric{
     struct simd_trait<float,memory::qpx> : trait<float>{
         typedef vector4double register_type;
     };
+    /* \endcond I do not need this part in the doc*/
 
     /**
         \brief Specialization trait for double with QPX
@@ -56,7 +57,7 @@ namespace numeric{
     };
     /* \endcond I do not need this part in the doc*/
 
-    /**
+    /** \cond I do not need this part in the doc
      \brief Specialization trait for float  Newton-Raphson division
      */
     template<>
@@ -71,6 +72,7 @@ namespace numeric{
     struct div_recursion<double, memory::qpx>{
         static const std::size_t value = 3; // card([0-3])=4
     };
+    /* \endcond I do not need this part in the doc*/
 
 }
 #endif
