@@ -107,21 +107,21 @@ namespace memory{
         It is calculated during compile time.
     */
     template<class T, std::size_t M, std::size_t N>
-    class block_a<T,M,N,AoSoA> : public boost::array<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>, N/(__GETSIMD__()/sizeof(T))+1>{
+    class block_a<T,M,N,AoSoA> : public boost::array<storage<T,unroll_factor::N*__GETSIMD__()/sizeof(T)*M,AoSoA>, N/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1>{
     public:
         typedef std::size_t                                               size_type;
         typedef T                                                         value_type;
         typedef value_type&                                               reference;
         typedef const value_type&                                         const_reference;
-        typedef storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>                storage_type;
-        typedef boost::array<storage_type,N/(__GETSIMD__()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
+        typedef storage<T,unroll_factor::N*__GETSIMD__()/sizeof(T)*M,AoSoA>                storage_type;
+        typedef boost::array<storage_type,N/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1>  base_type; //default template seems impossible on partial specialization
         typedef typename  base_type::iterator                             iterator;
 
         /**
         \brief Default constructor, the block_a is set up to 0
         */
         explicit block_a(){
-            for(size_type i(0); i<N/(__GETSIMD__()/sizeof(T))+1; ++i)
+            for(size_type i(0); i<N/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1; ++i)
                 base_type::operator[](i) = storage_type(); // fill up to 0
         }
 
@@ -129,7 +129,7 @@ namespace memory{
         \brief set up the block_a to the desired value
         */
         block_a(value_type value){
-            for(size_type i(0); i<N/(__GETSIMD__()/sizeof(T))+1; ++i)
+            for(size_type i(0); i<N/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1; ++i)
                 base_type::operator[](i) = storage_type(value); // fill up to value
         }
 
@@ -140,8 +140,8 @@ namespace memory{
             BOOST_ASSERT_MSG( i < N, "out of range: block_a AoSoA i" );
             BOOST_ASSERT_MSG( j < M, "out of range: block_a AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
-            return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T)))                         //(i)
-                                        (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
+            return base_type::operator[]((i*M+j)/(M*unroll_factor::N*__GETSIMD__()/sizeof(T)))                         //(i)
+                                        (j*(unroll_factor::N*__GETSIMD__()/sizeof(T)) + i%(unroll_factor::N*__GETSIMD__()/sizeof(T)));  //(j)
         }
 
         /**
@@ -151,8 +151,8 @@ namespace memory{
             BOOST_ASSERT_MSG( i < N, "out of range: block_a AoSoA i" );
             BOOST_ASSERT_MSG( j < M, "out of range: block_a AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
-            return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
-                                        (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));  //(j)
+            return base_type::operator[]((i*M+j)/(M*unroll_factor::N*__GETSIMD__()/sizeof(T))) //(i)
+                                        (j*(unroll_factor::N*__GETSIMD__()/sizeof(T)) + i%(unroll_factor::N*__GETSIMD__()/sizeof(T)));  //(j)
         }
 
         /**

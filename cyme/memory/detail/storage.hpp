@@ -31,13 +31,7 @@
 
 #include "core/simd_vector/simd_vec.hpp"
 #include "core/expression/expr_vec.hpp"
-/*
-#include <boost/simd/sdk/simd/pack.hpp>
-#include <boost/simd/include/functions/plus.hpp>
-#include <boost/simd/include/functions/multiplies.hpp>
-#include <boost/simd/include/functions/aligned_load.hpp>
-#include <boost/simd/include/functions/aligned_store.hpp>
-*/
+
 namespace memory{
      /** \brief  Basic subblock of memory for the cyme container*/
      template <class T, std::size_t Size, order O>

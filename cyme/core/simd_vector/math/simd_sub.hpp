@@ -33,9 +33,9 @@ namespace numeric{
     /**
     \brief free function - operator between two vectors, this function uses the return value optimization
     */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> operator- (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> operator- (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(lhs);
         nrv -= rhs;
         return nrv;
     }

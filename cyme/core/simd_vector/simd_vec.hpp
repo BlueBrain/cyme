@@ -38,91 +38,91 @@ namespace numeric{
       \brief Vector computation class. The SIMD register (hardware) is encapsulated. It is generic, it can be SEE, AVX or QPX.
       the type is given by the trait class (simd_trait)
     */
-    template<class T,memory::simd O>
+    template<class T,memory::simd O, int N>
     struct vec_simd{
-        typedef typename simd_trait<T,O>::value_type value_type;
-        typedef typename simd_trait<T,O>::pointer pointer;
-        typedef typename simd_trait<T,O>::const_pointer const_pointer;
-        typedef typename simd_trait<T,O>::register_type register_type;
+        typedef typename simd_trait<T,O,N>::value_type value_type;
+        typedef typename simd_trait<T,O,N>::pointer pointer;
+        typedef typename simd_trait<T,O,N>::const_pointer const_pointer;
+        typedef typename simd_trait<T,O,N>::register_type register_type;
 
         /**
          \brief construtor desired value else 0, note copy constructor generated automaticaly. Only used for constant.
          */
-        inline explicit vec_simd(const value_type a);
+        forceinline explicit vec_simd(const value_type a);
 
         /**
          \brief construtor without nothing load a value cost */
-        inline explicit vec_simd();
+        forceinline explicit vec_simd();
 
         /**
          \brief construtor for exp and log */
-        inline explicit vec_simd(register_type x);
+        forceinline explicit vec_simd(register_type x);
 
         /**
          \brief construtor from a pointer
          */
-        inline vec_simd(const_pointer a);
+        forceinline vec_simd(const_pointer a);
 
         /**
          \brief bracket operator called by the parser (expr_vec)
          */
-        inline vec_simd& operator()();
+        forceinline vec_simd& operator()();
 
         /**
          \brief bracket operator called by the parser (expr_vec)
          */
-        inline const vec_simd& operator()() const;
+        forceinline const vec_simd& operator()() const;
 
         /**
          \brief operator *= between two vectors
          */
-        inline vec_simd& operator *=(const vec_simd& rhs);
+        forceinline vec_simd& operator *=(const vec_simd& rhs);
 
         /**
          \brief operator /= between two vectors
          */
-        inline vec_simd& operator /=(const vec_simd& rhs);
+        forceinline vec_simd& operator /=(const vec_simd& rhs);
 
         /**
         \brief operator += between two vectors
         */
-        inline vec_simd& operator +=(const vec_simd& rhs);
+        forceinline vec_simd& operator +=(const vec_simd& rhs);
 
         /**
          \brief operator -= between two vectors
         */
-        inline vec_simd& operator -=(const vec_simd& rhs);
+        forceinline vec_simd& operator -=(const vec_simd& rhs);
 
         /**
          \brief Save the value into the register into the memory
         */
-        inline void store(pointer a) const;
+        forceinline void store(pointer a) const;
 
         /**
          \brief negate the value of the register 
         */
-        inline vec_simd& neg();
+        forceinline vec_simd& neg();
 
 #ifdef __FMA__
         /**
          \brief FMA operator
          */
-        inline void ma(const vec_simd& lhs, const vec_simd& rhs);
+        forceinline void ma(const vec_simd& lhs, const vec_simd& rhs);
 
         /**
          \brief FMS operator
          */
-        inline void ms(const vec_simd& lhs, const vec_simd& rhs);
+        forceinline void ms(const vec_simd& lhs, const vec_simd& rhs);
 
         /**
          \brief FMS operator, 2nd case of the operator -
          */
-        inline void nma(const vec_simd& lhs, const vec_simd& rhs);
+        forceinline void nma(const vec_simd& lhs, const vec_simd& rhs);
 
         /**
          \brief FMS operator, 2nd case of the operator -
          */
-        inline void nms(const vec_simd& lhs, const vec_simd& rhs);
+        forceinline void nms(const vec_simd& lhs, const vec_simd& rhs);
 #endif
          /**
          \brief hardware Register
@@ -133,36 +133,36 @@ namespace numeric{
     /**
      \brief cast int to float
      */
-    template<class T, memory::simd O>
-    inline vec_simd<T,O> cast(const vec_simd<int,O>& ths);
+    template<class T, memory::simd O, int N>
+    forceinline vec_simd<T,O,N> cast(const vec_simd<int,O,N>& ths);
 
     /**
      \brief return the 2^k where k is a vector base on an integer
      */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> twok(const vec_simd<int,O>& rhs);
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> twok(const vec_simd<int,O,N>& rhs);
 
     /**
      \brief floor the value return a int simd register
      */
-    template<class T,memory::simd O>
-    inline vec_simd<int,O> floor(vec_simd<T,O>& rhs);
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<int,O,N> floor(vec_simd<T,O,N>& rhs);
 
     /**
     \brief free function for call the vendor exponential, this function uses the return value optimization
     */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> exp_v(const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(_mm_exp<T,O>(rhs.xmm));
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> exp_v(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(_mm_exp<T,O,N>(rhs.xmm));
         return nrv;
     }
 
     /**
     \brief free function for call the vendor logarithm, this function uses the return value optimization
     */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> log_v(const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(_mm_log<T,O>(rhs.xmm));
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> log_v(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(_mm_log<T,O,N>(rhs.xmm));
         return nrv;
     }
 } //end namespace

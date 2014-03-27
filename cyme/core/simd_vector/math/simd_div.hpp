@@ -33,13 +33,13 @@ namespace numeric{
     /**
      \brief reccursive implementation of the Newton-Raphson algo
      */
-    template<class T, memory::simd O, std::size_t n>
+    template<class T, memory::simd O, int N, std::size_t n>
     struct helper_div{
-        static inline vec_simd<T,O> div(vec_simd<T,O> const& rhs){
+        static forceinline vec_simd<T,O,N> div(vec_simd<T,O,N> const& rhs){
 #ifdef __FMA__
-            return helper_div<T,O,n-1>::div(rhs)*negatemuladd(rhs,helper_div<T,O,n-1>::div(rhs),vec_simd<T,O>(2.0)); // FMA negate operations are differents between INTEL-IBM
+            return helper_div<T,O,N,n-1>::div(rhs)*negatemuladd(rhs,helper_div<T,O,N,n-1>::div(rhs),vec_simd<T,O,N>(2.0)); // FMA negate operations are differents between INTEL-IBM
 #else
-            return helper_div<T,O,n-1>::div(rhs)*(vec_simd<T,O>(2.0)-rhs*helper_div<T,O,n-1>::div(rhs));
+            return helper_div<T,O,N,n-1>::div(rhs)*(vec_simd<T,O,N>(2.0)-rhs*helper_div<T,O,N,n-1>::div(rhs));
 #endif
         }
     };
@@ -47,20 +47,20 @@ namespace numeric{
     /**
      \brief reccursive init with 1/r approximation
      */
-    template<class T, memory::simd O>
-    struct helper_div<T,O,0>{
-        static inline vec_simd<T,O> div(vec_simd<T,O> const& rhs){
-            return rec<T,O>(rhs);
+    template<class T, memory::simd O, int N>
+    struct helper_div<T,O,N,0>{
+        static forceinline vec_simd<T,O,N> div(vec_simd<T,O,N> const& rhs){
+            return rec<T,O,N>(rhs);
         }
     };
 
     /**
      \brief function object calling Newton-Raphson algo <3, ^_^'
      */
-    template<class T,memory::simd O>
+    template<class T,memory::simd O, int N>
     struct NewtonRaphson_div{
-        static inline vec_simd<T,O> div (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
-            vec_simd<T,O> nrv = lhs*helper_div<T,O,div_recursion<T,O>::value>::div(rhs); 
+        static forceinline vec_simd<T,O,N> div (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){ // lhs/rhs
+            vec_simd<T,O,N> nrv = lhs*helper_div<T,O,N,div_recursion<T,O>::value>::div(rhs);
             return nrv;
         }
     };
@@ -68,10 +68,10 @@ namespace numeric{
     /**
      \brief function object calling vendor algo
      */
-    template<class T,memory::simd O>
+    template<class T,memory::simd O, int N>
     struct Vendor_div{
-        static inline vec_simd<T,O> div(const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
-             vec_simd<T,O> nrv(lhs); 
+        static forceinline vec_simd<T,O,N> div(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){ // lhs/rhs
+             vec_simd<T,O,N> nrv(lhs);
              nrv /= rhs;
              return nrv;
         }
@@ -80,9 +80,9 @@ namespace numeric{
     /**
     \brief selector for the division algorithm (vendor or Newton-Raphson)
     */
-    template<class T, memory::simd O, class Solver = NewtonRaphson_div<T,O> >
+    template<class T, memory::simd O, int N, class Solver = NewtonRaphson_div<T,O,N> >
     struct Helper_div{
-        static inline  vec_simd<T,O> div (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){ // lhs/rhs
+        static forceinline  vec_simd<T,O,N> div (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){ // lhs/rhs
             return Solver::div(lhs,rhs);
         }
     };
@@ -90,9 +90,9 @@ namespace numeric{
     /**
      \brief free function / operator between two vectors this function uses the return value optimization
      */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> operator/ (const vec_simd<T,O>& lhs, const vec_simd<T,O>& rhs){
-           return Helper_div<T,O>::div(lhs,rhs);
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> operator/ (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
+           return Helper_div<T,O,N>::div(lhs,rhs);
     }
 } //end namespace
 #endif

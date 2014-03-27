@@ -33,9 +33,9 @@ namespace numeric{
     /**
     \brief free function FMS between 3 vectors, only a*b - c, - is not commutative
     */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> mulsub(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> mulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(lhs);
         nrv.ms(mhs,rhs);
         return nrv;
     }
@@ -43,9 +43,9 @@ namespace numeric{
     /**
      \brief free function nFMA 
      */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> negatemulsub(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> negatemulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(lhs);
         nrv.nms(mhs,rhs);
         return nrv;
     }

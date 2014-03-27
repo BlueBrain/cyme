@@ -31,111 +31,111 @@
 
 namespace numeric{
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>::vec_simd(const typename simd_trait<T,O>::value_type a){
-        this->xmm = _mm_load1<typename simd_trait<T,O>::value_type,O>(a);
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>::vec_simd(const typename simd_trait<T,O,N>::value_type a){
+        this->xmm = _mm_load1<typename simd_trait<T,O,N>::value_type,O,N>(a);
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>::vec_simd(){
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>::vec_simd(){
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>::vec_simd(typename simd_trait<T,O>::const_pointer a){
-        this->xmm = _mm_load<typename simd_trait<T,O>::value_type,O>(a);
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>::vec_simd(typename simd_trait<T,O,N>::const_pointer a){
+        this->xmm = _mm_load<typename simd_trait<T,O,N>::value_type,O,N>(a);
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>::vec_simd(typename simd_trait<T,O>::register_type x){
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>::vec_simd(typename simd_trait<T,O,N>::register_type x){
         this->xmm = x;
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>& vec_simd<T,O>::operator()(){
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>& vec_simd<T,O,N>::operator()(){
         return *this;
     }
 
-    template<class T, memory::simd O>
-    const vec_simd<T,O>& vec_simd<T,O>::operator()() const{
+    template<class T,memory::simd O, int N>
+    const vec_simd<T,O,N>& vec_simd<T,O,N>::operator()() const{
         return *this;
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>& vec_simd<T,O>::operator *=(const vec_simd<T,O>& rhs){
-        this->xmm = _mm_mul<typename simd_trait<T,O>::value_type,O>(this->xmm,rhs.xmm);
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>& vec_simd<T,O,N>::operator *=(const vec_simd<T,O,N>& rhs){
+        this->xmm = _mm_mul<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,rhs.xmm);
         return *this;
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>& vec_simd<T,O>::operator /=(const vec_simd<T,O>& rhs){
-        this->xmm = _mm_div<typename simd_trait<T,O>::value_type,O>(this->xmm,rhs.xmm);
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>& vec_simd<T,O,N>::operator /=(const vec_simd<T,O,N>& rhs){
+        this->xmm = _mm_div<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,rhs.xmm);
         return *this;
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>& vec_simd<T,O>::operator +=(const vec_simd<T,O>& rhs){
-        this->xmm = _mm_add<typename simd_trait<T,O>::value_type,O>(this->xmm,rhs.xmm);
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>& vec_simd<T,O,N>::operator +=(const vec_simd<T,O,N>& rhs){
+        this->xmm = _mm_add<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,rhs.xmm);
         return *this;
     }
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>& vec_simd<T,O>::operator -=(const vec_simd<T,O>& rhs){
-        this->xmm = _mm_sub<typename simd_trait<T,O>::value_type,O>(this->xmm,rhs.xmm);
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>& vec_simd<T,O,N>::operator -=(const vec_simd<T,O,N>& rhs){
+        this->xmm = _mm_sub<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,rhs.xmm);
         return *this;
     }
 
-    template<class T, memory::simd O>
-    void vec_simd<T,O>::store(typename simd_trait<T,O>::pointer a) const{
-        _mm_store<value_type,O>(this->xmm,a);
+    template<class T,memory::simd O, int N>
+    void vec_simd<T,O,N>::store(typename simd_trait<T,O,N>::pointer a) const{
+        _mm_store<value_type,O,N>(this->xmm,a);
     } 
 
-    template<class T, memory::simd O>
-    vec_simd<T,O>& vec_simd<T,O>::neg(){
-       this->xmm = _mm_neg<typename simd_trait<T,O>::value_type,O>(this->xmm);
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>& vec_simd<T,O,N>::neg(){
+       this->xmm = _mm_neg<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm);
        return *this;
     } 
 
 
-    template<class T,memory::simd O>
-    vec_simd<T,O> cast(const vec_simd<int,O>& rhs){
-        vec_simd<T,O> nrv;
-        nrv.xmm = _mm_cast<typename simd_trait<T,O>::value_type,O>(rhs.xmm); // TO change a day no time this week
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N> cast(const vec_simd<int,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_cast<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm); // TO change a day no time this week
         return nrv;
     }
 
-    template<class T, memory::simd O>
-    vec_simd<int,O> floor(vec_simd<T,O> &rhs){
-        vec_simd<int,O> nrv;
-        nrv.xmm = _mm_floor<typename simd_trait<T,O>::value_type,O>(rhs.xmm);
+    template<class T,memory::simd O, int N>
+    vec_simd<int,O,N> floor(vec_simd<T,O,N> &rhs){
+        vec_simd<int,O,N> nrv;
+        nrv.xmm = _mm_floor<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
         return nrv;
     }
 
-    template<class T,memory::simd O>
-    vec_simd<T,O> twok(const vec_simd<int,O>& rhs){
-        vec_simd<T,O> nrv;
-        nrv.xmm = _mm_twok<typename simd_trait<T,O>::value_type,O>(rhs.xmm); // TO change a day no time this week 
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N> twok(const vec_simd<int,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_twok<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm); // TO change a day no time this week
         return nrv;
     }
 
 #ifdef __FMA__
-    template<class T, memory::simd O>
-    void vec_simd<T,O>::ma(const vec_simd& lhs, const vec_simd& rhs){
-        this->xmm = _mm_fma<typename simd_trait<T,O>::value_type,O>(this->xmm,lhs.xmm,rhs.xmm);
+    template<class T,memory::simd O, int N>
+    void vec_simd<T,O,N>::ma(const vec_simd& lhs, const vec_simd& rhs){
+        this->xmm = _mm_fma<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,lhs.xmm,rhs.xmm);
     }
 
-    template<class T, memory::simd O>
-    void vec_simd<T,O>::ms(const vec_simd& lhs, const vec_simd& rhs){
-        this->xmm = _mm_fms<typename simd_trait<T,O>::value_type,O>(this->xmm,lhs.xmm,rhs.xmm);
+    template<class T,memory::simd O, int N>
+    void vec_simd<T,O,N>::ms(const vec_simd& lhs, const vec_simd& rhs){
+        this->xmm = _mm_fms<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,lhs.xmm,rhs.xmm);
     }
 
-    template<class T, memory::simd O>
-    void vec_simd<T,O>::nma(const vec_simd& lhs, const vec_simd& rhs){
-        this->xmm = _mm_nfma<typename simd_trait<T,O>::value_type,O>(this->xmm,lhs.xmm,rhs.xmm);
+    template<class T,memory::simd O, int N>
+    void vec_simd<T,O,N>::nma(const vec_simd& lhs, const vec_simd& rhs){
+        this->xmm = _mm_nfma<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,lhs.xmm,rhs.xmm);
     }
 
-    template<class T, memory::simd O>
-    void vec_simd<T,O>::nms(const vec_simd& lhs, const vec_simd& rhs){
-        this->xmm = _mm_nfms<typename simd_trait<T,O>::value_type,O>(this->xmm,lhs.xmm,rhs.xmm);
+   template<class T,memory::simd O, int N>
+    void vec_simd<T,O,N>::nms(const vec_simd& lhs, const vec_simd& rhs){
+        this->xmm = _mm_nfms<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,lhs.xmm,rhs.xmm);
     }
 #endif
 

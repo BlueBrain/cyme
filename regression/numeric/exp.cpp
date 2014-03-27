@@ -3,13 +3,12 @@
 using namespace cyme::test;
 
 #define TYPE typename T::value_type
-#define N T::n
 #define SIZE T::size
 #define MAX 1000 
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) {
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE a[n] __attribute__((aligned(64)));
     TYPE b[n] __attribute__((aligned(64)));
     TYPE res[n] __attribute__((aligned(64)));
@@ -19,8 +18,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) 
             b[i] = GetRandom<TYPE>();
         }
         
-        numeric::vec_simd<TYPE,memory::__GETSIMD__()> va(a);
-        numeric::vec_simd<TYPE,memory::__GETSIMD__()> vb(b);
+        numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
+        numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
         
         for(int i=0; i<n; ++i)
             a[i] = exp(b[i]);
@@ -34,6 +33,5 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) 
 }
 
 #undef TYPE
-#undef N
 #undef MAX
 #undef SIZE

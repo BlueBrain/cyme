@@ -52,7 +52,11 @@ namespace memory{
                 return NULL;
 
             void* ptr = NULL;
-            int rc = posix_memalign(&ptr, O, size);
+            int rc(0);
+            if(O == memory::chimera)
+                  ptr = malloc(size);
+            else
+                rc = posix_memalign(&ptr, 32, size);
 
             if (rc != 0)
                 return NULL;

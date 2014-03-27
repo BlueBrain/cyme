@@ -61,8 +61,8 @@ namespace memory{
         /**
          \brief Default constructor, the block_v is set up to 0
          */
-        explicit block_v(const size_type size_, const value_type value_)
-        :base_type(size_,storage_type(value_)){
+        explicit block_v(const size_type size, const value_type value)
+        :base_type(size,storage_type(value)){
         }
 
         block_v(block_v<T,M,AoS>const& v):base_type(v.size()){
@@ -114,19 +114,20 @@ namespace memory{
      T is the type, M the size of the subblock_v and N the total number of subblock_v.
      */
     template<class T, std::size_t M>
-    class block_v<T,M,AoSoA> : public std::vector<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA>, memory::Allocator<storage<T,__GETSIMD__()/sizeof(T)*M,AoSoA> > >{
+    class block_v<T,M,AoSoA> : public std::vector<storage<T,unroll_factor::N*__GETSIMD__()/sizeof(T)*M,AoSoA>, memory::Allocator<storage<T,unroll_factor::N*__GETSIMD__()/sizeof(T)*M,AoSoA> > >{
     public:
         typedef std::size_t                                               size_type;
-    static const size_type  storage_width = __GETSIMD__()/sizeof(T)*M;
+        static const size_type  storage_width = unroll_factor::N*__GETSIMD__()/sizeof(T)*M;
         typedef T                                                         value_type;
         typedef value_type&                                               reference;
         typedef const value_type&                                         const_reference;
-        typedef storage<T,storage_width,AoSoA>                storage_type;
+        typedef storage<T,storage_width,AoSoA>                            storage_type;
         typedef std::vector<storage_type, memory::Allocator<storage<T,storage_width,AoSoA> > >   base_type;                  //default template seems impossible on partial specialization
         typedef typename  base_type::iterator                             iterator;
 
-        explicit block_v(const size_type size_, const value_type value_)
-        :base_type(size_/(__GETSIMD__()/sizeof(T))+1, storage_type(value_)),size_cyme(size_){
+        explicit block_v(const size_type size, const value_type value)
+        :base_type(size/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1, storage_type(value)),size_cyme(size){
+           
         }
 
         block_v(block_v<T,M,AoSoA >const& v):base_type(v.size()),size_cyme(v.size()){
@@ -139,15 +140,15 @@ namespace memory{
             BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return base_type::operator[]((i*M+j)/storage_width) //(i)
-            (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
+            (j*(unroll_factor::N*__GETSIMD__()/sizeof(T)) + i%(unroll_factor::N*__GETSIMD__()/sizeof(T)));      //(j)
         }
 
         inline const_reference operator()(size_type i, size_type j) const{
            // nothing on i as the original size is destroyed in the constructor
             BOOST_ASSERT_MSG(     j < M, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
-            return base_type::operator[]((i*M+j)/(M*__GETSIMD__()/sizeof(T))) //(i)
-            (j*(__GETSIMD__()/sizeof(T)) + i%(__GETSIMD__()/sizeof(T)));      //(j)
+            return base_type::operator[]((i*M+j)/(M*unroll_factor::N*__GETSIMD__()/sizeof(T))) //(i)
+            (j*(unroll_factor::N*__GETSIMD__()/sizeof(T)) + i%(unroll_factor::N*__GETSIMD__()/sizeof(T)));      //(j)
         }
 
         static inline size_type size_block() {
@@ -155,11 +156,11 @@ namespace memory{
         }
 
         void resize(size_type n){
-            return base_type::resize(n/(__GETSIMD__()/sizeof(T))+1);
+            return base_type::resize(n/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1);
         }
 
         void reserve(size_type n){
-            return base_type::reserve(n/(__GETSIMD__()/sizeof(T))+1);
+            return base_type::reserve(n/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1);
         }
 
         size_type size() const{
@@ -175,7 +176,7 @@ namespace memory{
          \brief adding a new element at the end of the AoSoA container, first check the size if pb increase
          */
         void push_back(value_type value){
-            if((this->size_cyme/(__GETSIMD__()/sizeof(T))+1) > base_type::size())
+            if((this->size_cyme/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1) > base_type::size())
                 (*this).resize(size_cyme);
 
             for(size_type j=0; j<M; ++j)
@@ -191,7 +192,7 @@ namespace memory{
          */
         void push_front(value_type value){
             BOOST_ASSERT_MSG(true, " push_front is VERY SLOW for AoSoA container " );
-            if((this->size_cyme/(__GETSIMD__()/sizeof(T))+1) > base_type::size())
+            if((this->size_cyme/(unroll_factor::N*__GETSIMD__()/sizeof(T))+1) > base_type::size())
                 (*this).resize(size_cyme);
 
             for(size_type i=size_cyme; i>0; --i){ // reorder coeff one by one it is slow
@@ -222,8 +223,8 @@ namespace cyme {
         const static memory::order order_value = O;
         typedef typename T::value_type value_type;
 
-        explicit vector(const size_t size_ = 1, const value_type value_ = value_type())
-        :memory::block_v<value_type, T::value_size, O>(size_, value_){
+        explicit vector(const size_t size = 1, const value_type value = value_type())
+        :memory::block_v<value_type, T::value_size, O>(size, value){
         }
 
         vector(vector const& a):memory::block_v<typename T::value_type,  T::value_size, O>(a){

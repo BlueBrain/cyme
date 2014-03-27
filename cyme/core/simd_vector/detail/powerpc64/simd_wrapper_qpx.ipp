@@ -45,7 +45,7 @@ namespace numeric{
         boost::uint64_t ll;
     } ieee754;
 
-    inline double uint642dp(boost::uint64_t ll) {
+    forceinline double uint642dp(boost::uint64_t ll) {
         ieee754 tmp;
         tmp.ll=ll;
         return tmp.d;
@@ -59,73 +59,192 @@ namespace numeric{
      \brief Returns a vector of which the value of each element is set to a.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_load1<float,memory::qpx>(simd_trait<float,memory::qpx>::value_type a){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_load1<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::value_type a){
         return vec_splats(a);
+    }
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_load1<float,memory::qpx,2>(const simd_trait<float,memory::qpx,2>::value_type a){
+        return simd_trait<float,memory::qpx,2>::register_type(vec_splats(a),vec_splats(a));
+    }
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_load1<float,memory::qpx,4>(const simd_trait<float,memory::qpx,4>::value_type a){
+        return simd_trait<float,memory::qpx,4>::register_type(vec_splats(a),vec_splats(a),vec_splats(a),vec_splats(a));
     }
 
     /**
      \brief Loads a vector from the given memory address.
     */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_load<float,memory::qpx>(simd_trait<float,memory::qpx>::const_pointer a){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_load<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::const_pointer a){
         return vec_lda(0L,a);
+    }
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_load<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::const_pointer a){
+        return simd_trait<float,memory::qpx,2>::register_type(vec_lda(0L,a),vec_lda(4L,a));
+    }
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_load<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::const_pointer a){
+        return simd_trait<float,memory::qpx,4>::register_type(vec_lda(0L,a),vec_lda(4L,a),vec_lda(8L,a),vec_lda(12L,a));
     }
 
     /**
      \brief Stores a vector to memory at the given address.
     */
     template<>
-    inline void _mm_store<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::pointer a){
+
+    forceinline void _mm_store<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0, simd_trait<float,memory::qpx,1>::pointer a){
         vec_sta(xmm0,0L,a);
+    }
+
+    template<>
+    forceinline void _mm_store<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0, simd_trait<float,memory::qpx,2>::pointer a){
+        vec_sta(xmm0.r0,0L,a);
+        vec_sta(xmm0.r1,4L,a);
+    }
+
+    template<>
+    forceinline void _mm_store<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0, simd_trait<float,memory::qpx,4>::pointer a){
+        vec_sta(xmm0.r0,0L,a);
+        vec_sta(xmm0.r1,4L,a);
+        vec_sta(xmm0.r2,8L,a);
+        vec_sta(xmm0.r3,12L,a);
     }
 
     /**
      \brief Returns a vector containing the results of performing a multiply operation using the given vectors.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_mul<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_mul<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0,  simd_trait<float,memory::qpx,1>::register_type xmm1){
         return vec_mul(xmm0, xmm1);
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_mul<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0,  simd_trait<float,memory::qpx,2>::register_type xmm1){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_mul(xmm0.r0,xmm1.r0),
+                                                               vec_mul(xmm0.r1,xmm1.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_mul<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0,  simd_trait<float,memory::qpx,4>::register_type xmm1){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_mul(xmm0.r0,xmm1.r0),
+                                                               vec_mul(xmm0.r1,xmm1.r1),
+                                                               vec_mul(xmm0.r2,xmm1.r2),
+                                                               vec_mul(xmm0.r3,xmm1.r3));
     };
 
     /**
       \brief Returns a vector containing the result of dividing each element of a by the corresponding element of b.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_div<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_div<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0,  simd_trait<float,memory::qpx,1>::register_type xmm1){
         return vec_swdiv_nochk(xmm0, xmm1);
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_div<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0,  simd_trait<float,memory::qpx,2>::register_type xmm1){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_swdiv_nochk(xmm0.r0,xmm1.r0),
+                                                               vec_swdiv_nochk(xmm0.r1,xmm1.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_div<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0,  simd_trait<float,memory::qpx,4>::register_type xmm1){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_swdiv_nochk(xmm0.r0,xmm1.r0),
+                                                               vec_swdiv_nochk(xmm0.r1,xmm1.r1),
+                                                               vec_swdiv_nochk(xmm0.r2,xmm1.r2),
+                                                               vec_swdiv_nochk(xmm0.r3,xmm1.r3));
     };
 
     /**
      \brief Returns a vector containing the sums of each set of corresponding elements of the given vectors.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_add<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_add<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0,  simd_trait<float,memory::qpx,1>::register_type xmm1){
         return vec_add(xmm0, xmm1);
     };
 
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_add<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0,  simd_trait<float,memory::qpx,2>::register_type xmm1){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_add(xmm0.r0,xmm1.r0),
+                                                               vec_add(xmm0.r1,xmm1.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_add<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0,  simd_trait<float,memory::qpx,4>::register_type xmm1){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_add(xmm0.r0,xmm1.r0),
+                                                               vec_add(xmm0.r1,xmm1.r1),
+                                                               vec_add(xmm0.r2,xmm1.r2),
+                                                               vec_add(xmm0.r3,xmm1.r3));
+    };
+    
     /**
      \brief Returns a vector containing the result of subtracting each element of b from the corresponding element of a.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_sub<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_sub<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0,  simd_trait<float,memory::qpx,1>::register_type xmm1){
         return vec_sub(xmm0, xmm1);
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_sub<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0,  simd_trait<float,memory::qpx,2>::register_type xmm1){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_sub(xmm0.r0,xmm1.r0),
+                                                               vec_sub(xmm0.r1,xmm1.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_sub<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0,  simd_trait<float,memory::qpx,4>::register_type xmm1){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_sub(xmm0.r0,xmm1.r0),
+                                                               vec_sub(xmm0.r1,xmm1.r1),
+                                                               vec_sub(xmm0.r2,xmm1.r2),
+                                                               vec_sub(xmm0.r3,xmm1.r3));
     };
 
     /**
      \brief Computes the exponential function of each element of vx.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_exp<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_exp<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0){
         return expd4(xmm0);
-    }
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_exp<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0){
+         return simd_trait<float,memory::qpx,2>::register_type(expd4(xmm0.r0),
+                                                               expd4(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_exp<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0){
+         return simd_trait<float,memory::qpx,4>::register_type(expd4(xmm0.r0),
+                                                               expd4(xmm0.r1),
+                                                               expd4(xmm0.r2),
+                                                               expd4(xmm0.r3));
+    };
 
     /**
      \brief Computes the logarithm function of each element of vx.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_log<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_log<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0){
         return logd4(xmm0);
-    }
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_log<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0){
+         return simd_trait<float,memory::qpx,2>::register_type(logd4(xmm0.r0),
+                                                               logd4(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_log<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0){
+         return simd_trait<float,memory::qpx,4>::register_type(logd4(xmm0.r0),
+                                                               logd4(xmm0.r1),
+                                                               logd4(xmm0.r2),
+                                                               logd4(xmm0.r3));
+    };
 
     /**
      \brief Returns a vector containing estimates of the reciprocals of the corresponding elements of the given vector.
@@ -133,48 +252,144 @@ namespace numeric{
      | (r-1/x) / (1/x) | ≤ 1/256
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_rec<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_rec<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0){
         return vec_re(xmm0);
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_rec<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_re(xmm0.r0),
+                                                               vec_re(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_rec<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_re(xmm0.r0),
+                                                               vec_re(xmm0.r1),
+                                                               vec_re(xmm0.r2),
+                                                               vec_re(xmm0.r3));
     };
 
     /**
      \brief Returns a vector containing the negated value of the corresponding elements in the given vector.
      */
     template<>
-    inline  simd_trait<float,memory::qpx>::register_type _mm_neg<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_neg<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0){
         return vec_neg(xmm0);
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_neg<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_neg(xmm0.r0),
+                                                               vec_neg(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_neg<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_neg(xmm0.r0),
+                                                               vec_neg(xmm0.r1),
+                                                               vec_neg(xmm0.r2),
+                                                               vec_neg(xmm0.r3));
     };
 
     /**
      \brief nothing
      */
     template<>
-    inline  simd_trait<float,memory::qpx>::register_type _mm_cast<float,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,1>::register_type _mm_cast<float,memory::qpx,1>(simd_trait<int,memory::qpx,1>::register_type xmm0){
         return  xmm0; // this int is already a float as floor is saved into vec_double
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::qpx,2>::register_type _mm_cast<float,memory::qpx,2>(simd_trait<int,memory::qpx,2>::register_type xmm0){
+        return  xmm0; // this int is already a float as floor is saved into vec_double
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::qpx,4>::register_type _mm_cast<float,memory::qpx,4>(simd_trait<int,memory::qpx,4>::register_type xmm0){
+        return  xmm0; // this int is already a float as floor is saved into vec_double
+    }
     /**
      \brief Returns a vector containing the largest representable floating-point integral values less than or equal to the values of the corresponding elements of the given vector.
      */
     template<>
-    inline  simd_trait<int,memory::qpx>::register_type _mm_floor<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_floor<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0){
         return vec_floor(xmm0);
-    }
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_floor<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_floor(xmm0.r0),
+                                                               vec_floor(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_floor<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_floor(xmm0.r0),
+                                                               vec_floor(xmm0.r1),
+                                                               vec_floor(xmm0.r2),
+                                                               vec_floor(xmm0.r3));
+    };
 
     /**
      \brief Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not support QPX integer the computation is done serialy using C trick
      */
     template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_twok<float,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
-        boost::uint32_t n;
+    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_twok<float,memory::qpx,1>(simd_trait<int,memory::qpx,1>::register_type xmm0){
+        boost::int32_t n;
         for(int i=0; i<4; ++i){
             ieee754 u;
             u.d = 0;
             n = vec_extract(xmm0,i);
-            double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52); 
-            vec_insert(d,xmm0,i);
+            double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52);
+            xmm0 = vec_insert(d,xmm0,i);
         }
-        return xmm0; 
+        return xmm0;
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_twok<float,memory::qpx,2>(simd_trait<int,memory::qpx,2>::register_type xmm0){
+        boost::int32_t n1,n2;
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2;
+            u1.d = 0;
+            u2.d = 0;
+            n1 = vec_extract(xmm0.r0,i);
+            n2 = vec_extract(xmm0.r1,i);
+            double d1 = uint642dp(( ((boost::uint64_t)n1) +1023)<<52);
+            double d2 = uint642dp(( ((boost::uint64_t)n2) +1023)<<52);
+            xmm0.r0 = vec_insert(d1,xmm0.r0,i);
+            xmm0.r1 = vec_insert(d2,xmm0.r1,i);
+        }
+        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0, xmm0.r1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_twok<float,memory::qpx,4>(simd_trait<int,memory::qpx,4>::register_type xmm0){
+        boost::int32_t n1,n2,n3,n4;
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2,u3,u4;
+            u1.d = 0;
+            u2.d = 0;
+            u3.d = 0;
+            u4.d = 0;
+            n1 = vec_extract(xmm0.r0,i);
+            n2 = vec_extract(xmm0.r1,i);
+            n3 = vec_extract(xmm0.r2,i);
+            n4 = vec_extract(xmm0.r3,i);
+            double d1 = uint642dp(( ((boost::uint64_t)n1) +1023)<<52);
+            double d2 = uint642dp(( ((boost::uint64_t)n2) +1023)<<52);
+            double d3 = uint642dp(( ((boost::uint64_t)n3) +1023)<<52);
+            double d4 = uint642dp(( ((boost::uint64_t)n4) +1023)<<52);
+            xmm0.r0 = vec_insert(d1,xmm0.r0,i);
+            xmm0.r1 = vec_insert(d2,xmm0.r1,i);
+            xmm0.r2 = vec_insert(d3,xmm0.r2,i);
+            xmm0.r3 = vec_insert(d4,xmm0.r3,i);
+        }
+         return simd_trait<float,memory::qpx,4>::register_type(xmm0.r0,
+                                                               xmm0.r1,
+                                                               xmm0.r2,
+                                                               xmm0.r3);
     }
 
 #ifdef __FMA__
@@ -182,32 +397,89 @@ namespace numeric{
      \brief Returns a vector containing the results of performing a fused multiply/add for each corresponding set of elements of the given vectors.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_fma<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0, simd_trait<float,memory::qpx>::register_type xmm1, simd_trait<float,memory::qpx>::register_type xmm2){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_fma<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0, simd_trait<float,memory::qpx,1>::register_type xmm1, simd_trait<float,memory::qpx,1>::register_type xmm2){
         return vec_madd(xmm0, xmm1, xmm2);
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_fma<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0, simd_trait<float,memory::qpx,2>::register_type xmm1, simd_trait<float,memory::qpx,2>::register_type xmm2){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_madd(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                               vec_madd(xmm0.r1,xmm1.r1,xmm2.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_fma<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0, simd_trait<float,memory::qpx,4>::register_type xmm1, simd_trait<float,memory::qpx,4>::register_type xmm2){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_madd(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                               vec_madd(xmm0.r1,xmm1.r1,xmm2.r1),
+                                                               vec_madd(xmm0.r2,xmm1.r2,xmm2.r2),
+                                                               vec_madd(xmm0.r3,xmm1.r3,xmm2.r3));
     };
 
     /**
      \brief Returns a vector containing the results of performing a negative multiply-subtract operation on the given vectors.
      */
     template<>
-    inline  simd_trait<float,memory::qpx>::register_type _mm_nfma<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1,  simd_trait<float,memory::qpx>::register_type xmm2){
-        return vec_nmsub(xmm0, xmm1, xmm2); // QPX != AVX for this operations, add <-> sub
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_nfma<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0, simd_trait<float,memory::qpx,1>::register_type xmm1, simd_trait<float,memory::qpx,1>::register_type xmm2){
+        return vec_nmsub(xmm0, xmm1, xmm2);
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_nfma<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0, simd_trait<float,memory::qpx,2>::register_type xmm1, simd_trait<float,memory::qpx,2>::register_type xmm2){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_nmsub(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                               vec_nmsub(xmm0.r1,xmm1.r1,xmm2.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_nfma<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0, simd_trait<float,memory::qpx,4>::register_type xmm1, simd_trait<float,memory::qpx,4>::register_type xmm2){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_nmsub(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                               vec_nmsub(xmm0.r1,xmm1.r1,xmm2.r1),
+                                                               vec_nmsub(xmm0.r2,xmm1.r2,xmm2.r2),
+                                                               vec_nmsub(xmm0.r3,xmm1.r3,xmm2.r3));
     };
 
     /**
      \brief Returns a vector containing the results of performing a multiply-substract operation using the given vectors.
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_fms<float,memory::qpx>(simd_trait<float,memory::qpx>::register_type xmm0, simd_trait<float,memory::qpx>::register_type xmm1, simd_trait<float,memory::qpx>::register_type xmm2){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_fms<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0, simd_trait<float,memory::qpx,1>::register_type xmm1, simd_trait<float,memory::qpx,1>::register_type xmm2){
         return vec_msub(xmm0, xmm1, xmm2);
     };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_fms<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0, simd_trait<float,memory::qpx,2>::register_type xmm1, simd_trait<float,memory::qpx,2>::register_type xmm2){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_msub(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                               vec_msub(xmm0.r1,xmm1.r1,xmm2.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_fms<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0, simd_trait<float,memory::qpx,4>::register_type xmm1, simd_trait<float,memory::qpx,4>::register_type xmm2){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_msub(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                               vec_msub(xmm0.r1,xmm1.r1,xmm2.r1),
+                                                               vec_msub(xmm0.r2,xmm1.r2,xmm2.r2),
+                                                               vec_msub(xmm0.r3,xmm1.r3,xmm2.r3));
+    };
+
 
     /**
     \brief Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
     */
     template<>
-    inline  simd_trait<float,memory::qpx>::register_type _mm_nfms<float,memory::qpx>( simd_trait<float,memory::qpx>::register_type xmm0,  simd_trait<float,memory::qpx>::register_type xmm1,  simd_trait<float,memory::qpx>::register_type xmm2){
-        return vec_nmadd(xmm0, xmm1, xmm2); // QPX != AVX for this operation, add <-> sub
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_nfms<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0, simd_trait<float,memory::qpx,1>::register_type xmm1, simd_trait<float,memory::qpx,1>::register_type xmm2){
+        return vec_nmadd(xmm0, xmm1, xmm2);
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_nfms<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0, simd_trait<float,memory::qpx,2>::register_type xmm1, simd_trait<float,memory::qpx,2>::register_type xmm2){
+         return simd_trait<float,memory::qpx,2>::register_type(vec_nmadd(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                               vec_nmadd(xmm0.r1,xmm1.r1,xmm2.r1));
+    };
+
+    template<>
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_nfms<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0, simd_trait<float,memory::qpx,4>::register_type xmm1, simd_trait<float,memory::qpx,4>::register_type xmm2){
+         return simd_trait<float,memory::qpx,4>::register_type(vec_nmadd(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                               vec_nmadd(xmm0.r1,xmm1.r1,xmm2.r1),
+                                                               vec_nmadd(xmm0.r2,xmm1.r2,xmm2.r2),
+                                                               vec_nmadd(xmm0.r3,xmm1.r3,xmm2.r3));
     };
 #endif
 
@@ -215,73 +487,191 @@ namespace numeric{
      \brief Returns a vector of which the value of each element is set to a.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_load1<double,memory::qpx>(simd_trait<double,memory::qpx>::value_type a){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_load1<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::value_type a){
         return vec_splats(a);
+    }
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_load1<double,memory::qpx,2>(const simd_trait<double,memory::qpx,2>::value_type a){
+        return simd_trait<double,memory::qpx,2>::register_type(vec_splats(a),vec_splats(a));
+    }
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_load1<double,memory::qpx,4>(const simd_trait<double,memory::qpx,4>::value_type a){
+        return simd_trait<double,memory::qpx,4>::register_type(vec_splats(a),vec_splats(a),vec_splats(a),vec_splats(a));
     }
 
     /**
      \brief Loads a vector from the given memory address.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_load<double,memory::qpx>(simd_trait<double,memory::qpx>::const_pointer a){
-        return  vec_lda(0L,a);
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_load<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::const_pointer a){
+        return vec_lda(0L,a);
+    }
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_load<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::const_pointer a){
+        return simd_trait<double,memory::qpx,2>::register_type(vec_lda(0L,a),vec_lda(32L,a));
+    }
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_load<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::const_pointer a){
+        return simd_trait<double,memory::qpx,4>::register_type(vec_lda(0L,a),vec_lda(32L,a),vec_lda(64L,a),vec_lda(96L,a));
     }
 
     /**
      \brief Stores a vector to memory at the given address.
      */
     template<>
-    inline void _mm_store<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::pointer a){
+    forceinline void _mm_store<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0, simd_trait<double,memory::qpx,1>::pointer a){
         vec_sta(xmm0,0L,a);
+    }
+
+    template<>
+    forceinline void _mm_store<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0, simd_trait<double,memory::qpx,2>::const_pointer a){
+        vec_sta(xmm0.r0,0L,a);
+        vec_sta(xmm0.r1,32L,a);
+    }
+
+    template<>
+    forceinline void _mm_store<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0, simd_trait<double,memory::qpx,4>::const_pointer a){
+        vec_sta(xmm0.r0,0L,a);
+        vec_sta(xmm0.r1,32L,a);
+        vec_sta(xmm0.r2,64L,a);
+        vec_sta(xmm0.r3,96L,a);
     }
 
     /**
      \brief Returns a vector containing the results of performing a multiply operation using the given vectors.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_mul<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_mul<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0,  simd_trait<double,memory::qpx,1>::register_type xmm1){
         return vec_mul(xmm0, xmm1);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_mul<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0,  simd_trait<double,memory::qpx,2>::register_type xmm1){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_mul(xmm0.r0,xmm1.r0),
+                                                                vec_mul(xmm0.r1,xmm1.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_mul<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0,  simd_trait<double,memory::qpx,4>::register_type xmm1){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_mul(xmm0.r0,xmm1.r0),
+                                                                vec_mul(xmm0.r1,xmm1.r1),
+                                                                vec_mul(xmm0.r2,xmm1.r2),
+                                                                vec_mul(xmm0.r3,xmm1.r3));
     };
 
     /**
      \brief Returns a vector containing the result of dividing each element of a by the corresponding element of b.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_div<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_div<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0,  simd_trait<double,memory::qpx,1>::register_type xmm1){
         return vec_swdiv_nochk(xmm0, xmm1);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_div<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0,  simd_trait<double,memory::qpx,2>::register_type xmm1){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_swdiv_nochk(xmm0.r0,xmm1.r0),
+                                                                vec_swdiv_nochk(xmm0.r1,xmm1.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_div<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0,  simd_trait<double,memory::qpx,4>::register_type xmm1){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_swdiv_nochk(xmm0.r0,xmm1.r0),
+                                                                vec_swdiv_nochk(xmm0.r1,xmm1.r1),
+                                                                vec_swdiv_nochk(xmm0.r2,xmm1.r2),
+                                                                vec_swdiv_nochk(xmm0.r3,xmm1.r3));
     };
 
     /**
      \brief Returns a vector containing the sums of each set of corresponding elements of the given vectors.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_add<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_add<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0,  simd_trait<double,memory::qpx,1>::register_type xmm1){
         return vec_add(xmm0, xmm1);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_add<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0,  simd_trait<double,memory::qpx,2>::register_type xmm1){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_add(xmm0.r0,xmm1.r0),
+                                                                vec_add(xmm0.r1,xmm1.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_add<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0,  simd_trait<double,memory::qpx,4>::register_type xmm1){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_add(xmm0.r0,xmm1.r0),
+                                                                vec_add(xmm0.r1,xmm1.r1),
+                                                                vec_add(xmm0.r2,xmm1.r2),
+                                                                vec_add(xmm0.r3,xmm1.r3));
     };
 
     /**
      \brief Returns a vector containing the result of subtracting each element of b from the corresponding element of a.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_sub<double,memory::qpx>( simd_trait<double,memory::qpx>::register_type xmm0,  simd_trait<double,memory::qpx>::register_type xmm1){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_sub<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0,  simd_trait<double,memory::qpx,1>::register_type xmm1){
         return vec_sub(xmm0, xmm1);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_sub<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0,  simd_trait<double,memory::qpx,2>::register_type xmm1){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_sub(xmm0.r0,xmm1.r0),
+                                                                vec_sub(xmm0.r1,xmm1.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_sub<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0,  simd_trait<double,memory::qpx,4>::register_type xmm1){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_sub(xmm0.r0,xmm1.r0),
+                                                                vec_sub(xmm0.r1,xmm1.r1),
+                                                                vec_sub(xmm0.r2,xmm1.r2),
+                                                                vec_sub(xmm0.r3,xmm1.r3));
     };
 
     /**
      \brief Computes the exponential function of each element of vx.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_exp<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_exp<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0){
         return expd4(xmm0);
-    }
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_exp<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0){
+         return simd_trait<double,memory::qpx,2>::register_type(expd4(xmm0.r0),
+                                                                expd4(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_exp<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0){
+         return simd_trait<double,memory::qpx,4>::register_type(expd4(xmm0.r0),
+                                                                expd4(xmm0.r1),
+                                                                expd4(xmm0.r2),
+                                                                expd4(xmm0.r3));
+    };
 
     /**
      \brief Computes the logarithm function of each element of vx.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_log<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_log<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0){
         return logd4(xmm0);
-    }
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_log<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0){
+         return simd_trait<double,memory::qpx,2>::register_type(logd4(xmm0.r0),
+                                                                logd4(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_log<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0){
+         return simd_trait<double,memory::qpx,4>::register_type(logd4(xmm0.r0),
+                                                                logd4(xmm0.r1),
+                                                                logd4(xmm0.r2),
+                                                                logd4(xmm0.r3));
+    };
 
     /**
      \brief Returns a vector containing estimates of the reciprocals of the corresponding elements of the given vector.
@@ -289,48 +679,144 @@ namespace numeric{
      | (r-1/x) / (1/x) | ≤ 1/256
      */
     template<>
-    inline simd_trait<float,memory::qpx>::register_type _mm_rec<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
-        return vec_re(xmm0); // vec_res ????
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_rec<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0){
+        return vec_re(xmm0);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_rec<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_re(xmm0.r0),
+                                                                vec_re(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_rec<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_re(xmm0.r0),
+                                                                vec_re(xmm0.r1),
+                                                                vec_re(xmm0.r2),
+                                                                vec_re(xmm0.r3));
     };
 
     /**
      \brief Returns a vector containing the negated value of the corresponding elements in the given vector.
      */
     template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_neg<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_neg<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0){
         return vec_neg(xmm0);
     };
 
-    /**
-     \brief Returns a vector containing the largest representable floating-point integral values less than or equal to the values of the corresponding elements of the given vector.
-     */
     template<>
-    inline  simd_trait<int,memory::qpx>::register_type _mm_floor<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0){
-        return vec_floor(xmm0);
-    }
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_neg<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_neg(xmm0.r0),
+                                                                vec_neg(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_neg<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_neg(xmm0.r0),
+                                                                vec_neg(xmm0.r1),
+                                                                vec_neg(xmm0.r2),
+                                                                vec_neg(xmm0.r3));
+    };
 
     /**
      \brief nothing
      */
     template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_cast<double,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
-        return  xmm0; // this int is already a float as floor is saved into vec_double, so no cast
+    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_cast<double,memory::qpx,1>(simd_trait<int,memory::qpx,1>::register_type xmm0){
+        return  xmm0; // this int is already a float as floor is saved into vec_double
     }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_cast<double,memory::qpx,2>(simd_trait<int,memory::qpx,2>::register_type xmm0){
+        return  xmm0; // this int is already a float as floor is saved into vec_double
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_cast<double,memory::qpx,4>(simd_trait<int,memory::qpx,4>::register_type xmm0){
+        return  xmm0; // this int is already a float as floor is saved into vec_double
+    }
+
+
+    /**
+     \brief Returns a vector containing the largest representable floating-point integral values less than or equal to the values of the corresponding elements of the given vector.
+     */
+    template<>
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_floor<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0){
+        return vec_floor(xmm0);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_floor<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_floor(xmm0.r0),
+                                                               vec_floor(xmm0.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_floor<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_floor(xmm0.r0),
+                                                               vec_floor(xmm0.r1),
+                                                               vec_floor(xmm0.r2),
+                                                               vec_floor(xmm0.r3));
+    };
 
     /**
      \brief Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not support QPX integer the computation is done serialy using C trick
      */
     template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_twok<double,memory::qpx>(simd_trait<int,memory::qpx>::register_type xmm0){
+    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_twok<double,memory::qpx,1>(simd_trait<int,memory::qpx,1>::register_type xmm0){
         boost::int32_t n;
         for(int i=0; i<4; ++i){
             ieee754 u;
             u.d = 0;
             n = vec_extract(xmm0,i);
-            double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52); 
+            double d = uint642dp(( ((boost::uint64_t)n) +1023)<<52);
             xmm0 = vec_insert(d,xmm0,i);
         }
+
         return xmm0;
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_twok<double,memory::qpx,2>(simd_trait<int,memory::qpx,2>::register_type xmm0){
+        boost::int32_t n1,n2;
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2;
+            u1.d = 0;
+            u2.d = 0;
+            n1 = vec_extract(xmm0.r0,i);
+            n2 = vec_extract(xmm0.r1,i);
+            double d1 = uint642dp(( ((boost::uint64_t)n1) +1023)<<52);
+            double d2 = uint642dp(( ((boost::uint64_t)n2) +1023)<<52);
+            xmm0.r0 = vec_insert(d1,xmm0.r0,i);
+            xmm0.r1 = vec_insert(d2,xmm0.r1,i);
+        }
+        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0, xmm0.r1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_twok<double,memory::qpx,4>(simd_trait<int,memory::qpx,4>::register_type xmm0){
+        boost::int32_t n1,n2,n3,n4;
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2,u3,u4;
+            u1.d = 0;
+            u2.d = 0;
+            u3.d = 0;
+            u4.d = 0;
+            n1 = vec_extract(xmm0.r0,i);
+            n2 = vec_extract(xmm0.r1,i);
+            n3 = vec_extract(xmm0.r2,i);
+            n4 = vec_extract(xmm0.r3,i);
+            double d1 = uint642dp(( ((boost::uint64_t)n1) +1023)<<52);
+            double d2 = uint642dp(( ((boost::uint64_t)n2) +1023)<<52);
+            double d3 = uint642dp(( ((boost::uint64_t)n3) +1023)<<52);
+            double d4 = uint642dp(( ((boost::uint64_t)n4) +1023)<<52);
+            xmm0.r0 = vec_insert(d1,xmm0.r0,i);
+            xmm0.r1 = vec_insert(d2,xmm0.r1,i);
+            xmm0.r2 = vec_insert(d3,xmm0.r2,i);
+            xmm0.r3 = vec_insert(d4,xmm0.r3,i);
+        }
+	return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0, xmm0.r1, xmm0.r2, xmm0.r3);
     }
 
 #ifdef __FMA__
@@ -338,40 +824,89 @@ namespace numeric{
      \brief Returns a vector containing the results of performing a fused multiply/add for each corresponding set of elements of the given vectors.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_fma<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0,
-                                                                                     simd_trait<double,memory::qpx>::register_type xmm1,
-                                                                                     simd_trait<double,memory::qpx>::register_type xmm2){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_fma<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0, simd_trait<double,memory::qpx,1>::register_type xmm1, simd_trait<double,memory::qpx,1>::register_type xmm2){
         return vec_madd(xmm0, xmm1, xmm2);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_fma<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0, simd_trait<double,memory::qpx,2>::register_type xmm1, simd_trait<double,memory::qpx,2>::register_type xmm2){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_madd(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                                vec_madd(xmm0.r1,xmm1.r1,xmm2.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_fma<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0, simd_trait<double,memory::qpx,4>::register_type xmm1, simd_trait<double,memory::qpx,4>::register_type xmm2){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_madd(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                                vec_madd(xmm0.r1,xmm1.r1,xmm2.r1),
+                                                                vec_madd(xmm0.r2,xmm1.r2,xmm2.r2),
+                                                                vec_madd(xmm0.r3,xmm1.r3,xmm2.r3));
     };
 
     /**
      \brief Returns a vector containing the results of performing a negative multiply-subtract operation on the given vectors.
      */
     template<>
-    inline  simd_trait<double,memory::qpx>::register_type _mm_nfma<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0,
-                                                                                       simd_trait<double,memory::qpx>::register_type xmm1,
-                                                                                       simd_trait<double,memory::qpx>::register_type xmm2){
-        return vec_nmsub(xmm0, xmm1, xmm2); // QPX != AVX for this operations, add <-> sub
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_nfma<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0, simd_trait<double,memory::qpx,1>::register_type xmm1, simd_trait<double,memory::qpx,1>::register_type xmm2){
+        return vec_nmsub(xmm0, xmm1, xmm2);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_nfma<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0, simd_trait<double,memory::qpx,2>::register_type xmm1, simd_trait<double,memory::qpx,2>::register_type xmm2){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_nmsub(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                                vec_nmsub(xmm0.r1,xmm1.r1,xmm2.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_nfma<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0, simd_trait<double,memory::qpx,4>::register_type xmm1, simd_trait<double,memory::qpx,4>::register_type xmm2){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_nmsub(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                                vec_nmsub(xmm0.r1,xmm1.r1,xmm2.r1),
+                                                                vec_nmsub(xmm0.r2,xmm1.r2,xmm2.r2),
+                                                                vec_nmsub(xmm0.r3,xmm1.r3,xmm2.r3));
     };
 
     /**
      \brief Returns a vector containing the results of performing a multiply-substract operation using the given vectors.
      */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_fms<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0,
-                                                                                     simd_trait<double,memory::qpx>::register_type xmm1,
-                                                                                     simd_trait<double,memory::qpx>::register_type xmm2){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_fms<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0, simd_trait<double,memory::qpx,1>::register_type xmm1, simd_trait<double,memory::qpx,1>::register_type xmm2){
         return vec_msub(xmm0, xmm1, xmm2);
     };
 
-    /**
-     \brief Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
-     */
     template<>
-    inline simd_trait<double,memory::qpx>::register_type _mm_nfms<double,memory::qpx>(simd_trait<double,memory::qpx>::register_type xmm0,
-                                                                                      simd_trait<double,memory::qpx>::register_type xmm1,
-                                                                                      simd_trait<double,memory::qpx>::register_type xmm2){
-        return vec_nmadd(xmm0, xmm1, xmm2); // QPX != AVX for this operations, add <-> sub
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_fms<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0, simd_trait<double,memory::qpx,2>::register_type xmm1, simd_trait<double,memory::qpx,2>::register_type xmm2){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_msub(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                                vec_msub(xmm0.r1,xmm1.r1,xmm2.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_fms<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0, simd_trait<double,memory::qpx,4>::register_type xmm1, simd_trait<double,memory::qpx,4>::register_type xmm2){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_msub(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                                vec_msub(xmm0.r1,xmm1.r1,xmm2.r1),
+                                                                vec_msub(xmm0.r2,xmm1.r2,xmm2.r2),
+                                                                vec_msub(xmm0.r3,xmm1.r3,xmm2.r3));
+    };
+
+
+    /**
+    \brief Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
+    */
+    template<>
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_nfms<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0, simd_trait<double,memory::qpx,1>::register_type xmm1, simd_trait<double,memory::qpx,1>::register_type xmm2){
+        return vec_nmadd(xmm0, xmm1, xmm2);
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_nfms<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0, simd_trait<double,memory::qpx,2>::register_type xmm1, simd_trait<double,memory::qpx,2>::register_type xmm2){
+         return simd_trait<double,memory::qpx,2>::register_type(vec_nmadd(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                                vec_nmadd(xmm0.r1,xmm1.r1,xmm2.r1));
+    };
+
+    template<>
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_nfms<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0, simd_trait<double,memory::qpx,4>::register_type xmm1, simd_trait<double,memory::qpx,4>::register_type xmm2){
+         return simd_trait<double,memory::qpx,4>::register_type(vec_nmadd(xmm0.r0,xmm1.r0,xmm2.r0),
+                                                                vec_nmadd(xmm0.r1,xmm1.r1,xmm2.r1),
+                                                                vec_nmadd(xmm0.r2,xmm1.r2,xmm2.r2),
+                                                                vec_nmadd(xmm0.r3,xmm1.r3,xmm2.r3));
     };
 #endif
 } //end namespace

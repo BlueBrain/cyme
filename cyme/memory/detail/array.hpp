@@ -53,7 +53,8 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
     template<class T, std::size_t N>
     class array {
       public:
-       T elems[N] __attribute__((aligned(static_cast<int>(memory::__GETSIMD__()))));    // fixed-size array of elements of type T, align
+        T elems[N] __attribute__((aligned(static_cast<int>(memory::__GETSIMD__()))));    // fixed-size array of elements of type T, align
+      //  T elems[N];    // fixed-size array of elements of type T, align
       public:
         // type definitions
         typedef T              value_type;

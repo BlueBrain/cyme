@@ -30,8 +30,9 @@ static inline void cnrn_rates(T& S){
 
 template<class T>
 static inline void cnrn_states(T& S){
-    cnrn_rates<T>(S);
+   cnrn_rates<T>(S);
 //  IACA_START
+//    S[3] +=  S[5]* S[4] * S[3] * S[2] * S[1];
     S[3] += (1.-exp(0.1*(-1./S[7] )))*((S[6] /S[7]) /(1./S[7]) -S[3]);
     S[4] += (1.-exp(0.1*(-1./S[11])))*((S[10]/S[11])/(1./S[11])-S[4]);
 //  IACA_END
@@ -63,9 +64,9 @@ typedef  cyme::array<synapse<double>, 128,memory::AoS> Ar_d_AoS;
 typedef  cyme::array<synapse<double>, 128,memory::AoSoA> Ar_d_AoSoA;
 
 
-typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
+//typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
 //typedef boost::mpl::vector< Ar_f_AoS, Ar_f_AoSoA, Ar_d_AoS, Ar_d_AoSoA > vector_list;
-//typedef boost::mpl::vector<Vec_d_AoSoA > vector_list;
+typedef boost::mpl::vector<Vec_d_AoSoA > vector_list;
 
 #ifdef _OPENMP
 // OpenMP implementation of std::for_each
@@ -89,7 +90,7 @@ struct test_case{
     void operator()(T const&){
 
         typedef typename T::storage_type storage_type;
-        const std::size_t N(0xfffff);
+        const std::size_t N(0xffffff);
         T v(N,0);
         std::for_each(v.begin(), v.end(), f_init<T>() );
 

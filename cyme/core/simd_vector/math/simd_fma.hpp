@@ -33,9 +33,9 @@ namespace numeric{
     /**
     \brief free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb
     */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> muladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> muladd(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(lhs);
         nrv.ma(mhs,rhs);
         return nrv;
     }
@@ -43,9 +43,9 @@ namespace numeric{
     /**
      \brief free function nFMA
      */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> negatemuladd(const vec_simd<T,O>& lhs, const vec_simd<T,O>& mhs, const vec_simd<T,O>& rhs){
-        vec_simd<T,O> nrv(lhs);
+    template<class T,memory::simd O,int N>
+    forceinline vec_simd<T,O,N> negatemuladd(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(lhs);
         nrv.nma(mhs,rhs);
         return nrv;
     }

@@ -30,103 +30,315 @@
 #define CYME_SIMD_WRAPPER_AVX_HPP
 
 namespace numeric{
+    
+    
+    template<>
+    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_load1<double,memory::chimera,1>(simd_trait<double,memory::chimera,1>::value_type a){
+        return simd_trait<double,memory::chimera,1>::register_type(_mm256_set1_pd(a),a);
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_load<double,memory::chimera,1>(simd_trait<double,memory::chimera,1>::const_pointer a){
+        return simd_trait<double,memory::chimera,1>::register_type(_mm256_loadu_pd(a),*a);
+    }
+    
+    template<>
+    forceinline void _mm_store<double,memory::chimera,1>( simd_trait<double,memory::chimera,1>::register_type xmm0,  simd_trait<double,memory::chimera,1>::pointer a){
+          _mm256_storeu_pd(a,xmm0.r0);
+          *(a+5) = xmm0.r1;
+        }
+    
+    template<>
+    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_mul<double,memory::chimera,1>( simd_trait<double,memory::chimera,1>::register_type xmm0,  simd_trait<double,memory::chimera,1>::register_type xmm1){
+        return simd_trait<double,memory::chimera,1>::register_type(
+            _mm256_mul_pd(xmm0.r0, xmm1.r0),
+            xmm0.r1*xmm1.r1
+        );
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_add<double,memory::chimera,1>( simd_trait<double,memory::chimera,1>::register_type xmm0,  simd_trait<double,memory::chimera,1>::register_type xmm1){
+        return simd_trait<double,memory::chimera,1>::register_type(
+                                                                   _mm256_add_pd(xmm0.r0, xmm1.r0),
+                                                                   xmm0.r1+xmm1.r1
+                                                                   );
+    }
+    
     /**
      \brief Broadcast a double-precision (64-bit) floating-point element from memory to all elements of dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_load1<double,memory::avx>(simd_trait<double,memory::avx>::value_type a){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_load1<double,memory::avx,1>(simd_trait<double,memory::avx,1>::value_type a){
         return _mm256_set1_pd(a); // C - _mm256_broadcast_sd causes me a severe issue of perf into the e^y of the exp with clang, I do not know why ...
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_load1<double,memory::avx,2>(const simd_trait<double,memory::avx,2>::value_type a){
+        return simd_trait<double,memory::avx,2>::register_type(_mm256_set1_pd(a),_mm256_set1_pd(a));
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_load1<double,memory::avx,4>(const simd_trait<double,memory::avx,4>::value_type a){
+        return simd_trait<double,memory::avx,4>::register_type(_mm256_set1_pd(a),_mm256_set1_pd(a),_mm256_set1_pd(a),_mm256_set1_pd(a));
     }
 
     /**
      \brief Load 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_load<double,memory::avx>(simd_trait<double,memory::avx>::const_pointer a){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_load<double,memory::avx,1>(simd_trait<double,memory::avx,1>::const_pointer a){
         return _mm256_load_pd(a);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_load<double,memory::avx,2>(const simd_trait<double,memory::avx,2>::const_pointer a){
+        return simd_trait<double,memory::avx,2>::register_type(_mm256_load_pd(a),_mm256_load_pd(a+4));
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_load<double,memory::avx,4>(const simd_trait<double,memory::avx,4>::const_pointer a){
+        return simd_trait<double,memory::avx,4>::register_type(_mm256_load_pd(a),_mm256_load_pd(a+4),_mm256_load_pd(a+8),_mm256_load_pd(a+12));
     }
 
     /**
      \brief Store 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from a into memory. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
      */
     template<>
-    void _mm_store<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::pointer a){
+    forceinline void _mm_store<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0,  simd_trait<double,memory::avx,1>::pointer a){
         _mm256_store_pd(a,xmm0); 
+    }
+
+    template<>
+    forceinline void _mm_store<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0,  simd_trait<double,memory::avx,2>::pointer a){
+        _mm256_store_pd(a,xmm0.r0);
+        _mm256_store_pd(a+4,xmm0.r1);
+    }
+    
+    template<>
+    forceinline void _mm_store<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0,  simd_trait<double,memory::avx,4>::pointer a){
+        _mm256_store_pd(a,xmm0.r0);
+        _mm256_store_pd(a+4,xmm0.r1);
+        _mm256_store_pd(a+8,xmm0.r2);
+        _mm256_store_pd(a+12,xmm0.r3);
     }
 
     /**
      \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
     */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_mul<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::register_type xmm1){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_mul<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0,  simd_trait<double,memory::avx,1>::register_type xmm1){
         return _mm256_mul_pd(xmm0, xmm1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_mul<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0,  simd_trait<double,memory::avx,2>::register_type xmm1){
+        return simd_trait<double,memory::avx,2>::register_type(
+                        _mm256_mul_pd(xmm0.r0, xmm1.r0),
+                        _mm256_mul_pd(xmm0.r1, xmm1.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_mul<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0,  simd_trait<double,memory::avx,4>::register_type xmm1){
+        return simd_trait<double,memory::avx,4>::register_type(
+                        _mm256_mul_pd(xmm0.r0, xmm1.r0),
+                        _mm256_mul_pd(xmm0.r1, xmm1.r1),
+                        _mm256_mul_pd(xmm0.r2, xmm1.r2),
+                        _mm256_mul_pd(xmm0.r3, xmm1.r3)
+                      );
     }
 
     /**
      \brief Divide packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_div<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::register_type xmm1){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_div<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0,  simd_trait<double,memory::avx,1>::register_type xmm1){
         return _mm256_div_pd(xmm0, xmm1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_div<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0,  simd_trait<double,memory::avx,2>::register_type xmm1){
+        return simd_trait<double,memory::avx,2>::register_type(
+                        _mm256_div_pd(xmm0.r0, xmm1.r0),
+                        _mm256_div_pd(xmm0.r1, xmm1.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_div<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0,  simd_trait<double,memory::avx,4>::register_type xmm1){
+        return simd_trait<double,memory::avx,4>::register_type(
+                        _mm256_div_pd(xmm0.r0, xmm1.r0),
+                        _mm256_div_pd(xmm0.r1, xmm1.r1),
+                        _mm256_div_pd(xmm0.r2, xmm1.r2),
+                        _mm256_div_pd(xmm0.r3, xmm1.r3)
+                      );
     }
 
     /**
      \brief Add packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_add<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::register_type xmm1){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_add<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0,  simd_trait<double,memory::avx,1>::register_type xmm1){
         return _mm256_add_pd(xmm0, xmm1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_add<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0,  simd_trait<double,memory::avx,2>::register_type xmm1){
+        return simd_trait<double,memory::avx,2>::register_type(
+                        _mm256_add_pd(xmm0.r0, xmm1.r0),
+                        _mm256_add_pd(xmm0.r1, xmm1.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_add<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0,  simd_trait<double,memory::avx,4>::register_type xmm1){
+        return simd_trait<double,memory::avx,4>::register_type(
+                        _mm256_add_pd(xmm0.r0, xmm1.r0),
+                        _mm256_add_pd(xmm0.r1, xmm1.r1),
+                        _mm256_add_pd(xmm0.r2, xmm1.r2),
+                        _mm256_add_pd(xmm0.r3, xmm1.r3)
+                      );
     }
 
     /**
      \brief Subtract packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_sub<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0,  simd_trait<double,memory::avx>::register_type xmm1){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_sub<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0,  simd_trait<double,memory::avx,1>::register_type xmm1){
         return _mm256_sub_pd(xmm0, xmm1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_sub<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0,  simd_trait<double,memory::avx,2>::register_type xmm1){
+        return simd_trait<double,memory::avx,2>::register_type(
+                        _mm256_sub_pd(xmm0.r0, xmm1.r0),
+                        _mm256_sub_pd(xmm0.r1, xmm1.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_sub<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0,  simd_trait<double,memory::avx,4>::register_type xmm1){
+        return simd_trait<double,memory::avx,4>::register_type(
+                        _mm256_sub_pd(xmm0.r0, xmm1.r0),
+                        _mm256_sub_pd(xmm0.r1, xmm1.r1),
+                        _mm256_sub_pd(xmm0.r2, xmm1.r2),
+                        _mm256_sub_pd(xmm0.r3, xmm1.r3)
+                      );
     }
 
     /**
      \brief Convert packed double-precision (64-bit) floating-point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_rec<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_rec<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0){
         return _mm256_cvtps_pd(_mm_rcp_ps(_mm256_cvtpd_ps(xmm0))); // 256d --(cast)--> 128s --(cast)--> 256d
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_rec<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0){
+        return simd_trait<double,memory::avx,2>::register_type(
+            _mm256_cvtps_pd(_mm_rcp_ps(_mm256_cvtpd_ps(xmm0.r0))),
+            _mm256_cvtps_pd(_mm_rcp_ps(_mm256_cvtpd_ps(xmm0.r1)))
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_rec<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0){
+        return simd_trait<double,memory::avx,4>::register_type(
+            _mm256_cvtps_pd(_mm_rcp_ps(_mm256_cvtpd_ps(xmm0.r0))),
+            _mm256_cvtps_pd(_mm_rcp_ps(_mm256_cvtpd_ps(xmm0.r1))),
+            _mm256_cvtps_pd(_mm_rcp_ps(_mm256_cvtpd_ps(xmm0.r2))),
+            _mm256_cvtps_pd(_mm_rcp_ps(_mm256_cvtpd_ps(xmm0.r3)))
+        );
     }
 
     /**
      \brief Negate packed double-precision (64-bit) floating-point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_neg<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0){
-        simd_trait<double,memory::avx>::register_type mask =  _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_neg<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0){
+        simd_trait<double,memory::avx,1>::register_type mask =  _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
         return _mm256_xor_pd(xmm0, mask);
     }
 
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_neg<double,memory::avx,2>(simd_trait<double,memory::avx,2>::register_type xmm0){
+        simd_trait<double,memory::avx,1>::register_type mask =  _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
+        return simd_trait<double,memory::avx,2>::register_type(
+            _mm256_xor_pd(xmm0.r0, mask),
+            _mm256_xor_pd(xmm0.r1, mask)
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_neg<double,memory::avx,4>(simd_trait<double,memory::avx,4>::register_type xmm0){
+        simd_trait<double,memory::avx,1>::register_type mask =  _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
+        return simd_trait<double,memory::avx,4>::register_type(
+            _mm256_xor_pd(xmm0.r0, mask),
+            _mm256_xor_pd(xmm0.r1, mask),
+            _mm256_xor_pd(xmm0.r2, mask),
+            _mm256_xor_pd(xmm0.r3, mask)
+        );
+    }
     /**
      \brief Round the packed double-precision (64-bit) floating-point elements in xmm0 down to an integer value, and store the results as packed single-precision integer-point elements in dst.
      */
     template<>
-    inline  simd_trait<int,memory::avx>::register_type _mm_floor<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0){
+    forceinline  simd_trait<int,memory::avx,1>::register_type _mm_floor<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0){
         return _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0)));
+    }
+
+    template<>
+    forceinline  simd_trait<int,memory::avx,2>::register_type _mm_floor<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0){
+        return simd_trait<int,memory::avx,2>::register_type(
+            _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0.r0))),
+            _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0.r1))) 
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<int,memory::avx,4>::register_type _mm_floor<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0){
+        return simd_trait<int,memory::avx,4>::register_type(
+            _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0.r0))),
+            _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0.r1))),
+            _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0.r2))),
+            _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0.r3))) 
+        );
     }
 
     /**
      \brief Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_cast<double,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
-        return  _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0));
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_cast<double,memory::avx,1>(simd_trait<int,memory::avx,1>::register_type xmm0){
+        return _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0));
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_cast<double,memory::avx,2>(simd_trait<int,memory::avx,2>::register_type xmm0){
+        return simd_trait<double,memory::avx,2>::register_type(
+            _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)),
+            _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1))
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_cast<double,memory::avx,4>(simd_trait<int,memory::avx,4>::register_type xmm0){
+        return simd_trait<double,memory::avx,4>::register_type(
+            _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)),
+            _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)),
+            _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r2)),
+            _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r3))
+        );
     }
 
     /**
      \brief Compute 2^k packed integer (64-bit) elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_twok<double,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_twok<double,memory::avx,1>(simd_trait<int,memory::avx,1>::register_type xmm0){
         // ORIGINAL
         // ((int + 127) << 23) <=> int to float
-
         __m128i imm0 =  _mm_shuffle_epi32(_mm_slli_epi32(_mm_add_epi32(_mm256_castsi256_si128(xmm0), _mm_set1_epi32(1023)), 20), _MM_SHUFFLE(1,3,0,2));
         __m128i imm1 =  _mm_slli_epi64(imm0,32);
         imm0 =  _mm_srli_epi64(imm0,32); //mask will be slower because mov + broadcast + and, I need to mask 6 instructions
@@ -134,27 +346,134 @@ namespace numeric{
         xmm0 =   _mm256_insertf128_si256(xmm0, imm0,0);
         xmm0 =   _mm256_insertf128_si256(xmm0, imm1,1);
         return  _mm256_castsi256_pd(xmm0);
-
         // TUNE VERSION, ok if |x| < 89 
         // return _mm256_cvtps_pd(_mm_castsi128_ps(_mm_shuffle_epi32(_mm_slli_epi32(_mm_add_epi32(_mm256_castsi256_si128(xmm0), _mm_set1_epi32(127)), 23), _MM_SHUFFLE(1,3,0,2))));
     }
 
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_twok<double,memory::avx,2>(simd_trait<int,memory::avx,2>::register_type xmm0){
+        __m128i imm0_r0 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r0),  _mm_set1_epi32(1023));
+        __m128i imm0_r1 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r1),  _mm_set1_epi32(1023));
+        
+        imm0_r0 = _mm_slli_epi32(imm0_r0, 20);
+        imm0_r1 = _mm_slli_epi32(imm0_r1, 20);
+        
+        imm0_r0 = _mm_shuffle_epi32(imm0_r0, _MM_SHUFFLE(1,3,0,2));
+        imm0_r1 = _mm_shuffle_epi32(imm0_r1, _MM_SHUFFLE(1,3,0,2));
 
+        __m128i imm1_r0 =  _mm_srli_epi64(imm0_r0,32);
+        __m128i imm1_r1 =  _mm_srli_epi64(imm0_r1,32);
+
+        imm1_r0 =  _mm_slli_epi64(imm0_r0,32);
+        imm1_r1 =  _mm_slli_epi64(imm0_r1,32);
+
+        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, imm0_r0,0);
+        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, imm0_r1,0);
+
+        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, imm1_r0,1);
+        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, imm1_r1,1);
+
+        return simd_trait<double,memory::avx,2>::register_type(
+            _mm256_castsi256_pd(xmm0.r0),
+            _mm256_castsi256_pd(xmm0.r1)
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_twok<double,memory::avx,4>(simd_trait<int,memory::avx,4>::register_type xmm0){
+        __m128i imm0_r0 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r0),  _mm_set1_epi32(1023));
+        __m128i imm0_r1 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r1),  _mm_set1_epi32(1023));
+        __m128i imm0_r2 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r2),  _mm_set1_epi32(1023));
+        __m128i imm0_r3 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r3),  _mm_set1_epi32(1023));
+        
+        imm0_r0 = _mm_slli_epi32(imm0_r0, 20);
+        imm0_r1 = _mm_slli_epi32(imm0_r1, 20);
+        imm0_r2 = _mm_slli_epi32(imm0_r2, 20);
+        imm0_r3 = _mm_slli_epi32(imm0_r3, 20);
+
+        imm0_r0 = _mm_shuffle_epi32(imm0_r0, _MM_SHUFFLE(1,3,0,2));
+        imm0_r1 = _mm_shuffle_epi32(imm0_r1, _MM_SHUFFLE(1,3,0,2));
+        imm0_r2 = _mm_shuffle_epi32(imm0_r2, _MM_SHUFFLE(1,3,0,2));
+        imm0_r3 = _mm_shuffle_epi32(imm0_r3, _MM_SHUFFLE(1,3,0,2));
+
+        __m128i imm1_r0 =  _mm_srli_epi64(imm0_r0,32);
+        __m128i imm1_r1 =  _mm_srli_epi64(imm0_r1,32);
+        __m128i imm1_r2 =  _mm_srli_epi64(imm0_r2,32);
+        __m128i imm1_r3 =  _mm_srli_epi64(imm0_r3,32);
+
+        imm1_r0 =  _mm_slli_epi64(imm0_r0,32);
+        imm1_r1 =  _mm_slli_epi64(imm0_r1,32);
+        imm1_r2 =  _mm_slli_epi64(imm0_r2,32);
+        imm1_r3 =  _mm_slli_epi64(imm0_r3,32);
+
+        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, imm0_r0,0);
+        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, imm0_r1,0);
+        xmm0.r2 =   _mm256_insertf128_si256(xmm0.r2, imm0_r2,0);
+        xmm0.r3 =   _mm256_insertf128_si256(xmm0.r3, imm0_r3,0);
+
+        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, imm1_r0,1);
+        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, imm1_r1,1);
+        xmm0.r2 =   _mm256_insertf128_si256(xmm0.r2, imm1_r2,1);
+        xmm0.r3 =   _mm256_insertf128_si256(xmm0.r3, imm1_r3,1);
+
+        return simd_trait<double,memory::avx,4>::register_type(
+            _mm256_castsi256_pd(xmm0.r0),
+            _mm256_castsi256_pd(xmm0.r1),
+            _mm256_castsi256_pd(xmm0.r2),
+            _mm256_castsi256_pd(xmm0.r3)
+        );
+    }
 #ifdef __INTEL_COMPILER
     /**
      \brief Compute the exponential value of e raised to the power of packed double-precision (64-bit) floating-point elements in xmm0, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_exp<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_exp<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0){
         return _mm256_exp_pd(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_exp<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0){
+        return simd_trait<double,memory::avx,2>::register_type(
+                         _mm256_exp_pd(xmm0.r0),
+                         _mm256_exp_pd(xmm0.r1)
+                      );
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_exp<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0){
+        return simd_trait<double,memory::avx,4>::register_type(
+                         _mm256_exp_pd(xmm0.r0),
+                         _mm256_exp_pd(xmm0.r1),
+                         _mm256_exp_pd(xmm0.r2),
+                         _mm256_exp_pd(xmm0.r3)
+                      );
     }
 
     /**
      \brief Compute the natural logarithm of packed double-precision (64-bit) floating-point elements in xmm0, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_log<double,memory::avx>( simd_trait<double,memory::avx>::register_type xmm0){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_log<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0){
         return _mm256_log_pd(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_log<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0){
+        return simd_trait<double,memory::avx,2>::register_type(
+                         _mm256_log_pd(xmm0.r0),
+                         _mm256_log_pd(xmm0.r1)
+                      );
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_log<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0){
+        return simd_trait<double,memory::avx,4>::register_type(
+                         _mm256_log_pd(xmm0.r0),
+                         _mm256_log_pd(xmm0.r1),
+                         _mm256_log_pd(xmm0.r2),
+                         _mm256_log_pd(xmm0.r3)
+                      );
     }
 #endif
 
@@ -163,40 +482,127 @@ namespace numeric{
      \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, add the intermediate result to packed elements in xmm2, and store the results in dst.
      */
    template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_fma<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0,
-                                                                                      simd_trait<double,memory::avx>::register_type xmm1,
-                                                                                      simd_trait<double,memory::avx>::register_type xmm2){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_fma<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0,
+                                                                                      simd_trait<double,memory::avx,1>::register_type xmm1,
+                                                                                      simd_trait<double,memory::avx,1>::register_type xmm2){
         return _mm256_fmadd_pd(xmm0, xmm1, xmm2);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_fma<double,memory::avx,2>(simd_trait<double,memory::avx,2>::register_type xmm0,
+                                                                                          simd_trait<double,memory::avx,2>::register_type xmm1,
+                                                                                          simd_trait<double,memory::avx,2>::register_type xmm2){
+        return simd_trait<double,memory::avx,2>::register_type(
+                        _mm256_fmadd_pd(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fmadd_pd(xmm0.r1, xmm1.r1, xmm2.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_fma<double,memory::avx,4>(simd_trait<double,memory::avx,4>::register_type xmm0,
+                                                                                               simd_trait<double,memory::avx,4>::register_type xmm1,
+                                                                                               simd_trait<double,memory::avx,4>::register_type xmm2){
+        return simd_trait<double,memory::avx,4>::register_type(
+                        _mm256_fmadd_pd(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fmadd_pd(xmm0.r1, xmm1.r1, xmm2.r1),
+                        _mm256_fmadd_pd(xmm0.r2, xmm1.r2, xmm2.r2),
+                        _mm256_fmadd_pd(xmm0.r3, xmm1.r3, xmm2.r3)
+                      );
     }
 
     /**
      \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, add the negated intermediate result to packed elements in xmm2, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_nfma<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0,
-                                                                                       simd_trait<double,memory::avx>::register_type xmm1,
-                                                                                       simd_trait<double,memory::avx>::register_type xmm2){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_nfma<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0,
+                                                                                              simd_trait<double,memory::avx,1>::register_type xmm1,
+                                                                                              simd_trait<double,memory::avx,1>::register_type xmm2){
         return _mm256_fnmadd_pd(xmm0, xmm1, xmm2);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_nfma<double,memory::avx,2>(simd_trait<double,memory::avx,2>::register_type xmm0,
+                                                                                          simd_trait<double,memory::avx,2>::register_type xmm1,
+                                                                                          simd_trait<double,memory::avx,2>::register_type xmm2){
+        return simd_trait<double,memory::avx,2>::register_type(
+                        _mm256_fnmadd_pd(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fnmadd_pd(xmm0.r1, xmm1.r1, xmm2.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_nfma<double,memory::avx,4>(simd_trait<double,memory::avx,4>::register_type xmm0,
+                                                                                                simd_trait<double,memory::avx,4>::register_type xmm1,
+                                                                                                simd_trait<double,memory::avx,4>::register_type xmm2){
+        return simd_trait<double,memory::avx,4>::register_type(
+                        _mm256_fnmadd_pd(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fnmadd_pd(xmm0.r1, xmm1.r1, xmm2.r1),
+                        _mm256_fnmadd_pd(xmm0.r2, xmm1.r2, xmm2.r2),
+                        _mm256_fnmadd_pd(xmm0.r3, xmm1.r3, xmm2.r3)
+                      );
     }
 
     /**
      \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the intermediate result, and store the results in dst.
     */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_fms<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0,
-                                                                                      simd_trait<double,memory::avx>::register_type xmm1,
-                                                                                      simd_trait<double,memory::avx>::register_type xmm2){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_fms<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0,
+                                                                                               simd_trait<double,memory::avx,1>::register_type xmm1,
+                                                                                               simd_trait<double,memory::avx,1>::register_type xmm2){
         return _mm256_fmsub_pd(xmm0, xmm1, xmm2);
     }
 
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_fms<double,memory::avx,2>(simd_trait<double,memory::avx,2>::register_type xmm0,
+                                                                                               simd_trait<double,memory::avx,2>::register_type xmm1,
+                                                                                               simd_trait<double,memory::avx,2>::register_type xmm2){
+        return simd_trait<double,memory::avx,2>::register_type(
+                        _mm256_fmsub_pd(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fmsub_pd(xmm0.r1, xmm1.r1, xmm2.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_fms<double,memory::avx,4>(simd_trait<double,memory::avx,4>::register_type xmm0,
+                                                                                               simd_trait<double,memory::avx,4>::register_type xmm1,
+                                                                                               simd_trait<double,memory::avx,4>::register_type xmm2){
+        return simd_trait<double,memory::avx,4>::register_type(
+                        _mm256_fmsub_pd(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fmsub_pd(xmm0.r1, xmm1.r1, xmm2.r1),
+                        _mm256_fmsub_pd(xmm0.r2, xmm1.r2, xmm2.r2),
+                        _mm256_fmsub_pd(xmm0.r3, xmm1.r3, xmm2.r3)
+                      );
+    }
     /**
      \brief Multiply packed double-precision (64-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the negated intermediate result, and store the results in dst.
      */
     template<>
-    inline  simd_trait<double,memory::avx>::register_type _mm_nfms<double,memory::avx>(simd_trait<double,memory::avx>::register_type xmm0,
-                                                                                       simd_trait<double,memory::avx>::register_type xmm1,
-                                                                                       simd_trait<double,memory::avx>::register_type xmm2){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_nfms<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0,
+                                                                                              simd_trait<double,memory::avx,1>::register_type xmm1,
+                                                                                              simd_trait<double,memory::avx,1>::register_type xmm2){
         return _mm256_fnmsub_pd(xmm0, xmm1, xmm2);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_nfms<double,memory::avx,2>(simd_trait<double,memory::avx,2>::register_type xmm0,
+                                                                                           simd_trait<double,memory::avx,2>::register_type xmm1,
+                                                                                           simd_trait<double,memory::avx,2>::register_type xmm2){
+        return simd_trait<double,memory::avx,2>::register_type(
+                        _mm256_fnmsub_pd(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fnmsub_pd(xmm0.r1, xmm1.r1, xmm2.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_nfms<double,memory::avx,4>(simd_trait<double,memory::avx,4>::register_type xmm0,
+                                                                                           simd_trait<double,memory::avx,4>::register_type xmm1,
+                                                                                           simd_trait<double,memory::avx,4>::register_type xmm2){
+        return simd_trait<double,memory::avx,4>::register_type(
+                        _mm256_fnmsub_pd(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fnmsub_pd(xmm0.r1, xmm1.r1, xmm2.r1),
+                        _mm256_fnmsub_pd(xmm0.r2, xmm1.r2, xmm2.r2),
+                        _mm256_fnmsub_pd(xmm0.r3, xmm1.r3, xmm2.r3)
+                      );
     }
 #endif //end FMA
 
@@ -204,96 +610,270 @@ namespace numeric{
      \brief Broadcast a single-precision (32-bit) floating-point element from memory to all elements of dst.
      */
     template<>
-     simd_trait<float,memory::avx>::register_type _mm_load1<float,memory::avx>(simd_trait<float,memory::avx>::value_type a){
+     simd_trait<float,memory::avx,1>::register_type _mm_load1<float,memory::avx,1>(simd_trait<float,memory::avx,1>::value_type a){
         return _mm256_set1_ps(a);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_load1<float,memory::avx,2>(const simd_trait<float,memory::avx,2>::value_type a){
+        return simd_trait<float,memory::avx,2>::register_type(_mm256_set1_ps(a),_mm256_set1_ps(a));
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_load1<float,memory::avx,4>(const simd_trait<float,memory::avx,4>::value_type a){
+        return simd_trait<float,memory::avx,4>::register_type(_mm256_set1_ps(a),_mm256_set1_ps(a),_mm256_set1_ps(a),_mm256_set1_ps(a));
     }
    
     /**
      \brief Load 256-bits (composed of 8 packed single-precision (32-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
      */
     template<>
-     simd_trait<float,memory::avx>::register_type _mm_load<float,memory::avx>(simd_trait<float,memory::avx>::const_pointer a){
+     simd_trait<float,memory::avx,1>::register_type _mm_load<float,memory::avx,1>(simd_trait<float,memory::avx,1>::const_pointer a){
         return _mm256_load_ps(a);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_load<float,memory::avx,2>(const simd_trait<float,memory::avx,2>::const_pointer a){
+        return simd_trait<float,memory::avx,2>::register_type(_mm256_load_ps(a),_mm256_load_ps(a+8));
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_load<float,memory::avx,4>(const simd_trait<float,memory::avx,4>::const_pointer a){
+        return simd_trait<float,memory::avx,4>::register_type(_mm256_load_ps(a),_mm256_load_ps(a+8),_mm256_load_ps(a+16),_mm256_load_ps(a+24));
     }
 
     /**
      \brief Store 256-bits (composed of 8 packed single-precision (32-bit) floating-point elements) from a into memory. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
      */
     template<>
-    void _mm_store<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0,  simd_trait<float,memory::avx>::pointer a){
+    void _mm_store<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0,  simd_trait<float,memory::avx,1>::pointer a){
         _mm256_store_ps(a,xmm0); 
     }
 
+    template<>
+    forceinline void _mm_store<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0,  simd_trait<float,memory::avx,2>::pointer a){
+        _mm256_store_ps(a,xmm0.r0);
+        _mm256_store_ps(a+8,xmm0.r1);
+    }
+    
+    template<>
+    forceinline void _mm_store<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0,  simd_trait<float,memory::avx,4>::pointer a){
+        _mm256_store_ps(a,xmm0.r0);
+        _mm256_store_ps(a+8,xmm0.r1);
+        _mm256_store_ps(a+16,xmm0.r2);
+        _mm256_store_ps(a+24,xmm0.r3);
+    }
+
     /**
      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_mul<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0,  simd_trait<float,memory::avx>::register_type xmm1){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_mul<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0,  simd_trait<float,memory::avx,1>::register_type xmm1){
         return _mm256_mul_ps(xmm0, xmm1);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_mul<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0,  simd_trait<float,memory::avx,2>::register_type xmm1){
+        return simd_trait<float,memory::avx,2>::register_type(
+                        _mm256_mul_ps(xmm0.r0, xmm1.r0),
+                        _mm256_mul_ps(xmm0.r1, xmm1.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_mul<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0,  simd_trait<float,memory::avx,4>::register_type xmm1){
+        return simd_trait<float,memory::avx,4>::register_type(
+                        _mm256_mul_ps(xmm0.r0, xmm1.r0),
+                        _mm256_mul_ps(xmm0.r1, xmm1.r1),
+                        _mm256_mul_ps(xmm0.r2, xmm1.r2),
+                        _mm256_mul_ps(xmm0.r3, xmm1.r3)
+                      );
+    }
+
     /**
      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_div<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0,  simd_trait<float,memory::avx>::register_type xmm1){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_div<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0,  simd_trait<float,memory::avx,1>::register_type xmm1){
         return _mm256_div_ps(xmm0, xmm1);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_div<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0,  simd_trait<float,memory::avx,2>::register_type xmm1){
+        return simd_trait<float,memory::avx,2>::register_type(
+                        _mm256_div_ps(xmm0.r0, xmm1.r0),
+                        _mm256_div_ps(xmm0.r1, xmm1.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_div<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0,  simd_trait<float,memory::avx,4>::register_type xmm1){
+        return simd_trait<float,memory::avx,4>::register_type(
+                        _mm256_div_ps(xmm0.r0, xmm1.r0),
+                        _mm256_div_ps(xmm0.r1, xmm1.r1),
+                        _mm256_div_ps(xmm0.r2, xmm1.r2),
+                        _mm256_div_ps(xmm0.r3, xmm1.r3)
+                      );
+    }
     /**
      \brief Add packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_add<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0,  simd_trait<float,memory::avx>::register_type xmm1){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_add<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0,  simd_trait<float,memory::avx,1>::register_type xmm1){
         return _mm256_add_ps(xmm0, xmm1);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_add<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0,  simd_trait<float,memory::avx,2>::register_type xmm1){
+        return simd_trait<float,memory::avx,2>::register_type(
+                        _mm256_add_ps(xmm0.r0, xmm1.r0),
+                        _mm256_add_ps(xmm0.r1, xmm1.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_add<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0,  simd_trait<float,memory::avx,4>::register_type xmm1){
+        return simd_trait<float,memory::avx,4>::register_type(
+                        _mm256_add_ps(xmm0.r0, xmm1.r0),
+                        _mm256_add_ps(xmm0.r1, xmm1.r1),
+                        _mm256_add_ps(xmm0.r2, xmm1.r2),
+                        _mm256_add_ps(xmm0.r3, xmm1.r3)
+                      );
+    }
     /**
      \brief Subtract packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_sub<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0,  simd_trait<float,memory::avx>::register_type xmm1){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_sub<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0,  simd_trait<float,memory::avx,1>::register_type xmm1){
         return _mm256_sub_ps(xmm0, xmm1);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_sub<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0,  simd_trait<float,memory::avx,2>::register_type xmm1){
+        return simd_trait<float,memory::avx,2>::register_type(
+                        _mm256_sub_ps(xmm0.r0, xmm1.r0),
+                        _mm256_sub_ps(xmm0.r1, xmm1.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_sub<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0,  simd_trait<float,memory::avx,4>::register_type xmm1){
+        return simd_trait<float,memory::avx,4>::register_type(
+                        _mm256_sub_ps(xmm0.r0, xmm1.r0),
+                        _mm256_sub_ps(xmm0.r1, xmm1.r1),
+                        _mm256_sub_ps(xmm0.r2, xmm1.r2),
+                        _mm256_sub_ps(xmm0.r3, xmm1.r3)
+                      );
+    }
     /**
      \brief Compute the approximate reciprocal of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst. The maximum relative error for this approximation is less than 1.5*2^-12.
     */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_rec<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_rec<float,memory::avx,1>(simd_trait<float,memory::avx,1>::register_type xmm0){
         return _mm256_rcp_ps(xmm0);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_rec<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0){
+        return simd_trait<float,memory::avx,2>::register_type(
+            _mm256_rcp_ps(xmm0.r0),
+            _mm256_rcp_ps(xmm0.r1)
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_rec<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0){
+        return simd_trait<float,memory::avx,4>::register_type(
+            _mm256_rcp_ps(xmm0.r0),
+            _mm256_rcp_ps(xmm0.r1),
+            _mm256_rcp_ps(xmm0.r2),
+            _mm256_rcp_ps(xmm0.r3)
+        );
+    }
     /**
      \brief Negate packed single-precision (32-bit) floating-point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
      */
     template<>
-    inline  simd_trait<float,memory::avx>::register_type _mm_neg<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0){
-        simd_trait<float,memory::avx>::register_type mask =  _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
+    forceinline  simd_trait<float,memory::avx,1>::register_type _mm_neg<float,memory::avx,1>(simd_trait<float,memory::avx,1>::register_type xmm0){
+        simd_trait<float,memory::avx,1>::register_type mask =  _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
         return _mm256_xor_ps(xmm0, mask);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_neg<float,memory::avx,2>(simd_trait<float,memory::avx,2>::register_type xmm0){
+        simd_trait<float,memory::avx,1>::register_type mask =  _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
+        return simd_trait<float,memory::avx,2>::register_type(
+            _mm256_xor_ps(xmm0.r0, mask),
+            _mm256_xor_ps(xmm0.r1, mask)
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_neg<float,memory::avx,4>(simd_trait<float,memory::avx,4>::register_type xmm0){
+        simd_trait<float,memory::avx,1>::register_type mask =  _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
+        return simd_trait<float,memory::avx,4>::register_type(
+            _mm256_xor_ps(xmm0.r0, mask),
+            _mm256_xor_ps(xmm0.r1, mask),
+            _mm256_xor_ps(xmm0.r2, mask),
+            _mm256_xor_ps(xmm0.r3, mask)
+        );
+    }
     /**
      \brief Round the packed single-precision (32-bit) floating-point elements in xmm0 down to an integer value, and store the results as packed single-precision integer-point elements in dst.
      */
     template<>
-    inline  simd_trait<int,memory::avx>::register_type _mm_floor<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0){
+    forceinline  simd_trait<int,memory::avx,1>::register_type _mm_floor<float,memory::avx,1>(simd_trait<float,memory::avx,1>::register_type xmm0){
         return _mm256_cvttps_epi32(_mm256_floor_ps(xmm0));
     }
 
+    template<>
+    forceinline  simd_trait<int,memory::avx,2>::register_type _mm_floor<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0){
+        return simd_trait<int,memory::avx,2>::register_type(
+            _mm256_cvttps_epi32(_mm256_floor_ps(xmm0.r0)),
+            _mm256_cvttps_epi32(_mm256_floor_ps(xmm0.r1)) 
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<int,memory::avx,4>::register_type _mm_floor<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0){
+        return simd_trait<int,memory::avx,4>::register_type(
+            _mm256_cvttps_epi32(_mm256_floor_ps(xmm0.r0)),
+            _mm256_cvttps_epi32(_mm256_floor_ps(xmm0.r1)),
+            _mm256_cvttps_epi32(_mm256_floor_ps(xmm0.r2)),
+            _mm256_cvttps_epi32(_mm256_floor_ps(xmm0.r3)) 
+        );
+    }
     /**
      \brief Convert packed 32-bit integers in xmm0 to packed single-precision (32-bit) floating-point elements, and store the results in dst.
      */
     template<>
-    inline  simd_trait<float,memory::avx>::register_type _mm_cast<float,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
+    forceinline  simd_trait<float,memory::avx,1>::register_type _mm_cast<float,memory::avx,1>(simd_trait<int,memory::avx,1>::register_type xmm0){
         return  _mm256_cvtepi32_ps(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_cast<float,memory::avx,2>(simd_trait<int,memory::avx,2>::register_type xmm0){
+        return simd_trait<float,memory::avx,2>::register_type(
+            _mm256_cvtepi32_ps(xmm0.r0),
+            _mm256_cvtepi32_ps(xmm0.r1)
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_cast<float,memory::avx,4>(simd_trait<int,memory::avx,4>::register_type xmm0){
+        return simd_trait<float,memory::avx,4>::register_type(
+            _mm256_cvtepi32_ps(xmm0.r0),
+            _mm256_cvtepi32_ps(xmm0.r1),
+            _mm256_cvtepi32_ps(xmm0.r2),
+            _mm256_cvtepi32_ps(xmm0.r3)
+        );
     }
 
     /**
      \brief Compute 2^k packed integer (32-bit) elements in xmm0 to packed single-precision (32-bit) floating-point elements, and store the results in dst.
      */
     template<>
-    inline  simd_trait<float,memory::avx>::register_type _mm_twok<float,memory::avx>(simd_trait<int,memory::avx>::register_type xmm0){
+    forceinline  simd_trait<float,memory::avx,1>::register_type _mm_twok<float,memory::avx,1>(simd_trait<int,memory::avx,1>::register_type xmm0){
         // ((int + 127) << 23) <=> int to float 
         /* AVX2, return _mm256_castsi256_ps(_mm256_slli_epi32(_mm256_add_epi32(xmm0, _mm256_set1_epi32(127)), 23)); */
         xmm0 = _mm256_insertf128_si256(xmm0, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0,0), _mm_set1_epi32(127)), 23),0);
@@ -302,21 +882,85 @@ namespace numeric{
     }
 
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_twok<float,memory::avx,2>(simd_trait<int,memory::avx,2>::register_type xmm0){
+        xmm0.r0 = _mm256_insertf128_si256(xmm0.r0, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r0,0), _mm_set1_epi32(127)), 23),0);
+        xmm0.r1 = _mm256_insertf128_si256(xmm0.r1, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r1,0), _mm_set1_epi32(127)), 23),0);
+        xmm0.r0 = _mm256_insertf128_si256(xmm0.r0, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r0,1), _mm_set1_epi32(127)), 23),1);
+        xmm0.r1 = _mm256_insertf128_si256(xmm0.r1, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r1,1), _mm_set1_epi32(127)), 23),1);
+        return simd_trait<float,memory::avx,2>::register_type(
+            _mm256_castsi256_ps(xmm0.r0),
+            _mm256_castsi256_ps(xmm0.r1)
+        );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_twok<float,memory::avx,4>(simd_trait<int,memory::avx,4>::register_type xmm0){
+        xmm0.r0 = _mm256_insertf128_si256(xmm0.r0, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r0,0), _mm_set1_epi32(127)), 23),0);
+        xmm0.r1 = _mm256_insertf128_si256(xmm0.r1, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r1,0), _mm_set1_epi32(127)), 23),0);
+        xmm0.r2 = _mm256_insertf128_si256(xmm0.r2, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r2,0), _mm_set1_epi32(127)), 23),0);
+        xmm0.r3 = _mm256_insertf128_si256(xmm0.r3, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r3,0), _mm_set1_epi32(127)), 23),0);
+        xmm0.r0 = _mm256_insertf128_si256(xmm0.r0, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r0,1), _mm_set1_epi32(127)), 23),1);
+        xmm0.r1 = _mm256_insertf128_si256(xmm0.r1, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r1,1), _mm_set1_epi32(127)), 23),1);
+        xmm0.r2 = _mm256_insertf128_si256(xmm0.r2, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r2,1), _mm_set1_epi32(127)), 23),1);
+        xmm0.r3 = _mm256_insertf128_si256(xmm0.r3, _mm_slli_epi32(_mm_add_epi32(_mm256_extractf128_si256(xmm0.r3,1), _mm_set1_epi32(127)), 23),1);
+        return simd_trait<float,memory::avx,4>::register_type(
+            _mm256_castsi256_ps(xmm0.r0),
+            _mm256_castsi256_ps(xmm0.r1),
+            _mm256_castsi256_ps(xmm0.r2),
+            _mm256_castsi256_ps(xmm0.r3)
+        );
+    }
 #ifdef  __INTEL_COMPILER
     /**
      \brief Compute the exponential value of e raised to the power of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_exp<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0){
+    forceinline simd_trait<float,memory::avx>::register_type _mm_exp<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0){
         return _mm256_exp_ps(xmm0);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_exp<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0){
+        return simd_trait<float,memory::avx,2>::register_type(
+                         _mm256_exp_ps(xmm0.r0),
+                         _mm256_exp_ps(xmm0.r1)
+                      );
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_exp<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0){
+        return simd_trait<float,memory::avx,4>::register_type(
+                         _mm256_exp_ps(xmm0.r0),
+                         _mm256_exp_ps(xmm0.r1),
+                         _mm256_exp_ps(xmm0.r2),
+                         _mm256_exp_ps(xmm0.r3)
+                      );
+    }
     /**
       \brief Compute the natural logarithm of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_log<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0){
+    forceinline simd_trait<float,memory::avx>::register_type _mm_log<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0){
         return _mm256_log_ps(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_log<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0){
+        return simd_trait<float,memory::avx,2>::register_type(
+                         _mm256_log_ps(xmm0.r0),
+                         _mm256_log_ps(xmm0.r1)
+                      );
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_log<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0){
+        return simd_trait<float,memory::avx,4>::register_type(
+                         _mm256_log_ps(xmm0.r0),
+                         _mm256_log_ps(xmm0.r1),
+                         _mm256_log_ps(xmm0.r2),
+                         _mm256_log_ps(xmm0.r3)
+                      );
     }
 #endif
 
@@ -326,40 +970,125 @@ namespace numeric{
       \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, add the intermediate result to packed elements in xmm2, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_fma<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0,
-                                                                                   simd_trait<float,memory::avx>::register_type xmm1,
-                                                                                   simd_trait<float,memory::avx>::register_type xmm2){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_fma<float,memory::avx,1>(simd_trait<float,memory::avx,1>::register_type xmm0,
+                                                                                            simd_trait<float,memory::avx,1>::register_type xmm1,
+                                                                                            simd_trait<float,memory::avx,1>::register_type xmm2){
         return _mm256_fmadd_ps(xmm0, xmm1, xmm2);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_fma<float,memory::avx,2>(simd_trait<float,memory::avx,2>::register_type xmm0,
+                                                                                             simd_trait<float,memory::avx,2>::register_type xmm1,
+                                                                                             simd_trait<float,memory::avx,2>::register_type xmm2){
+        return simd_trait<float,memory::avx,2>::register_type(
+                        _mm256_fmadd_ps(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fmadd_ps(xmm0.r1, xmm1.r1, xmm2.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_fma<float,memory::avx,4>(simd_trait<float,memory::avx,4>::register_type xmm0,
+                                                                                             simd_trait<float,memory::avx,4>::register_type xmm1,
+                                                                                             simd_trait<float,memory::avx,4>::register_type xmm2){
+        return simd_trait<float,memory::avx,4>::register_type(
+                        _mm256_fmadd_ps(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fmadd_ps(xmm0.r1, xmm1.r1, xmm2.r1),
+                        _mm256_fmadd_ps(xmm0.r2, xmm1.r2, xmm2.r2),
+                        _mm256_fmadd_ps(xmm0.r3, xmm1.r3, xmm2.r3)
+                      );
+    }
     /**
      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, add the negated intermediate result to packed elements in xmm2, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_nfma<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0,
-                                                                                    simd_trait<float,memory::avx>::register_type xmm1,
-                                                                                    simd_trait<float,memory::avx>::register_type xmm2){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_nfma<float,memory::avx,1>(simd_trait<float,memory::avx,1>::register_type xmm0,
+                                                                                             simd_trait<float,memory::avx,1>::register_type xmm1,
+                                                                                             simd_trait<float,memory::avx,1>::register_type xmm2){
         return _mm256_fnmadd_ps(xmm0, xmm1, xmm2);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_nfma<float,memory::avx,2>(simd_trait<float,memory::avx,2>::register_type xmm0,
+                                                                                              simd_trait<float,memory::avx,2>::register_type xmm1,
+                                                                                              simd_trait<float,memory::avx,2>::register_type xmm2){
+        return simd_trait<float,memory::avx,2>::register_type(
+                        _mm256_fnmadd_ps(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fnmadd_ps(xmm0.r1, xmm1.r1, xmm2.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_nfma<float,memory::avx,4>(simd_trait<float,memory::avx,4>::register_type xmm0,
+                                                                                              simd_trait<float,memory::avx,4>::register_type xmm1,
+                                                                                              simd_trait<float,memory::avx,4>::register_type xmm2){
+        return simd_trait<float,memory::avx,4>::register_type(
+                        _mm256_fnmadd_ps(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fnmadd_ps(xmm0.r1, xmm1.r1, xmm2.r1),
+                        _mm256_fnmadd_ps(xmm0.r2, xmm1.r2, xmm2.r2),
+                        _mm256_fnmadd_ps(xmm0.r3, xmm1.r3, xmm2.r3)
+                      );
+    }
     /**
      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the intermediate result, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_fms<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0,
-                                                                                   simd_trait<float,memory::avx>::register_type xmm1,
-                                                                                   simd_trait<float,memory::avx>::register_type xmm2){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_fms<float,memory::avx,1>(simd_trait<float,memory::avx,1>::register_type xmm0,
+                                                                                            simd_trait<float,memory::avx,1>::register_type xmm1,
+                                                                                            simd_trait<float,memory::avx,1>::register_type xmm2){
         return _mm256_fmsub_ps(xmm0, xmm1, xmm2);
     }
 
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_fms<float,memory::avx,2>(simd_trait<float,memory::avx,2>::register_type xmm0,
+                                                                                             simd_trait<float,memory::avx,2>::register_type xmm1,
+                                                                                             simd_trait<float,memory::avx,2>::register_type xmm2){
+        return simd_trait<float,memory::avx,2>::register_type(
+                        _mm256_fmsub_ps(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fmsub_ps(xmm0.r1, xmm1.r1, xmm2.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_fms<float,memory::avx,4>(simd_trait<float,memory::avx,4>::register_type xmm0,
+                                                                                             simd_trait<float,memory::avx,4>::register_type xmm1,
+                                                                                             simd_trait<float,memory::avx,4>::register_type xmm2){
+        return simd_trait<float,memory::avx,4>::register_type(
+                        _mm256_fmsub_ps(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fmsub_ps(xmm0.r1, xmm1.r1, xmm2.r1),
+                        _mm256_fmsub_ps(xmm0.r2, xmm1.r2, xmm2.r2),
+                        _mm256_fmsub_ps(xmm0.r3, xmm1.r3, xmm2.r3)
+                      );
+    }
     /**
      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the negated intermediate result, and store the results in dst.
      */
     template<>
-    inline simd_trait<float,memory::avx>::register_type _mm_nfms<float,memory::avx>(simd_trait<float,memory::avx>::register_type xmm0,
-                                                                                    simd_trait<float,memory::avx>::register_type xmm1,
-                                                                                    simd_trait<float,memory::avx>::register_type xmm2){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_nfms<float,memory::avx,1>(simd_trait<float,memory::avx,1>::register_type xmm0,
+                                                                                            simd_trait<float,memory::avx,1>::register_type xmm1,
+                                                                                            simd_trait<float,memory::avx,1>::register_type xmm2){
         return _mm256_fnmsub_ps(xmm0, xmm1, xmm2);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_nfms<float,memory::avx,2>(simd_trait<float,memory::avx,2>::register_type xmm0,
+                                                                                                simd_trait<float,memory::avx,2>::register_type xmm1,
+                                                                                                simd_trait<float,memory::avx,2>::register_type xmm2){
+        return simd_trait<float,memory::avx,2>::register_type(
+                        _mm256_fnmsub_ps(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fnmsub_ps(xmm0.r1, xmm1.r1, xmm2.r1)
+                      );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_nfms<float,memory::avx,4>(simd_trait<float,memory::avx,4>::register_type xmm0,
+                                                                                           simd_trait<float,memory::avx,4>::register_type xmm1,
+                                                                                           simd_trait<float,memory::avx,4>::register_type xmm2){
+        return simd_trait<float,memory::avx,4>::register_type(
+                        _mm256_fnmsub_ps(xmm0.r0, xmm1.r0, xmm2.r0),
+                        _mm256_fnmsub_ps(xmm0.r1, xmm1.r1, xmm2.r1),
+                        _mm256_fnmsub_ps(xmm0.r2, xmm1.r2, xmm2.r2),
+                        _mm256_fnmsub_ps(xmm0.r3, xmm1.r3, xmm2.r3)
+                      );
     }
 #endif //end FMA
 } //end namespace

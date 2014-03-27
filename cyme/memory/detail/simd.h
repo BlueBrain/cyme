@@ -30,8 +30,12 @@
 #define CYME_SIMD_H
 
 namespace memory{
+    struct unroll_factor{
+        const static int N = __CYME_UNROLL_VALUE__ ;
+    };
+
     /** \cond I do not need this part in the doc*/
-    enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpx = 32, mic = 64}; //sizeof(void*) = 8 on 64 bits machine
+    enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpx = 32, chimera = 40, mic = 64}; //sizeof(void*) = 8 on 64 bits machine
 
     #define __GETSIMD__() __CYME_SIMD_VALUE__
 
@@ -48,7 +52,7 @@ namespace memory{
 
     template<class T>
     struct stride<T,AoSoA>{
-        static inline std::size_t helper_stride(){return __GETSIMD__()/sizeof(T);}
+        static inline std::size_t helper_stride(){return  unroll_factor::N*__GETSIMD__()/sizeof(T);}
     };
     /** \endcond I do not need this part in the doc*/
 

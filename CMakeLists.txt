@@ -36,8 +36,15 @@ endif(NOT MACHINE_CONFIG)
 #
 ########################################################################
 
+########################################################################
+#
+# Project and version information
+#
+########################################################################
+
 project (cyme)
 
+option(CYME_BUILDYARD "Build with Buildyard"  OFF)
 set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OS X" FORCE) #overwrite Builyard setting 32 bit is outdate
 
 set(RELEASE_VERSION OFF) # OFF or ABI version
@@ -51,19 +58,29 @@ set(VERSION_PATCH "0")
 # CMake Modules Buildyard and description
 #
 ######################################################################
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake
-  ${CMAKE_SOURCE_DIR}/CMake/common)
-include(GitExternal)
-
 set(CYME_DESCRIPTION "SIMD computation over user cyme container")
-set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
-#Boost selection
-set(BOOST_MIN_VERSION "1.49.0") #old is bad
-#set(Boost_NO_SYSTEM_PATHS TRUE) # useless on x86 maybe need it on BG/Q
-set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
-include(Common)
-include(FindPackages)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake ${CMAKE_SOURCE_DIR}/CMake/common)
+
+if(CYME_BUILDYARD)
+    include(GitExternal)
+    set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
+    set(BOOST_MIN_VERSION "1.49.0") #old is bad
+    include(Common)
+    set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
+    include(FindPackages)
+else(CYME_BUILDYARD)
+    set(Boost_NO_SYSTEM_PATHS TRUE)
+    set(BOOST_MIN_VERSION "1.49.0") #old is bad
+    set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
+    find_package (Boost 1.54 COMPONENTS unit_test_framework chrono system)
+    if(Boost_FOUND)
+       include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+    else()
+        message(FATAL_ERROR "Boost libraries not found. Please specify location using the BOOST_DIR variable")
+    endif()
+endif(CYME_BUILDYARD)
+
 
 ########################################################################
 #
@@ -225,5 +242,7 @@ endif(CYME_TESTS)
 
 install(DIRECTORY cyme DESTINATION include FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.ipp")
 
+if(CYME_BUILDYARD)
 include(CPackConfig)
 include(DoxygenRule)
+endif(CYME_BUILDYARD)

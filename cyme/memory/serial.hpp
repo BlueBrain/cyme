@@ -36,15 +36,15 @@ namespace cyme{
        a SIMD vector. Note for AoSoA version: is serial = ... , it will generates the
        the tree but it will not save the data into memory.
     */
-    template<class T, memory::order O>
+    template<class T, memory::order O, int N = memory::unroll_factor::N>
     class serial{
     };
 
     /**
      \brief The serial class for AoS layout
     */
-    template<class T>
-    struct serial<T,memory::AoS>{
+    template<class T, int N>
+    struct serial<T,memory::AoS,N>{
         typedef T value_type;
 
         /**
@@ -80,10 +80,10 @@ namespace cyme{
     /**
      \brief The serial class for AoSoA layout
      */
-    template<class T>
-    struct serial<T,memory::AoSoA>{
+    template<class T, int N>
+    struct serial<T,memory::AoSoA,N>{
         typedef T value_type;
-        typedef numeric::vec<value_type,memory::__GETSIMD__()> base_type;
+        typedef numeric::vec<value_type,memory::__GETSIMD__(),N> base_type;
 
         /**
          \brief constructor
@@ -91,11 +91,17 @@ namespace cyme{
         serial(base_type m = base_type()):a(m){}
 
         /**
+         \brief constructor constant
+         */
+        explicit serial(typename base_type::value_type m):a(m){}
+
+
+        /**
          \brief copy constructor create the tree with bracket operator call 
                  not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
          */
         template<class T2, memory::simd O, class Rep>
-        serial(numeric::vec<T2,O,Rep > const& rhs){
+        serial(numeric::vec<T2,O,N,Rep > const& rhs){
             a.rep()() = rhs.rep()();
         }
 

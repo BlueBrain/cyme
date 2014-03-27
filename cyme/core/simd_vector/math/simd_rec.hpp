@@ -33,10 +33,10 @@ namespace numeric{
     /**
     \brief free function for call the reciprocal for the Newton-Raphson division (initialization only), this function uses the return value optimization
     */
-    template<class T,memory::simd O>
-    inline vec_simd<T,O> rec(vec_simd<T,O> const& rhs){
-        vec_simd<T,O> nrv;
-        nrv.xmm = _mm_rec<T,O>(rhs.xmm);
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> rec(vec_simd<T,O,N> const& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_rec<T,O,N>(rhs.xmm);
         return nrv;
     }
 } //end namespace

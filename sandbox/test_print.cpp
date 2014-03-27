@@ -55,7 +55,7 @@
  void init(Ba& block_a){
      for(int i=0; i<block_a.size(); ++i)
          for(int j=0; j<block_a.size_block(); ++j){
-             typename Ba::value_type random = 100*drand48();
+             typename Ba::value_type random = 10*drand48();
              block_a(i,j) = random;
          }
  }
@@ -64,7 +64,8 @@
  void init(Ba& block_a, Bb& block_b){
      for(size_t i=0; i<block_a.size(); ++i)
          for(size_t j=0; j<block_a.size_block(); ++j){
-             typename Ba::value_type random = -100*std::pow(-1,rand())*drand48();
+       //    typename Ba::value_type random = 10*std::pow(-1,rand())*drand48();
+             typename Ba::value_type random = 10*drand48();
              block_a(i,j) = random;
              block_b(i,j) = random;
          }
@@ -118,11 +119,11 @@ R*/
 
      template<class iterator>
      static inline void cnrn_states(iterator it){
-//     cnrn_rates(it);
+     cnrn_rates(it);
      (*it)[3] += (1.-exp(dt*(-1.0/(*it)[7] )))*(-((*it)[6] /(*it)[7]) /(-1.0/(*it)[7]) -(*it)[3]);
      (*it)[4] += (1.-exp(dt*(-1.0/(*it)[11])))*(-((*it)[10]/(*it)[11])/(-1.0/(*it)[11])-(*it)[4]);
      }
-
+/*
      template<class iterator, memory::order O>
      static inline  cyme::serial<value_type,O> cnrn_current(iterator it, value_type t = value_type()){
          (*it)[16] = t;
@@ -150,11 +151,11 @@ R*/
          (*it)[17] = (*it)[17]/0.001;
      }
 
+*/
      template<class iterator>
      static inline void cnrn_state(iterator it){
          cnrn_states(it);
      }
-
      const static int value_size = 18;
  };
 

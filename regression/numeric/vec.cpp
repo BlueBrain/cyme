@@ -4,13 +4,12 @@ using namespace cyme::test;
 
 #define TYPE typename T::value_type
 #define SIZE T::size
-#define N T::n
 #define MAX 1000 
 //MAKE SIMD test is not easy do I do : memory -> simd register (perform something) -> memory where I finally test
 //not the SIMD type is presently given bu the __GETSIMD__() function hardcoded into /memory/detail/simd.h
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_default_constructor, T, floating_point_test_types) {
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(0.0);
+    int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> a(0.0);
     TYPE test[n]; 
     TYPE res[n] __attribute__((aligned(64)));
     memset((void*)test,0,n*sizeof(TYPE)); 
@@ -20,9 +19,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_default_constructor, T, floating_poi
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, floating_point_test_types) {
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE Random = GetRandom<TYPE>();
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(Random);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> a(Random);
     TYPE test[n]; 
     TYPE res[n] __attribute__((aligned(64)));
    for(int i=0; i<n; ++i)
@@ -34,9 +33,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, floating_po
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_negate, T, floating_point_test_types) {
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE Random = GetRandom<TYPE>();
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(Random);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> a(Random);
     TYPE test[n];
     TYPE res[n] __attribute__((aligned(64)));
     for(int i=0; i<n; ++i)
@@ -52,9 +51,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_negate, T, floating_point_test_types) {
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_double_negate, T, floating_point_test_types) {
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE Random = GetRandom<TYPE>();
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(Random);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> a(Random);
     TYPE test[n];
     TYPE res[n] __attribute__((aligned(64)));
     for(int i=0; i<n; ++i)
@@ -70,13 +69,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_double_negate, T, floating_point_test_typ
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_pointer_constructor, T, floating_point_test_types) {
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE test[n]  __attribute__((aligned(64)))  ; 
     TYPE res[n] __attribute__((aligned(64)));
     for(int i=0; i<n; ++i){
        test[i] = GetRandom<TYPE>();
     }
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> a(test);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> a(test);
     a.store(res);
 
     int b = memcmp((void*)test,(void*)res,n*sizeof(TYPE)); 
@@ -84,8 +83,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_pointer_constructor, T, floating_poi
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_add_operations, T, floating_point_test_types) {
-
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE a[n] __attribute__((aligned(64)));
     TYPE b[n] __attribute__((aligned(64)));
     TYPE res[n] __attribute__((aligned(64)));
@@ -95,8 +93,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_add_operations, T, floating_point_test_ty
        b[i] = GetRandom<TYPE>();
     }
 
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> va(a);
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> vb(b);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
 
     for(int i=0; i<n; ++i)
         a[i] += b[i];
@@ -109,8 +107,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_add_operations, T, floating_point_test_ty
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_sub_operations, T, floating_point_test_types) {
-
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE a[n] __attribute__((aligned(64)));
     TYPE b[n] __attribute__((aligned(64)));
     TYPE res[n] __attribute__((aligned(64)));
@@ -120,8 +117,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_sub_operations, T, floating_point_test_ty
        b[i] = GetRandom<TYPE>();
     }
 
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> va(a);
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> vb(b);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
 
     for(int i=0; i<n; ++i)
         a[i] -= b[i];
@@ -134,8 +131,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_sub_operations, T, floating_point_test_ty
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_mul_operations, T, floating_point_test_types) {
-
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE a[n] __attribute__((aligned(64)));
     TYPE b[n] __attribute__((aligned(64)));
     TYPE res[n] __attribute__((aligned(64)));
@@ -145,8 +141,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_mul_operations, T, floating_point_test_ty
        b[i] = GetRandom<TYPE>();
     }
 
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> va(a);
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> vb(b);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
 
     for(int i=0; i<n; ++i)
         a[i] *= b[i];
@@ -159,8 +155,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_mul_operations, T, floating_point_test_ty
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_div_operations, T, floating_point_test_types) {
-
-    int n = memory::__GETSIMD__()/sizeof(TYPE);
+    int n = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE);
     TYPE a[n] __attribute__((aligned(64)));
     TYPE b[n] __attribute__((aligned(64)));
     TYPE res[n] __attribute__((aligned(64)));
@@ -170,8 +165,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_div_operations, T, floating_point_test_ty
        b[i] = GetRandom<TYPE>();
     }
 
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> va(a);
-    numeric::vec_simd<TYPE,memory::__GETSIMD__()> vb(b);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
+    numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
 
     for(int i=0; i<n; ++i)
         a[i] /= b[i];
@@ -185,5 +180,5 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_div_operations, T, floating_point_test_ty
 
 #undef SIZE
 #undef TYPE
-#undef N
+
 #undef MAX

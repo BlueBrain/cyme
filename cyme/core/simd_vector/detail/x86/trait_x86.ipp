@@ -32,32 +32,102 @@
 #ifdef __AVX__
 #include <immintrin.h> //type SIMD, memory::memory::avx
 #else
-#include <smmintrin.h> //type SIMD, memory::sse4.11
+#include <smmintrin.h> //type SIMD, memory::sse4.1
 #endif
 
 namespace numeric{
 
-    /** \cond I do not need this part in the doc
-        \brief Specialization trait for float with SSE SIMD 
-    */
-    template <>
-    struct simd_trait<float, memory::sse> : trait<float>{
-        typedef __m128 register_type;
+    template<class T, memory::simd O>
+    struct register_trait;
+
+    template<>
+    struct register_trait<int, memory::sse>{
+        typedef __m128i trait_register_type;
     };
 
+    template<>
+    struct register_trait<float, memory::sse>{
+        typedef __m128 trait_register_type;
+    };
+
+    template<>
+    struct register_trait<double, memory::sse>{
+        typedef __m128d trait_register_type;
+    };
+
+#ifdef __AVX__
+    template<>
+    struct register_trait<int, memory::avx>{
+        typedef __m256i trait_register_type;
+    };
+
+    template<>
+    struct register_trait<float, memory::avx>{
+        typedef __m256 trait_register_type;
+    };
+
+    template<>
+    struct register_trait<double, memory::avx>{
+        typedef __m256d trait_register_type;
+    };
+    
+    template<>
+    struct register_trait<double, memory::chimera>{
+        typedef __m256d trait_register_type;
+    };
+#endif
+
     /**
-        \brief Specialization trait for double with SSE SIMD
+        \brief definition of the type for the trait class, with unroll 4,2 and 1 for double/sse
     */
     template <>
-    struct simd_trait<double, memory::sse> : trait<double>{
+    struct simd_trait<double, memory::sse, 4> : trait<double>{
+        typedef simd_unroll<double, memory::sse, 4> register_type;
+    };
+
+    template <>
+    struct simd_trait<double, memory::sse, 2> : trait<double>{
+        typedef simd_unroll<double,  memory::sse, 2> register_type;
+    };
+
+    template <>
+    struct simd_trait<double, memory::sse, 1> : trait<double>{
         typedef __m128d register_type;
     };
 
     /**
-     \brief Specialization trait for int with SSE SIMD, use by the exp
-     */
+        \brief definition of the type for the trait class, with unroll 4,2 and 1 for float/sse
+    */
     template <>
-    struct simd_trait<int, memory::sse> : trait<int>{
+    struct simd_trait<float, memory::sse, 4> : trait<float>{
+        typedef simd_unroll<float, memory::sse, 4> register_type;
+    };
+
+    template <>
+    struct simd_trait<float, memory::sse, 2> : trait<float>{
+        typedef simd_unroll<float,  memory::sse, 2> register_type;
+    };
+
+    template <>
+    struct simd_trait<float, memory::sse, 1> : trait<float>{
+        typedef __m128 register_type;
+    };
+
+    /**
+    \brief definition of the type for the trait class, with unroll 4,2 and 1 for int/sse
+    */
+    template <>
+    struct simd_trait<int, memory::sse, 4> : trait<int>{
+        typedef simd_unroll<int, memory::sse, 4> register_type;
+    };
+
+    template <>
+    struct simd_trait<int, memory::sse, 2> : trait<int>{
+        typedef simd_unroll<int,  memory::sse, 2> register_type;
+    };
+
+    template <>
+    struct simd_trait<int, memory::sse, 1> : trait<int>{
         typedef __m128i register_type;
     };
 
@@ -87,27 +157,58 @@ namespace numeric{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
 #ifdef __AVX__
-    /** 
-        \brief Specialization trait for float with AVX SIMD 
+    /**
+        \brief definition of the type for the trait class, with unroll 4,2 and 1 for double/sse
     */
     template <>
-    struct simd_trait<float,memory::avx> : trait<float>{
-        typedef __m256 register_type;
+    struct simd_trait<double, memory::avx, 4> : trait<double>{
+        typedef simd_unroll<double, memory::avx, 4> register_type;
     };
 
-    /**
-        \brief Specialization trait for double with AVX SIMD
-    */
     template <>
-    struct simd_trait<double,memory::avx> : trait<double>{
+    struct simd_trait<double, memory::avx, 2> : trait<double>{
+        typedef simd_unroll<double,  memory::avx, 2> register_type;
+    };
+
+    template <>
+    struct simd_trait<double, memory::avx, 1> : trait<double>{
         typedef __m256d register_type;
     };
 
     /**
-     \brief Specialization trait for int with SSE SIMD, use by the exp
-     */
+        \brief definition of the type for the trait class, with unroll 4,2 and 1 for float/avx
+    */
     template <>
-    struct simd_trait<int, memory::avx> : trait<int>{
+    struct simd_trait<float, memory::avx, 4> : trait<float>{
+        typedef simd_unroll<float, memory::avx, 4> register_type;
+    };
+
+    template <>
+    struct simd_trait<float, memory::avx, 2> : trait<float>{
+        typedef simd_unroll<float,  memory::avx, 2> register_type;
+    };
+
+    template <>
+    struct simd_trait<float, memory::avx, 1> : trait<float>{
+        typedef __m256 register_type;
+    };
+
+    /**
+        \brief definition of the type for the trait class, with unroll 4,2 and 1 for int/avx
+    */
+
+    template <>
+    struct simd_trait<int, memory::avx, 4> : trait<int>{
+        typedef simd_unroll<int, memory::avx, 4> register_type;
+    };
+
+    template <>
+    struct simd_trait<int, memory::avx, 2> : trait<int>{
+        typedef simd_unroll<int,  memory::avx, 2> register_type;
+    };
+
+    template <>
+    struct simd_trait<int, memory::avx, 1> : trait<int>{
         typedef __m256i register_type;
     };
 #endif
