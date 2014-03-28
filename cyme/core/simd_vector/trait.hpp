@@ -66,7 +66,7 @@ namespace numeric{
     template<class T, memory::simd O>
     struct simd_unroll<T,O,4>{
          typedef typename register_trait<T,O>::trait_register_type register_simd;
-         simd_unroll(){r0 = register_simd();r1 = register_simd();r2 = register_simd();r3 = register_simd();};
+         simd_unroll(){}; //else compiler unhappy
          simd_unroll(register_simd _r0, register_simd _r1, register_simd _r2, register_simd _r3):r0(_r0),r1(_r1),r2(_r2),r3(_r3){}
          register_simd r0;register_simd r1; register_simd r2; register_simd r3;
     };
@@ -74,7 +74,7 @@ namespace numeric{
     template<class T,memory::simd O>
     struct simd_unroll<T,O,2>{
          typedef typename register_trait<T,O>::trait_register_type register_simd;
-         simd_unroll(){r0 = register_simd();r1 = register_simd();};
+         simd_unroll(){}; //else compiler unhappy
          simd_unroll(register_simd _r0, register_simd _r1):r0(_r0),r1(_r1){}
          register_simd r0;register_simd r1;
     };
@@ -89,7 +89,7 @@ namespace numeric{
     struct simd_chimera<T,O,1>{
         typedef T value_type;
         typedef typename register_trait<value_type,O>::trait_register_type register_simd;
-        simd_chimera(){r0 = register_simd();r1 = value_type();};
+        simd_chimera(){};
         simd_chimera(register_simd _r0, value_type _r1):r0(_r0),r1(_r1){}
         register_simd r0;value_type r1;
     };

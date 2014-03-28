@@ -916,7 +916,7 @@ namespace numeric{
      \brief Compute the exponential value of e raised to the power of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
      */
     template<>
-    forceinline simd_trait<float,memory::avx>::register_type _mm_exp<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_exp<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0){
         return _mm256_exp_ps(xmm0);
     }
 
@@ -941,7 +941,7 @@ namespace numeric{
       \brief Compute the natural logarithm of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
      */
     template<>
-    forceinline simd_trait<float,memory::avx>::register_type _mm_log<float,memory::avx>( simd_trait<float,memory::avx>::register_type xmm0){
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_log<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0){
         return _mm256_log_ps(xmm0);
     }
 
