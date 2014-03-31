@@ -483,15 +483,15 @@ namespace numeric{
      */
    template<>
     forceinline  simd_trait<double,memory::avx,1>::register_type _mm_fma<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0,
-                                                                                      simd_trait<double,memory::avx,1>::register_type xmm1,
-                                                                                      simd_trait<double,memory::avx,1>::register_type xmm2){
+                                                                                               simd_trait<double,memory::avx,1>::register_type xmm1,
+                                                                                               simd_trait<double,memory::avx,1>::register_type xmm2){
         return _mm256_fmadd_pd(xmm0, xmm1, xmm2);
     }
 
     template<>
     forceinline  simd_trait<double,memory::avx,2>::register_type _mm_fma<double,memory::avx,2>(simd_trait<double,memory::avx,2>::register_type xmm0,
-                                                                                          simd_trait<double,memory::avx,2>::register_type xmm1,
-                                                                                          simd_trait<double,memory::avx,2>::register_type xmm2){
+                                                                                               simd_trait<double,memory::avx,2>::register_type xmm1,
+                                                                                               simd_trait<double,memory::avx,2>::register_type xmm2){
         return simd_trait<double,memory::avx,2>::register_type(
                         _mm256_fmadd_pd(xmm0.r0, xmm1.r0, xmm2.r0),
                         _mm256_fmadd_pd(xmm0.r1, xmm1.r1, xmm2.r1)
@@ -628,7 +628,7 @@ namespace numeric{
      \brief Load 256-bits (composed of 8 packed single-precision (32-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
      */
     template<>
-     simd_trait<float,memory::avx,1>::register_type _mm_load<float,memory::avx,1>(simd_trait<float,memory::avx,1>::const_pointer a){
+    simd_trait<float,memory::avx,1>::register_type _mm_load<float,memory::avx,1>(simd_trait<float,memory::avx,1>::const_pointer a){
         return _mm256_load_ps(a);
     }
 

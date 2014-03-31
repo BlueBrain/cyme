@@ -66,7 +66,7 @@ namespace numeric{
     template<class T, memory::simd O>
     struct simd_unroll<T,O,4>{
          typedef typename register_trait<T,O>::trait_register_type register_simd;
-         simd_unroll(){}; //else compiler unhappy
+         simd_unroll(){}; //default constructor doing nothing I do not want pollute with useless instruction
          simd_unroll(register_simd _r0, register_simd _r1, register_simd _r2, register_simd _r3):r0(_r0),r1(_r1),r2(_r2),r3(_r3){}
          register_simd r0;register_simd r1; register_simd r2; register_simd r3;
     };

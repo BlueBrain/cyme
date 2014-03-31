@@ -54,9 +54,9 @@ namespace memory{
             void* ptr = NULL;
             int rc(0);
             if(O == memory::chimera)
-                  ptr = malloc(size);
+                ptr = malloc(size);
             else
-                rc = posix_memalign(&ptr, 32, size);
+                rc = posix_memalign(&ptr, static_cast<int>(memory::__GETSIMD__()), size);
 
             if (rc != 0)
                 return NULL;
