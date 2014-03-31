@@ -66,7 +66,7 @@ typedef  cyme::array<synapse<double>, 128,memory::AoSoA> Ar_d_AoSoA;
 
 typedef boost::mpl::vector< Vec_f_AoS, Vec_f_AoSoA, Vec_d_AoS, Vec_d_AoSoA > vector_list;
 //typedef boost::mpl::vector< Ar_f_AoS, Ar_f_AoSoA, Ar_d_AoS, Ar_d_AoSoA > vector_list;
-//typedef boost::mpl::vector<Vec_d_AoSoA > vector_list;
+//typedef boost::mpl::vector<Vec_f_AoSoA > vector_list;
 
 #ifdef _OPENMP
 // OpenMP implementation of std::for_each

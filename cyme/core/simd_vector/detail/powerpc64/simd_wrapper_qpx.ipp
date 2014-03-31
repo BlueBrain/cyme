@@ -83,12 +83,12 @@ namespace numeric{
 
     template<>
     forceinline simd_trait<float,memory::qpx,2>::register_type _mm_load<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::const_pointer a){
-        return simd_trait<float,memory::qpx,2>::register_type(vec_lda(0L,a),vec_lda(4L,a));
+        return simd_trait<float,memory::qpx,2>::register_type(vec_lda(0L,a),vec_lda(16L,a));
     }
 
     template<>
     forceinline simd_trait<float,memory::qpx,4>::register_type _mm_load<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::const_pointer a){
-        return simd_trait<float,memory::qpx,4>::register_type(vec_lda(0L,a),vec_lda(4L,a),vec_lda(8L,a),vec_lda(12L,a));
+        return simd_trait<float,memory::qpx,4>::register_type(vec_lda(0L,a),vec_lda(16L,a),vec_lda(32L,a),vec_lda(48L,a));
     }
 
     /**
@@ -103,15 +103,15 @@ namespace numeric{
     template<>
     forceinline void _mm_store<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0, simd_trait<float,memory::qpx,2>::pointer a){
         vec_sta(xmm0.r0,0L,a);
-        vec_sta(xmm0.r1,4L,a);
+        vec_sta(xmm0.r1,16L,a);
     }
 
     template<>
     forceinline void _mm_store<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0, simd_trait<float,memory::qpx,4>::pointer a){
         vec_sta(xmm0.r0,0L,a);
-        vec_sta(xmm0.r1,4L,a);
-        vec_sta(xmm0.r2,8L,a);
-        vec_sta(xmm0.r3,12L,a);
+        vec_sta(xmm0.r1,16L,a);
+        vec_sta(xmm0.r2,32L,a);
+        vec_sta(xmm0.r3,48L,a);
     }
 
     /**
