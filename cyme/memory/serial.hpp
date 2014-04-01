@@ -97,7 +97,7 @@ namespace cyme{
 
 
         /**
-         \brief copy constructor create the tree with bracket operator call 
+         \brief copy constructor create the tree with bracket operator call
                  not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
          */
         template<class T2, memory::simd O, class Rep>
@@ -114,7 +114,7 @@ namespace cyme{
         }
 
         /**
-         \brief implicit conversion operator 
+         \brief implicit conversion operator
          */
         inline operator base_type (){
             return a;
