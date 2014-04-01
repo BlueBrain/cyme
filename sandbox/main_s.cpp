@@ -73,7 +73,7 @@ typedef  cyme::vector<ProbAMPANMDA_EMS::synapse<float>, memory::AoSoA> Vec_f_AoS
 typedef  cyme::vector<ProbAMPANMDA_EMS::synapse<double>, memory::AoS> Vec_d_AoS_ProbAMPANMDA_EMS;
 typedef  cyme::vector<ProbAMPANMDA_EMS::synapse<double>, memory::AoSoA> Vec_d_AoSoA_ProbAMPANMDA_EMS;
 
-typedef boost::mpl::vector<Vec_d_AoS_ProbAMPANMDA_EMS> vector_list;
+typedef boost::mpl::vector<Vec_f_AoS_ProbAMPANMDA_EMS, Vec_f_AoSoA_ProbAMPANMDA_EMS,Vec_d_AoS_ProbAMPANMDA_EMS, Vec_d_AoSoA_ProbAMPANMDA_EMS> vector_list;
 
 template<class T>
 struct f_init{
@@ -170,6 +170,6 @@ struct test_case_2{
 int main(){
      std::cout << " cnrn_state " << std::endl;
      boost::mpl::for_each<vector_list>(test_case_1());
-//     std::cout << " cnrn_current " << std::endl;
-//     boost::mpl::for_each<vector_list>(test_case_2());
+     std::cout << " cnrn_current " << std::endl;
+     boost::mpl::for_each<vector_list>(test_case_2());
 }

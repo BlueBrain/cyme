@@ -55,7 +55,7 @@ typedef  cyme::vector<Na::channel<float>, memory::AoSoA> Vec_f_AoSoA_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoS> Vec_d_AoS_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoSoA> Vec_d_AoSoA_Na;
 
-typedef boost::mpl::vector<Vec_d_AoS_Na> vector_list;
+typedef boost::mpl::vector<Vec_f_AoS_Na,Vec_f_AoSoA_Na,Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
 
 template<class T>
 struct f_init{
@@ -93,7 +93,7 @@ struct test_case{
     void operator()(T const&){
         int limit = 10;
         typedef typename T::storage_type storage_type;
-        const std::size_t N(0xffffff);
+        const std::size_t N(0xfffff);
         T v(N,0);
 
 #ifdef _OPENMP
