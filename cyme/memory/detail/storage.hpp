@@ -78,6 +78,11 @@ namespace memory{
          */
          inline const_reference operator[](size_type i) const;
 
+         /**
+         \brief return memory layout of the container
+         */
+         static const memory::order MemoryOrder = AoS;
+
          private:
          /**
          \brief a basic array is the container
@@ -121,6 +126,10 @@ namespace memory{
          inline numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i);
 
          inline const numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
+         /**
+         \brief return memory layout of the container
+         */
+         static const memory::order MemoryOrder = AoSoA;
 
          private:
          value_type data[Size]; // need for std algo
