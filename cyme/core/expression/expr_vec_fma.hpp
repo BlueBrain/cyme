@@ -31,11 +31,25 @@
 
 namespace numeric{
 /** \cond I do not need this part in the doc */
-   //mul add a*b + c
+    //mul add a*b + c
     template<class T, memory::simd O, int N, class R1, class R2, class R3>
     vec<T,O,N, vec_muladd<T,O,N,R1,R2,R3> >
     forceinline operator +(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, vec<T,O,N,R3> const& b){
         return  vec<T,O,N,vec_muladd<T,O,N,R1,R2,R3> >(vec_muladd<T,O,N,R1,R2,R3>(a.rep(),b.rep()));
+    }
+
+    //mul add a*b + c where c (double or float)
+    template<class T, memory::simd O, int N, class R1, class R2>
+    vec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator +(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, double const& b){
+        return  vec<T,O,N,vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(b)));
+    }
+
+    //mul add a*b + c where c (int)
+    template<class T, memory::simd O, int N, class R1, class R2>
+    vec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator +(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, int const& b){
+        return  vec<T,O,N,vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(b))));
     }
 
     //mul add a + b*c
@@ -43,6 +57,20 @@ namespace numeric{
     vec<T,O,N, vec_muladd<T,O,N,R1,R2,R3> >
     forceinline operator +(vec<T,O,N,R3> const& b, vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
         return operator+(a,b); //take previous one ^_^, as the addition is commutative 
+    }
+
+    //mul add c+ a*b  where c (double or float)
+    template<class T, memory::simd O, int N, class R1, class R2>
+    vec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator +(double const& b, vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
+        return operator+(a,b);
+    }
+
+    //mul add c + a*b  where c (int)
+    template<class T, memory::simd O, int N, class R1, class R2>
+    vec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator +(int const& b, vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
+        return operator+(a,b);
     }
 
     //mul add a*b + c*d, I introduce this new case, because the compiler can't distinguish a*b + c*d (ambiguous fma(a,b,c*d) or fma(c,d,a*b)), with the two previous wrappers
@@ -59,11 +87,39 @@ namespace numeric{
         return  vec<T,O,N, vec_mulsub<T,O,N,R1,R2,R3> >(vec_mulsub<T,O,N,R1,R2,R3>(a.rep(),b.rep()));
     }
 
+    //mul add a*b - c where c (double or float)
+    template<class T, memory::simd O, int N, class R1, class R2>
+    vec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator -(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, double const& b){
+        return  vec<T,O,N,vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(b)));
+    }
+
+    //mul add a*b - c where c (int)
+    template<class T, memory::simd O, int N, class R1, class R2>
+    vec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator -(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, int const& b){
+        return  vec<T,O,N,vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(b))));
+    }
+
     //mul sub a - b*c
     template<class T, memory::simd O, int N, class R1, class R2, class R3>
     vec<T,O,N, vec_negate_muladd<T,O,N,R1,R2,R3> >
     forceinline operator -(vec<T,O,N,R3> const& a, vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
         return  vec<T,O,N, vec_negate_muladd<T,O,N,R1,R2,R3> >(vec_negate_muladd<T,O,N,R1,R2,R3>(b.rep(),a.rep()));
+    }
+
+    //mul add c - a*b  where c (double or float)
+    template<class T, memory::simd O, int N, class R1, class R2>
+    vec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator -(double const& a,vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
+        return  vec<T,O,N,vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(a)));
+    }
+
+    //mul add a*b - c where c (int)
+    template<class T, memory::simd O, int N, class R1, class R2>
+    vec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator -(int const& a,vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
+        return  vec<T,O,N,vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(static_cast<T>(a))));
     }
 
     //mul add a*b - c*d, I introduce this new case, because the compiler can't distinguish a*b - c*d (ambiguous fms(a,b,c*d) or fms(c,d,a*b)), with the two previous wrappers
