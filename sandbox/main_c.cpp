@@ -58,6 +58,15 @@ typedef  cyme::vector<Na::channel<double>, memory::AoSoA> Vec_d_AoSoA_Na;
 typedef boost::mpl::vector<Vec_f_AoS_Na,Vec_f_AoSoA_Na,Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
 
 template<class T>
+const std::string name();
+
+template<>
+const std::string name<float>(){return "float";}
+
+template<>
+const std::string name<double>(){return "double";}
+
+template<class T>
 struct f_init{
     void operator()(typename T::storage_type& S ){
         for(std::size_t i=0;i <T::size_block(); ++i)
@@ -79,12 +88,12 @@ omp_for_each(Iterator first, Iterator last, Functor f) {
 #endif
 
 template<class T>
-void average(std::vector<T> &v_time){
-        T sum = std::accumulate(v_time.begin(), v_time.end(), 0.0);
-        T mean = sum / v_time.size();
-        T sq_sum = std::inner_product(v_time.begin(), v_time.end(), v_time.begin(), 0.0);
-        T stdev = std::sqrt(sq_sum / v_time.size() - mean * mean);
-        std::cout << "float: " << sizeof(T) << "[Byte], "  << " mean " << mean << " [s], stdev " << stdev << std::endl;
+void average(std::vector<double> &v_time){
+        double sum = std::accumulate(v_time.begin(), v_time.end(), 0.0);
+        double mean = sum / v_time.size();
+        double sq_sum = std::inner_product(v_time.begin(), v_time.end(), v_time.begin(), 0.0);
+        double stdev = std::sqrt(sq_sum / v_time.size() - mean * mean);
+        std::cout << name<T>()  << " mean " << mean << " [s], stdev " << stdev << std::endl;
 }
 
 struct test_case{
@@ -93,6 +102,7 @@ struct test_case{
     void operator()(T const&){
         int limit = 10;
         typedef typename T::storage_type storage_type;
+        typedef typename storage_type::value_type value_type;
         const std::size_t N(0xfffff);
         T v(N,0);
 
@@ -114,7 +124,7 @@ struct test_case{
             boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
             v_time[i] = sec.count();
         }
-        average<double>(v_time);
+        average<value_type>(v_time);
     }
 };
 
