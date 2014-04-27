@@ -54,9 +54,11 @@ typedef  cyme::vector<Na::channel<float>, memory::AoS> Vec_f_AoS_Na;
 typedef  cyme::vector<Na::channel<float>, memory::AoSoA> Vec_f_AoSoA_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoS> Vec_d_AoS_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoSoA> Vec_d_AoSoA_Na;
+typedef  test::vector<Na::channel<double>, memory::AoSoA> test_d_AoSoA_Na;
 
-typedef boost::mpl::vector<Vec_f_AoS_Na,Vec_f_AoSoA_Na,Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
-
+//typedef boost::mpl::vector<Vec_f_AoS_Na,Vec_f_AoSoA_Na,Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
+typedef boost::mpl::vector<test_d_AoSoA_Na,Vec_d_AoSoA_Na,test_d_AoSoA_Na,Vec_d_AoSoA_Na> test_list;
+//2567
 template<class T>
 const std::string name();
 
@@ -68,13 +70,13 @@ const std::string name<double>(){return "double";}
 
 template<class T>
 struct f_init{
-    void operator()(typename T::storage_type& S ){
-        for(std::size_t i=0;i <T::size_block(); ++i)
-            S[i] = drand48();
+    void operator()(typename T::storage_type& S){
+      for(std::size_t i=0;i <T::size_block(); ++i)
+          S[i] = drand48();
     }
 };
 
-#ifdef _OPENMP
+//#ifdef _OPENMP
 template<typename Iterator, typename Functor>
 Functor
 omp_for_each(Iterator first, Iterator last, Functor f) {
@@ -83,9 +85,9 @@ omp_for_each(Iterator first, Iterator last, Functor f) {
         f(*it);
     }
 
-    return f;
+    return std::move(f);
 }
-#endif
+//#endif
 
 template<class T>
 void average(std::vector<double> &v_time){
@@ -103,7 +105,7 @@ struct test_case{
         int limit = 10;
         typedef typename T::storage_type storage_type;
         typedef typename storage_type::value_type value_type;
-        const std::size_t N(0xfffff);
+        const std::size_t N(0xffffff);
         T v(N,0);
 
 #ifdef _OPENMP
@@ -129,5 +131,6 @@ struct test_case{
 };
 
 int main(){
-     boost::mpl::for_each<vector_list>(test_case());
+    // boost::mpl::for_each<vector_list>(test_case());
+     boost::mpl::for_each<test_list>(test_case());
 }

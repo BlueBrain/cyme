@@ -38,5 +38,6 @@
 #include "memory/serial.hpp" // container
 #include "memory/array.hpp"  // container
 #include "memory/vector.hpp" // container
+#include "memory/vector_demo.hpp" // container
 
 #endif
