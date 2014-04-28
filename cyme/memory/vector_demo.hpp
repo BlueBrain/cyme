@@ -40,7 +40,7 @@ public:
     typedef typename base_type::iterator iterator;
     
     vector(const size_t size=0, value_type value=value_type())
-        :data(size/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(T))+1,value),size_cyme(size){
+        :data(size/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))+1,value),size_cyme(size){
     }
     
     iterator begin(){
