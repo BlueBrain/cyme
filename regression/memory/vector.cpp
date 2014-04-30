@@ -156,7 +156,32 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_equal_multiple, T, floating_point_
     check(vector_a, vector_b);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_scalar_fma, T, floating_point_torture_list) {
+    cyme::vector<synapse<TYPE,N>,memory::AoS> vector_a(1024);
+    cyme::vector<synapse<TYPE,N>,memory::AoSoA> vector_b(1024);
 
+    init(vector_a, vector_b);
+
+    typename cyme::vector<synapse<TYPE,N>,memory::AoS>::iterator it_AoS = vector_a.begin();
+    for(; it_AoS != vector_a.end(); ++it_AoS)
+        (*it_AoS)[0] = 3.3*(*it_AoS)[0]+2.2;
+
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA = vector_b.begin();
+    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = 3.3*(*it_AoSoA)[0]+2.2;
+
+    check(vector_a, vector_b);
+
+    it_AoS = vector_a.begin();
+    for(; it_AoS != vector_a.end(); ++it_AoS)
+        (*it_AoS)[0] = (*it_AoS)[1]*2.5+6.9;
+
+    it_AoSoA = vector_b.begin();
+    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
+        (*it_AoSoA)[0] = (*it_AoSoA)[1]*2.5+6.9;
+
+    check(vector_a, vector_b);
+}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_plusequal, T, floating_point_torture_list) {
     cyme::vector<synapse<TYPE,N>,memory::AoS> vector_a(1024);

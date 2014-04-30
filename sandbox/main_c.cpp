@@ -55,9 +55,10 @@ typedef  cyme::vector<Na::channel<float>, memory::AoSoA> Vec_f_AoSoA_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoS> Vec_d_AoS_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoSoA> Vec_d_AoSoA_Na;
 typedef  test::vector<Na::channel<double>, memory::AoSoA> test_d_AoSoA_Na;
+typedef  test::vector<Na::channel<double>, memory::AoS> test_d_AoS_Na;
 
 //typedef boost::mpl::vector<Vec_f_AoS_Na,Vec_f_AoSoA_Na,Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
-typedef boost::mpl::vector<test_d_AoSoA_Na,Vec_d_AoSoA_Na,test_d_AoSoA_Na,Vec_d_AoSoA_Na> test_list;
+typedef boost::mpl::vector<test_d_AoSoA_Na,test_d_AoS_Na> test_list;
 //2567
 template<class T>
 const std::string name();
