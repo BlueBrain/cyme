@@ -264,7 +264,7 @@ public:
 
     array(value_type value=value_type()){
         for(size_type i(0); i<storage_width; ++i)
-            data[i] = storage_type(); // fill up to 0
+            data[i] = storage_type(value); // fill up to 0
     }
 
     iterator begin(){

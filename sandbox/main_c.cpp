@@ -77,7 +77,7 @@ struct f_init{
     }
 };
 
-//#ifdef _OPENMP
+#ifdef _OPENMP
 template<typename Iterator, typename Functor>
 Functor
 omp_for_each(Iterator first, Iterator last, Functor f) {
@@ -86,9 +86,9 @@ omp_for_each(Iterator first, Iterator last, Functor f) {
         f(*it);
     }
 
-    return std::move(f);
+    return f;
 }
-//#endif
+#endif
 
 template<class T>
 void average(std::vector<double> &v_time){
