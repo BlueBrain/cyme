@@ -47,7 +47,15 @@
 #include <boost/random/uniform_real_distribution.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 
-#define RELATIVE_ERROR 0.001
+
+template<class T>
+T relative_error();
+
+template<>
+float relative_error(){return 0.1;}
+
+template<>
+double relative_error(){return 0.001;}
 
 namespace cyme {
     namespace test {
@@ -80,10 +88,12 @@ namespace cyme {
     }
 
     template<class Ba, class Bb>
-    void check(Ba const& block_a, Bb const& block_b){
+    void check(Ba & block_a, Bb & block_b){
         for(std::size_t i=0; i<block_a.size(); ++i)
-            for(std::size_t j=0; j<block_a.size_block(); ++j)
-                BOOST_CHECK_CLOSE(block_a(i,j), block_b(i,j), RELATIVE_ERROR);
+            for(std::size_t j=0; j<block_a.size_block(); ++j){
+                typename Ba::value_type error =  relative_error<typename Ba::value_type>();
+                BOOST_CHECK_CLOSE(block_a(i,j), block_b(i,j), error);
+            }
     }
 
     template<class T, std::size_t m, memory::order o>
@@ -143,9 +153,9 @@ namespace cyme {
                                 data_block<float,6,15,memory::AoS>,
                                 data_block<float,7,13,memory::AoSoA>,
                                 data_block<float,8,11,memory::AoS>,
-                                data_block<double,9,9,memory::AoS>,
-                                data_block<double,10,7,memory::AoSoA>,
-                                data_block<double,11,5,memory::AoSoA>
+                                data_block<double,6,15,memory::AoS>,
+                                data_block<double,7,13,memory::AoSoA>,
+                                data_block<double,8,11,memory::AoS>
                             > floating_point_block_types;
 
 
@@ -155,3 +165,4 @@ namespace cyme {
 } // end namespace CYME
 
 #endif // CYME_TEST_HEADER_HPP
+

@@ -292,53 +292,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_divideequal, T, floating_point_tor
     check(vector_a, vector_b);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(vector_push_back, T, floating_point_torture_list) {
-    cyme::vector<synapse<TYPE,N>,memory::AoS> vector_a;
-    cyme::vector<synapse<TYPE,N>,memory::AoSoA> vector_b;
-
-    for(int i=0; i<10; ++i){
-        vector_a.push_back(i);
-        vector_b.push_back(i);
-    }
-
-    check(vector_a, vector_b);
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(vector_push_front, T, floating_point_torture_list) {
-    cyme::vector<synapse<TYPE,N>,memory::AoS> vector_a;
-    cyme::vector<synapse<TYPE,N>,memory::AoSoA> vector_b;
-
-    for(int i=0; i<10; ++i){
-        vector_a.push_front(i);
-        vector_b.push_front(i);
-    }
-
-    check(vector_a, vector_b);
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(vector_push_back_front, T, floating_point_torture_list) {
-    cyme::vector<synapse<TYPE,N>,memory::AoS> vector_a;
-    cyme::vector<synapse<TYPE,N>,memory::AoSoA> vector_b;
-
-    for(int i=0; i<10; ++i){
-        vector_a.push_front(i);
-        vector_b.push_front(i);
-    }
-
-    for(int i=0; i<3; ++i){
-        vector_a.push_back(i);
-        vector_b.push_back(i);
-    }
-
-    for(int i=0; i<3; ++i){
-        vector_a.push_front(i);
-        vector_b.push_front(i);
-    }
-
-
-    check(vector_a, vector_b);
-}
-
 #undef TYPE
 #undef N
 #undef ORRDER

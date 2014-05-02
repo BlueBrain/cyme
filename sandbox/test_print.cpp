@@ -160,7 +160,7 @@ R*/
  };
 
 
- template<class mechanism, class container = test::vector<mechanism, memory::AoSoA> > // should use cyme container there
+ template<class mechanism, class container = cyme::vector<mechanism, memory::AoSoA> > // should use cyme container there
  class pack{
  public:
      typedef typename mechanism::value_type value_type;
@@ -216,12 +216,12 @@ R*/
  int main(){
      stack s;
 
-     pack<Na,test::vector<Na, memory::AoSoA> > a(256,0); // pack 16384 synapse, AoSoA
+     pack<Na,cyme::vector<Na, memory::AoSoA> > a(256,0); // pack 16384 synapse, AoSoA
      pack<Na,cyme::vector<Na, memory::AoS> > b(256,0); // pack 16384 synapse, AoSoA
 
      init(a,b);
 
-     s.push_back(boost::bind(&pack<Na,test::vector<Na, memory::AoSoA> >::execution,&a)); // fill up the stack
+     s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoSoA> >::execution,&a)); // fill up the stack
      s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&b)); // fill up the stack
 
      boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
