@@ -7,6 +7,7 @@
 #include <boost/mpl/vector.hpp>
 
 #include "cyme/cyme.hpp"
+#include "helpers.hpp"
 
 //#include "iacaMarks.h"
 namespace ProbAMPANMDA_EMS{
@@ -75,6 +76,17 @@ typedef  cyme::vector<ProbAMPANMDA_EMS::synapse<double>, memory::AoSoA> Vec_d_Ao
 
 typedef boost::mpl::vector<Vec_f_AoS_ProbAMPANMDA_EMS, Vec_f_AoSoA_ProbAMPANMDA_EMS,Vec_d_AoS_ProbAMPANMDA_EMS, Vec_d_AoSoA_ProbAMPANMDA_EMS> vector_list;
 
+template<typename T>
+struct name<ProbAMPANMDA_EMS::synapse<T> > {
+    static const std::string print() {
+        std::stringstream s;
+        s << "ProbAMPANMDA_EMS::synapse<" << name<T>::print()
+          << "\tby " << ProbAMPANMDA_EMS::synapse<T>::value_size
+          << ">";
+        return s.str();
+    }
+};
+
 template<class T>
 struct f_init{
     void operator()(typename T::storage_type& S ){
@@ -96,19 +108,10 @@ omp_for_each(Iterator first, Iterator last, Functor f) {
 }
 #endif
 
-template<class T>
-void average(std::vector<T> &v_time){
-        T sum = std::accumulate(v_time.begin(), v_time.end(), 0.0);
-        T mean = sum / v_time.size();
-        T sq_sum = std::inner_product(v_time.begin(), v_time.end(), v_time.begin(), 0.0);
-        T stdev = std::sqrt(sq_sum / v_time.size() - mean * mean);
-        std::cout << "float: " << sizeof(T) << "[Byte], "  << " mean " << mean << " [s], stdev " << stdev << std::endl;
-}
-
 struct test_case_1{
     template <class T>
     void operator()(T const&){
-        int limit = 10;
+        int limit = 5;
         typedef typename T::storage_type storage_type;
         const std::size_t N(0xfffff);
         T v(N,0);
@@ -121,17 +124,17 @@ struct test_case_1{
 
         std::vector<double> v_time(limit,0);
 
+        timer t;
         for(int j=0; j < limit; ++j){
-            boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+            t.tic();
 #ifdef _OPENMP
             omp_for_each(v.begin(), v.end(), ProbAMPANMDA_EMS::f_compute_1<storage_type>() );
 #else
             std::for_each(v.begin(), v.end(), ProbAMPANMDA_EMS::f_compute_1<storage_type>() );
 #endif
-            boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-            v_time[j] = sec.count();
+            v_time[j] = t.toc();
         }
-        average<double>(v_time);
+        average<T>(v_time);
     }
 };
 
@@ -139,7 +142,7 @@ struct test_case_1{
 struct test_case_2{
     template <class T>
     void operator()(T const&){
-        int limit = 10;
+        int limit = 5;
         typedef typename T::storage_type storage_type;
         const std::size_t N(0xfffff);
         T v(N,0);
@@ -152,17 +155,17 @@ struct test_case_2{
 
         std::vector<double> v_time(limit,0);
 
+        timer t;
         for(int j=0; j < limit; ++j){
-            boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+            t.tic();
 #ifdef _OPENMP
             omp_for_each(v.begin(), v.end(), ProbAMPANMDA_EMS::f_compute_2<storage_type>() );
 #else
             std::for_each(v.begin(), v.end(), ProbAMPANMDA_EMS::f_compute_2<storage_type>() );
 #endif
-            boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-            v_time[j] = sec.count();
+            v_time[j] = t.toc();
         }
-        average<double>(v_time);
+        average<T>(v_time);
     }
 };
 

@@ -7,6 +7,7 @@
 #include <boost/mpl/vector.hpp>
 
 #include "cyme/cyme.hpp"
+#include "helpers.hpp"
 
 //#include "iacaMarks.h"
 namespace Na{
@@ -56,15 +57,17 @@ typedef  cyme::vector<Na::channel<double>, memory::AoS> Vec_d_AoS_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoSoA> Vec_d_AoSoA_Na;
 
 typedef boost::mpl::vector<Vec_f_AoS_Na,Vec_f_AoSoA_Na,Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
-//2567
-template<class T>
-const std::string name();
 
-template<>
-const std::string name<float>(){return "float";}
-
-template<>
-const std::string name<double>(){return "double";}
+template<typename T>
+struct name<Na::channel<T> > {
+    static const std::string print() {
+        std::stringstream s;
+        s << "Na::channel<" << name<T>::print()
+          << " by " << Na::channel<T>::value_size
+          << ">";
+        return s.str();
+    }
+};
 
 template<class T>
 struct f_init{
@@ -87,23 +90,14 @@ omp_for_each(Iterator first, Iterator last, Functor f) {
 }
 #endif
 
-template<class T>
-void average(std::vector<double> &v_time){
-        double sum = std::accumulate(v_time.begin(), v_time.end(), 0.0);
-        double mean = sum / v_time.size();
-        double sq_sum = std::inner_product(v_time.begin(), v_time.end(), v_time.begin(), 0.0);
-        double stdev = std::sqrt(sq_sum / v_time.size() - mean * mean);
-        std::cout << name<T>()  << " mean " << mean << " [s], stdev " << stdev << std::endl;
-}
-
 struct test_case{
 
     template <class T>
     void operator()(T const&){
-        int limit = 10;
+        int limit = 4;
         typedef typename T::storage_type storage_type;
         typedef typename storage_type::value_type value_type;
-        const std::size_t N(0xffffff);
+        const std::size_t N(0xfffff);
         T v(N,0);
 
 #ifdef _OPENMP
@@ -114,17 +108,17 @@ struct test_case{
 
         std::vector<double> v_time(limit,0);
 
+        timer t;
         for(int i=0; i < limit; ++i){
-            boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+            t.tic();
 #ifdef _OPENMP
             omp_for_each(v.begin(), v.end(), Na::f_compute<storage_type>() );
 #else
             std::for_each(v.begin(), v.end(), Na::f_compute<storage_type>() );
 #endif
-            boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-            v_time[i] = sec.count();
+            v_time[i] = t.toc();
         }
-        average<value_type>(v_time);
+        average<T>(v_time);
     }
 };
 
