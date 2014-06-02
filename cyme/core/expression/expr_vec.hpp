@@ -297,58 +297,55 @@ namespace numeric{
     private:
         vec_simd<T,O,N> const s; // valuer of the scalar
     };
-
-    /** 
+    
+    /**
         \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
-        During the compilation, we will create the tree of operations or DAG. I called also this class Parser into
-        my comment
+         During the compilation, we will create the tree of operations or DAG. The three is built on the read only vector
     */
     template<class T, memory::simd O, int N = memory::unroll_factor::N, class Rep = vec_simd<T,O,N> >
-    class vec{
+    class rvec{
     public:
         typedef T value_type;
-        typedef value_type* pointer; 
-        typedef const pointer const_pointer;
+        typedef value_type* pointer;
+        typedef value_type const* const_pointer;
         typedef Rep base_type;
  
         /**
            \brief default constructor nothing special
         */
-        forceinline explicit vec():expr_rep(){
+        forceinline explicit rvec():expr_rep(){
         }
 
         /**
            \brief constructor rhs of the operator =, I do not care to save the pointer, as I read only the memory on this side
         */
-        forceinline explicit vec(Rep const& rb):data_pointer(NULL),expr_rep(rb){
+        forceinline explicit rvec(Rep const& rb):expr_rep(rb){
         }
 
         /**
            \brief constructor lhs of the operator =, I need to save the pointer to save the data into the memory after the calculation
         */
-        forceinline explicit vec(const_pointer rb):data_pointer(rb),expr_rep(rb){
+        forceinline explicit rvec(const_pointer rb):expr_rep(rb){
         }
 
         /**
            \brief constructor for a given value 
         */
-        forceinline explicit vec(value_type a):data_pointer(NULL),expr_rep(a){
+        forceinline explicit rvec(value_type a):expr_rep(a){
         }
         
         /**
            \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
         */
-        forceinline vec& operator= (value_type a){
-            *(data_pointer) = a;
+        forceinline rvec& operator= (value_type a){
             return *this;
         }
         
         /**
            \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
         */
-        forceinline vec& operator= (vec const& rhs){
+        forceinline rvec& operator= (rvec const& rhs){
             this->expr_rep() = rhs.expr_rep(); //basic register copy no three
-            this->rep().store(data_pointer);
             return *this;
         }
 
@@ -356,9 +353,8 @@ namespace numeric{
            \brief operator =, create the tree and execute  in normal condition
         */
         template<class T2, memory::simd O2, int N2, class Rep2>
-        forceinline vec& operator= (vec<T2,O2,N2,Rep2 > const& rhs){
+        forceinline rvec& operator= (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->rep() = rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         } 
 
@@ -366,9 +362,8 @@ namespace numeric{
            \brief operator +=, create the tree and execute  in normal condition
         */
         template<class T2, memory::simd O2, int N2, class Rep2>
-        forceinline vec& operator+= (vec<T2,O2,N2,Rep2 > const& rhs){
+        forceinline rvec& operator+= (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->rep() += rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -376,9 +371,8 @@ namespace numeric{
            \brief operator -=, create the tree and execute  in normal condition
         */
         template<class T2, memory::simd O2, int N2, class Rep2>
-        forceinline vec& operator-=  (vec<T2,O2,N2,Rep2 > const& rhs){
+        forceinline rvec& operator-=  (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->rep() -= rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -386,9 +380,8 @@ namespace numeric{
            \brief operator *=, create the tree and execute  in normal condition
         */
         template<class T2, memory::simd O2, int N2, class Rep2>
-        forceinline vec& operator*=  (vec<T2,O2,N2,Rep2 > const& rhs){
+        forceinline rvec& operator*=  (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->rep() *= rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -396,9 +389,8 @@ namespace numeric{
         \brief operator /=, create the tree and execute  in normal condition
         */
         template<class T2, memory::simd O2, int N2, class Rep2>
-        forceinline vec& operator/=  (vec<T2,O2,N2,Rep2 > const& rhs){
+        forceinline rvec& operator/=  (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->rep() /= rhs.rep()(); //evaluate the three compile time, and execute calculation
-            this->rep().store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -416,15 +408,112 @@ namespace numeric{
         }
     private:
         /**
-        \brief need pointer for the operator=, to store the data into the memory, unfortunately I can not have an access to the lfs
-        */
-        pointer data_pointer;
-        /** 
         \brief this is the vector_simd class
         */
         Rep expr_rep;
     };
-}
+
+    /** 
+        \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
+        During the compilation, we will create the tree of operations or DAG. Write only
+    */
+    template<class T, memory::simd O, int N = memory::unroll_factor::N, class Rep = vec_simd<T,O,N> >
+    class wvec{
+    public:
+        typedef rvec<T,O,N,Rep> V;
+        typedef T value_type;
+        typedef value_type* pointer; 
+        typedef const pointer const_pointer;
+        typedef Rep base_type;
+ 
+
+        /**
+           \brief constructor lhs of the operator =, I need to save the pointer to save the data into the memory after the calculation
+        */
+        forceinline explicit wvec(const_pointer rb):data_pointer(rb),expr_rep(rb){
+        }
+        
+        
+        /**
+           \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
+        */
+        forceinline wvec& operator= (value_type a){
+            *(data_pointer) = a;
+            return *this;
+        }
+        
+        /**
+           \brief operator =, create the tree and execute  in normal condition
+        */
+        template<class T2, memory::simd O2, int N2, class Rep2>
+        forceinline wvec& operator= (rvec<T2,O2,N2,Rep2> const& rhs){
+            this->expr_rep() = rhs.rep()(); //basic register copy no three
+            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
+            return *this;
+        } 
+
+        /**
+           \brief operator +=, create the tree and execute  in normal condition
+        */
+        template<class T2, memory::simd O2, int N2, class Rep2>
+        forceinline wvec& operator+= (rvec<T2,O2,N2,Rep2 > const& rhs){
+            this->expr_rep() += rhs.rep()(); //basic register copy no three
+            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
+            return *this;
+        }
+
+        /**
+           \brief operator -=, create the tree and execute  in normal condition
+        */
+        template<class T2, memory::simd O2, int N2, class Rep2>
+        forceinline wvec& operator-=  (rvec<T2,O2,N2,Rep2 > const& rhs){
+            this->expr_rep() -= rhs.rep()(); //basic register copy no three
+            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
+            return *this;
+        }
+
+        /**
+           \brief operator *=, create the tree and execute  in normal condition
+        */
+        template<class T2, memory::simd O2, int N2, class Rep2>
+        forceinline wvec& operator*=  (rvec<T2,O2,N2,Rep2 > const& rhs){
+            this->expr_rep() *= rhs.rep()(); //basic register copy no three
+            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
+            return *this;
+        }
+
+        /**
+        \brief operator /=, create the tree and execute  in normal condition
+        */
+        template<class T2, memory::simd O2, int N2, class Rep2>
+        forceinline wvec& operator/=  (rvec<T2,O2,N2,Rep2 > const& rhs){
+            this->expr_rep() /= rhs.rep()(); //basic register copy no three
+            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
+            return *this;
+        }
+
+        /**
+           \brief get the vector class, read only
+        */
+        forceinline Rep const& rep() const{
+            return expr_rep;
+        }
+        /**
+           \brief get the vector class, write only
+        */
+        forceinline Rep& rep(){
+            return expr_rep;
+        }
+
+    private:
+        /**
+        \brief need pointer for the operator=, to store the data into the memory, unfortunately I can not have an access to the lfs
+        */
+        pointer data_pointer;
+        Rep expr_rep;
+    };
+    
+ }
 
 #include "core/expression/expr_vec_ops.hpp"
 #ifdef __FMA__

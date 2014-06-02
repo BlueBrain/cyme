@@ -78,17 +78,17 @@ namespace numeric{
     */
     template<>
     forceinline simd_trait<float,memory::qpx,1>::register_type _mm_load<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::const_pointer a){
-        return vec_lda(0L,a);
+        return vec_lda(0L,(float*)(void*)a); // QPX does not support const keyword ...
     }
 
     template<>
     forceinline simd_trait<float,memory::qpx,2>::register_type _mm_load<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::const_pointer a){
-        return simd_trait<float,memory::qpx,2>::register_type(vec_lda(0L,a),vec_lda(16L,a));
+        return simd_trait<float,memory::qpx,2>::register_type(vec_lda(0L,(float*)(void*)a),vec_lda(16L,(float*)(void*)a));
     }
 
     template<>
     forceinline simd_trait<float,memory::qpx,4>::register_type _mm_load<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::const_pointer a){
-        return simd_trait<float,memory::qpx,4>::register_type(vec_lda(0L,a),vec_lda(16L,a),vec_lda(32L,a),vec_lda(48L,a));
+        return simd_trait<float,memory::qpx,4>::register_type(vec_lda(0L,(float*)(void*)a),vec_lda(16L,(float*)(void*)a),vec_lda(32L,(float*)(void*)a),vec_lda(48L,(float*)(void*)a));
     }
 
     /**
@@ -506,17 +506,17 @@ namespace numeric{
      */
     template<>
     forceinline simd_trait<double,memory::qpx,1>::register_type _mm_load<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::const_pointer a){
-        return vec_lda(0L,a);
+        return vec_lda(0L,(double*)(void*)a);
     }
 
     template<>
     forceinline simd_trait<double,memory::qpx,2>::register_type _mm_load<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::const_pointer a){
-        return simd_trait<double,memory::qpx,2>::register_type(vec_lda(0L,a),vec_lda(32L,a));
+        return simd_trait<double,memory::qpx,2>::register_type(vec_lda(0L,(double*)(void*)a),vec_lda(32L,(double*)(void*)a));
     }
 
     template<>
     forceinline simd_trait<double,memory::qpx,4>::register_type _mm_load<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::const_pointer a){
-        return simd_trait<double,memory::qpx,4>::register_type(vec_lda(0L,a),vec_lda(32L,a),vec_lda(64L,a),vec_lda(96L,a));
+        return simd_trait<double,memory::qpx,4>::register_type(vec_lda(0L,(double*)(void*)a),vec_lda(32L,(double*)(void*)a),vec_lda(64L,(double*)(void*)a),vec_lda(96L,(double*)(void*)a));
     }
 
     /**
@@ -528,13 +528,13 @@ namespace numeric{
     }
 
     template<>
-    forceinline void _mm_store<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0, simd_trait<double,memory::qpx,2>::const_pointer a){
+    forceinline void _mm_store<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0, simd_trait<double,memory::qpx,2>::pointer a){
         vec_sta(xmm0.r0,0L,a);
         vec_sta(xmm0.r1,32L,a);
     }
 
     template<>
-    forceinline void _mm_store<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0, simd_trait<double,memory::qpx,4>::const_pointer a){
+    forceinline void _mm_store<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0, simd_trait<double,memory::qpx,4>::pointer a){
         vec_sta(xmm0.r0,0L,a);
         vec_sta(xmm0.r1,32L,a);
         vec_sta(xmm0.r2,64L,a);

@@ -22,36 +22,38 @@ namespace ProbAMPANMDA_EMS{
     };
 
     template<class T>
-    static inline void cnrn_state(T& S){
-        S[A_AMPA] += (1.-exp(-0.1/S[tau_r_AMPA]))*(-S[A_AMPA]);
-        S[B_AMPA] += (1.-exp(-0.1/S[tau_d_AMPA]))*(-S[B_AMPA]);
-        S[A_NMDA] += (1.-exp(-0.1/S[tau_r_NMDA]))*(-S[A_NMDA]);
-        S[B_NMDA] += (1.-exp(-0.1/S[tau_d_NMDA]))*(-S[B_NMDA]);
+    static inline void cnrn_state(T& W){
+        T const & R = W;
+        W[A_AMPA] += (1.-exp(-0.1/R[tau_r_AMPA]))*(-R[A_AMPA]);
+        W[B_AMPA] += (1.-exp(-0.1/R[tau_d_AMPA]))*(-R[B_AMPA]);
+        W[A_NMDA] += (1.-exp(-0.1/R[tau_r_NMDA]))*(-R[A_NMDA]);
+        W[B_NMDA] += (1.-exp(-0.1/R[tau_d_NMDA]))*(-R[B_NMDA]);
     }
 
     template<class T>
-    static inline  cyme::serial<typename T::value_type,T::MemoryOrder> cnrn_current( T& S,typename T::value_type t){
+    static inline  cyme::serial<typename T::value_type,T::MemoryOrder> cnrn_current( T& W,typename T::value_type t){
+        T const & R = W;
         typedef typename T::value_type value_type;
-        S[v] = t;
+        W[v] = t;
         cyme::serial<value_type,T::MemoryOrder> gmax(1.1); // my value
-        cyme::serial<value_type,T::MemoryOrder> mggate(1.0/(1.0+exp(-0.062*S[v])*(S[mg]/3.57)));
-        S[g_AMPA] = gmax() * (S[B_AMPA] - S[A_AMPA]);
-        S[g_NMDA] = gmax() * (S[B_NMDA] - S[A_NMDA]) * mggate();
-        S[g] = S[g_AMPA] + S[g_NMDA];
-        S[i_AMPA] = S[g_AMPA]*(S[v]-S[e]);
-        S[i_NMDA] = S[g_NMDA]*(S[v]-S[e]);
-        S[i] = S[i_AMPA]+S[i_NMDA];
-        return cyme::serial<value_type,T::MemoryOrder>(S[i]);
+        cyme::serial<value_type,T::MemoryOrder> mggate(1.0/(1.0+exp(-0.062*R[v])*(R[mg]/3.57)));
+        W[g_AMPA] = gmax() * (R[B_AMPA] - R[A_AMPA]);
+        W[g_NMDA] = gmax() * (R[B_NMDA] - R[A_NMDA]) * mggate();
+        W[g] = R[g_AMPA] + R[g_NMDA];
+        W[i_AMPA] = R[g_AMPA]*(R[v]-R[e]);
+        W[i_NMDA] = R[g_NMDA]*(R[v]-R[e]);
+        W[i] = R[i_AMPA]+R[i_NMDA];
+        return cyme::serial<value_type,T::MemoryOrder>(R[i]);
     }
 
     template<class T>
-    static inline void cnrn_cur(T& S){
+    static inline void cnrn_cur(T& W){
         typedef typename T::value_type value_type; //basic float or double
         value_type _v = drand48(); // _v voltage fron a node random number
         value_type _nd_area=3.1;
-        cyme::serial<value_type,T::MemoryOrder> tmp  = cnrn_current<T>(S,_v + 0.001);
-        cyme::serial<value_type,T::MemoryOrder> tmp2 = cnrn_current<T>(S,_v);
-        S[_g] = (tmp()-tmp2())/0.001*(1.e2/_nd_area);
+        cyme::serial<value_type,T::MemoryOrder> tmp  = cnrn_current<T>(W,_v + 0.001);
+        cyme::serial<value_type,T::MemoryOrder> tmp2 = cnrn_current<T>(W,_v);
+        W[_g] = (tmp()-tmp2())/0.001*(1.e2/_nd_area);
     }
 
     template<class T>

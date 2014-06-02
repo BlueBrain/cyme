@@ -22,25 +22,24 @@ namespace Na{
     };
 
     template<class T>
-    static inline void cnrn_rates(T& C){
-//      cyme::serial<typename T::value_type, memory::AoSoA> tmp(exp((C[v]+35.0f)/9.0f));
-//      C[mAlpha] = (0.182*(C[v]+35.0))/(1.-(1./tmp()));
-//      C[mBeta]  = (-0.124*(C[v]+35.0))/(1.-tmp());
-        C[mAlpha] = (0.182*(C[v]+35.0))/(1.-(exp((-35.0-C[v])/9.0)));
-        C[mBeta]  = (-0.124*(C[v]+35.0))/(1.-(exp((C[v]+35.0)/9.0)));
-        C[mInf]   = C[mAlpha]/(C[mAlpha]+C[mBeta]);
-        C[mTau]   = 1./(C[mAlpha]+C[mBeta]);
-        C[hAlpha] = (0.024*(C[v]+50.0))/(1.-(exp((-50.0-C[v])/5.0)));
-        C[hBeta]  = (-0.0091*(C[v]+75.0))/(1.-(exp((C[v]+75.0)/5.0)));
-        C[hInf]   = 1./(1.+exp((C[v]+65.0)/6.2));
-        C[hTau]   = 1./(C[hAlpha]+C[hBeta]);
+    static inline void cnrn_rates(T& W){
+        T const & R = W;
+        W[mAlpha] = (0.182*(R[v]+35.0))/(1.-(exp((-35.0-R[v])/9.0)));
+        W[mBeta]  = (-0.124*(R[v]+35.0))/(1.-(exp((R[v]+35.0)/9.0)));
+        W[mInf]   = R[mAlpha]/(R[mAlpha]+R[mBeta]);
+        W[mTau]   = 1./(R[mAlpha]+R[mBeta]);
+        W[hAlpha] = (0.024*(R[v]+50.0))/(1.-(exp((-50.0-R[v])/5.0)));
+        W[hBeta]  = (-0.0091*(R[v]+75.0))/(1.-(exp((R[v]+75.0)/5.0)));
+        W[hInf]   = 1./(1.+exp((R[v]+65.0)/6.2));
+        W[hTau]   = 1./(R[hAlpha]+R[hBeta]);
     };
 
     template<class T>
-    static inline void cnrn_states(T& C){
-        cnrn_rates<T>(C);
-        C[m] += (1.-exp(-0.1/C[mTau]))*(C[mInf]-C[m]);
-        C[h] += (1.-exp(-0.1/C[hTau]))*(C[hInf]-C[h]);
+    static inline void cnrn_states(T& W){
+        T const & R = W;
+        cnrn_rates<T>(W);
+        W[m] += (1.-exp(-0.1/R[mTau]))*(R[mInf]-R[m]);
+        W[h] += (1.-exp(-0.1/R[hTau]))*(R[hInf]-R[h]);
     }
 
     template<class T>
@@ -82,10 +81,8 @@ template<typename Iterator, typename Functor>
 Functor
 omp_for_each(Iterator first, Iterator last, Functor f) {
     #pragma omp parallel for private(f)
-    for(Iterator it=first; it<last; ++it) {
+    for(Iterator it=first; it<last; ++it)
         f(*it);
-    }
-
     return f;
 }
 #endif

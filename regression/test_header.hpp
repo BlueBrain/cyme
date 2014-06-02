@@ -122,27 +122,18 @@ namespace cyme {
                             > floating_point_test_types;
     //max 20 elements, because MPL must emulate variadic template
     typedef boost::mpl::list<
-                                data_block<float,2,2,memory::AoSoA>,
-                                data_block<double,3,2,memory::AoS>,
-                                data_block<float,4,2,memory::AoSoA>,
-                                data_block<double,5,2,memory::AoSoA>,
-
-                                data_block<float,2,3,memory::AoSoA>,
                                 data_block<double,3,3,memory::AoS>,
                                 data_block<float,4,3,memory::AoSoA>,
                                 data_block<double,5,3,memory::AoSoA>,
 
-                                data_block<float,2,4,memory::AoSoA>,
                                 data_block<double,3,4,memory::AoS>,
                                 data_block<float,4,4,memory::AoSoA>,
                                 data_block<double,5,4,memory::AoSoA>,
 
-                                data_block<float,2,5,memory::AoSoA>,
                                 data_block<double,3,5,memory::AoS>,
                                 data_block<float,4,5,memory::AoSoA>,
                                 data_block<double,5,5,memory::AoSoA>,
 
-                                data_block<float,2,6,memory::AoSoA>,
                                 data_block<double,3,6,memory::AoS>,
                                 data_block<float,4,6,memory::AoSoA>,
                                 data_block<double,5,6,memory::AoSoA>

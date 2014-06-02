@@ -94,9 +94,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_equal, T, floating_point_block_typ
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] = (*it_AoS)[1];
 
-    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] = (*it_AoSoA)[1];
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA_w = vector_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::const_iterator it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1];
 
     check(vector_a, vector_b);
 }
@@ -130,27 +131,28 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_equal_multiple, T, floating_point_
         (*it_AoS)[3] = (*it_AoS)[3];
     }
 
-    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA){
-        (*it_AoSoA)[0] = (*it_AoSoA)[0];
-        (*it_AoSoA)[0] = (*it_AoSoA)[1];
-        (*it_AoSoA)[0] = (*it_AoSoA)[2];
-        (*it_AoSoA)[0] = (*it_AoSoA)[3];
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA_w = vector_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::const_iterator it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r){
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[0];
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1];
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[2];
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[3];
 
-        (*it_AoSoA)[1] = (*it_AoSoA)[0];
-        (*it_AoSoA)[1] = (*it_AoSoA)[1];
-        (*it_AoSoA)[1] = (*it_AoSoA)[2];
-        (*it_AoSoA)[1] = (*it_AoSoA)[3];
+        (*it_AoSoA_w)[1] = (*it_AoSoA_r)[0];
+        (*it_AoSoA_w)[1] = (*it_AoSoA_r)[1];
+        (*it_AoSoA_w)[1] = (*it_AoSoA_r)[2];
+        (*it_AoSoA_w)[1] = (*it_AoSoA_r)[3];
 
-        (*it_AoSoA)[2] = (*it_AoSoA)[0];
-        (*it_AoSoA)[2] = (*it_AoSoA)[1];
-        (*it_AoSoA)[2] = (*it_AoSoA)[2];
-        (*it_AoSoA)[2] = (*it_AoSoA)[3];
+        (*it_AoSoA_w)[2] = (*it_AoSoA_r)[0];
+        (*it_AoSoA_w)[2] = (*it_AoSoA_r)[1];
+        (*it_AoSoA_w)[2] = (*it_AoSoA_r)[2];
+        (*it_AoSoA_w)[2] = (*it_AoSoA_r)[3];
 
-        (*it_AoSoA)[3] = (*it_AoSoA)[0];
-        (*it_AoSoA)[3] = (*it_AoSoA)[1];
-        (*it_AoSoA)[3] = (*it_AoSoA)[2];
-        (*it_AoSoA)[3] = (*it_AoSoA)[3];
+        (*it_AoSoA_w)[3] = (*it_AoSoA_r)[0];
+        (*it_AoSoA_w)[3] = (*it_AoSoA_r)[1];
+        (*it_AoSoA_w)[3] = (*it_AoSoA_r)[2];
+        (*it_AoSoA_w)[3] = (*it_AoSoA_r)[3];
     }
     
     check(vector_a, vector_b);
@@ -166,9 +168,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_scalar_fma, T, floating_point_tort
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] = 3.3*(*it_AoS)[0]+2.2;
 
-    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] = 3.3*(*it_AoSoA)[0]+2.2;
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA_w = vector_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::const_iterator it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] = 3.3*(*it_AoSoA_r)[0]+2.2;
 
     check(vector_a, vector_b);
 
@@ -176,9 +179,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_scalar_fma, T, floating_point_tort
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] = (*it_AoS)[1]*2.5+6.9;
 
-    it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] = (*it_AoSoA)[1]*2.5+6.9;
+    it_AoSoA_w = vector_b.begin();
+    it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1]*2.5+6.9;
 
     check(vector_a, vector_b);
 }
@@ -193,9 +197,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_plusequal, T, floating_point_tortu
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] += (*it_AoS)[0];
 
-    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] += (*it_AoSoA)[0];
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA_w = vector_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::const_iterator it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] += (*it_AoSoA_r)[0];
 
     check(vector_a, vector_b);
 
@@ -203,9 +208,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_plusequal, T, floating_point_tortu
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] += (*it_AoS)[1];
 
-    it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] += (*it_AoSoA)[1];
+    it_AoSoA_w = vector_b.begin();
+    it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] += (*it_AoSoA_r)[1];
 
     check(vector_a, vector_b);
 }
@@ -220,9 +226,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_minusequal, T, floating_point_tort
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] -= (*it_AoS)[0];
 
-    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] -= (*it_AoSoA)[0];
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA_w = vector_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::const_iterator it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] -= (*it_AoSoA_r)[0];
 
     check(vector_a, vector_b);
 
@@ -230,9 +237,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_minusequal, T, floating_point_tort
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] -= (*it_AoS)[1];
 
-    it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] -= (*it_AoSoA)[1];
+    it_AoSoA_w = vector_b.begin();
+    it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] -= (*it_AoSoA_r)[1];
 
     check(vector_a, vector_b);
 }
@@ -248,9 +256,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_multiplyequal, T, floating_point_t
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] *= (*it_AoS)[0];
 
-    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] *= (*it_AoSoA)[0];
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA_w = vector_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::const_iterator it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] *= (*it_AoSoA_r)[0];
 
     check(vector_a, vector_b);
 
@@ -258,9 +267,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_multiplyequal, T, floating_point_t
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] *= (*it_AoS)[1];
 
-    it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] *= (*it_AoSoA)[1];
+    it_AoSoA_w = vector_b.begin();
+    it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] *= (*it_AoSoA_r)[1];
 
     check(vector_a, vector_b);
 }
@@ -275,9 +285,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_divideequal, T, floating_point_tor
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] /= (*it_AoS)[0];
 
-    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] /= (*it_AoSoA)[0];
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::iterator it_AoSoA_w = vector_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,memory::AoSoA>::const_iterator it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] /= (*it_AoSoA_r)[0];
 
     check(vector_a, vector_b);
 
@@ -285,9 +296,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_divideequal, T, floating_point_tor
     for(; it_AoS != vector_a.end(); ++it_AoS)
         (*it_AoS)[0] /= (*it_AoS)[1];
 
-    it_AoSoA = vector_b.begin();
-    for(; it_AoSoA != vector_b.end(); ++it_AoSoA)
-        (*it_AoSoA)[0] /= (*it_AoSoA)[1];
+    it_AoSoA_w = vector_b.begin();
+    it_AoSoA_r = vector_b.begin();
+    for(; it_AoSoA_r != vector_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] /= (*it_AoSoA_r)[1];
 
     check(vector_a, vector_b);
 }

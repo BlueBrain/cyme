@@ -97,14 +97,14 @@ namespace memory{
     }
 
     template <class T, std::size_t Size>
-    numeric::vec<T,memory::__GETSIMD__()>
+    numeric::wvec<T,memory::__GETSIMD__()>
     storage<T, Size, AoSoA>::operator[](size_type i){
-        return numeric::vec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
+        return numeric::wvec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 
     template <class T, std::size_t Size>
-    const numeric::vec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
-        return numeric::vec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
+    const numeric::rvec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
+        return numeric::rvec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 } //end namespace
 #endif 

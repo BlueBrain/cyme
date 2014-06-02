@@ -123,9 +123,9 @@ namespace memory{
          */
          inline const_reference operator()(size_type i) const;
 
-         inline numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i);
+         inline numeric::wvec<T,memory::__GETSIMD__()> operator[](size_type i);
 
-         inline const numeric::vec<T,memory::__GETSIMD__()> operator[](size_type i) const;
+         inline const numeric::rvec<T,memory::__GETSIMD__()> operator[](size_type i) const;
          /**
          \brief return memory layout of the container
          */

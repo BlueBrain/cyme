@@ -94,34 +94,36 @@
      typedef double value_type;
 
 
-     template<class iterator, memory::order O>
-     static inline void cnrn_functions(iterator it){
+     template<class T, memory::order O>
+     static inline void cnrn_functions(T& W){
  /*
          cnrn_initmodel(it);
          cnrn_cur<iterator,O>(it);
 R*/
-       cnrn_states(it);
+       cnrn_states(W);
 
        //(*it)[8]  = exp((*it)[16]);
      }
 
-     template<class iterator>
-     static inline void cnrn_rates(iterator it){
-         (*it)[8]  = (0.182*((*it)[16]+35.0)) / (1.0 - (exp((-(*it)[16]-35.0)/9.0)));
-         (*it)[9]  = (-0.124*((*it)[16]+35.0))/ (1.0 - (exp(((*it)[16]+35.0)/9.0)));
-         (*it)[6]  = (*it)[8]/((*it)[8]+(*it)[9]);
-         (*it)[7]  = 1.0/((*it)[8]+(*it)[9]);
-         (*it)[12] = (0.024*((*it)[16]+50.0))  /(1.0-(exp((-(*it)[16]-50.0)/5.0)));
-         (*it)[13] = (-0.0091*((*it)[16]+75.0))/(1.0-(exp(((*it)[16]+75.0)/5.0)));
-         (*it)[10] = 1.0/(1.0+exp(((*it)[16]+65.0)/6.2));
-         (*it)[11] = 1.0/((*it)[12]+(*it)[13]);
+     template<class T>
+     static inline void cnrn_rates(T& W){
+         T const & R = W; 
+         W[8]  = (0.182*(R[16]+35.0)) / (1.0 - (exp((-R[16]-35.0)/9.0)));
+         W[9]  = (-0.124*(R[16]+35.0))/ (1.0 - (exp((R[16]+35.0)/9.0)));
+         W[6]  = R[8]/(R[8]+R[9]);
+         W[7]  = 1.0/(R[8]+R[9]);
+         W[12] = (0.024*(R[16]+50.0))  /(1.0-(exp((-R[16]-50.0)/5.0)));
+         W[13] = (-0.0091*(R[16]+75.0))/(1.0-(exp((R[16]+75.0)/5.0)));
+         W[10] = 1.0/(1.0+exp(R[16]+65.0)/6.2);
+         W[11] = 1.0/(R[12]+R[13]);
      };
 
-     template<class iterator>
-     static inline void cnrn_states(iterator it){
-     cnrn_rates(it);
-     (*it)[3] += (1.-exp(dt*(-1.0/(*it)[7] )))*(-((*it)[6] /(*it)[7]) /(-1.0/(*it)[7]) -(*it)[3]);
-     (*it)[4] += (1.-exp(dt*(-1.0/(*it)[11])))*(-((*it)[10]/(*it)[11])/(-1.0/(*it)[11])-(*it)[4]);
+     template<class T>
+     static inline void cnrn_states(T& W){
+        T const & R = W; 
+        cnrn_rates(W);
+        W[3] += (1.-exp(dt*(-1.0/R[7] )))*(-(R[6] /R[7]) /(-1.0/R[7]) -R[3]);
+        W[4] += (1.-exp(dt*(-1.0/R[11])))*(-(R[10]/R[11])/(-1.0/R[11])-R[4]);
      }
 /*
      template<class iterator, memory::order O>
@@ -173,7 +175,7 @@ R*/
 
      void execution(){
          for(typename container::iterator it = cont.begin(); it < cont.end(); ++it)
-             m.template cnrn_functions<typename container::iterator, container::order_value>(it);
+             m.template cnrn_functions<typename container::storage_type, container::order_value>(*it);
      }
 
      value_type& operator()(size_t i, size_t j){

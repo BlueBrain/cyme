@@ -83,7 +83,7 @@ namespace cyme{
     template<class T, int N>
     struct serial<T,memory::AoSoA,N>{
         typedef T value_type;
-        typedef numeric::vec<value_type,memory::__GETSIMD__(),N> base_type;
+        typedef numeric::rvec<value_type,memory::__GETSIMD__(),N> base_type;
 
         /**
          \brief constructor
@@ -101,7 +101,7 @@ namespace cyme{
                  not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
          */
         template<class T2, memory::simd O, class Rep>
-        serial(numeric::vec<T2,O,N,Rep > const& rhs){
+        serial(numeric::rvec<T2,O,N,Rep > const& rhs){
             a.rep()() = rhs.rep()();
         }
 

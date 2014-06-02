@@ -34,52 +34,52 @@ namespace numeric{
 
     /* parser for the exp */
     template<class T, memory::simd O, int N, class R1>
-    vec<T,O,N,vec_exp<T,O,N,R1> >
-    forceinline exp(vec<T,O,N,R1> const& a){
-        return vec<T,O,N,vec_exp<T,O,N,R1> >(vec_exp<T,O,N,R1>(a.rep()));
+    rvec<T,O,N,vec_exp<T,O,N,R1> >
+    forceinline exp(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_exp<T,O,N,R1> >(vec_exp<T,O,N,R1>(a.rep()));
     }
 
     /* parser for the log */
     template<class T, memory::simd O, int N, class R1>
-    vec<T,O,N,vec_log<T,O,N,R1> >
-    forceinline log(vec<T,O,N,R1> const& a){
-        return vec<T,O,N,vec_log<T,O,N,R1> >(vec_log<T,O,N,R1>(a.rep()));
+    rvec<T,O,N,vec_log<T,O,N,R1> >
+    forceinline log(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_log<T,O,N,R1> >(vec_log<T,O,N,R1>(a.rep()));
     }
 
     /* parser for neg */
     template<class T, memory::simd O, int N, class R1>
-    vec<T,O,N,vec_neg<T,O,N,R1> >
-    forceinline operator-(vec<T,O,N,R1> const& a){
-        return vec<T,O,N,vec_neg<T,O,N,R1> >(vec_neg<T,O,N,R1>(a.rep()));
+    rvec<T,O,N,vec_neg<T,O,N,R1> >
+    forceinline operator-(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_neg<T,O,N,R1> >(vec_neg<T,O,N,R1>(a.rep()));
     }
 
     /* this is the key of parser, describe every possibilities */
     //addition of two vectors v+w
     template<class T, memory::simd O, int N, class R1, class R2>
-    vec<T,O, N,vec_add<T,O,N,R1,R2> >
-    forceinline operator +(vec<T,O,N,R1> const& a, vec<T,O,N,R2> const& b){
-        return vec<T,O,N,vec_add<T,O,N,R1,R2> >(vec_add<T,O,N,R1,R2>(a.rep(),b.rep()));
+    rvec<T,O, N,vec_add<T,O,N,R1,R2> >
+    forceinline operator +(rvec<T,O,N,R1> const& a, rvec<T,O,N,R2> const& b){
+        return rvec<T,O,N,vec_add<T,O,N,R1,R2> >(vec_add<T,O,N,R1,R2>(a.rep(),b.rep()));
     }
 
     //subtraction of two vectors v-w
     template<class T, memory::simd O, int N, class R1, class R2>
-    vec<T,O,N,vec_sub<T,O,N,R1,R2> >
-    forceinline operator -(vec<T,O,N,R1> const& a, vec<T,O,N,R2> const& b){
-        return vec<T,O,N,vec_sub<T,O,N,R1,R2> >(vec_sub<T,O,N,R1,R2>(a.rep(),b.rep()));
+    rvec<T,O,N,vec_sub<T,O,N,R1,R2> >
+    forceinline operator -(rvec<T,O,N,R1> const& a, rvec<T,O,N,R2> const& b){
+        return rvec<T,O,N,vec_sub<T,O,N,R1,R2> >(vec_sub<T,O,N,R1,R2>(a.rep(),b.rep()));
     }
 
     //division of two vectors v/w
     template<class T, memory::simd O, int N, class R1, class R2>
-    vec<T,O,N, vec_div<T,O,N,R1,R2> >
-    forceinline operator /(vec<T,O,N,R1> const& a, vec<T,O,N,R2> const& b){
-        return vec<T,O,N,vec_div<T,O,N,R1,R2> >(vec_div<T,O,N,R1,R2>(a.rep(),b.rep()));
+    rvec<T,O,N, vec_div<T,O,N,R1,R2> >
+    forceinline operator /(rvec<T,O,N,R1> const& a, rvec<T,O,N,R2> const& b){
+        return rvec<T,O,N,vec_div<T,O,N,R1,R2> >(vec_div<T,O,N,R1,R2>(a.rep(),b.rep()));
     }
 
     //multiplication of two vectors v*w
     template<class T, memory::simd O, int N, class R1, class R2>
-    vec<T,O,N, vec_mul<T,O,N,R1,R2> >
-    forceinline operator *(vec<T,O,N,R1> const& a, vec<T,O,N,R2> const& b){
-        return vec<T,O,N,vec_mul<T,O,N,R1,R2> >(vec_mul<T,O,N,R1,R2>(a.rep(),b.rep()));
+    rvec<T,O,N, vec_mul<T,O,N,R1,R2> >
+    forceinline operator *(rvec<T,O,N,R1> const& a, rvec<T,O,N,R2> const& b){
+        return rvec<T,O,N,vec_mul<T,O,N,R1,R2> >(vec_mul<T,O,N,R1,R2>(a.rep(),b.rep()));
     }
 
     /* OK I give the type because the compiler makes me partial specialization*/
@@ -87,114 +87,114 @@ namespace numeric{
 
     //addition of scalar/vector, lambda+v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_add<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator +(double const& s, vec<T,O,N,R2> const& b){
-        return vec<T,O,N, vec_add<T,O,N, vec_scalar<T,O,N>, R2> >(vec_add<T,O,N,vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(s),b.rep()));
+    forceinline rvec<T,O,N, vec_add<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator +(double const& s, rvec<T,O,N,R2> const& b){
+        return rvec<T,O,N, vec_add<T,O,N, vec_scalar<T,O,N>, R2> >(vec_add<T,O,N,vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(s),b.rep()));
     }
 
     //addition of scalar/vector, lambda+v for int
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_add<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator +(int const& s, vec<T,O,N,R2> const& b){
+    forceinline rvec<T,O,N, vec_add<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator +(int const& s, rvec<T,O,N,R2> const& b){
         return operator+(static_cast<T>(s),b);// CHECK IF NO COPY
     }
 
     //v + lambda(double)
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_add<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator +(vec<T,O,N,R2> const& b, double const& s){
+    forceinline rvec<T,O,N, vec_add<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator +(rvec<T,O,N,R2> const& b, double const& s){
         return operator+(s,b);// CHECK IF NO COPY
     }
 
     //v + lambda(int)
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_add<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator +(vec<T,O,N,R2> const& b, int const& s){
+    forceinline rvec<T,O,N, vec_add<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator +(rvec<T,O,N,R2> const& b, int const& s){
         return operator+(static_cast<T>(s),b);
     }
 
     // Tim to Tim FYI A-B != B-A
     //subtraction of scalar/vector, lambda-v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_sub<T,O,N, vec_scalar<T,O,N>,R2> >
-    operator -(double const& s, vec<T,O,N,R2> const& b){
-        return vec<T,O,N, vec_sub<T,O,N, vec_scalar<T,O,N>, R2> >(vec_sub<T,O,N, vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(s),b.rep()));
+    forceinline rvec<T,O,N, vec_sub<T,O,N, vec_scalar<T,O,N>,R2> >
+    operator -(double const& s, rvec<T,O,N,R2> const& b){
+        return rvec<T,O,N, vec_sub<T,O,N, vec_scalar<T,O,N>, R2> >(vec_sub<T,O,N, vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(s),b.rep()));
     }
 
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_sub<T,O,N,R2, vec_scalar<T,O,N> > >
-    operator -(vec<T,O,N,R2> const& b,double const& s){
-        return vec<T,O,N, vec_sub<T,O,N,R2,vec_scalar<T,O,N> > >(vec_sub<T,O,N,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(s)));
+    forceinline rvec<T,O,N, vec_sub<T,O,N,R2, vec_scalar<T,O,N> > >
+    operator -(rvec<T,O,N,R2> const& b,double const& s){
+        return rvec<T,O,N, vec_sub<T,O,N,R2,vec_scalar<T,O,N> > >(vec_sub<T,O,N,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(s)));
     }
 
     //subtraction of scalar/vector, lambda-v for int
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_sub<T,O,N, vec_scalar<T,O,N>,R2> >
-    operator -(int const& s, vec<T,O,N,R2> const& b){
+    forceinline rvec<T,O,N, vec_sub<T,O,N, vec_scalar<T,O,N>,R2> >
+    operator -(int const& s, rvec<T,O,N,R2> const& b){
         return operator-(static_cast<T>(s),b);// CHECK IF NO COPY
     }
 
     //v - lambda(int)
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_sub<T,O,N,R2,vec_scalar<T,O,N> > >
-    operator -(vec<T,O,N,R2> const& b, int const& s){
+    forceinline rvec<T,O,N, vec_sub<T,O,N,R2,vec_scalar<T,O,N> > >
+    operator -(rvec<T,O,N,R2> const& b, int const& s){
         return operator-(b,static_cast<T>(s));
     }
 
     //multiplication of scalar/vector, lambda*v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator *(double const& s, vec<T,O,N,R2> const& b){
-        return vec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>, R2> >(vec_mul<T,O,N,vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(s),b.rep()));
+    forceinline rvec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator *(double const& s, rvec<T,O,N,R2> const& b){
+        return rvec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>, R2> >(vec_mul<T,O,N,vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(s),b.rep()));
     }
 
     //multiplication of scalar/vector, lambda*v for int
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator *(int const& s, vec<T,O,N,R2> const& b){
+    forceinline rvec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator *(int const& s, rvec<T,O,N,R2> const& b){
         return operator*(static_cast<T>(s),b); 
     }
     
     //v * lambda(double)
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator *(vec<T,O,N,R2> const& b, double const& s){
+    forceinline rvec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator *(rvec<T,O,N,R2> const& b, double const& s){
         return operator*(s,b);
     }
 
     //v * lambda(int)
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator *(vec<T,O,N,R2> const& b, int const& s){
+    forceinline rvec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator *(rvec<T,O,N,R2> const& b, int const& s){
         return operator*(static_cast<T>(s),b);
     }
 
     // Tim to Tim FYI A/B != B/A
     //division of scalar/vector, lambda*v for double, partial specialization are impossible on a single function
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_div<T,O,N, vec_scalar<T,O,N>,R2> >
-    operator /(double const& s, vec<T,O,N,R2> const& b){
-        return vec<T,O,N, vec_div<T,O,N,vec_scalar<T,O,N>, R2> >(vec_div<T,O,N,vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(s),b.rep()));
+    forceinline rvec<T,O,N, vec_div<T,O,N, vec_scalar<T,O,N>,R2> >
+    operator /(double const& s, rvec<T,O,N,R2> const& b){
+        return rvec<T,O,N, vec_div<T,O,N,vec_scalar<T,O,N>, R2> >(vec_div<T,O,N,vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(s),b.rep()));
     }
 
     //division of scalar/vector, lambda/v for int
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_div<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator /(int const& s, vec<T,O,N,R2> const& b){
+    forceinline rvec<T,O,N, vec_div<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator /(int const& s, rvec<T,O,N,R2> const& b){
         return operator/(static_cast<T>(s),b); 
     }
     
     //v / lambda(double)
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_div<T,O,N, R2,vec_scalar<T,O,N> > >
-    operator /(vec<T,O,N, R2> const& b, double const& s){
-        return  vec<T,O,N,vec_div<T,O,N,R2,vec_scalar<T,O,N> > >(vec_div<T,O,N,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(s)));
+    forceinline rvec<T,O,N, vec_div<T,O,N, R2,vec_scalar<T,O,N> > >
+    operator /(rvec<T,O,N, R2> const& b, double const& s){
+        return  rvec<T,O,N,vec_div<T,O,N,R2,vec_scalar<T,O,N> > >(vec_div<T,O,N,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(s)));
     }
 
     //v / lambda(int)
     template<class T, memory::simd O, int N, class R2>
-    forceinline vec<T,O,N, vec_div<T,O,N,vec_scalar<T,O,N>,R2> >
-    operator /(vec<T,O,N,R2> const& b, int const& s){
+    forceinline rvec<T,O,N, vec_div<T,O,N,vec_scalar<T,O,N>,R2> >
+    operator /(rvec<T,O,N,R2> const& b, int const& s){
         return operator/(b,static_cast<T>(s));
     }
 /** \endcond I do not need this part in the doc */

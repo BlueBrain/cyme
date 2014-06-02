@@ -54,6 +54,7 @@ public:
     typedef boost::array<storage_type,N>   base_type; //default template seems impossible on partial specialization
 
     typedef typename base_type::iterator iterator;
+    typedef typename base_type::const_iterator const_iterator;
 
     explicit array(){
         std::fill(data.begin(),data.end(),storage_type());
@@ -116,8 +117,8 @@ public:
     typedef memory::storage<value_type,memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)*T::value_size,memory::AoSoA>                storage_type;
     typedef boost::array<storage_type,storage_width>  base_type; //default template seems impossible on partial specialization
     
-
     typedef typename base_type::iterator iterator;
+    typedef typename base_type::const_iterator const_iterator;
     
     explicit array(){
         for(size_type i(0); i<storage_width; ++i)

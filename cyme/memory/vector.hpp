@@ -49,6 +49,7 @@ namespace cyme{
         typedef memory::storage<value_type,T::value_size,memory::AoS>              storage_type;
         typedef std::vector<storage_type, memory::Allocator<storage_type> >  base_type; //default template seems impossible on partial specialization
         typedef typename base_type::iterator iterator;
+        typedef typename base_type::const_iterator const_iterator;
 
         vector(const size_t size=1, value_type value=value_type())
         :data(size,value){
@@ -118,6 +119,7 @@ namespace cyme{
         memory::Allocator<storage_type>
         > base_type;
         typedef typename base_type::iterator iterator;
+        typedef typename base_type::const_iterator const_iterator;
 
         vector(const size_t size=1  , value_type value=value_type())
         :data(size/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))+1,value),size_cyme(size){
