@@ -29,6 +29,8 @@
 #ifndef CYME_CYME_HPP
 #define CYME_CYME_HPP
 
+#pragma GCC diagnostic ignored "-Wshadow"
+
 #define forceinline __inline__ __attribute__((always_inline))
 
 #include <math.h> // exp system

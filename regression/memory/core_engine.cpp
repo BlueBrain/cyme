@@ -7,10 +7,10 @@ using namespace cyme::test;
 #define ORDER T::order 
 #define MAX 1000 
 
-    template<class T, int M>
+    template<class T, size_t M>
     struct synapse{
        typedef T value_type;
-       static const int value_size = M;
+       static const size_t value_size = M;
     };
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(core_operator_plus, T, floating_point_block_types) {

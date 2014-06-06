@@ -29,7 +29,7 @@
  template<class T>
  struct synapse{
      typedef T value_type;
-     static const int value_size = 18;
+     static const size_t value_size = 18;
  };
 
  typedef cyme::array<synapse<float>,1024, memory::AoS> block_f_aos;
@@ -53,8 +53,8 @@
 
  template<class Ba>
  void init(Ba& block_a){
-     for(int i=0; i<block_a.size(); ++i)
-         for(int j=0; j<block_a.size_block(); ++j){
+     for(size_t i=0; i<block_a.size(); ++i)
+         for(size_t j=0; j<block_a.size_block(); ++j){
              typename Ba::value_type random = 10*drand48();
              block_a(i,j) = random;
          }
@@ -158,7 +158,7 @@ R*/
      static inline void cnrn_state(iterator it){
          cnrn_states(it);
      }
-     const static int value_size = 18;
+     const static size_t value_size = 18;
  };
 
 
@@ -167,7 +167,7 @@ R*/
  public:
      typedef typename mechanism::value_type value_type;
 
-     explicit pack(int s, int value):cont(s,value){ // vector constructor
+     explicit pack(size_t s, size_t value):cont(s,value){ // vector constructor
      }
 
      explicit pack():cont(){ // array constructor

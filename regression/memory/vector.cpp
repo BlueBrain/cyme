@@ -6,10 +6,10 @@ using namespace cyme::test;
 #define N T::n
 #define ORDER T::order 
 
-    template<class T, int M>
+    template<class T, size_t M>
     struct synapse{
        typedef T value_type;
-       static const int value_size = M;
+       static const size_t value_size = M;
     };
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vector_init_default_constructor, T, floating_point_block_types) {
@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_init_default_size_constructor, T, floating_
      for(std::size_t i=0; i < N*10; ++i)
         test[i] = 0;
 
-     int b = memcmp((void*)test, (void*)&a(0,0), N*10*sizeof(TYPE));
+     size_t b = memcmp((void*)test, (void*)&a(0,0), N*10*sizeof(TYPE));
      BOOST_CHECK_EQUAL(b,0);
 }
 
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_init_value_size_constructor, T, floating_po
      for(std::size_t i=0; i < N*10; ++i)
         test[i] = 3;
 
-     int b = memcmp((void*)test, (void*)&a(0,0), N*10*sizeof(TYPE));
+     size_t b = memcmp((void*)test, (void*)&a(0,0), N*10*sizeof(TYPE));
      BOOST_CHECK_EQUAL(b,0); 
 }
 
