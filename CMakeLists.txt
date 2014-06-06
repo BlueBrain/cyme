@@ -44,7 +44,7 @@ endif(NOT MACHINE_CONFIG)
 
 project (cyme)
 
-option(CYME_BUILDYARD "Build with Buildyard"  OFF)
+option(CYME_BUILDYARD "Build with Buildyard"  ON)
 set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OS X" FORCE) #overwrite Builyard setting 32 bit is outdate
 
 set(RELEASE_VERSION OFF) # OFF or ABI version
