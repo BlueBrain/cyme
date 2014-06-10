@@ -5,6 +5,8 @@ using namespace cyme::test;
 #define TYPE typename T::value_type
 #define SIZE T::size
 #define MAX 1000 
+
+#pragma GCC diagnostic ignored "-Wvla" // compiler complains about line 13 which is not dynamic at all but determine during compile time
 //MAKE SIMD test is not easy do I do : memory -> simd register (perform something) -> memory where I finally test
 //not the SIMD type is presently given bu the __GETSIMD__() function hardcoded into /memory/detail/simd.h
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_default_constructor, T, floating_point_test_types) {

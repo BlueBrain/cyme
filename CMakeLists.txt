@@ -26,8 +26,8 @@ endif(MACHINE_CONFIG)
 set(CMAKE_INSTALL_PREFIX "/opt/cyme" CACHE STRING "Install path prefix, prepended onto install directories.")
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.")
 if(NOT MACHINE_CONFIG)
-    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3" CACHE STRING "Compiler flags for Release compiles.")
-    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64" CACHE STRING "Compiler flags for Debug compiles.")
+    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG -O3 " CACHE STRING "Compiler flags for Release compiles.")
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -m64 " CACHE STRING "Compiler flags for Debug compiles.")
 endif(NOT MACHINE_CONFIG)
 
 ########################################################################
@@ -63,6 +63,7 @@ set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake ${CMAKE_SOURCE_DIR}/CMake/common)
 
 if(CYME_BUILDYARD)
+    set(COMMON_USE_CXX03 "ON" CACHE STRING "C++11 features are disabled " FORCE)
     include(GitExternal)
     set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
     set(BOOST_MIN_VERSION "1.49.0") #old is bad

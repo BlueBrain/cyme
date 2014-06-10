@@ -333,17 +333,11 @@ namespace numeric{
         */
         forceinline explicit rvec(value_type a):expr_rep(a){
         }
-        
+
         /**
            \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
         */
-        forceinline rvec& operator= (value_type a){
-            return *this;
-        }
-        
-        /**
-           \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
-        */
+
         forceinline rvec& operator= (rvec const& rhs){
             this->expr_rep() = rhs.expr_rep(); //basic register copy no three
             return *this;
