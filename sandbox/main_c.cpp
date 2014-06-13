@@ -93,7 +93,6 @@ struct test_case{
     void operator()(T const&){
         int limit = 4;
         typedef typename T::storage_type storage_type;
-        typedef typename storage_type::value_type value_type;
         const std::size_t N(0xfffff);
         T v(N,0);
 

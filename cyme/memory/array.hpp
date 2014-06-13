@@ -29,7 +29,7 @@
 #define CYME_ARRAY_HPP
 
 #include "memory/detail/simd.h"
-#include "memory/detail/array.hpp" // copy of boost::array + align
+#include "memory/detail/array_helper.hpp" // copy of boost::array + align
 #include "memory/detail/storage.hpp"
 
 namespace cyme{
@@ -51,7 +51,7 @@ public:
     typedef value_type&                                               reference;
     typedef const value_type&                                         const_reference;
     typedef memory::storage<value_type,T::value_size,memory::AoS>              storage_type;
-    typedef boost::array<storage_type,N>   base_type; //default template seems impossible on partial specialization
+    typedef cyme::array_helper<storage_type,N>   base_type; //default template seems impossible on partial specialization
 
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
@@ -63,7 +63,7 @@ public:
     array(value_type value){
         std::fill(data.begin(),data.end(),storage_type(value));
     }
-    
+
     iterator begin(){
         return this->data.begin();
     }
@@ -115,11 +115,11 @@ public:
     typedef const value_type&                                         const_reference;
     static const size_type  storage_width = N/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))+1;
     typedef memory::storage<value_type,memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)*T::value_size,memory::AoSoA>                storage_type;
-    typedef boost::array<storage_type,storage_width>  base_type; //default template seems impossible on partial specialization
-    
+    typedef cyme::array_helper<storage_type,storage_width> base_type; //default template seems impossible on partial specialization
+
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
-    
+
     explicit array(){
         for(size_type i(0); i<storage_width; ++i)
             data[i] = storage_type(); // fill up to 0

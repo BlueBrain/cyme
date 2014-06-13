@@ -1,8 +1,8 @@
-/* The following code declares class array,
- * an STL container (as wrapper) for arrays of constant size.
+/* The following code declares class array_helper,
+ * an STL container (as wrapper) for array_helpers of constant size.
  *
  * See
- *      http://www.boost.org/libs/array/
+ *      http://www.boost.org/libs/array_helper/
  * for documentation.
  *
  * The original author site is at: http://www.josuttis.com/
@@ -20,7 +20,7 @@
  *      See <http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#776> or Trac issue #3168
  *      Eventually, we should remove "assign" which is now a synonym for "fill" (Marshall Clow)
  * 10 Mar 2010 - added workaround for SUNCC and !STLPort [trac #3893] (Marshall Clow)
- * 29 Jan 2004 - c_array() added, BOOST_NO_PRIVATE_IN_AGGREGATE removed (Nico Josuttis)
+ * 29 Jan 2004 - c_array_helper() added, BOOST_NO_PRIVATE_IN_AGGREGATE removed (Nico Josuttis)
  * 23 Aug 2002 - fix for Non-MSVC compilers combined with MSVC libraries.
  * 05 Aug 2001 - minor update (Nico Josuttis)
  * 20 Jan 2001 - STLport fix (Beman Dawes)
@@ -30,11 +30,11 @@
  */
 
 
-// this file is just a copy past of the boost array, clean up, I need to align to get better performance
+// this file is just a copy past of the boost array_helper, clean up, I need to align to get better performance
 
 
-#ifndef BOOST_ARRAY_HPP
-#define BOOST_ARRAY_HPP
+#ifndef BOOST_ARRAY_CYME_HPP
+#define BOOST_ARRAY_CYME_HPP
 
 #include <cstddef>
 #include <stdexcept>
@@ -48,13 +48,13 @@
 #include "memory/detail/simd.h"
 
 
-namespace boost { // Tim:  I keep the same name space else I am going to big mistake
+namespace cyme { 
 
     template<class T, std::size_t N>
-    class array {
+    class array_helper {
       public:
-        T elems[N] __attribute__((aligned(static_cast<int>(memory::__GETSIMD__()))));    // fixed-size array of elements of type T, align
-      //  T elems[N];    // fixed-size array of elements of type T, align
+        T elems[N] __attribute__((aligned(static_cast<int>(memory::__GETSIMD__()))));    // fixed-size array_helper of elements of type T, align
+      //  T elems[N];    // fixed-size array_helper of elements of type T, align
       public:
         // type definitions
         typedef T              value_type;
@@ -133,7 +133,7 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
         enum { static_size = N };
 
         // swap (note: linear complexity)
-        void swap (array<T,N>& y) {
+        void swap (array_helper<T,N>& y) {
             for (size_type i = 0; i < N; ++i)
                 boost::swap(elems[i],y.elems[i]);
         }
@@ -142,12 +142,12 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
         const T* data() const { return elems; }
         T* data() { return elems; }
 
-        // use array as C array (direct read/write access to data)
-        T* c_array() { return elems; }
+        // use array_helper as C array_helper (direct read/write access to data)
+        T* c_array_helper() { return elems; }
 
         // assignment with type conversion
         template <typename T2>
-        array<T,N>& operator= (const array<T2,N>& rhs) {
+        array_helper<T,N>& operator= (const array_helper<T2,N>& rhs) {
             std::copy(rhs.begin(),rhs.end(), begin());
             return *this;
         }
@@ -162,7 +162,7 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
         // check range (may be private because it is static)
         static void rangecheck (size_type i) {
             if (i >= size()) {
-                std::out_of_range e("array<>: index out of range");
+                std::out_of_range e("array_helper<>: index out of range");
                 boost::throw_exception(e);
             }
         }
@@ -171,38 +171,38 @@ namespace boost { // Tim:  I keep the same name space else I am going to big mis
 
     // comparisons
     template<class T, std::size_t N>
-    bool operator== (const array<T,N>& x, const array<T,N>& y) {
+    bool operator== (const array_helper<T,N>& x, const array_helper<T,N>& y) {
         return std::equal(x.begin(), x.end(), y.begin());
     }
     template<class T, std::size_t N>
-    bool operator< (const array<T,N>& x, const array<T,N>& y) {
+    bool operator< (const array_helper<T,N>& x, const array_helper<T,N>& y) {
         return std::lexicographical_compare(x.begin(),x.end(),y.begin(),y.end());
     }
     template<class T, std::size_t N>
-    bool operator!= (const array<T,N>& x, const array<T,N>& y) {
+    bool operator!= (const array_helper<T,N>& x, const array_helper<T,N>& y) {
         return !(x==y);
     }
     template<class T, std::size_t N>
-    bool operator> (const array<T,N>& x, const array<T,N>& y) {
+    bool operator> (const array_helper<T,N>& x, const array_helper<T,N>& y) {
         return y<x;
     }
     template<class T, std::size_t N>
-    bool operator<= (const array<T,N>& x, const array<T,N>& y) {
+    bool operator<= (const array_helper<T,N>& x, const array_helper<T,N>& y) {
         return !(y<x);
     }
     template<class T, std::size_t N>
-    bool operator>= (const array<T,N>& x, const array<T,N>& y) {
+    bool operator>= (const array_helper<T,N>& x, const array_helper<T,N>& y) {
         return !(x<y);
     }
 
     // global swap()
     template<class T, std::size_t N>
-    inline void swap (array<T,N>& x, array<T,N>& y) {
+    inline void swap (array_helper<T,N>& x, array_helper<T,N>& y) {
         x.swap(y);
     }
 
     template<class T, std::size_t N>
-    std::size_t hash_value(const array<T,N>& arr) {
+    std::size_t hash_value(const array_helper<T,N>& arr) {
         return boost::hash_range(arr.begin(), arr.end());
     }
 
