@@ -232,7 +232,7 @@ endif(CYME_MAIN)
 if(CYME_TESTS)
     include(CTest)
     enable_testing()
-    add_subdirectory (regression)
+    add_subdirectory (testing)
 endif(CYME_TESTS)
 
 ########################################################################

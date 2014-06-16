@@ -1,0 +1,6 @@
+The test Na.cpp check the good execution of the framework for a channel Na.
+But it does not check the results. Deep verifications is performs into the unit
+tests, where every tests is performs for AoSoA and AoS and compared using a
+a given epsilon in test_header.hpp. At least it checks if the given assembly
+works on the compiled platform.
+

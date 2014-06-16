@@ -1,4 +1,4 @@
-#include <regression/test_header.hpp>
+#include <testing/unit/test_header.hpp>
 
 using namespace cyme::test;
 
@@ -8,23 +8,22 @@ using namespace cyme::test;
 
 #define NN memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE)
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
     TYPE res[NN] __attribute__((aligned(64)));
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            a[i] = GetRandom<TYPE>();
-            b[i] = GetRandom<TYPE>();
+            b[i] = fabs(GetRandom<TYPE>());
         }
 
-        numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
+        numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va;
         numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
 
         for(size_t i=0; i<NN; ++i)
-            a[i] = exp(b[i]);
+            a[i] = log(b[i]);
 
-        va = exp(vb);
+        va = log(vb);
         va.store(res);
 
         for(size_t i=0; i<NN; ++i)
