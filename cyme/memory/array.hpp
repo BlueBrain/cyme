@@ -115,13 +115,7 @@ public:
     typedef const value_type&                                         const_reference;
     static const size_type  storage_width = N/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))+1;
     typedef memory::storage<value_type,memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)*T::value_size,memory::AoSoA>                storage_type;
-<<<<<<< HEAD
     typedef cyme::array_helper<storage_type,storage_width> base_type; //default template seems impossible on partial specialization
-
-=======
-    typedef boost::array<storage_type,storage_width>__attribute__((aligned(static_cast<int>(memory::__GETSIMD__()))))  base_type; //default template seems impossible on partial specialization
-    
->>>>>>> 3d2b0ed...  reorganize the tests section unit and regression
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
 
