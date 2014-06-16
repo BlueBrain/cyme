@@ -10,7 +10,10 @@ The include is cyme/cyme.hpp
 
 If cyme has been installed to a non-standard location then it may be necessary to use -I compiler flags to point to the right directories.
 Unfortunately, for now, cyme can not detect the platform where your are compiling. Therefore, you have to specify a series of flags of compilation
-specific to your target platform. As usual you should add optimisation flag e.g. -O3.
+specific to your target platform. As usual you should add optimisation flag e.g. -O3. Cyme allows composite vector e.g. several SIMD vector are packed 
+together to build a "big one", this option is passed to the compiler by the flag -D__CYME_UNROLL_VALUE__=1 (a single SIMD vector), 2 (2 vectors packed)
+or 4. A big unroll factor does not guarantee a faster code, test and try ! Cyme performs FMA operations, if your machine support the technology, add the 
+the flag -mfma (x86) or to be sure -D__FMA__.
 
 <TABLE BORDER="1">
 <CAPTION> Flags and options of compilation </CAPTION>
@@ -23,10 +26,10 @@ specific to your target platform. As usual you should add optimisation flag e.g.
  </TR>
  <TR>
  <TH> needed Flags  </TH>
- <TD  align="center">  -D__CYME_SIMD_VALUE__=sse -msse4  </TD>
- <TD  align="center">  -D__CYME_SIMD_VALUE__=avx -mavx   </TD>
- <TD  align="center">  -D__CYME_SIMD_VALUE__=qpx         </TD>
- <TD  align="center">  -D__CYME_SIMD_VALUE__=mic -D__FMA__ -mmic   </TD>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=sse <br> -D__CYME_UNROLL_VALUE__=4 <br> -msse4   </TD>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=avx <br> -D__CYME_UNROLL_VALUE__=4 <br> -mavx    </TD>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=qpx <br> -D__CYME_UNROLL_VALUE__=4          </TD>
+ <TD  align="center">  -D__CYME_SIMD_VALUE__=mic <br> -D__CYME_UNROLL_VALUE__=4 <br> -D__FMA__ -mmic   </TD>
  </TR>
 </TABLE>
 
@@ -62,7 +65,7 @@ It demonstrated the abilities of the compiler to construct/simplify the DAG  wit
 
 If the library is installed in the standard location, for AVX on x86, you will compile by
 
-    g++  -D__CYME_SIMD_VALUE__=avx -mavx -O3 my_program.cpp 
+    g++  -D__CYME_SIMD_VALUE__=avx -D__CYME_UNROLL_VALUE__=2 -mavx -O3 my_program.cpp  (unroll of 2)
                             
 
 Moreover, if you performed operations with specialised library, it will necessitate additional link to the corresponding one (IBM simd_mass per example), e.g.

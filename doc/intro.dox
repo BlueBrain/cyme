@@ -1,8 +1,6 @@
 /*!
 
 \mainpage Cyme notice
-
-\section Introduction
 	
 The main purpose of the cyme framework is to facilitate SIMD programming, without any fastidious intrinsics SIMD.
 To achieve the performance, cyme is composed of two parts: containers (inspired from equivalent in the STL). 

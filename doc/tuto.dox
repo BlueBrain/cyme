@@ -29,28 +29,30 @@ in the second case they are interleaved on the size of the SIMD register desired
 For the initialization, the bracket operator (i,j) is implemented. For both memory layout it will pick up element following the AoS layout ideology. 
 We make this choice as it is easier for user to represent AoS layout in mind. 
 
-\image html memory_access.tiff Memory access following the AoS ideology 
+\image html memory_access.tiff Memory access following the AoS ideology
 
 Thus we can write :
 
-     cyme::array<channel<float>,5, memory::AoS> a; 
-     cyme::array<channel<float>,5, memory::AoSoA> b; 
+     cyme::array<channel<float>,5, memory::AoS> a;
+     cyme::array<channel<float>,5, memory::AoSoA> b;
 
-     a(3,0) = 3.4; 
-     b(3,0) = 3.4; 
-    
-\section tuto2 Iterator and memory manipulation 
+     a(3,0) = 3.4;
+     b(3,0) = 3.4;
+
+\section tuto2 Iterator and memory manipulation
 
 Based on the std::vector and std::array, cyme allows iterator mechanism, it is the main advantage of the library. As usual, the iterator manipulates the memory:
 for the AoS layout, a simple iteration, move from one element to the next element. For the AoSoA, it will move for the next element which is four times « bigger ».
 \image html iterator.tiff Manipulation into the container with the iterator
-    
+
 Thus we can write
-  
-    for(typename cyme::array<channel<float>,5, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
-        I do something 
-      
-A second operator [i] completes the first one (i,j), it reads the memory with « scalar access » for AoS but with « vectorial access » with AoSoA.  
+
+    cyme::array<synapse<float>,5, memory::AoSoA>::iterator it = a.begin();
+    cyme::array<synapse<float>,5, memory::AoSoA>::const_iterator cit = a.begin();
+    for(; it < a.end(); ++it,++cit)
+        I do something
+
+A second operator [i] completes the first one (i,j), it reads the memory with « scalar access » for AoS but with « vectorial access » with AoSoA. 
 When we request an element from the iterator with AoS layout, we manipulate one element of data, and four for the AoSoA layout with the help
 of SIMD technology.
 
@@ -66,19 +68,23 @@ In 2 steps with the AoSoA layout the initialization is done, against  5 steps fo
 \section tuto3 Computation 
   
 The last tutorial  operations. We simply request data from the iterator and execute operations. But with the AoSoA layout,
-we can compute our operations 4 times faster.
-
+we can compute our operations 4 times faster. Do not forget to declare a const iterator for the rhs.
+ 
     cyme::array<synapse<float>,5, memory::AoSoA> b;
     init(b); // init function
-    for(cyme::array<synapse<float>,5, memory::AoSoA>::iterator it = b.begin(); it < b.end(); ++it)
-       (*it)[0] = (*it)[1]*(*it)[2]+(*it)[3]/1.2;
+    cyme::array<synapse<float>,5, memory::AoSoA>::iterator it = b.begin();
+    cyme::array<synapse<float>,5, memory::AoSoA>::const_iterator cit = b.begin(); 
+    for(; it < b.end(); ++it,++cit)
+       (*it)[0] = (*cit)[1]*(*cit)[2]+(*cit)[3]/1.2;
 
-The framework is more and less compatible with C++ features specially algorithm concept. The previous example my be rewritten using a functor and std::for_each
+The framework is more and less compatible with C++ features specially algorithm concept. The previous example my be rewritten using a functor and std::for_each,
+do not forget to declare a const reference to make the distinction read/write
 
     template<class T>
     struct functor{
-        void operator()(typename T::storage_type& S ){ // cyme::vector and cyme::array are built over cyme::storage
-             S[0] = S[1]*S[2]+S[3]/1.2;
+        void operator()(typename T::storage_type& W ){ // cyme::vector and cyme::array are built over cyme::storage
+             typename T::storage_type const& R
+             W[0] = R[1]*R[2]+R[3]/1.2;
         }
     };
 
@@ -99,40 +105,41 @@ We summarize on a basic example
     #include <iostream>
     #include <algorithm>
     #include <boost/chrono.hpp>
-   
+
     #include "cyme/cyme.hpp"
-   
-   
+
+
     template<class T>
     struct synapse{
         typedef T value_type;
         static const int value_size = 18;
     };
-   
+
     template<class T>
     struct f_compute{
-        void operator()(typename T::storage_type& S ){
-             S[0] = exp(S[1])*S[2]+exp(S[3])/1.2;
+        void operator()(typename T::storage_type& W ){
+             typename T::storage_type const& R
+             W[0] = exp(R[1])*R[2]+exp(R[3])/1.2;
         }
     };
-   
+
     template<class T>
     struct f_init{
-        void operator()(typename T::storage_type& S ){
+        void operator()(typename T::storage_type& W ){
             for(int i=0;i <T::size_block(); ++i)
-                S[i] = drand48();
+                W[i] = drand48();
         }
     };
-   
+
     int main(int argc, char* argv[]){
-       typedef  cyme::vector<synapse<double>, memory::AoS> my_vector; 
+       typedef  cyme::vector<synapse<double>, memory::AoS> my_vector;
        my_vector b(0xfffff,0);
        std::for_each(b.begin(), b.end(), f_init<my_vector>() );
-   
+
        boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
            std::for_each(b.begin(), b.end(), f_compute<my_vector>() );
        boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
-   
+
        std::cout << " sec " << sec.count() << std::endl; }
 
 */

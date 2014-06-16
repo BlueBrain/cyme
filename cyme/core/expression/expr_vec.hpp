@@ -301,6 +301,8 @@ namespace numeric{
     /**
         \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
          During the compilation, we will create the tree of operations or DAG. The three is built on the read only vector
+         consenquently this object is called only with the const [] operators of the class storage.
+         \remark constrary the wrec I do not keep trace of the pointer of the input. I do not want generate a tree with a useless pointer.
     */
     template<class T, memory::simd O, int N = memory::unroll_factor::N, class Rep = vec_simd<T,O,N> >
     class rvec{
@@ -409,25 +411,27 @@ namespace numeric{
 
     /** 
         \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
-        During the compilation, we will create the tree of operations or DAG. Write only
+        During the compilation, we will create the tree of operations or DAG. It is  write only (lhs)
+        the operators [] of the storage class is not const
+        \remark the class saves a pointer to bring back the data into memory when the computation has been done
     */
     template<class T, memory::simd O, int N = memory::unroll_factor::N, class Rep = vec_simd<T,O,N> >
     class wvec{
     public:
         typedef rvec<T,O,N,Rep> V;
         typedef T value_type;
-        typedef value_type* pointer; 
+        typedef value_type* pointer;
         typedef const pointer const_pointer;
         typedef Rep base_type;
- 
+
 
         /**
            \brief constructor lhs of the operator =, I need to save the pointer to save the data into the memory after the calculation
         */
         forceinline explicit wvec(const_pointer rb):data_pointer(rb),expr_rep(rb){
         }
-        
-        
+
+
         /**
            \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
         */
@@ -435,7 +439,7 @@ namespace numeric{
             *(data_pointer) = a;
             return *this;
         }
-        
+
         /**
            \brief operator =, create the tree and execute  in normal condition
         */
@@ -444,7 +448,7 @@ namespace numeric{
             this->expr_rep() = rhs.rep()(); //basic register copy no three
             this->expr_rep.store(data_pointer); //store the SIMD register into main memory
             return *this;
-        } 
+        }
 
         /**
            \brief operator +=, create the tree and execute  in normal condition
