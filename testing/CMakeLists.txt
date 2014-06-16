@@ -23,7 +23,7 @@ function(compiler_flag testing_ techno_ test_ unroll_)
      STRING(COMPARE EQUAL "qpx" "${CYME_THERE}" CYME_TRUE)
      IF (CYME_TRUE)
          set(simd_test "qpx")
-         test_arch_dependence(${testing_}"" " " ${simd_test} ${unroll_} ${test_})
+         test_arch_dependence(${testing_} "" " " ${simd_test} ${unroll_} ${test_})
          #no flag for BG/Q
      endif (CYME_TRUE)
 

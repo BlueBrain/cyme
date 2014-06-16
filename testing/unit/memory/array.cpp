@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_negate, T, floating_point_block_typ
 
     check(block_a, block_b);
 }
-BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal_multiple, T, floating_point_block_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal_assign, T, floating_point_block_types) {
     cyme::array<synapse<TYPE,4>,N,memory::AoS> block_a;
     cyme::array<synapse<TYPE,4>,N,memory::AoSoA> block_b;
 

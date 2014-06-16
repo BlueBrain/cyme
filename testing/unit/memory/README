@@ -1,0 +1,108 @@
+Global Remarks, all tests run with a given mpl::list (different type). It means each test is built for the given type of the MPL list, for all SIMD tech and unroll factors
+
+alignement.cpp, memory boundary test
+test: alignement_test
+    - Test the boundary alignement of the memory for the specified targets (QPX,SSE,AVX,...), tested for float, double and int (mpl full_test_types see test_header.hpp)
+
+array.cpp, array test
+The strategy for these test is to run AoSoA example and compare to AoS, the tests validates a basic construction/execution of the ASM uwing rvec and wvec
+test: block_init_default_constructor
+    - Test default constructor (should be equal to zero), type list:floating_point_block_types
+test: block_init_value_constructor
+    - Test constuctor to a given value, type list:floating_point_block_types
+test: block_init_operator_bracket
+    - Test the bracket operator () for serial access, type list:floating_point_block_types
+test: block_copy_constructor
+    - Test the copy constructor, type list:floating_point_block_types
+test: block_operator_negate
+    <Down> Test the negate operator, type list:floating_point_block_types
+test: block_operator_equal_assign
+    - Test the assign operator, type list:floating_point_block_types
+test: block_operator_plusequal
+    - Test the += operators, type list:floating_point_block_types
+test: block_operator_minusequal
+    - Test the -= operators, type list:floating_point_block_types
+test: block_operator_minus_basic_type
+    - Test the operator - into a expression, type list:floating_point_block_types
+test: block_operator_multiplyequal
+    - Test the *= operators, type list:floating_point_block_types
+test: block_operator_divideequal
+    - Test the /= operators, type list:floating_point_block_types, note this operator calls the native / (not Newton Raphson)
+
+core_engine.cpp
+Theses tests evaluates the generation of the tree for more and less complex maths operations
+test: core_operator_plus
+    - Test an additions, type list:floating_point_block_types
+test: core_operator_minus
+    - Test an substractions & additions/subtractions together, type list:floating_point_block_types
+test: core_operator_multiply
+    - Test multiplications, type list:floating_point_block_types, type list:floating_point_block_types
+test: core_operator_div
+    - Test division, the solver selection is done into simd_div.hpp, type list:floating_point_block_types
+test: core_operator_add_mul_min_div
+    - Test combinaison of basics operators (+,-,*,/), type list:floating_point_block_types
+test: core_operator_fma_a_mul_b_plus_c
+    - Test FMA catch for a*b+c, type list:floating_point_block_types
+test: core_operator_fma_c_plus_a_mul_b
+    - Test FMA catch for a+b*c, type list:floating_point_block_types
+test: core_operator_fma_a_mul_b_plus_c_mul_d
+    - Test FMA catch for a*b+c*d, type list:floating_point_block_types
+test: core_operator_fms_a_minus_b_plus_c
+    - Test FMS catch for a*b-c, type list:floating_point_block_types
+test: core_operator_fms_c_minus_a_mul_b
+    - Test FMS catch for a-b*c, type list:floating_point_block_types
+test: core_operator_fms_a_minus_b_plus_c_mul_d
+    - Test FMS catch for a*b-c*d, type list:list:floating_point_block_types
+test: core_operator_bracket_torture
+    - Test kernels with a lot of brackets for all operators, type:list:floating_point_block_types
+test: core_operator_fma_c_plus_a_mul_b_scalar
+    - test all fma/fms possibilities for mix iterator/scalar, type:list:floating_point_block_types
+
+serial.cpp
+Test the serial object which is used for temporary operations
+test: block_init_default_constructor
+    - test default constructor, type list:floating_point_block_types
+test: block_init_default_constructor_value
+    - test constructor for a given value, type list:floating_point_block_types
+test: serial_does_not_store
+    - test to a given value, type list:floating_point_block_types
+test:floating_point_block_types
+    - test all basic operators for a serial object (+,-,*,/), type list:floating_point_block_types
+
+storage.cpp
+test the storage concept cyme::array & cyme::vector are templated on it
+test: storage_init_default_constructor
+    - test the default constructor of storage, type list:floating_point_test_types
+test: storage_init_value_constructor
+    - test the constructor to a given value, type list:floating_point_test_types
+test: storage_init_operator
+    - test the bracket operator (), type list:floating_point_test_types
+test: storage_operator
+    - test the = operator, type list:floating_point_test_types
+
+vector.cpp
+test the vector container (test similar to the array, little bit duplicated)
+test: vector_init_default_constructor
+    - test default constructor - empty vector, type:list:floating_point_block_types
+test: vector_init_default_size_constructor
+    - test constructor for a given size, type:list:floating_point_block_types
+test: vector_init_operator_bracket
+    - test the bracket operator (serial access), type:list:floating_point_block_types
+test: vector_copy_constructor
+    - test the copy constructor (dynamic memory), type:list:floating_point_block_types
+test: vector_resize_operator_bracket
+    - test the resize operators, type:list:floating_point_block_types
+tests: vector_operator_equal
+    - test the operator=, type:list:floating_point_block_types
+test: vector_operator_equal_multiple
+    - test the assign operators, type:list:floating_point_block_types
+test: vector_operator_scalar_fma
+    - test scalar FMA with vector, type:list:floating_point_torture_list
+test: vector_operator_plusequal
+    - test the operators +=, type:list:floating_point_torture_list
+test: vector_operator_multiplyequal
+    - test the operators *=, type:list:floating_point_torture_list
+test: vector_operator_minusequal
+    - test the operators -=, type:list:floating_point_torture_list
+test: vector_operator_divideequal
+    - test the operators /=, type:list:floating_point_torture_list

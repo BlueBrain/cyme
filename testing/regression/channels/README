@@ -1,0 +1,5 @@
+
+
+Na.cpp
+test: main
+   - This test executes the Na channel, for cyme vector,  all layouts i.e. AoS, AoSoA, float and double. This regression test checks the good execution of the process without crash.
