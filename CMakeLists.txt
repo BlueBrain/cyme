@@ -232,7 +232,7 @@ endif(CYME_MAIN)
 if(CYME_TESTS)
     include(CTest)
     enable_testing()
-    add_subdirectory (testing)
+    add_subdirectory (test)
 endif(CYME_TESTS)
 
 ########################################################################
