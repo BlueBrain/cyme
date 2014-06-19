@@ -21,7 +21,7 @@ namespace Na{
     template<class T>
     struct channel{
         typedef T value_type;
-        static const int value_size = 11;
+        static const size_t value_size = 11;
     };
 
     template<class T>
