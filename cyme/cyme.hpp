@@ -31,7 +31,7 @@
 
 #pragma GCC diagnostic ignored "-Wshadow"
 
-#define forceinline __inline__ __attribute__((always_inline))
+#define forceinline inline __attribute__((always_inline))
 
 #include <math.h> // exp system
 #include <cmath> // log system
