@@ -242,6 +242,8 @@ endif(CYME_TESTS)
 ########################################################################
 
 install(DIRECTORY cyme DESTINATION include FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.ipp")
+install(DIRECTORY test/validity/channels DESTINATION share/cyme/validity FILES_MATCHING PATTERN "*.cpp" PATTERN "*.hpp" PATTERN "README")
+
 
 if(CYME_BUILDYARD)
 include(CPackConfig)

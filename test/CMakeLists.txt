@@ -47,6 +47,9 @@ function(test_arch_dependence testing_ offload_ flag_ simd_ unroll_ test_)
     else(SLURM_FOUND)
         add_test(${testing_}_${test_}_${simd_}_${unroll_} ${testing_}_${test_}_${simd_}_${unroll_})
     endif(SLURM_FOUND)
+    if(${testing_} STREQUAL "ValidityTest")
+        install(TARGETS ${testing_}_${test_}_${simd_}_${unroll_} RUNTIME DESTINATION lib/cyme/validity)
+    endif()
 endfunction(test_arch_dependence)
 
 #add test directory
