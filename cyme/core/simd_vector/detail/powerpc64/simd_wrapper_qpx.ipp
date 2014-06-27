@@ -59,17 +59,17 @@ namespace numeric{
      \brief Returns a vector of which the value of each element is set to a.
      */
     template<>
-    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_load1<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::value_type a){
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_load1<float,memory::qpx,1>(const simd_trait<float,memory::qpx,1>::value_type& a){
         return vec_splats(a);
     }
 
     template<>
-    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_load1<float,memory::qpx,2>(const simd_trait<float,memory::qpx,2>::value_type a){
+    forceinline simd_trait<float,memory::qpx,2>::register_type _mm_load1<float,memory::qpx,2>(const simd_trait<float,memory::qpx,2>::value_type& a){
         return simd_trait<float,memory::qpx,2>::register_type(vec_splats(a),vec_splats(a));
     }
 
     template<>
-    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_load1<float,memory::qpx,4>(const simd_trait<float,memory::qpx,4>::value_type a){
+    forceinline simd_trait<float,memory::qpx,4>::register_type _mm_load1<float,memory::qpx,4>(const simd_trait<float,memory::qpx,4>::value_type& a){
         return simd_trait<float,memory::qpx,4>::register_type(vec_splats(a),vec_splats(a),vec_splats(a),vec_splats(a));
     }
 
@@ -487,17 +487,17 @@ namespace numeric{
      \brief Returns a vector of which the value of each element is set to a.
      */
     template<>
-    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_load1<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::value_type a){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_load1<double,memory::qpx,1>(const simd_trait<double,memory::qpx,1>::value_type& a){
         return vec_splats(a);
     }
 
     template<>
-    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_load1<double,memory::qpx,2>(const simd_trait<double,memory::qpx,2>::value_type a){
+    forceinline simd_trait<double,memory::qpx,2>::register_type _mm_load1<double,memory::qpx,2>(const simd_trait<double,memory::qpx,2>::value_type& a){
         return simd_trait<double,memory::qpx,2>::register_type(vec_splats(a),vec_splats(a));
     }
 
     template<>
-    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_load1<double,memory::qpx,4>(const simd_trait<double,memory::qpx,4>::value_type a){
+    forceinline simd_trait<double,memory::qpx,4>::register_type _mm_load1<double,memory::qpx,4>(const simd_trait<double,memory::qpx,4>::value_type& a){
         return simd_trait<double,memory::qpx,4>::register_type(vec_splats(a),vec_splats(a),vec_splats(a),vec_splats(a));
     }
 

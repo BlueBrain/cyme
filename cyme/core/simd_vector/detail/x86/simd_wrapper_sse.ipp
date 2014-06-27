@@ -37,17 +37,17 @@ namespace numeric{
      \brief  Load a double-precision (64-bit) floating-point element from memory into both elements of dst.
      */
     template<>
-    forceinline  simd_trait<double,memory::sse,1>::register_type _mm_load1<double,memory::sse,1>(const simd_trait<double,memory::sse,1>::value_type a){
+    forceinline  simd_trait<double,memory::sse,1>::register_type _mm_load1<double,memory::sse,1>(const simd_trait<double,memory::sse,1>::value_type& a){
         return _mm_set1_pd(a);
     }
 
     template<>
-    forceinline  simd_trait<double,memory::sse,2>::register_type _mm_load1<double,memory::sse,2>(const simd_trait<double,memory::sse,2>::value_type a){
+    forceinline  simd_trait<double,memory::sse,2>::register_type _mm_load1<double,memory::sse,2>(const simd_trait<double,memory::sse,2>::value_type& a){
         return simd_trait<double,memory::sse,2>::register_type(_mm_set1_pd(a),_mm_set1_pd(a));
     }
     
     template<>
-    forceinline  simd_trait<double,memory::sse,4>::register_type _mm_load1<double,memory::sse,4>(const simd_trait<double,memory::sse,4>::value_type a){
+    forceinline  simd_trait<double,memory::sse,4>::register_type _mm_load1<double,memory::sse,4>(const simd_trait<double,memory::sse,4>::value_type& a){
         return simd_trait<double,memory::sse,4>::register_type(_mm_set1_pd(a),_mm_set1_pd(a),_mm_set1_pd(a),_mm_set1_pd(a));
     }
 
@@ -547,17 +547,17 @@ namespace numeric{
      \brief Load a single-precision (32-bit) floating-point element from memory into all elements of dst.
      */
     template<>
-    forceinline  simd_trait<float,memory::sse,1>::register_type _mm_load1<float,memory::sse,1>(const simd_trait<float,memory::sse,1>::value_type a){
+    forceinline  simd_trait<float,memory::sse,1>::register_type _mm_load1<float,memory::sse,1>(const simd_trait<float,memory::sse,1>::value_type& a){
         return _mm_load1_ps(&a);
     }
 
     template<>
-    forceinline  simd_trait<float,memory::sse,2>::register_type _mm_load1<float,memory::sse,2>(const simd_trait<float,memory::sse,2>::value_type a){
+    forceinline  simd_trait<float,memory::sse,2>::register_type _mm_load1<float,memory::sse,2>(const simd_trait<float,memory::sse,2>::value_type& a){
         return simd_trait<float,memory::sse,2>::register_type(_mm_set1_ps(a),_mm_set1_ps(a));
     }
     
     template<>
-    forceinline  simd_trait<float,memory::sse,4>::register_type _mm_load1<float,memory::sse,4>(const simd_trait<float,memory::sse,4>::value_type a){
+    forceinline  simd_trait<float,memory::sse,4>::register_type _mm_load1<float,memory::sse,4>(const simd_trait<float,memory::sse,4>::value_type& a){
         return simd_trait<float,memory::sse,4>::register_type(_mm_set1_ps(a),_mm_set1_ps(a),_mm_set1_ps(a),_mm_set1_ps(a));
     }
 

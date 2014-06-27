@@ -33,7 +33,7 @@ namespace numeric{
     
     
     template<>
-    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_load1<double,memory::chimera,1>(simd_trait<double,memory::chimera,1>::value_type a){
+    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_load1<double,memory::chimera,1>(const simd_trait<double,memory::chimera,1>::value_type& a){
         return simd_trait<double,memory::chimera,1>::register_type(_mm256_set1_pd(a),a);
     }
     
@@ -68,17 +68,17 @@ namespace numeric{
      \brief Broadcast a double-precision (64-bit) floating-point element from memory to all elements of dst.
      */
     template<>
-    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_load1<double,memory::avx,1>(simd_trait<double,memory::avx,1>::value_type a){
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_load1<double,memory::avx,1>(const simd_trait<double,memory::avx,1>::value_type& a){
         return _mm256_set1_pd(a); // C - _mm256_broadcast_sd causes me a severe issue of perf into the e^y of the exp with clang, I do not know why ...
     }
 
     template<>
-    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_load1<double,memory::avx,2>(const simd_trait<double,memory::avx,2>::value_type a){
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_load1<double,memory::avx,2>(const simd_trait<double,memory::avx,2>::value_type& a){
         return simd_trait<double,memory::avx,2>::register_type(_mm256_set1_pd(a),_mm256_set1_pd(a));
     }
     
     template<>
-    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_load1<double,memory::avx,4>(const simd_trait<double,memory::avx,4>::value_type a){
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_load1<double,memory::avx,4>(const simd_trait<double,memory::avx,4>::value_type& a){
         return simd_trait<double,memory::avx,4>::register_type(_mm256_set1_pd(a),_mm256_set1_pd(a),_mm256_set1_pd(a),_mm256_set1_pd(a));
     }
 
@@ -361,11 +361,8 @@ namespace numeric{
         imm0_r0 = _mm_shuffle_epi32(imm0_r0, _MM_SHUFFLE(1,3,0,2));
         imm0_r1 = _mm_shuffle_epi32(imm0_r1, _MM_SHUFFLE(1,3,0,2));
 
-        __m128i imm1_r0 =  _mm_srli_epi64(imm0_r0,32);
-        __m128i imm1_r1 =  _mm_srli_epi64(imm0_r1,32);
-
-        imm1_r0 =  _mm_slli_epi64(imm0_r0,32);
-        imm1_r1 =  _mm_slli_epi64(imm0_r1,32);
+        __m128i imm1_r0 =  _mm_slli_epi64(imm0_r0,32);
+        __m128i  imm1_r1 =  _mm_slli_epi64(imm0_r1,32);
 
         xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, imm0_r0,0);
         xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, imm0_r1,0);
@@ -396,15 +393,10 @@ namespace numeric{
         imm0_r2 = _mm_shuffle_epi32(imm0_r2, _MM_SHUFFLE(1,3,0,2));
         imm0_r3 = _mm_shuffle_epi32(imm0_r3, _MM_SHUFFLE(1,3,0,2));
 
-        __m128i imm1_r0 =  _mm_srli_epi64(imm0_r0,32);
-        __m128i imm1_r1 =  _mm_srli_epi64(imm0_r1,32);
-        __m128i imm1_r2 =  _mm_srli_epi64(imm0_r2,32);
-        __m128i imm1_r3 =  _mm_srli_epi64(imm0_r3,32);
-
-        imm1_r0 =  _mm_slli_epi64(imm0_r0,32);
-        imm1_r1 =  _mm_slli_epi64(imm0_r1,32);
-        imm1_r2 =  _mm_slli_epi64(imm0_r2,32);
-        imm1_r3 =  _mm_slli_epi64(imm0_r3,32);
+        __m128i imm1_r0 =  _mm_slli_epi64(imm0_r0,32);
+        __m128i imm1_r1 =  _mm_slli_epi64(imm0_r1,32);
+        __m128i imm1_r2 =  _mm_slli_epi64(imm0_r2,32);
+        __m128i imm1_r3 =  _mm_slli_epi64(imm0_r3,32);
 
         xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, imm0_r0,0);
         xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, imm0_r1,0);
@@ -610,17 +602,17 @@ namespace numeric{
      \brief Broadcast a single-precision (32-bit) floating-point element from memory to all elements of dst.
      */
     template<>
-     simd_trait<float,memory::avx,1>::register_type _mm_load1<float,memory::avx,1>(simd_trait<float,memory::avx,1>::value_type a){
+     simd_trait<float,memory::avx,1>::register_type _mm_load1<float,memory::avx,1>(const simd_trait<float,memory::avx,1>::value_type& a){
         return _mm256_set1_ps(a);
     }
 
     template<>
-    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_load1<float,memory::avx,2>(const simd_trait<float,memory::avx,2>::value_type a){
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_load1<float,memory::avx,2>(const simd_trait<float,memory::avx,2>::value_type& a){
         return simd_trait<float,memory::avx,2>::register_type(_mm256_set1_ps(a),_mm256_set1_ps(a));
     }
     
     template<>
-    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_load1<float,memory::avx,4>(const simd_trait<float,memory::avx,4>::value_type a){
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_load1<float,memory::avx,4>(const simd_trait<float,memory::avx,4>::value_type& a){
         return simd_trait<float,memory::avx,4>::register_type(_mm256_set1_ps(a),_mm256_set1_ps(a),_mm256_set1_ps(a),_mm256_set1_ps(a));
     }
    

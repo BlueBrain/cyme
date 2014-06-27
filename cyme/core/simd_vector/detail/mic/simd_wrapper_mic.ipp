@@ -35,17 +35,17 @@ namespace numeric{
      \brief Broadcast double-precision (64-bit) floating-point value a to all elements of dst.
      */
     template<>
-    forceinline  simd_trait<double,memory::mic,1>::register_type _mm_load1<double,memory::mic,1>( simd_trait<double,memory::mic,1>::value_type a){
+    forceinline  simd_trait<double,memory::mic,1>::register_type _mm_load1<double,memory::mic,1>(const simd_trait<double,memory::mic,1>::value_type& a){
         return _mm512_set1_pd(a);
     }
 
     template<>
-    forceinline  simd_trait<double,memory::mic,2>::register_type _mm_load1<double,memory::mic,2>(const simd_trait<double,memory::mic,2>::value_type a){
+    forceinline  simd_trait<double,memory::mic,2>::register_type _mm_load1<double,memory::mic,2>(const simd_trait<double,memory::mic,2>::value_type& a){
         return simd_trait<double,memory::mic,2>::register_type(_mm512_set1_pd(a),_mm512_set1_pd(a));
     }
     
     template<>
-    forceinline  simd_trait<double,memory::mic,4>::register_type _mm_load1<double,memory::mic,4>(const simd_trait<double,memory::mic,4>::value_type a){
+    forceinline  simd_trait<double,memory::mic,4>::register_type _mm_load1<double,memory::mic,4>(const simd_trait<double,memory::mic,4>::value_type& a){
         return simd_trait<double,memory::mic,4>::register_type(_mm512_set1_pd(a),_mm512_set1_pd(a),_mm512_set1_pd(a),_mm512_set1_pd(a));
     }
     /**
@@ -574,17 +574,17 @@ namespace numeric{
      \brief Broadcast single-precision (32-bit) floating-point value a to all elements of dst.
      */
     template<>
-     simd_trait<float,memory::mic,1>::register_type _mm_load1<float,memory::mic,1>( simd_trait<float,memory::mic,1>::value_type a){
+     simd_trait<float,memory::mic,1>::register_type _mm_load1<float,memory::mic,1>(const simd_trait<float,memory::mic,1>::value_type& a){
         return _mm512_set1_ps(a);
     }
 
     template<>
-    forceinline  simd_trait<float,memory::mic,2>::register_type _mm_load1<float,memory::mic,2>(const simd_trait<float,memory::mic,2>::value_type a){
+    forceinline  simd_trait<float,memory::mic,2>::register_type _mm_load1<float,memory::mic,2>(const simd_trait<float,memory::mic,2>::value_type& a){
         return simd_trait<float,memory::mic,2>::register_type(_mm512_set1_ps(a),_mm512_set1_ps(a));
     }
     
     template<>
-    forceinline  simd_trait<float,memory::mic,4>::register_type _mm_load1<float,memory::mic,4>(const simd_trait<float,memory::mic,4>::value_type a){
+    forceinline  simd_trait<float,memory::mic,4>::register_type _mm_load1<float,memory::mic,4>(const simd_trait<float,memory::mic,4>::value_type& a){
         return simd_trait<float,memory::mic,4>::register_type(_mm512_set1_ps(a),_mm512_set1_ps(a),_mm512_set1_ps(a),_mm512_set1_ps(a));
     }
     /**

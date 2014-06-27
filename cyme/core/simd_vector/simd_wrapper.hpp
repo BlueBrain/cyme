@@ -35,7 +35,7 @@ namespace numeric{
     \brief free function (wrapper) for loading basic type (double,into) into register
     */
     template<class T, memory::simd O, int N>
-    forceinline typename simd_trait<T,O,N>::register_type _mm_load1(const typename simd_trait<T,O,N>::value_type a);
+    forceinline typename simd_trait<T,O,N>::register_type _mm_load1(const typename simd_trait<T,O,N>::value_type& a);
 
     /**
     \brief free function (wrapper) for loading data from memory (pointer) into register
