@@ -52,4 +52,4 @@ endfunction(test_arch_dependence)
 #add test directory
 add_subdirectory (unit/memory)
 add_subdirectory (unit/numeric)
-add_subdirectory (regression/channels)
+add_subdirectory (validity/channels)
