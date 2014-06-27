@@ -29,7 +29,7 @@
 #ifndef CYME_TRAIT_HPP
 #define CYME_TRAIT_HPP
 
-#include "memory/detail/simd.h"
+#include "cyme/memory/detail/simd.h"
 
 namespace numeric{
     /**
@@ -112,15 +112,15 @@ namespace numeric{
 }
 
 #ifdef __x86_64__
-    #include "core/simd_vector/detail/x86/trait_x86.ipp"
+    #include "cyme/core/simd_vector/detail/x86/trait_x86.ipp"
 #endif
 
 #ifdef _ARCH_QP
-    #include "core/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
+    #include "cyme/core/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
 #endif
 
 #ifdef __MIC__
-    #include "core/simd_vector/detail/mic/trait_mic.ipp"
+    #include "cyme/core/simd_vector/detail/mic/trait_mic.ipp"
 #endif
 
 #endif

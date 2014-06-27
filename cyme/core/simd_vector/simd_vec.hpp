@@ -29,8 +29,8 @@
 #ifndef CYME_SIMD_VEC_HPP
 #define CYME_SIMD_VEC_HPP
 
-#include "core/simd_vector/trait.hpp"
-#include "core/simd_vector/simd_wrapper.hpp"
+#include "cyme/core/simd_vector/trait.hpp"
+#include "cyme/core/simd_vector/simd_wrapper.hpp"
 
 namespace numeric{
 
@@ -167,8 +167,8 @@ namespace numeric{
     }
 } //end namespace
 
-#include "core/simd_vector/simd_vec.ipp"
-#include "core/simd_vector/simd_math.hpp" // contains all math operations include
+#include "cyme/core/simd_vector/simd_vec.ipp"
+#include "cyme/core/simd_vector/simd_math.hpp" // contains all math operations include
 
 #endif
 

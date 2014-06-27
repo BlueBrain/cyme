@@ -31,7 +31,7 @@
 
 #include <assert.h> 
 #include <stdlib.h> // POSIX, size_t is inside
-#include "memory/detail/simd.h"
+#include "cyme/memory/detail/simd.h"
 #include <limits>
 
 namespace memory{

@@ -29,8 +29,8 @@
 #ifndef CYME_STORAGE_HPP
 #define CYME_STORAGE_HPP
 
-#include "core/simd_vector/simd_vec.hpp"
-#include "core/expression/expr_vec.hpp"
+#include "cyme/core/simd_vector/simd_vec.hpp"
+#include "cyme/core/expression/expr_vec.hpp"
 
 namespace memory{
      /** \brief  Basic subblock of memory for the cyme container*/
@@ -136,6 +136,6 @@ namespace memory{
      };
 } //end namespace
 
-#include "memory/detail/storage.ipp"
+#include "cyme/memory/detail/storage.ipp"
 
 #endif

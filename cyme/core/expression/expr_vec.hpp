@@ -513,9 +513,9 @@ namespace numeric{
     
  }
 
-#include "core/expression/expr_vec_ops.hpp"
+#include "cyme/core/expression/expr_vec_ops.hpp"
 #ifdef __FMA__
-#include "core/expression/expr_vec_fma.hpp"
+#include "cyme/core/expression/expr_vec_fma.hpp"
 #endif
 
 #endif

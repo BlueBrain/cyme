@@ -29,17 +29,17 @@
 #ifndef CYME_SIMD_MATH_HPP
 #define CYME_SIMD_MATH_HPP
 // C - order mater !
-    #include "core/simd_vector/math/simd_neg.hpp" 
-    #include "core/simd_vector/math/simd_rec.hpp" 
-    #include "core/simd_vector/math/simd_div.hpp"
-    #include "core/simd_vector/math/simd_add.hpp"
-    #include "core/simd_vector/math/simd_sub.hpp"
-    #include "core/simd_vector/math/simd_mul.hpp"
-    #include "core/simd_vector/math/simd_exp.hpp"
-    #include "core/simd_vector/math/simd_log.hpp"
+    #include "cyme/core/simd_vector/math/simd_neg.hpp" 
+    #include "cyme/core/simd_vector/math/simd_rec.hpp" 
+    #include "cyme/core/simd_vector/math/simd_div.hpp"
+    #include "cyme/core/simd_vector/math/simd_add.hpp"
+    #include "cyme/core/simd_vector/math/simd_sub.hpp"
+    #include "cyme/core/simd_vector/math/simd_mul.hpp"
+    #include "cyme/core/simd_vector/math/simd_exp.hpp"
+    #include "cyme/core/simd_vector/math/simd_log.hpp"
 #ifdef __FMA__
-    #include "core/simd_vector/math/simd_fma.hpp"
-    #include "core/simd_vector/math/simd_fms.hpp"
+    #include "cyme/core/simd_vector/math/simd_fma.hpp"
+    #include "cyme/core/simd_vector/math/simd_fms.hpp"
 #endif
 
 #endif

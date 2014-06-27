@@ -28,9 +28,9 @@
 #ifndef CYME_ARRAY_HPP
 #define CYME_ARRAY_HPP
 
-#include "memory/detail/simd.h"
-#include "memory/detail/array_helper.hpp" // copy of boost::array + align
-#include "memory/detail/storage.hpp"
+#include "cyme/memory/detail/simd.h"
+#include "cyme/memory/detail/array_helper.hpp" // copy of boost::array + align
+#include "cyme/memory/detail/storage.hpp"
 
 namespace cyme{
 

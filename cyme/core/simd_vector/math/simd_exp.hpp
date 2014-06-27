@@ -29,7 +29,7 @@
 #ifndef CYME_SIMD_EXP_HPP
 #define CYME_SIMD_EXP_HPP
 
-#include "core/simd_vector/math/detail/remez.hpp"
+#include "cyme/core/simd_vector/math/detail/remez.hpp"
 
 namespace numeric{
 

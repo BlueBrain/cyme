@@ -148,19 +148,19 @@ namespace numeric{
 } //end namespace 
 
 #ifdef __SSE__
-    #include "core/simd_vector/detail/x86/simd_wrapper_sse.ipp"
+    #include "cyme/core/simd_vector/detail/x86/simd_wrapper_sse.ipp"
 #endif
 
 #ifdef __AVX__
-    #include "core/simd_vector/detail/x86/simd_wrapper_avx.ipp"
+    #include "cyme/core/simd_vector/detail/x86/simd_wrapper_avx.ipp"
 #endif
 
 #ifdef _ARCH_QP
-    #include "core/simd_vector/detail/powerpc64/simd_wrapper_qpx.ipp"
+    #include "cyme/core/simd_vector/detail/powerpc64/simd_wrapper_qpx.ipp"
 #endif
 
 #ifdef __MIC__
-    #include "core/simd_vector/detail/mic/simd_wrapper_mic.ipp"
+    #include "cyme/core/simd_vector/detail/mic/simd_wrapper_mic.ipp"
 #endif
 
 #endif

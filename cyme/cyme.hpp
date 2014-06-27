@@ -35,10 +35,10 @@
 
 #include <math.h> // exp system
 #include <cmath> // log system
-#include "core/simd_vector/simd_vec.hpp" // simd vector
-#include "core/expression/expr_vec.hpp" // template expression
-#include "memory/serial.hpp" // container
-#include "memory/array.hpp"  // container
-#include "memory/vector.hpp" // container
+#include "cyme/core/simd_vector/simd_vec.hpp" // simd vector
+#include "cyme/core/expression/expr_vec.hpp" // template expression
+#include "cyme/memory/serial.hpp" // container
+#include "cyme/memory/array.hpp"  // container
+#include "cyme/memory/vector.hpp" // container
 
 #endif

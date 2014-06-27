@@ -29,9 +29,9 @@
 #define CYME_VECTOR_HPP
 
 #include <vector>
-#include "memory/detail/simd.h"
-#include "memory/allocator.hpp"
-#include "memory/detail/storage.hpp"
+#include "cyme/memory/detail/simd.h"
+#include "cyme/memory/allocator.hpp"
+#include "cyme/memory/detail/storage.hpp"
 
 namespace cyme{
 
@@ -70,7 +70,7 @@ namespace cyme{
         iterator end(){
             return this->data.end();
         }
-        
+
         inline storage_type& operator [](int i){
             return this->data[i];
         }
@@ -124,11 +124,11 @@ namespace cyme{
         vector(const size_t size=1  , value_type value=value_type())
         :data(size/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))+1,value),size_cyme(size){
         }
-        
+
         vector(vector& v):data(v.size()),size_cyme(v.cyme_size()){
             std::copy(v.begin(),v.end(),this->begin());
         }
-        
+
         void resize(size_type size){
             this->data.resize(size/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))+1);
         }
@@ -148,7 +148,7 @@ namespace cyme{
         const inline  storage_type& operator [](int i) const{
             return this->data[i];
         }
-        
+
         static inline size_type size_block() {
             return T::value_size;
         }
@@ -156,7 +156,7 @@ namespace cyme{
         inline size_type size() {
             return this->data.size();
         }
-        
+
         inline size_type cyme_size() {
             return this->size_cyme;
         }
@@ -177,7 +177,7 @@ namespace cyme{
             return this->data[(i*T::value_size+j)/(T::value_size*memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))] //(i)
             (j*(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)));      //(j)
         }
-        
+
     private:
         base_type data;
         size_type size_cyme;
