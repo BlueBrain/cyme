@@ -91,12 +91,12 @@ namespace numeric{
     }
 
     template<>
-    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_load<double,memory::avx,2>(const simd_trait<double,memory::avx,2>::const_pointer a){
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_load<double,memory::avx,2>(simd_trait<double,memory::avx,2>::const_pointer a){
         return simd_trait<double,memory::avx,2>::register_type(_mm256_load_pd(a),_mm256_load_pd(a+4));
     }
     
     template<>
-    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_load<double,memory::avx,4>(const simd_trait<double,memory::avx,4>::const_pointer a){
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_load<double,memory::avx,4>(simd_trait<double,memory::avx,4>::const_pointer a){
         return simd_trait<double,memory::avx,4>::register_type(_mm256_load_pd(a),_mm256_load_pd(a+4),_mm256_load_pd(a+8),_mm256_load_pd(a+12));
     }
 
@@ -625,12 +625,12 @@ namespace numeric{
     }
 
     template<>
-    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_load<float,memory::avx,2>(const simd_trait<float,memory::avx,2>::const_pointer a){
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_load<float,memory::avx,2>(simd_trait<float,memory::avx,2>::const_pointer a){
         return simd_trait<float,memory::avx,2>::register_type(_mm256_load_ps(a),_mm256_load_ps(a+8));
     }
     
     template<>
-    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_load<float,memory::avx,4>(const simd_trait<float,memory::avx,4>::const_pointer a){
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_load<float,memory::avx,4>(simd_trait<float,memory::avx,4>::const_pointer a){
         return simd_trait<float,memory::avx,4>::register_type(_mm256_load_ps(a),_mm256_load_ps(a+8),_mm256_load_ps(a+16),_mm256_load_ps(a+24));
     }
 

@@ -32,7 +32,7 @@
 namespace numeric{
 
     template<class T,memory::simd O, int N>
-    vec_simd<T,O,N>::vec_simd(const typename simd_trait<T,O,N>::value_type a){
+    vec_simd<T,O,N>::vec_simd(const typename simd_trait<T,O,N>::value_type& a){
         this->xmm = _mm_load1<typename simd_trait<T,O,N>::value_type,O,N>(a);
     }
 

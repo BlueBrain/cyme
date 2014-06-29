@@ -52,17 +52,17 @@ namespace numeric{
      \brief Load 512-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 64-byte boundary or a general-protection exception will be generated.
      */
     template<>
-    forceinline  simd_trait<double,memory::mic,1>::register_type _mm_load<double,memory::mic,1>( simd_trait<double,memory::mic,1>::const_pointer a){
+    forceinline  simd_trait<double,memory::mic,1>::register_type _mm_load<double,memory::mic,1>(simd_trait<double,memory::mic,1>::const_pointer a){
         return _mm512_load_pd(a);
     }
 
     template<>
-    forceinline  simd_trait<double,memory::mic,2>::register_type _mm_load<double,memory::mic,2>(const simd_trait<double,memory::mic,2>::const_pointer a){
+    forceinline  simd_trait<double,memory::mic,2>::register_type _mm_load<double,memory::mic,2>(simd_trait<double,memory::mic,2>::const_pointer a){
         return simd_trait<double,memory::mic,2>::register_type(_mm512_load_pd(a),_mm512_load_pd(a+8));
     }
     
     template<>
-    forceinline  simd_trait<double,memory::mic,4>::register_type _mm_load<double,memory::mic,4>(const simd_trait<double,memory::mic,4>::const_pointer a){
+    forceinline  simd_trait<double,memory::mic,4>::register_type _mm_load<double,memory::mic,4>(simd_trait<double,memory::mic,4>::const_pointer a){
         return simd_trait<double,memory::mic,4>::register_type(_mm512_load_pd(a),_mm512_load_pd(a+8),_mm512_load_pd(a+16),_mm512_load_pd(a+24));
     }
     /**
@@ -591,17 +591,17 @@ namespace numeric{
      \brief Load 512-bits (composed of 16 packed single-precision (32-bit) floating-point elements) from memory into dst. mem_addr must be aligned on a 64-byte boundary or a general-protection exception will be generated.
      */
     template<>
-    forceinline simd_trait<float,memory::mic,1>::register_type _mm_load<float,memory::mic,1>( simd_trait<float,memory::mic,1>::const_pointer a){
+    forceinline simd_trait<float,memory::mic,1>::register_type _mm_load<float,memory::mic,1>(simd_trait<float,memory::mic,1>::const_pointer a){
         return _mm512_load_ps(a);
     }
 
     template<>
-    forceinline  simd_trait<float,memory::mic,2>::register_type _mm_load<float,memory::mic,2>(const simd_trait<float,memory::mic,2>::const_pointer a){
+    forceinline  simd_trait<float,memory::mic,2>::register_type _mm_load<float,memory::mic,2>(simd_trait<float,memory::mic,2>::const_pointer a){
         return simd_trait<float,memory::mic,2>::register_type(_mm512_load_ps(a),_mm512_load_ps(a+16));
     }
     
     template<>
-    forceinline  simd_trait<float,memory::mic,4>::register_type _mm_load<float,memory::mic,4>(const simd_trait<float,memory::mic,4>::const_pointer a){
+    forceinline  simd_trait<float,memory::mic,4>::register_type _mm_load<float,memory::mic,4>(simd_trait<float,memory::mic,4>::const_pointer a){
         return simd_trait<float,memory::mic,4>::register_type(_mm512_load_ps(a),_mm512_load_ps(a+16),_mm512_load_ps(a+32),_mm512_load_ps(a+48));
     }
     /**

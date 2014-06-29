@@ -48,7 +48,7 @@ namespace numeric{
         /**
          \brief construtor desired value else 0, note copy constructor generated automaticaly. Only used for constant.
          */
-        forceinline explicit vec_simd(const value_type a);
+        forceinline explicit vec_simd(const value_type& a);
 
         /**
          \brief construtor without nothing load a value cost */
