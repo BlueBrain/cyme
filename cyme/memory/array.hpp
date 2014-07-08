@@ -113,8 +113,8 @@ public:
     typedef typename    T::value_type value_type;
     typedef value_type&                                               reference;
     typedef const value_type&                                         const_reference;
-    static const size_type  storage_width = N/(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type))+1;
-    typedef memory::storage<value_type,memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)*T::value_size,memory::AoSoA>                storage_type;
+    static const size_type  storage_width = N/(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type))+1;
+    typedef memory::storage<value_type,memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type)*T::value_size,memory::AoSoA>                storage_type;
     typedef cyme::array_helper<storage_type,storage_width> base_type; //default template seems impossible on partial specialization
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
@@ -158,16 +158,16 @@ public:
         // BOOST_ASSERT_MSG( i < size(), "out of range: block_v AoS i" );
         BOOST_ASSERT_MSG(     j < T::value_size, "out of range: block_v AoSoA j" );
         // Please tune me ! (does it exist an alternative to this ? ^_^
-        return this->data[(i*T::value_size+j)/(T::value_size*memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type))] //(i)
-            (j*(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)));      //(j)
+        return this->data[(i*T::value_size+j)/(T::value_size*memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type))] //(i)
+            (j*(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type)));      //(j)
     }
 
     inline const_reference operator()(size_type i, size_type j) const{
         // nothing on i as the original size is destroyed in the constructor
         BOOST_ASSERT_MSG(     j < T::value_size, "out of range: block_v AoSoA j" );
         // Please tune me ! (does it exist an alternative to this ? ^_^
-        return this->data[(i*T::value_size+j)/(T::value_size*memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type))] //(i)
-            (j*(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)));      //(j)
+        return this->data[(i*T::value_size+j)/(T::value_size*memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type))] //(i)
+            (j*(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type)));      //(j)
     }
 
 private:

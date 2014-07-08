@@ -120,7 +120,7 @@ namespace numeric{
      */
     template<>
     struct div_recursion<float, memory::qpx>{
-        static const std::size_t value = 2; // cardinal([0-2])=3
+        static const std::size_t value = 3; // cardinal([0-2])=3
     };
 
     /**
@@ -128,7 +128,7 @@ namespace numeric{
      */
     template<>
     struct div_recursion<double, memory::qpx>{
-        static const std::size_t value = 3; // card([0-3])=4
+        static const std::size_t value = 4; // card([0-3])=4
     };
 
 }

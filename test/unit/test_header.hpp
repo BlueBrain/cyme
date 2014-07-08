@@ -112,7 +112,7 @@ namespace cyme {
         static const memory::order order = O;
     };
 
-    typedef boost::mpl::list<boost::int32_t,boost::int64_t,float,double> full_test_types;
+    typedef boost::mpl::list<float,double> full_test_types;
 
     typedef boost::mpl::list<
                                 data<float,14,memory::AoS>,

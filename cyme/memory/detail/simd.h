@@ -51,32 +51,32 @@ namespace memory{
 
     template<class T>
     struct trait_register<T,sse>{
-        const static int size=16;
-        const static int a=16;
+        const static size_t size=16;
+        const static size_t a=16;
     };
 
     template<class T>
     struct trait_register<T,avx>{
-        const static int size=32;
-        const static int a=32;
+        const static size_t size=32;
+        const static size_t a=32;
     };
 
     template<class T>
     struct trait_register<T,mic>{
-        const static int size=64;
-        const static int a=64;
+        const static size_t size=64;
+        const static size_t a=64;
     };
 
     template<>
     struct trait_register<float,qpx>{
-        const static int size=16; // 16 / sizeof(T) = 4 BG/Q does not support native 8 floats
-        const static int a=32; // align 32 byte on BG/Q EVEN for float
+        const static size_t size=16; // 16 / sizeof(T) = 4 BG/Q does not support native 8 floats
+        const static size_t a=32; // align 32 byte on BG/Q EVEN for float
     };
 
-    template<>
-    struct trait_register<double,qpx>{
-        const static int size=32;
-        const static int a=32;
+    template<class T>
+    struct trait_register<T,qpx>{
+        const static size_t size=32;
+        const static size_t a=32;
     };
 
 

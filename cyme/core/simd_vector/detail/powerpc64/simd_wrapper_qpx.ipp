@@ -141,21 +141,21 @@ namespace numeric{
      */
     template<>
     forceinline simd_trait<float,memory::qpx,1>::register_type _mm_div<float,memory::qpx,1>( simd_trait<float,memory::qpx,1>::register_type xmm0,  simd_trait<float,memory::qpx,1>::register_type xmm1){
-        return vec_swdiv_nochk(xmm0, xmm1);
+        return vec_swdivs(xmm0, xmm1);
     };
 
     template<>
     forceinline simd_trait<float,memory::qpx,2>::register_type _mm_div<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0,  simd_trait<float,memory::qpx,2>::register_type xmm1){
-         return simd_trait<float,memory::qpx,2>::register_type(vec_swdiv_nochk(xmm0.r0,xmm1.r0),
-                                                               vec_swdiv_nochk(xmm0.r1,xmm1.r1));
+         return simd_trait<float,memory::qpx,2>::register_type(vec_swdivs(xmm0.r0,xmm1.r0),
+                                                               vec_swdivs(xmm0.r1,xmm1.r1));
     };
 
     template<>
     forceinline simd_trait<float,memory::qpx,4>::register_type _mm_div<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0,  simd_trait<float,memory::qpx,4>::register_type xmm1){
-         return simd_trait<float,memory::qpx,4>::register_type(vec_swdiv_nochk(xmm0.r0,xmm1.r0),
-                                                               vec_swdiv_nochk(xmm0.r1,xmm1.r1),
-                                                               vec_swdiv_nochk(xmm0.r2,xmm1.r2),
-                                                               vec_swdiv_nochk(xmm0.r3,xmm1.r3));
+         return simd_trait<float,memory::qpx,4>::register_type(vec_swdivs(xmm0.r0,xmm1.r0),
+                                                               vec_swdivs(xmm0.r1,xmm1.r1),
+                                                               vec_swdivs(xmm0.r2,xmm1.r2),
+                                                               vec_swdivs(xmm0.r3,xmm1.r3));
     };
 
     /**
@@ -568,21 +568,21 @@ namespace numeric{
      */
     template<>
     forceinline simd_trait<double,memory::qpx,1>::register_type _mm_div<double,memory::qpx,1>( simd_trait<double,memory::qpx,1>::register_type xmm0,  simd_trait<double,memory::qpx,1>::register_type xmm1){
-        return vec_swdiv_nochk(xmm0, xmm1);
+        return vec_swdiv(xmm0, xmm1);
     };
 
     template<>
     forceinline simd_trait<double,memory::qpx,2>::register_type _mm_div<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0,  simd_trait<double,memory::qpx,2>::register_type xmm1){
-         return simd_trait<double,memory::qpx,2>::register_type(vec_swdiv_nochk(xmm0.r0,xmm1.r0),
-                                                                vec_swdiv_nochk(xmm0.r1,xmm1.r1));
+         return simd_trait<double,memory::qpx,2>::register_type(vec_swdiv(xmm0.r0,xmm1.r0),
+                                                                vec_swdiv(xmm0.r1,xmm1.r1));
     };
 
     template<>
     forceinline simd_trait<double,memory::qpx,4>::register_type _mm_div<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0,  simd_trait<double,memory::qpx,4>::register_type xmm1){
-         return simd_trait<double,memory::qpx,4>::register_type(vec_swdiv_nochk(xmm0.r0,xmm1.r0),
-                                                                vec_swdiv_nochk(xmm0.r1,xmm1.r1),
-                                                                vec_swdiv_nochk(xmm0.r2,xmm1.r2),
-                                                                vec_swdiv_nochk(xmm0.r3,xmm1.r3));
+         return simd_trait<double,memory::qpx,4>::register_type(vec_swdiv(xmm0.r0,xmm1.r0),
+                                                                vec_swdiv(xmm0.r1,xmm1.r1),
+                                                                vec_swdiv(xmm0.r2,xmm1.r2),
+                                                                vec_swdiv(xmm0.r3,xmm1.r3));
     };
 
     /**

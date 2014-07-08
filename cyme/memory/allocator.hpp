@@ -46,12 +46,12 @@ namespace memory{
         typedef std::size_t        size_type;
     protected:
         void* allocate_policy(size_type size) {
-            assert((trait_register<T,__GETSIMD__()>::size) >=sizeof(void*));
+            assert((memory::trait_register<T,memory::__GETSIMD__()>::size) >=  sizeof(void*));
             if (size == 0)
                 return NULL;
 
             void* ptr = NULL;
-            int rc = posix_memalign(&ptr, trait_register<T,__GETSIMD__()>::a, size);
+            int rc = posix_memalign(&ptr, memory::trait_register<T,memory::__GETSIMD__()>::a, size);
 
             if (rc != 0)
                 return NULL;
