@@ -35,11 +35,50 @@ namespace memory{
     };
 
     /** \cond I do not need this part in the doc*/
-    enum simd {normal = sizeof(void*), sse = 16, avx = 32, qpx = 32, chimera = 40, mic = 64}; //sizeof(void*) = 8 on 64 bits machine
+    enum simd{sse, avx, qpx, mic}; 
+    enum order{AoS, AoSoA};
 
     #define __GETSIMD__() __CYME_SIMD_VALUE__
 
-    enum order {AoS, AoSoA};
+
+    template<class T, memory::simd O>
+    struct trait_register;
+
+    /*
+        size = size of the datas (byte) that can fit into the register, WARNING it is not NECESSARILY equal to the size of the register e.g. BG/q float
+        a = needed alignement
+    */
+
+    template<class T>
+    struct trait_register<T,sse>{
+        const static int size=16;
+        const static int a=16;
+    };
+
+    template<class T>
+    struct trait_register<T,avx>{
+        const static int size=32;
+        const static int a=32;
+    };
+
+    template<class T>
+    struct trait_register<T,mic>{
+        const static int size=64;
+        const static int a=64;
+    };
+
+    template<>
+    struct trait_register<float,qpx>{
+        const static int size=16; // 16 / sizeof(T) = 4 BG/Q does not support native 8 floats
+        const static int a=32; // align 32 byte on BG/Q EVEN for float
+    };
+
+    template<>
+    struct trait_register<double,qpx>{
+        const static int size=32;
+        const static int a=32;
+    };
+
 
     template<class T, order O>
     struct stride;
@@ -52,7 +91,7 @@ namespace memory{
 
     template<class T>
     struct stride<T,AoSoA>{
-        static inline std::size_t helper_stride(){return  unroll_factor::N*__GETSIMD__()/sizeof(T);}
+        static inline std::size_t helper_stride(){return  unroll_factor::N*trait_register<T,__GETSIMD__()>::size/sizeof(T);}
     };
     /** \endcond I do not need this part in the doc*/
 

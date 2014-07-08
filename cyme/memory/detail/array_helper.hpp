@@ -53,7 +53,7 @@ namespace cyme {
     template<class T, std::size_t N>
     class array_helper {
       public:
-        T elems[N] __attribute__((aligned(static_cast<int>(memory::__GETSIMD__()))));    // fixed-size array_helper of elements of type T, align
+        T elems[N] __attribute__((aligned(static_cast<int>(memory::trait_register<T,memory::__GETSIMD__()>::size))));    // fixed-size array_helper of elements of type T, align
       //  T elems[N];    // fixed-size array_helper of elements of type T, align
       public:
         // type definitions

@@ -29,41 +29,7 @@
 #ifndef CYME_SIMD_WRAPPER_AVX_HPP
 #define CYME_SIMD_WRAPPER_AVX_HPP
 
-namespace numeric{
-    
-    
-    template<>
-    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_load1<double,memory::chimera,1>(const simd_trait<double,memory::chimera,1>::value_type& a){
-        return simd_trait<double,memory::chimera,1>::register_type(_mm256_set1_pd(a),a);
-    }
-    
-    template<>
-    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_load<double,memory::chimera,1>(simd_trait<double,memory::chimera,1>::const_pointer a){
-        return simd_trait<double,memory::chimera,1>::register_type(_mm256_loadu_pd(a),*a);
-    }
-    
-    template<>
-    forceinline void _mm_store<double,memory::chimera,1>( simd_trait<double,memory::chimera,1>::register_type xmm0,  simd_trait<double,memory::chimera,1>::pointer a){
-          _mm256_storeu_pd(a,xmm0.r0);
-          *(a+5) = xmm0.r1;
-        }
-    
-    template<>
-    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_mul<double,memory::chimera,1>( simd_trait<double,memory::chimera,1>::register_type xmm0,  simd_trait<double,memory::chimera,1>::register_type xmm1){
-        return simd_trait<double,memory::chimera,1>::register_type(
-            _mm256_mul_pd(xmm0.r0, xmm1.r0),
-            xmm0.r1*xmm1.r1
-        );
-    }
-    
-    template<>
-    forceinline  simd_trait<double,memory::chimera,1>::register_type _mm_add<double,memory::chimera,1>( simd_trait<double,memory::chimera,1>::register_type xmm0,  simd_trait<double,memory::chimera,1>::register_type xmm1){
-        return simd_trait<double,memory::chimera,1>::register_type(
-                                                                   _mm256_add_pd(xmm0.r0, xmm1.r0),
-                                                                   xmm0.r1+xmm1.r1
-                                                                   );
-    }
-    
+namespace numeric{    
     /**
      \brief Broadcast a double-precision (64-bit) floating-point element from memory to all elements of dst.
      */

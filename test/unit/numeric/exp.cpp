@@ -6,7 +6,7 @@ using namespace cyme::test;
 #define SIZE T::size
 #define MAX 1000
 
-#define NN memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(TYPE)
+#define NN memory::unroll_factor::N*memory::trait_register<TYPE,memory::__GETSIMD__()>::size/sizeof(TYPE)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));

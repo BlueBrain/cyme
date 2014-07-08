@@ -70,11 +70,6 @@ namespace numeric{
     struct register_trait<double, memory::avx>{
         typedef __m256d trait_register_type;
     };
-    
-    template<>
-    struct register_trait<double, memory::chimera>{
-        typedef __m256d trait_register_type;
-    };
 #endif
 
     /**

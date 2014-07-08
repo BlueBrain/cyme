@@ -112,7 +112,7 @@ namespace cyme{
         typedef typename    T::value_type value_type;
         typedef value_type&                                               reference;
         typedef const value_type&                                         const_reference;
-        static const size_type  storage_width = memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)*T::value_size;
+        static const size_type  storage_width = memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)*T::value_size;
         typedef memory::storage<value_type,storage_width,memory::AoSoA>  storage_type;
         typedef std::vector<
         storage_type,
@@ -122,7 +122,7 @@ namespace cyme{
         typedef typename base_type::const_iterator const_iterator;
 
         vector(const size_t size=1  , value_type value=value_type())
-        :data(size/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))+1,value),size_cyme(size){
+        :data(size/(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type))+1,value),size_cyme(size){
         }
 
         vector(vector& v):data(v.size()),size_cyme(v.cyme_size()){
@@ -130,7 +130,7 @@ namespace cyme{
         }
 
         void resize(size_type size){
-            this->data.resize(size/(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))+1);
+            this->data.resize(size/(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type))+1);
         }
 
         iterator begin(){
@@ -167,15 +167,15 @@ namespace cyme{
             BOOST_ASSERT_MSG(     j < T::value_size, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
             return this->data[(i*T::value_size+j)/storage_width] //(i)
-            (j*(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)));      //(j)
+            (j*(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)));      //(j)
         }
 
         inline const_reference operator()(size_type i, size_type j) const{
             // nothing on i as the original size is destroyed in the constructor
             BOOST_ASSERT_MSG(     j < T::value_size, "out of range: block_v AoSoA j" );
             // Please tune me ! (does it exist an alternative to this ? ^_^
-            return this->data[(i*T::value_size+j)/(T::value_size*memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type))] //(i)
-            (j*(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::__GETSIMD__()/sizeof(value_type)));      //(j)
+            return this->data[(i*T::value_size+j)/(T::value_size*memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type))] //(i)
+            (j*(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)) + i%(memory::unroll_factor::N*memory::trait_register<T,memory::__GETSIMD__()>::size/sizeof(value_type)));      //(j)
         }
 
     private:

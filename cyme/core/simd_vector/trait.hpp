@@ -78,28 +78,6 @@ namespace numeric{
          simd_unroll(register_simd _r0, register_simd _r1):r0(_r0),r1(_r1){}
          register_simd r0;register_simd r1;
     };
-
-    /**
-     \brief definition chimera
-     */
-    template<class T, memory::simd O, int n>
-    struct simd_chimera;
-
-    template<class T,memory::simd O>
-    struct simd_chimera<T,O,1>{
-        typedef T value_type;
-        typedef typename register_trait<value_type,O>::trait_register_type register_simd;
-        simd_chimera(){};
-        simd_chimera(register_simd _r0, value_type _r1):r0(_r0),r1(_r1){}
-        register_simd r0;value_type r1;
-    };
-
-    template <>
-    struct simd_trait<double, memory::chimera, 1> : trait<double>{
-        typedef simd_chimera<double,  memory::chimera, 1> register_type;
-    };
-
-
     /**
      \brief structure giving the maximum number of the recursion for the Newton-Raphson division algorithm.
      the precision of the Newton-Raphson algo double at every step. As the approximation of the SIMD _mm_rcp_ps

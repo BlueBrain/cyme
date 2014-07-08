@@ -40,23 +40,18 @@ namespace memory{
         \brief This class encapsulated the function allocate and deallocate for the memory allocation. I used POSX
         to allign on special memory bound.
     */
-    template<memory::simd O>
+    template<class T, memory::simd O>
     class Align_POSIX{
     public:
         typedef std::size_t        size_type;
     protected:
         void* allocate_policy(size_type size) {
-           assert(O>=sizeof(void*));
-
+            assert((trait_register<T,__GETSIMD__()>::size) >=sizeof(void*));
             if (size == 0)
                 return NULL;
 
             void* ptr = NULL;
-            int rc(0);
-            if(O == memory::chimera)
-                ptr = malloc(size);
-            else
-                rc = posix_memalign(&ptr, static_cast<int>(memory::__GETSIMD__()), size);
+            int rc = posix_memalign(&ptr, trait_register<T,__GETSIMD__()>::a, size);
 
             if (rc != 0)
                 return NULL;
@@ -74,7 +69,7 @@ namespace memory{
         on 8-16 or 32 byte memory. It is a copy past from standard allocator, the only difference is the functions allocate
         and deallocate where I call my own function with the help of the policy pattern
     */
-    template<class T, class Policy = Align_POSIX<memory::__GETSIMD__()> >
+    template<class T, class Policy = Align_POSIX<T,__GETSIMD__()> >
     class Allocator : private Policy {
         using Policy::allocate_policy;
         using Policy::deallocate_policy;
