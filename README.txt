@@ -4,3 +4,33 @@ Compilation:
  -D__CYME_SIMD_VALUE__=avx -msvx+ optional -D__FMA__
  -D__CYME_SIMD_VALUE__=qpx -D__FMA__
 
+Know issues:
+
+- BG/Q it looks like a bug may appear with division (Newton-Raphson).
+
+DEBUG mode:
+
+1) the core engine test: core_operator_bracket_torture - the division
+part fail (Newton-Raphson):
+
+365     it_AoS = block_a.begin();
+366     for(; it_AoS != block_a.end(); ++it_AoS)
+367         (*it_AoS)[0]   = (((((*it_AoS)[1] /(*it_AoS)[2])/(*it_AoS)[3])/(*it_AoS)[4])/(*it_AoS)[5]);
+368
+369     it_AoSoA_w = block_b.begin();
+370     it_AoSoA_r = block_b.begin();
+371     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+372         (*it_AoSoA_w)[0] = (((((*it_AoSoA_r)[1]/(*it_AoSoA_r)[2])/(*it_AoSoA_r)[3])/(*it_AoSoA_r)[4])/(*it_AoSoA_r)[5]);
+
+It fails for an unroll of 2 and double only if the number of successive
+division is larger than 3. I check the corresponding wrapper __mm__rec() and
+_mm_nfma(), I do not find any issues.It works for float. Test works if I
+perform the normal division
+
+2) the validity test also fail for an unroll of 2
+
+RELEASE:
+
+The serial test unroll 4 fails, again for the division. It is very wierd
+as the operator /= call the system division and not Newton-Raphson
+
