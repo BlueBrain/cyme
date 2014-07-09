@@ -62,18 +62,18 @@ set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake ${CMAKE_SOURCE_DIR}/CMake/common)
 
+# some common set up of two version
+    set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
+    set(BOOST_MIN_VERSION "1.49.0") #old is bad
+
 if(CYME_BUILDYARD)
     set(COMMON_USE_CXX03 "ON" CACHE STRING "C++11 features are disabled " FORCE)
     include(GitExternal)
     set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
-    set(BOOST_MIN_VERSION "1.49.0") #old is bad
     include(Common)
-    set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
     include(FindPackages)
 else(CYME_BUILDYARD)
     set(Boost_NO_SYSTEM_PATHS TRUE)
-    set(BOOST_MIN_VERSION "1.49.0") #old is bad
-    set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
     find_package (Boost 1.54 COMPONENTS unit_test_framework chrono system)
     if(Boost_FOUND)
        include_directories(SYSTEM ${Boost_INCLUDE_DIRS})

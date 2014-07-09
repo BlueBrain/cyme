@@ -6,9 +6,8 @@
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/vector.hpp>
 
-
-#define BOOST_TEST_MODULE integration_test
-#include <boost/test/included/unit_test.hpp>
+#define BOOST_TEST_MODULE validty_test
+#include <boost/test/unit_test.hpp>
 
 #include "cyme/cyme.hpp"
 #include "helpers.hpp"
