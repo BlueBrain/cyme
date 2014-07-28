@@ -47,12 +47,20 @@ namespace numeric{
     }
 
     /* parser for neg */
+    // optimization -*- = +
+    template<class T, memory::simd O, int N, class R1>
+    rvec<T,O,N,R1>
+    forceinline operator-(rvec<T,O,N,vec_neg<T,O,N,R1> > const& a){
+        return rvec<T,O,N,R1>(a.rep().op1());
+    }
+    
+    // orginal negation
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,vec_neg<T,O,N,R1> >
     forceinline operator-(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_neg<T,O,N,R1> >(vec_neg<T,O,N,R1>(a.rep()));
     }
-
+    
     /* this is the key of parser, describe every possibilities */
     //addition of two vectors v+w
     template<class T, memory::simd O, int N, class R1, class R2>

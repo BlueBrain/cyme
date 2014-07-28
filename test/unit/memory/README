@@ -57,6 +57,10 @@ test: core_operator_bracket_torture
     - Test kernels with a lot of brackets for all operators, type:list:floating_point_block_types
 test: core_operator_fma_c_plus_a_mul_b_scalar
     - test all fma/fms possibilities for mix iterator/scalar, type:list:floating_point_block_types
+test: core_operator_negate
+    - test negate operator, especially the optimization -*- = +, type:list:floating_point_block_types
+test: core_operator_negate_expression
+    - test negate operator, as previsouly but for a complex expression, type:list:floating_point_block_types
 
 serial.cpp
 Test the serial object which is used for temporary operations

@@ -123,10 +123,12 @@ namespace numeric{
     };
 
     /** 
-      \brief this class participates to the tree creation by recursive process, wrap negation -(*it)[1], not optimal FIX ME 
+      \brief this class participates to the tree creation by recursive process, wrap negation -(*it)[1],
+      contrary to other class it is a structure, I did an optimization in case I get multiple negate e.g.
+      -(-(R[0])) for this I need to get the original operator (op1)
     */
     template<class T, memory::simd O, int N, class OP1>
-    class vec_neg{
+    struct vec_neg{
         typename vec_traits<OP1,O,N>::value_type op1;
 
     public:
