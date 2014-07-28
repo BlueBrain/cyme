@@ -54,6 +54,7 @@ namespace numeric{
     struct vec_traits< vec_scalar<T,O,N>, O, N>{
         typedef vec_scalar<T,O,N> value_type;
     };
+    
     /* \endcond */
 
     /**
@@ -85,6 +86,21 @@ namespace numeric{
 
         forceinline vec_simd<T,O,N> operator()() const{
             return log(op1());
+        }
+    };
+    
+        /**
+    \brief this class participates to the tree creation by recursive process, wrap pow e.g log((*it)[0])
+    */
+    template<class T, memory::simd O, int N, class OP1, int M>
+    class vec_pow{
+        typename vec_traits<OP1,O,N>::value_type op1;
+    public:
+        forceinline vec_pow(OP1 const& a):op1(a){
+        }
+
+        forceinline vec_simd<T,O,N> operator()() const{
+            return pow<T,O,N,M>(op1());
         }
     };
 
@@ -123,10 +139,12 @@ namespace numeric{
     };
 
     /** 
-      \brief this class participates to the tree creation by recursive process, wrap negation -(*it)[1], not optimal FIX ME 
+      \brief this class participates to the tree creation by recursive process, wrap negation -(*it)[1],
+      contrary to other class it is a structure, I did an optimization in case I get multiple negate e.g.
+      -(-(R[0])) for this I need to get the original operator (op1)
     */
     template<class T, memory::simd O, int N, class OP1>
-    class vec_neg{
+    struct vec_neg{
         typename vec_traits<OP1,O,N>::value_type op1;
 
     public:

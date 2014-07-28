@@ -9,6 +9,10 @@ test: std_log_comparison
     - Test the log(x) to the system, type list floating_point_test_types
     remarks I do not code log it is a serial call to log
 
+pow.cpp
+test: std_pow_comparison
+    - Test the pow(x,n) where n is the exposen, type list floating_point_test_types
+    remarks n is static and not dynamic
 
 vec.cpp
 the vec class encapsulate the SIMD register
