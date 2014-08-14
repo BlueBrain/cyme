@@ -1,7 +1,7 @@
 #add_definitions (-DBOOST_TEST_DYN_LINK -Wno-unused-variable)
 add_definitions (-Wno-unused-variable)
 
-set(tests exp log vec)
+set(tests exp log vec pow)
 set(unrolls 1 2 4)
 
 #loop over SIMD techno

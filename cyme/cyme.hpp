@@ -41,4 +41,7 @@
 #include "cyme/memory/array.hpp"  // container
 #include "cyme/memory/vector.hpp" // container
 
+// This macro is dangerous maybe later undefined behaviour with std or boost
+// #define pow(x,e) pow(x,numeric::exponent<e>())
+
 #endif

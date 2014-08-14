@@ -31,6 +31,14 @@
 
 namespace numeric{
 /** \cond I do not need this part in the doc */
+    /*
+        this extructure helps to transform the integer argument of pow(x,e) here e
+        as a template parameter for the pow_helper wrapper
+    */
+    template<int M>
+    struct exponent{
+        const static int e = M;
+    };
 
     /* parser for the exp */
     template<class T, memory::simd O, int N, class R1>
@@ -44,6 +52,20 @@ namespace numeric{
     rvec<T,O,N,vec_log<T,O,N,R1> >
     forceinline log(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_log<T,O,N,R1> >(vec_log<T,O,N,R1>(a.rep()));
+    }
+    
+    /* parser for pow */
+    template<class T, memory::simd O, int N, class R1, int M>
+    rvec<T,O,N,vec_pow<T,O,N,R1,M> >
+    forceinline pow(rvec<T,O,N,R1> const& a, exponent<M> const& e){
+        return rvec<T,O,N,vec_pow<T,O,N,R1,M> >(vec_pow<T,O,N,R1,M>(a.rep()));
+    }
+    
+    /* parser for the pow (integer only M) */
+    template<class T, memory::simd O, int N, class R1, int M>
+    rvec<T,O,N,vec_pow<T,O,N,R1,M> >
+    forceinline pow_h(rvec<T,O,N,R1> const& a, exponent<M> const& e){
+        return rvec<T,O,N,vec_pow<T,O,N,R1,M> >(vec_pow<T,O,N,R1,M>(a.rep()));
     }
 
     /* parser for neg */
