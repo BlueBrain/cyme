@@ -30,6 +30,8 @@
 #define CYME_CYME_HPP
 
 #pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wunused-parameter" // for the exponent of pow
+
 
 #define forceinline inline __attribute__((always_inline))
 

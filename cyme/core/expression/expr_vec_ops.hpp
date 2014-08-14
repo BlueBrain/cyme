@@ -61,13 +61,6 @@ namespace numeric{
         return rvec<T,O,N,vec_pow<T,O,N,R1,M> >(vec_pow<T,O,N,R1,M>(a.rep()));
     }
     
-    /* parser for the pow (integer only M) */
-    template<class T, memory::simd O, int N, class R1, int M>
-    rvec<T,O,N,vec_pow<T,O,N,R1,M> >
-    forceinline pow_h(rvec<T,O,N,R1> const& a, exponent<M> const& e){
-        return rvec<T,O,N,vec_pow<T,O,N,R1,M> >(vec_pow<T,O,N,R1,M>(a.rep()));
-    }
-
     /* parser for neg */
     // optimization -*- = +
     template<class T, memory::simd O, int N, class R1>
