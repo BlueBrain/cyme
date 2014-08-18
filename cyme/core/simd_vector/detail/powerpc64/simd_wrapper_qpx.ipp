@@ -409,7 +409,6 @@ namespace numeric{
 
     template<>
     forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_ge<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0){
-        boost::int32_t n1,n2;
         for(int i=0; i<4; ++i){
             ieee754 u1,u2;
             u1.d = vec_extract(xmm0.r0,i);

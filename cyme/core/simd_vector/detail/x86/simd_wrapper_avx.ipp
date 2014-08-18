@@ -465,9 +465,9 @@ namespace numeric{
         __m128i tmp1 =  _mm256_extractf128_si256(TMP,1);
         tmp1 = _mm_and_si128(tmp1,_mm_set1_epi64x(0xfffffffffffff));
         tmp1 = _mm_add_epi64(tmp1,_mm_set1_epi64x(0x3ff0000000000000));
-        xmm0 =   _mm256_insertf128_si256(xmm0, tmp0,0);
-        xmm0 =   _mm256_insertf128_si256(xmm0, tmp1,1);
-        return _mm256_castsi256_pd(xmm0);
+        TMP =   _mm256_insertf128_si256(TMP, tmp0,0);
+        TMP =   _mm256_insertf128_si256(TMP, tmp1,1);
+        return _mm256_castsi256_pd(TMP);
     }
 
     template<>
@@ -493,13 +493,13 @@ namespace numeric{
         tmp01 = _mm_add_epi64(tmp01,_mm_set1_epi64x(0x3ff0000000000000));
         tmp11 = _mm_add_epi64(tmp11,_mm_set1_epi64x(0x3ff0000000000000));
 
-        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, tmp0,0);
-        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, tmp01,1);
+        TMP0 =   _mm256_insertf128_si256(TMP0, tmp0,0);
+        TMP0 =   _mm256_insertf128_si256(TMP0, tmp01,1);
 
-        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, tmp1,0);
-        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, tmp11,1);
+        TMP1 =   _mm256_insertf128_si256(TMP1, tmp1,0);
+        TMP1 =   _mm256_insertf128_si256(TMP1, tmp11,1);
 
-        return simd_trait<double,memory::avx,2>::register_type(_mm256_castsi256_pd(xmm0.r0),_mm256_castsi256_pd(xmm0.r1));
+        return simd_trait<double,memory::avx,2>::register_type(_mm256_castsi256_pd(TMP0),_mm256_castsi256_pd(TMP1));
     }
 
     template<>
@@ -540,19 +540,19 @@ namespace numeric{
         tmp21 = _mm_add_epi64(tmp21,_mm_set1_epi64x(0x3ff0000000000000));
         tmp31 = _mm_add_epi64(tmp31,_mm_set1_epi64x(0x3ff0000000000000));
 
-        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, tmp0,0);
-        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, tmp01,1);
+        TMP0 =   _mm256_insertf128_si256(TMP0, tmp0,0);
+        TMP0 =   _mm256_insertf128_si256(TMP0, tmp01,1);
 
-        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, tmp1,0);
-        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, tmp11,1);
+        TMP1 =   _mm256_insertf128_si256(TMP1, tmp1,0);
+        TMP1 =   _mm256_insertf128_si256(TMP1, tmp11,1);
 
-        xmm0.r2 =   _mm256_insertf128_si256(xmm0.r2, tmp2,0);
-        xmm0.r2 =   _mm256_insertf128_si256(xmm0.r2, tmp21,1);
+        TMP2 =   _mm256_insertf128_si256(TMP2, tmp2,0);
+        TMP2 =   _mm256_insertf128_si256(TMP2, tmp21,1);
 
-        xmm0.r3 =   _mm256_insertf128_si256(xmm0.r3, tmp3,0);
-        xmm0.r3 =   _mm256_insertf128_si256(xmm0.r3, tmp31,1);
+        TMP3 =   _mm256_insertf128_si256(TMP3, tmp3,0);
+        TMP3 =   _mm256_insertf128_si256(TMP3, tmp31,1);
 
-        return simd_trait<double,memory::avx,4>::register_type(_mm256_castsi256_pd(xmm0.r0),_mm256_castsi256_pd(xmm0.r1),_mm256_castsi256_pd(xmm0.r2),_mm256_castsi256_pd(xmm0.r3));
+        return simd_trait<double,memory::avx,4>::register_type(_mm256_castsi256_pd(TMP0),_mm256_castsi256_pd(TMP1),_mm256_castsi256_pd(TMP2),_mm256_castsi256_pd(TMP3));
     }
 
 #ifdef __INTEL_COMPILER
@@ -1126,9 +1126,9 @@ namespace numeric{
         __m128i tmp1 =  _mm256_extractf128_si256(TMP,1);
         tmp1 = _mm_and_si128(tmp1,_mm_set1_epi32(0x7fffff));
         tmp1 = _mm_add_epi32(tmp1,_mm_set1_epi32(0x3f800000));
-        xmm0 =   _mm256_insertf128_si256(xmm0, tmp0,0);
-        xmm0 =   _mm256_insertf128_si256(xmm0, tmp1,1);
-        return _mm256_castsi256_ps(xmm0);
+        TMP =   _mm256_insertf128_si256(xmm0, tmp0,0);
+        TMP =   _mm256_insertf128_si256(xmm0, tmp1,1);
+        return _mm256_castsi256_ps(TMP);
     }
 
     template<>
@@ -1154,13 +1154,13 @@ namespace numeric{
         tmp01 = _mm_add_epi32(tmp01,_mm_set1_epi32(0x3f800000));
         tmp11 = _mm_add_epi32(tmp11,_mm_set1_epi32(0x3f800000));
 
-        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, tmp0,0);
-        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, tmp01,1);
+        TMP0 =   _mm256_insertf128_si256(TMP0, tmp0,0);
+        TMP0 =   _mm256_insertf128_si256(TMP0, tmp01,1);
 
-        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, tmp1,0);
-        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, tmp11,1);
+        TMP1 =   _mm256_insertf128_si256(TMP1, tmp1,0);
+        TMP1 =   _mm256_insertf128_si256(TMP1, tmp11,1);
 
-        return simd_trait<float,memory::avx,2>::register_type(_mm256_castsi256_ps(xmm0.r0),_mm256_castsi256_ps(xmm0.r1));
+        return simd_trait<float,memory::avx,2>::register_type(_mm256_castsi256_ps(TMP0),_mm256_castsi256_ps(TMP1));
     }
 
     template<>
@@ -1201,19 +1201,19 @@ namespace numeric{
         tmp21 = _mm_add_epi32(tmp21,_mm_set1_epi32(0x3f800000));
         tmp31 = _mm_add_epi32(tmp31,_mm_set1_epi32(0x3f800000));
 
-        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, tmp0,0);
-        xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0, tmp01,1);
+        TMP0 =   _mm256_insertf128_si256(TMP0, tmp0,0);
+        TMP0 =   _mm256_insertf128_si256(TMP0, tmp01,1);
 
-        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, tmp1,0);
-        xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1, tmp11,1);
+        TMP1 =   _mm256_insertf128_si256(TMP1, tmp1,0);
+        TMP1 =   _mm256_insertf128_si256(TMP1, tmp11,1);
 
-        xmm0.r2 =   _mm256_insertf128_si256(xmm0.r2, tmp2,0);
-        xmm0.r2 =   _mm256_insertf128_si256(xmm0.r2, tmp21,1);
+        TMP2 =   _mm256_insertf128_si256(TMP2, tmp2,0);
+        TMP2 =   _mm256_insertf128_si256(TMP2, tmp21,1);
 
-        xmm0.r3 =   _mm256_insertf128_si256(xmm0.r3, tmp3,0);
-        xmm0.r3 =   _mm256_insertf128_si256(xmm0.r3, tmp31,1);
+        TMP3 =   _mm256_insertf128_si256(TMP3, tmp3,0);
+        TMP3 =   _mm256_insertf128_si256(TMP3, tmp31,1);
 
-        return simd_trait<float,memory::avx,4>::register_type(_mm256_castsi256_ps(xmm0.r0),_mm256_castsi256_ps(xmm0.r1),_mm256_castsi256_ps(xmm0.r2),_mm256_castsi256_ps(xmm0.r3));
+        return simd_trait<float,memory::avx,4>::register_type(_mm256_castsi256_ps(TMP0),_mm256_castsi256_ps(TMP1),_mm256_castsi256_ps(TMP2),_mm256_castsi256_ps(TMP3));
     }
 
 
