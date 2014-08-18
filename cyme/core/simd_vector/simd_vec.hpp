@@ -143,6 +143,18 @@ namespace numeric{
     forceinline vec_simd<T,O,N> twok(const vec_simd<int,O,N>& rhs);
 
     /**
+     \brief return the exponent of the floating point representation
+     */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> ge(const vec_simd<T,O,N>& rhs);
+
+    /**
+     \brief return the fraction of the floating point representation
+     */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> gf(const vec_simd<T,O,N>& rhs);
+
+    /**
      \brief floor the value return a int simd register
      */
     template<class T,memory::simd O, int N>

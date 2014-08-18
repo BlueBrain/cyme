@@ -111,6 +111,20 @@ namespace numeric{
     }
 
     template<class T,memory::simd O, int N>
+    vec_simd<T,O,N> ge(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_ge<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm); 
+        return nrv;
+    }
+
+    template<class T,memory::simd O, int N>
+    vec_simd<T,O,N> gf(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_gf<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
+        return nrv;
+    }
+
+    template<class T,memory::simd O, int N>
     vec_simd<T,O,N> twok(const vec_simd<int,O,N>& rhs){
         vec_simd<T,O,N> nrv;
         nrv.xmm = _mm_twok<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm); // TO change a day no time this week

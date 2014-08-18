@@ -31,6 +31,7 @@
 
 #pragma GCC diagnostic ignored "-Wshadow"
 #pragma GCC diagnostic ignored "-Wunused-parameter" // for the exponent of pow
+#pragma GCC diagnostic ignored "-Wuninitialized" // for the optimization of log
 
 
 #define forceinline inline __attribute__((always_inline))

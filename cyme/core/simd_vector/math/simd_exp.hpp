@@ -33,44 +33,18 @@
 
 namespace numeric{
 
-
-    /**
-     \brief Implementation of e^y using recursive template, as the factorial
-     */
-    template<class T, memory::simd O, int N, std::size_t n>
-    struct helper_remez_exp{
-        static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> const& a){
-#ifdef __FMA__
-            return muladd(helper_remez_exp<T,O,N,n-1>::exp(a),a,vec_simd<T,O,N>(coeff_remez<T,coeff_remez_number::value-n>::coeff()));
-#else
-            return vec_simd<T,O,N>(coeff_remez<T,coeff_remez_number::value-n>::coeff()) + helper_remez_exp<T,O,N,n-1>::exp(a)*a;
-#endif
-        }
-    };
-
-    /**
-     \brief Implementation of e^y using recursive template, final specialization
-     */
-    template<class T, memory::simd O, int N>
-    struct helper_remez_exp<T,O,N,0>{
-        static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> const&){
-            return vec_simd<T,O,N>(coeff_remez<T,coeff_remez_number::value>::coeff());
-        }
-    };
-
     /**
      \cond
      */
     template<class T, memory::simd O, int N,std::size_t n>
     struct Remez_exp{
         static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> const& a){
-            return helper_remez_exp<T,O,N,n>::exp(a);
+            return helper_horner<T,O,N,coeff_remez_exp,n>::horner(a);
         }
     };
     /**
      \endcond
      */
-
 
     /** \brief implementation of the exp,the algorithm is based on e^x = 2^k e^y, where k is unsigned integer and y belongs to [0,log 2].
                e^y is determined using a Pade approximation of the order n with an third value program.
@@ -86,7 +60,7 @@ namespace numeric{
                2^k use the internal representation of the floating point number
     */
 
-    template<class T, memory::simd O, int N,std::size_t n = coeff_remez_number::value, class Solver = Remez_exp<T,O,N,n> > // Remez, series ...
+    template<class T, memory::simd O, int N,std::size_t n = poly_order<T,coeff_remez_exp>::value, class Solver = Remez_exp<T,O,N,n> > // Remez, series ...
     struct my_exp{
         static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> x){
             /* calculate k,  k = (int)floor(a); p = (float)k; */
@@ -128,7 +102,7 @@ namespace numeric{
     /**
      \brief selector for the exponential algorithm (vendor or my implementation)
      */
-    template<class T, memory::simd O, int N, std::size_t n = coeff_remez_number::value, class Solver = my_exp<T,O,N,n> > // my_exp ou vendor
+    template<class T, memory::simd O, int N, std::size_t n = poly_order<T,coeff_remez_exp>::value, class Solver = my_exp<T,O,N,n> > // my_exp ou vendor
     struct Selector_exp{
          static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> x){
                x = Solver::exp(x);

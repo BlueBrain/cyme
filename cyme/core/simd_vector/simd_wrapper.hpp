@@ -119,6 +119,18 @@ namespace numeric{
     template<class T, memory::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_twok(typename simd_trait<int,O,N>::register_type xmm0);
 
+    /**
+     \brief free function return the exponent of a floating point number
+     */
+    template<class T, memory::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_ge(typename simd_trait<T,O,N>::register_type xmm0);
+
+    /**
+     \brief free function return the fraction of a floating point number
+     */
+    template<class T, memory::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_gf(typename simd_trait<T,O,N>::register_type xmm0);
+
 #ifdef __FMA__ // This macro is a compiler one
     /**
     \brief free function (wrapper) for the FMA between three registers

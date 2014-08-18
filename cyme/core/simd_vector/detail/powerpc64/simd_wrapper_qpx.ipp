@@ -42,7 +42,7 @@ namespace numeric{
      */
     typedef union {
         double d;
-        boost::uint64_t ll;
+        boost::int64_t ll;
     } ieee754;
 
     forceinline double uint642dp(boost::uint64_t ll) {
@@ -390,6 +390,104 @@ namespace numeric{
                                                                xmm0.r1,
                                                                xmm0.r2,
                                                                xmm0.r3);
+    }
+    
+       /**
+     \brief Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
+      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
+     */
+    template<>
+    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_ge<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u;
+            u.d = vec_extract(xmm0,i);
+            u.ll =(u.ll>>52)-1023;
+            xmm0 = vec_insert((double)u.ll,xmm0,i);
+        }
+        return xmm0;
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_ge<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0){
+        boost::int32_t n1,n2;
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2;
+            u1.d = vec_extract(xmm0.r0,i);
+            u2.d = vec_extract(xmm0.r1,i);
+            u1.ll =(u1.ll>>52)-1023;
+            u2.ll =(u2.ll>>52)-1023;
+            xmm0.r0 = vec_insert((double)u1.ll,xmm0.r0,i);
+            xmm0.r1 = vec_insert((double)u2.ll,xmm0.r1,i);
+        }
+        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0,xmm0.r1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_ge<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2,u3,u4;
+            u1.d = vec_extract(xmm0.r0,i);
+            u2.d = vec_extract(xmm0.r1,i);
+            u3.d = vec_extract(xmm0.r2,i);
+            u4.d = vec_extract(xmm0.r3,i);
+            u1.ll =(u1.ll>>52)-1023;
+            u2.ll =(u2.ll>>52)-1023;
+            u3.ll =(u3.ll>>52)-1023;
+            u4.ll =(u4.ll>>52)-1023;
+            xmm0.r0 = vec_insert((double)u1.ll,xmm0.r0,i);
+            xmm0.r1 = vec_insert((double)u2.ll,xmm0.r1,i);
+            xmm0.r2 = vec_insert((double)u3.ll,xmm0.r2,i);
+            xmm0.r3 = vec_insert((double)u4.ll,xmm0.r3,i);
+        }
+        return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
+    }
+
+    /**
+     \brief Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
+     */
+    template<>
+    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_gf<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u;
+            u.d = vec_extract(xmm0,i);
+            u.ll = (u.ll&0xfffffffffffff)+0x3ff0000000000000;
+            xmm0 = vec_insert(u.d,xmm0,i);
+        }
+        return xmm0;
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_gf<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2;
+            u1.d = vec_extract(xmm0.r0,i);
+            u2.d = vec_extract(xmm0.r1,i);
+            u1.ll = (u1.ll&0xfffffffffffff)+0x3ff0000000000000;
+            u2.ll = (u2.ll&0xfffffffffffff)+0x3ff0000000000000;
+            xmm0.r0 = vec_insert(u1.d,xmm0.r0,i);
+            xmm0.r1 = vec_insert(u2.d,xmm0.r1,i);
+        }
+        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0,xmm0.r1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_gf<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2,u3,u4;
+            u1.d = vec_extract(xmm0.r0,i);
+            u2.d = vec_extract(xmm0.r1,i);
+            u3.d = vec_extract(xmm0.r2,i);
+            u4.d = vec_extract(xmm0.r3,i);
+            u1.ll = (u1.ll&0xfffffffffffff)+0x3ff0000000000000;
+            u2.ll = (u2.ll&0xfffffffffffff)+0x3ff0000000000000;
+            u3.ll = (u3.ll&0xfffffffffffff)+0x3ff0000000000000;
+            u4.ll = (u4.ll&0xfffffffffffff)+0x3ff0000000000000;
+            xmm0.r0 = vec_insert(u1.d,xmm0.r0,i);
+            xmm0.r1 = vec_insert(u2.d,xmm0.r1,i);
+            xmm0.r2 = vec_insert(u3.d,xmm0.r3,i);
+            xmm0.r3 = vec_insert(u4.d,xmm0.r3,i);
+        }
+        return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
     }
 
 #ifdef __FMA__
@@ -819,6 +917,102 @@ namespace numeric{
 	return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0, xmm0.r1, xmm0.r2, xmm0.r3);
     }
 
+   /**
+     \brief Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
+      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
+     */
+    template<>
+    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_ge<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u;
+            u.d = vec_extract(xmm0,i);
+            u.ll =(u.ll>>52)-1023;
+            xmm0 = vec_insert((double)u.ll,xmm0,i);
+        }
+        return xmm0;
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_ge<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2;
+            u1.d = vec_extract(xmm0.r0,i);
+            u2.d = vec_extract(xmm0.r1,i);
+            u1.ll =(u1.ll>>52)-1023;
+            u2.ll =(u2.ll>>52)-1023;
+            xmm0.r0 = vec_insert((double)u1.ll,xmm0.r0,i);
+            xmm0.r1 = vec_insert((double)u2.ll,xmm0.r1,i);
+        }
+        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0,xmm0.r1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_ge<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2,u3,u4;
+            u1.d = vec_extract(xmm0.r0,i);
+            u2.d = vec_extract(xmm0.r1,i);
+            u3.d = vec_extract(xmm0.r2,i);
+            u4.d = vec_extract(xmm0.r3,i);
+            u1.ll =(u1.ll>>52)-1023;
+            u2.ll =(u2.ll>>52)-1023;
+            u3.ll =(u3.ll>>52)-1023;
+            u4.ll =(u4.ll>>52)-1023;
+            xmm0.r0 = vec_insert((double)u1.ll,xmm0.r0,i);
+            xmm0.r1 = vec_insert((double)u2.ll,xmm0.r1,i);
+            xmm0.r2 = vec_insert((double)u3.ll,xmm0.r2,i);
+            xmm0.r3 = vec_insert((double)u4.ll,xmm0.r3,i);
+        }
+        return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
+    }
+
+    /**
+     \brief Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
+     */
+    template<>
+    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_gf<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u;
+            u.d = vec_extract(xmm0,i);
+            u.ll = (u.ll&0xfffffffffffff)+0x3ff0000000000000;
+            xmm0 = vec_insert(u.d,xmm0,i);
+        }
+        return xmm0;
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_gf<double,memory::qpx,2>(simd_trait<double,memory::qpx,2>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2;
+            u1.d = vec_extract(xmm0.r0,i);
+            u2.d = vec_extract(xmm0.r1,i);
+            u1.ll = (u1.ll&0xfffffffffffff)+0x3ff0000000000000;
+            u2.ll = (u2.ll&0xfffffffffffff)+0x3ff0000000000000;
+            xmm0.r0 = vec_insert(u1.d,xmm0.r0,i);
+            xmm0.r1 = vec_insert(u2.d,xmm0.r1,i);
+        }
+        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0,xmm0.r1);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_gf<double,memory::qpx,4>(simd_trait<double,memory::qpx,4>::register_type xmm0){
+        for(int i=0; i<4; ++i){
+            ieee754 u1,u2,u3,u4;
+            u1.d = vec_extract(xmm0.r0,i);
+            u2.d = vec_extract(xmm0.r1,i);
+            u3.d = vec_extract(xmm0.r2,i);
+            u4.d = vec_extract(xmm0.r3,i);
+            u1.ll = (u1.ll&0xfffffffffffff)+0x3ff0000000000000;
+            u2.ll = (u2.ll&0xfffffffffffff)+0x3ff0000000000000;
+            u3.ll = (u3.ll&0xfffffffffffff)+0x3ff0000000000000;
+            u4.ll = (u4.ll&0xfffffffffffff)+0x3ff0000000000000;
+            xmm0.r0 = vec_insert(u1.d,xmm0.r0,i);
+            xmm0.r1 = vec_insert(u2.d,xmm0.r1,i);
+            xmm0.r2 = vec_insert(u3.d,xmm0.r3,i);
+            xmm0.r3 = vec_insert(u4.d,xmm0.r3,i);
+        }
+        return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
+    }
 #ifdef __FMA__
     /**
      \brief Returns a vector containing the results of performing a fused multiply/add for each corresponding set of elements of the given vectors.
