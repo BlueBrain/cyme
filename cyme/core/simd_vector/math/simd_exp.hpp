@@ -46,7 +46,7 @@ namespace numeric{
      \endcond
      */
 
-    /** \brief implementation of the exp,the algorithm is based on e^x = 2^k e^y, where k is unsigned integer and y belongs to [0,log 2].
+    /** \brief implementation of the exp,the algorithm is based on e^x = 2^k e^y, where k is signed integer and y belongs to [0,log 2].
                e^y is determined using a Pade approximation of the order n with an third value program.
                The algo does:
                     x = y + k*log(2)
