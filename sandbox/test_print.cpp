@@ -20,7 +20,7 @@
  #include <boost/mpl/vector.hpp>
  #include <boost/mpl/push_back.hpp>
 
-#include "/Users/ewart/Documents/IACA_SALAH/include/iacaMarks.h"
+//#include "/Users/ewart/Documents/IACA_SALAH/include/iacaMarks.h"
 
 
  #include <functional>
@@ -89,7 +89,7 @@
                             << ", standard deviation " << sqrt(extract_result< tag::variance >(acc)) << std::endl;
  }
 
- static double dt = 0.01;
+   static double dt = 0.01;
 
  struct Na{
      typedef double value_type;
@@ -97,13 +97,7 @@
 
      template<class T, memory::order O>
      static inline void cnrn_functions(T& W){
- /*
-         cnrn_initmodel(it);
-         cnrn_cur<iterator,O>(it);
-R*/
-       cnrn_states(W);
-
-       //(*it)[8]  = exp((*it)[16]);
+         cnrn_states(W);
      }
 
      template<class T>
@@ -122,15 +116,9 @@ R*/
      template<class T>
      static inline void cnrn_states(T& W){
         T const & R = W;
-
-   //s     IACA_START
-        W[0] = sqrt(R[1]);
-   //     IACA_END
-/*
         cnrn_rates(W);
         W[3] += (1.-exp(dt*(-1.0/R[7] )))*(-(R[6] /R[7]) /(-1.0/R[7]) -R[3]);
         W[4] += (1.-exp(dt*(-1.0/R[11])))*(-(R[10]/R[11])/(-1.0/R[11])-R[4]);
-*/
      }
 /*
      template<class iterator, memory::order O>

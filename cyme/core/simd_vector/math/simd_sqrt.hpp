@@ -30,7 +30,7 @@
 #define CYME_SIMD_SQRT_HPP
 
 namespace numeric{
-    
+
     /**
      \brief reccursive implementation of the Newton-Raphson algo
      */
@@ -44,7 +44,7 @@ namespace numeric{
 #endif
         }
     };
-    
+
     /**
      \brief reccursive init with 1/r approximation
      */
@@ -54,7 +54,7 @@ namespace numeric{
             return recsqrt<T,O,N>(rhs);
         }
     };
-    
+
     /**
      \brief function object calling Newton-Raphson algo <3, ^_^'
      */
@@ -65,7 +65,7 @@ namespace numeric{
             return nrv;
         }
     };
-    
+
     /**
      \brief Vendor implementation of the sqrtarithm
      */
@@ -76,7 +76,7 @@ namespace numeric{
         }
     };
 
-    
+
     /**
      \brief helper selector for the sqrt because BG/Q does not support natively square root
      */
@@ -88,12 +88,12 @@ namespace numeric{
         typedef NewtonRaphson_sqrt<T,O,N> Solver_sqrt;
 #endif
     };
-    
+
     /**
      \brief Selector for the sqrt
      \warning BG/Q does not support natively square root
     */
-    template<class T, memory::simd O, int N, std::size_t n = poly_order<T,coeff_remez_sqrt>::value, class Solver = typename helper_Solver<T,O,N>::Solver_sqrt >
+    template<class T, memory::simd O, int N, class Solver = typename helper_Solver<T,O,N>::Solver_sqrt >
     struct Selector_sqrt{
          static forceinline vec_simd<T,O,N> sqrt(vec_simd<T,O,N> x){
                x = Solver::sqrt(x);
