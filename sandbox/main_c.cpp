@@ -9,7 +9,7 @@
 #include "cyme/cyme.hpp"
 #include "helpers.hpp"
 
-//#include "iacaMarks.h"
+
 namespace Na{
     enum properties {
         m, h, mInf, mTau, mAlpha, mBeta, hInf, hTau, hAlpha, hBeta, v
@@ -37,9 +37,18 @@ namespace Na{
     template<class T>
     static inline void cnrn_states(T& W){
         T const & R = W;
+//IACA_START
+        W[0] = sqrt(R[3]);
+        W[1] = sqrt(R[4]);
+        W[2] = sqrt(R[5]);
+
+        
+        //IACA_END
+/*
         cnrn_rates<T>(W);
         W[m] += (1.-exp(-0.1/R[mTau]))*(R[mInf]-R[m]);
         W[h] += (1.-exp(-0.1/R[hTau]))*(R[hInf]-R[h]);
+*/
     }
 
     template<class T>
@@ -72,7 +81,7 @@ template<class T>
 struct f_init{
     void operator()(typename T::storage_type& S){
       for(std::size_t i=0;i <T::size_block(); ++i)
-          S[i] = drand48();
+          S[i] =100*drand48();
     }
 };
 

@@ -151,6 +151,35 @@ namespace numeric{
     struct div_recursion<double, memory::avx>{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
+    
+    
+    /**
+     \brief Specialization trait for float  Newton-Raphson square root 
+     */
+    template<>
+    struct sqrt_recursion<float, memory::sse>{
+        static const std::size_t value = 1; // cardinal([0-1])=2
+    };
+    
+    template<>
+    struct sqrt_recursion<float, memory::avx>{
+        static const std::size_t value = 1; // cardinal([0-1])=2
+    };
+    
+    /**
+     \brief Specialization trait for double  Newton-Raphson square root 
+     */
+    template<>
+    struct sqrt_recursion<double, memory::sse>{
+        static const std::size_t value = 2; // card([0-2])=3, should be 3
+    };
+    
+    template<>
+    struct sqrt_recursion<double, memory::avx>{
+        static const std::size_t value = 2; // card([0-2])=3, should be 3
+    };
+
+    
 #ifdef __AVX__
     /**
         \brief definition of the type for the trait class, with unroll 4,2 and 1 for double/sse

@@ -90,10 +90,23 @@ namespace numeric{
     forceinline typename simd_trait<T,O,N>::register_type _mm_log(typename simd_trait<T,O,N>::register_type xmm0); // Vendor (IBM/Intel) only 
 
     /**
+    \brief free function (wrapper) for calculating sqrt of a vector
+    \warning this function is only works if the wrapper Helper_sqrt is setup to Vendor_sqrt
+    */
+    template<class T, memory::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_sqrt(typename simd_trait<T,O,N>::register_type xmm0); // Vendor only - to check ? 
+
+    /**
      \brief free function (wrapper) for calculating a light version of the inverse
      */
     template<class T, memory::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_rec(typename simd_trait<T,O,N>::register_type xmm0);
+
+    /**
+     \brief free function (wrapper) for calculating a light version of the inverse of sqrt
+     */
+    template<class T, memory::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_rsqrt(typename simd_trait<T,O,N>::register_type xmm0);
 
     /**
      \brief free function (wrapper) for calculating the negate number

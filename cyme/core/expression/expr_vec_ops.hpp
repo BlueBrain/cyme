@@ -39,7 +39,14 @@ namespace numeric{
     struct exponent{
         const static int e = M;
     };
-
+    
+    /* parser for the exp */
+    template<class T, memory::simd O, int N, class R1>
+    rvec<T,O,N,vec_sqrt<T,O,N,R1> >
+    forceinline sqrt(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_sqrt<T,O,N,R1> >(vec_sqrt<T,O,N,R1>(a.rep()));
+    }
+    
     /* parser for the exp */
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,vec_exp<T,O,N,R1> >

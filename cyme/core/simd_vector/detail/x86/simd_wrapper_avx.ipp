@@ -554,6 +554,60 @@ namespace numeric{
 
         return simd_trait<double,memory::avx,4>::register_type(_mm256_castsi256_pd(TMP0),_mm256_castsi256_pd(TMP1),_mm256_castsi256_pd(TMP2),_mm256_castsi256_pd(TMP3));
     }
+    
+    /**
+     \brief Compute sqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
+     */
+    template<>
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_sqrt<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0){
+        return _mm256_sqrt_pd(xmm0);
+    }
+    
+    
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_sqrt<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0){
+        return simd_trait<double,memory::avx,2>::register_type(
+                                                               _mm256_sqrt_pd(xmm0.r0),
+                                                               _mm256_sqrt_pd(xmm0.r1)
+                                                               );
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_sqrt<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0){
+        return simd_trait<double,memory::avx,4>::register_type(
+                                                               _mm256_sqrt_pd(xmm0.r0),
+                                                               _mm256_sqrt_pd(xmm0.r1),
+                                                               _mm256_sqrt_pd(xmm0.r2),
+                                                               _mm256_sqrt_pd(xmm0.r3)
+                                                               );
+    }
+    
+    /**
+     \brief Compute 1/recsqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
+     precision 12 bits
+     */
+    template<>
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_rsqrt<double,memory::avx,1>(simd_trait<double,memory::avx,1>::register_type xmm0){
+        return _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0)));
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_rsqrt<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0){
+        return simd_trait<double,memory::avx,2>::register_type(
+                                                               _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r0))),
+                                                               _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r1)))
+                                                               );
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_rsqrt<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0){
+        return simd_trait<double,memory::avx,4>::register_type(
+                                                               _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r0))),
+                                                               _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r1))),
+                                                               _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r2))),
+                                                               _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r3)))
+                                                               );
+    }
 
 #ifdef __INTEL_COMPILER
     /**
@@ -1215,8 +1269,63 @@ namespace numeric{
 
         return simd_trait<float,memory::avx,4>::register_type(_mm256_castsi256_ps(TMP0),_mm256_castsi256_ps(TMP1),_mm256_castsi256_ps(TMP2),_mm256_castsi256_ps(TMP3));
     }
+    
+    /**
+     \brief Compute sqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
+     */
+    template<>
+    forceinline  simd_trait<float,memory::avx,1>::register_type _mm_sqrt<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0){
+        return _mm256_sqrt_ps(xmm0);
+    }
+    
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_sqrt<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0){
+        return simd_trait<float,memory::avx,2>::register_type(
+                                                               _mm256_sqrt_ps(xmm0.r0),
+                                                               _mm256_sqrt_ps(xmm0.r1)
+                                                               );
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_sqrt<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0){
+        return simd_trait<float,memory::avx,4>::register_type(
+                                                               _mm256_sqrt_ps(xmm0.r0),
+                                                               _mm256_sqrt_ps(xmm0.r1),
+                                                               _mm256_sqrt_ps(xmm0.r2),
+                                                               _mm256_sqrt_ps(xmm0.r3)
+                                                               );
+    }
+    
+    /**
+     \brief Compute 1/recsqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
+     precision 12 bits
+     */
+    template<>
+    forceinline  simd_trait<float,memory::avx,1>::register_type _mm_rsqrt<float,memory::avx,1>(simd_trait<float,memory::avx,1>::register_type xmm0){
+        return _mm256_rsqrt_ps(xmm0);
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_rsqrt<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0){
+        return simd_trait<float,memory::avx,2>::register_type(
+                                                                   _mm256_rsqrt_ps(xmm0.r0),
+                                                                   _mm256_rsqrt_ps(xmm0.r1)
+                                                               );
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_rsqrt<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0){
+        return simd_trait<float,memory::avx,4>::register_type(
+                                                                   _mm256_rsqrt_ps(xmm0.r0),
+                                                                   _mm256_rsqrt_ps(xmm0.r1),
+                                                                   _mm256_rsqrt_ps(xmm0.r2),
+                                                                   _mm256_rsqrt_ps(xmm0.r3)
+                                                            );
+    }
 
-
+    
+    
 #ifdef  __INTEL_COMPILER
     /**
      \brief Compute the exponential value of e raised to the power of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.

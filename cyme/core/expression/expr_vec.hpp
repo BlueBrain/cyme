@@ -58,6 +58,23 @@ namespace numeric{
     /* \endcond */
 
     /**
+     \brief this class participates to the tree creation by recursive process, wrap exp e.g exp((*it)[0])
+     */
+    template<class T, memory::simd O, int N, class OP1>
+    class vec_sqrt{
+        typename vec_traits<OP1,O,N>::value_type op1;
+        
+    public:
+        forceinline vec_sqrt(OP1 const& a):op1(a){
+        }
+        
+        forceinline vec_simd<T,O,N> operator()() const{
+            return sqrt(op1());
+        }
+    };
+    
+    
+    /**
     \brief this class participates to the tree creation by recursive process, wrap exp e.g exp((*it)[0])
     */
     template<class T, memory::simd O, int N, class OP1>

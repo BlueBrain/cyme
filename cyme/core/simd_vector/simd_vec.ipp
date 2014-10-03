@@ -93,8 +93,7 @@ namespace numeric{
     vec_simd<T,O,N>& vec_simd<T,O,N>::neg(){
        this->xmm = _mm_neg<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm);
        return *this;
-    } 
-
+    }
 
     template<class T,memory::simd O, int N>
     vec_simd<T,O,N> cast(const vec_simd<int,O,N>& rhs){

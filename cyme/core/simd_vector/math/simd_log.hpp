@@ -71,7 +71,7 @@ namespace numeric{
     /**
      \brief Selector for the log
     */
-    template<class T, memory::simd O, int N, std::size_t n = poly_order<T,coeff_remez_exp>::value, class Solver = my_log<T,O,N,n> > // my_log (to do) ou vendor
+    template<class T, memory::simd O, int N, std::size_t n = poly_order<T,coeff_remez_log>::value, class Solver = my_log<T,O,N,n> > // my_log (to do) ou vendor
     struct Selector_log{
          static forceinline vec_simd<T,O,N> log(vec_simd<T,O,N> x){
                x = Solver::log(x);

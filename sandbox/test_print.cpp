@@ -20,6 +20,7 @@
  #include <boost/mpl/vector.hpp>
  #include <boost/mpl/push_back.hpp>
 
+#include "/Users/ewart/Documents/IACA_SALAH/include/iacaMarks.h"
 
 
  #include <functional>
@@ -65,7 +66,7 @@
      for(size_t i=0; i<block_a.size(); ++i)
          for(size_t j=0; j<block_a.size_block(); ++j){
        //    typename Ba::value_type random = 10*std::pow(-1,rand())*drand48();
-             typename Ba::value_type random = 10*drand48();
+             typename Ba::value_type random = 876.76786; // 10*drand48();
              block_a(i,j) = random;
              block_b(i,j) = random;
          }
@@ -120,10 +121,16 @@ R*/
 
      template<class T>
      static inline void cnrn_states(T& W){
-        T const & R = W; 
+        T const & R = W;
+
+   //s     IACA_START
+        W[0] = sqrt(R[1]);
+   //     IACA_END
+/*
         cnrn_rates(W);
         W[3] += (1.-exp(dt*(-1.0/R[7] )))*(-(R[6] /R[7]) /(-1.0/R[7]) -R[3]);
         W[4] += (1.-exp(dt*(-1.0/R[11])))*(-(R[10]/R[11])/(-1.0/R[11])-R[4]);
+*/
      }
 /*
      template<class iterator, memory::order O>

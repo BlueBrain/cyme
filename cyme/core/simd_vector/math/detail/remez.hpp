@@ -168,8 +168,7 @@ namespace numeric{
     struct poly_order<T,coeff_remez_log> {
         static const std::size_t value=10;
     };
-
-
+  
     /**
      \brief Implementation of a polynomial computation using Horner's method (http://en.wikipedia.org/wiki/Horner's_method)
      the template parameter C represents the coefficients described (log or exp coeff). This function is called
@@ -187,7 +186,7 @@ namespace numeric{
     };
 
     /**
-     \brief Implementation of e^y using recursive template, final specialization
+     \brief Implementation of the polynomial computation recursive template, final specialization
      */
     template<class T, memory::simd O, int N, template <typename,std::size_t> class C>
     struct helper_horner<T,O,N,C,0>{

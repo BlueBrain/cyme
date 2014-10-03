@@ -87,6 +87,9 @@ namespace numeric{
      */
     template <typename T, memory::simd O>
     struct div_recursion;
+
+    template <typename T, memory::simd O>
+    struct sqrt_recursion;
 }
 
 #ifdef __x86_64__

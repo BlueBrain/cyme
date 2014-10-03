@@ -116,20 +116,31 @@ namespace numeric{
     };
 
     /**
-     \brief Specialization trait for float  Newton-Raphson division
+     \brief Specialization trait for float  Newton-Raphson division and square root 
      */
     template<>
     struct div_recursion<float, memory::qpx>{
         static const std::size_t value = 3; // cardinal([0-2])=3
     };
 
+    template<>
+    struct sqrt_recursion<float, memory::qpx>{
+        static const std::size_t value = 3; // cardinal([0-2])=3
+    };
+
+    
     /**
-     \brief Specialization trait for double  Newton-Raphson division
+     \brief Specialization trait for double  Newton-Raphson division and square root
      */
     template<>
     struct div_recursion<double, memory::qpx>{
         static const std::size_t value = 4; // card([0-3])=4
     };
 
+    template<>
+    struct sqrt_recursion<double, memory::qpx>{
+        static const std::size_t value = 4; // card([0-3])=4
+    };
+    
 }
 #endif

@@ -26,23 +26,20 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CYME_SIMD_MATH_HPP
-#define CYME_SIMD_MATH_HPP
-// C - order mater !
-    #include "cyme/core/simd_vector/math/simd_neg.hpp" 
-    #include "cyme/core/simd_vector/math/simd_recsqrt.hpp"
-    #include "cyme/core/simd_vector/math/simd_rec.hpp"
-    #include "cyme/core/simd_vector/math/simd_div.hpp"
-    #include "cyme/core/simd_vector/math/simd_add.hpp"
-    #include "cyme/core/simd_vector/math/simd_sub.hpp"
-    #include "cyme/core/simd_vector/math/simd_mul.hpp"
-    #include "cyme/core/simd_vector/math/simd_exp.hpp"
-    #include "cyme/core/simd_vector/math/simd_log.hpp"
-    #include "cyme/core/simd_vector/math/simd_sqrt.hpp"
-    #include "cyme/core/simd_vector/math/simd_pow.hpp"
-#ifdef __FMA__
-    #include "cyme/core/simd_vector/math/simd_fma.hpp"
-    #include "cyme/core/simd_vector/math/simd_fms.hpp"
-#endif
+#ifndef CYME_SIMD_RSQRT_HPP
+#define CYME_SIMD_RSQRT_HPP
+
+namespace numeric{
+    /**
+    \brief free function for call the reciprocal for the Newton-Raphson square root (initialization only), this function uses the return value optimization
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> recsqrt(vec_simd<T,O,N> const& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_rsqrt<T,O,N>(rhs.xmm);
+        return nrv;
+    }
+} //end namespace
 
 #endif
+

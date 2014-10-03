@@ -269,6 +269,36 @@ namespace numeric{
                                                                vec_re(xmm0.r2),
                                                                vec_re(xmm0.r3));
     };
+    /**
+     \brief Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
+     \warning The precision guarantee is specified by the following expression, where x is the value of each element of a and r is the value of the corresponding element of the result value:
+     | (r-1/x^0.5) / (1/x^0.5) | ≤ 1/256
+     */
+    template<>
+    forceinline  simd_trait<float,memory::qpx,1>::register_type _mm_rsqrt<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0){
+        return vec_rsqrt(xmm0);
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::qpx,2>::register_type _mm_rsqrt<float,memory::qpx,2>( simd_trait<float,memory::qpx,2>::register_type xmm0){
+        return simd_trait<float,memory::qpx,2>::register_type(
+                                                               vec_rsqrt(xmm0.r0),
+                                                               vec_rsqrt(xmm0.r1)
+                                                               );
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::qpx,4>::register_type _mm_rsqrt<float,memory::qpx,4>( simd_trait<float,memory::qpx,4>::register_type xmm0){
+        return simd_trait<float,memory::qpx,4>::register_type(
+                                                               vec_rsqrt(xmm0.r0),
+                                                               vec_rsqrt(xmm0.r1),
+                                                               vec_rsqrt(xmm0.r2),
+                                                               vec_rsqrt(xmm0.r3)
+                                                               );
+    }
+
+
+
 
     /**
      \brief Returns a vector containing the negated value of the corresponding elements in the given vector.
@@ -793,6 +823,37 @@ namespace numeric{
                                                                 vec_re(xmm0.r2),
                                                                 vec_re(xmm0.r3));
     };
+
+
+    /**
+     \brief Compute 1/recsqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
+     \warning The precision guarantee is specified by the following expression, where x is the value of each element of a and r is the value of the corresponding element of the result value:
+     | (r-1/x^0,5) / (1/x^0.5) | ≤ 1/256
+     
+     */
+    template<>
+    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_rsqrt<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0){
+        return vec_rsqrt(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_rsqrt<double,memory::qpx,2>( simd_trait<double,memory::qpx,2>::register_type xmm0){
+        return simd_trait<double,memory::qpx,2>::register_type(
+                                                               vec_rsqrt(xmm0.r0),
+                                                               vec_rsqrt(xmm0.r1)
+                                                               );
+    }
+    
+    template<>
+    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_rsqrt<double,memory::qpx,4>( simd_trait<double,memory::qpx,4>::register_type xmm0){
+        return simd_trait<double,memory::qpx,4>::register_type(
+                                                               vec_rsqrt(xmm0.r0),
+                                                               vec_rsqrt(xmm0.r1),
+                                                               vec_rsqrt(xmm0.r2),
+                                                               vec_rsqrt(xmm0.r3)
+                                                               );
+    }
+
 
     /**
      \brief Returns a vector containing the negated value of the corresponding elements in the given vector.

@@ -155,6 +155,12 @@ namespace numeric{
     forceinline vec_simd<T,O,N> gf(const vec_simd<T,O,N>& rhs);
 
     /**
+     \brief return the exponent/2 of the floating point representation multiplied by sqrt(2) if n is an odd number
+     */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> gesqrt2(const vec_simd<T,O,N>& rhs);
+
+    /**
      \brief floor the value return a int simd register
      */
     template<class T,memory::simd O, int N>
@@ -175,6 +181,15 @@ namespace numeric{
     template<class T,memory::simd O, int N>
     forceinline vec_simd<T,O,N> log_v(const vec_simd<T,O,N>& rhs){
         vec_simd<T,O,N> nrv(_mm_log<T,O,N>(rhs.xmm));
+        return nrv;
+    }
+
+    /**
+    \brief free function for call the vendor square root, this function uses the return value optimization
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> sqrt_v(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(_mm_sqrt<T,O,N>(rhs.xmm));
         return nrv;
     }
 } //end namespace
