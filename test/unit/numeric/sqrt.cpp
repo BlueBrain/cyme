@@ -14,8 +14,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_sqrt_comparison, T, floating_point_test_types)
     TYPE res[NN] __attribute__((aligned(64)));
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            a[i] = abs(GetRandom<TYPE>());
-            b[i] = abs(GetRandom<TYPE>());
+            a[i] = fabs(GetRandom<TYPE>());
+            b[i] = fabs(GetRandom<TYPE>());
         }
 
         numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
