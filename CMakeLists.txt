@@ -90,6 +90,7 @@ endif(CYME_BUILDYARD)
 ########################################################################
 
 option (CYME_MAIN "Build the main (sandbox)" ON)
+option (CYME_LIBRARY "Build a library for serial computation" ON)
 option (CYME_TESTS "Build the CYMEE regression tests" ON)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_MIC_HOST "Check if MIC is install" OFF)
@@ -233,6 +234,10 @@ if(CYME_MAIN)
  add_subdirectory(sandbox/)
 endif(CYME_MAIN)
 
+if(CYME_LIBRARY)
+ add_subdirectory(cyme/instance/)
+endif(CYME_LIBRARY)
+
 ########################################################################
 #
 # Tests
@@ -252,6 +257,7 @@ endif(CYME_TESTS)
 ########################################################################
 
 install(DIRECTORY cyme DESTINATION include FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.ipp")
+install(FILES ${PROJECT_BINARY_DIR}/cyme/instance/libcyme.a DESTINATION lib)
 install(DIRECTORY test/validity/channels DESTINATION share/cyme/validity FILES_MATCHING PATTERN "*.cpp" PATTERN "*.hpp" PATTERN "README")
 
 

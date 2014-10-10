@@ -54,6 +54,26 @@ namespace numeric{
      \endcond
      */
 
+    /**
+     \brief  Load a single-precision (32-bit) floating-point element from memory into lower element of dst.
+     */
+    template<>
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_single_load<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0,
+                                                                                                    const simd_trait<float,memory::qpx,1>::value_type b){
+        xmm0 = vec_lds(0,(float*)(void*)&b);
+        return xmm0;
+    }
+
+    /**
+     \brief  store a double-precision (32-bit) floating-point element from register lower element to memory.
+     */
+    template<>
+    forceinline simd_trait<float,memory::qpx,1>::value_type _mm_single_store<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0,
+                                                                                                    simd_trait<float,memory::qpx,1>::pointer b){
+        vec_sts(xmm0,0,b);
+        return *b;
+    }
+
 
     /**
      \brief Returns a vector of which the value of each element is set to a.
@@ -609,6 +629,25 @@ namespace numeric{
                                                                vec_nmadd(xmm0.r3,xmm1.r3,xmm2.r3));
     };
 #endif
+
+    /**
+     \brief  Load a double-precision (64-bit) floating-point element from memory into lower element of dst.
+     */
+    template<>
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_single_load<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0,
+                                                                                                      const simd_trait<double,memory::qpx,1>::value_type b){
+        return vec_lds(0,(double*)(void*)&b);
+    }
+
+    /**
+     \brief  store a double-precision (64-bit) floating-point element from register lower element to memory.
+     */
+    template<>
+    forceinline simd_trait<double,memory::qpx,1>::value_type _mm_single_store<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0,
+                                                                                                    simd_trait<double,memory::qpx,1>::pointer b){
+        vec_sts(xmm0,0,b);
+        return *b;
+    }
 
     /**
      \brief Returns a vector of which the value of each element is set to a.

@@ -144,6 +144,20 @@ namespace numeric{
     template<class T, memory::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_gf(typename simd_trait<T,O,N>::register_type xmm0);
 
+    /**
+     \brief free function load a simd vector with a single value
+     */
+    template<class T, memory::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_single_load(typename simd_trait<T,O,N>::register_type xmm0,
+                                                                          const typename simd_trait<T,O,N>::value_type);
+
+    /**
+     \brief free function return a single value from a vector
+    */
+    template<class T, memory::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::value_type _mm_single_store(typename simd_trait<T,O,N>::register_type xmm0,
+                                                                        const typename simd_trait<T,O,N>::pointer);
+    
 #ifdef __FMA__ // This macro is a compiler one
     /**
     \brief free function (wrapper) for the FMA between three registers

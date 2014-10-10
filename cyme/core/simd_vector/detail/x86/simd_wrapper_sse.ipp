@@ -31,13 +31,30 @@
 
 namespace numeric{
 
+    /**
+     \brief  Load a double-precision (64-bit) floating-point element from memory into lower element of dst.
+     */
+    template<>
+    forceinline simd_trait<double,memory::sse,1>::register_type _mm_single_load<double,memory::sse,1>(simd_trait<double,memory::sse,1>::register_type xmm0,
+                                                                                                      const simd_trait<double,memory::sse,1>::value_type b){
+        return _mm_loadl_pd(xmm0,&b);
+    }
 
-
+    /**
+     \brief  store a double-precision (64-bit) floating-point element from register lower element to memory.
+     */
+    template<>
+    forceinline simd_trait<double,memory::sse,1>::value_type _mm_single_store<double,memory::sse,1>(simd_trait<double,memory::sse,1>::register_type xmm0,
+                                                                                                    simd_trait<double,memory::sse,1>::pointer b){
+        _mm_storel_pd(b,xmm0);
+        return *b;
+    }
+    
     /**
      \brief  Load a double-precision (64-bit) floating-point element from memory into both elements of dst.
      */
     template<>
-    forceinline  simd_trait<double,memory::sse,1>::register_type _mm_load1<double,memory::sse,1>(const simd_trait<double,memory::sse,1>::value_type& a){
+    forceinline simd_trait<double,memory::sse,1>::register_type _mm_load1<double,memory::sse,1>(const simd_trait<double,memory::sse,1>::value_type& a){
         return _mm_set1_pd(a);
     }
 
@@ -751,6 +768,25 @@ namespace numeric{
                                                                );
     }
 #endif //end FMA
+
+    /**
+     \brief  Load a double-precision (64-bit) floating-point element from memory into lower element of dst.
+     */
+    template<>
+    forceinline simd_trait<float,memory::sse,1>::register_type _mm_single_load<float,memory::sse,1>(simd_trait<float,memory::sse,1>::register_type xmm0,
+                                                                                                      const simd_trait<float,memory::sse,1>::value_type b){
+        return _mm_load_ss(&b);
+    }
+
+    /**
+     \brief  store a double-precision (64-bit) floating-point element from register lower element to memory.
+     */
+    template<>
+    forceinline simd_trait<float,memory::sse,1>::value_type _mm_single_store<float,memory::sse,1>(simd_trait<float,memory::sse,1>::register_type xmm0,
+                                                                                                  simd_trait<float,memory::sse,1>::pointer b){
+        _mm_store_ss(b,xmm0);
+        return *b;
+    }
 
     /**
      \brief Load a single-precision (32-bit) floating-point element from memory into all elements of dst.

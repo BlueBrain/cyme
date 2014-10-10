@@ -1,4 +1,6 @@
 #include <test/unit/test_header.hpp>
+#include "cyme/instance/instance.h"
+
 
 using namespace cyme::test;
 
@@ -29,6 +31,32 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) 
 
         for(size_t i=0; i<NN; ++i)
           BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
+    }
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparisoni_serial, T, floating_point_test_types) {
+    TYPE a[NN] __attribute__((aligned(64)));
+    TYPE b[NN] __attribute__((aligned(64)));
+
+    TYPE sa[NN] __attribute__((aligned(64)));
+    TYPE sb[NN] __attribute__((aligned(64)));
+
+
+    TYPE res[NN] __attribute__((aligned(64)));
+    for(size_t k=0; k<100; ++k){
+        for(size_t i=0; i<NN; ++i){
+            sa[i] = a[i] = GetRandom<TYPE>();
+            sb[i] = b[i] = GetRandom<TYPE>();
+        }
+
+
+        for(size_t i=0; i<NN; ++i){
+            a[i] = exp(b[i]);
+            sa[i] = sexp(sb[i]);
+        }
+
+        for(size_t i=0; i<NN; ++i)
+          BOOST_REQUIRE_CLOSE( a[i], sa[i], 0.001);
     }
 }
 

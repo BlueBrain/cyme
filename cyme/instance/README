@@ -1,0 +1,2 @@
+This directory contains elements to build a C-library only for the math solver (sqrt, exp ,log, ...)
+Signatures for the C library are into the file cyme.h, one step below. 

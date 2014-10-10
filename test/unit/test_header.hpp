@@ -37,6 +37,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include "cyme/cyme.hpp"
+#include "cyme/instance/instance.h" // for serial computation only
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/test/unit_test.hpp>

@@ -102,7 +102,17 @@ namespace numeric{
          \brief negate the value of the register 
         */
         forceinline vec_simd& neg();
+        
+        /**
+         \brief function for load only one value type, serial library
+        */
+        forceinline vec_simd& single(const value_type b);
 
+        /**
+         \brief function for load only one value type, serial library
+         */
+        forceinline value_type single(pointer b);
+        
 #ifdef __FMA__
         /**
          \brief FMA operator

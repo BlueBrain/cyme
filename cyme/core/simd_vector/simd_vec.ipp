@@ -85,6 +85,17 @@ namespace numeric{
     }
 
     template<class T,memory::simd O, int N>
+    vec_simd<T,O,N>& vec_simd<T,O,N>::single(const typename vec_simd<T,O,N>::value_type b){
+        this->xmm = _mm_single_load<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,b);
+        return *this;
+    }
+
+    template<class T,memory::simd O, int N>
+    typename vec_simd<T,O,N>::value_type vec_simd<T,O,N>::single(typename vec_simd<T,O,N>::pointer b){
+        return _mm_single_store<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm, b);
+    }
+    
+    template<class T,memory::simd O, int N>
     void vec_simd<T,O,N>::store(typename simd_trait<T,O,N>::pointer a) const{
         _mm_store<value_type,O,N>(this->xmm,a);
     } 
@@ -130,6 +141,7 @@ namespace numeric{
         return nrv;
     }
 
+    
 #ifdef __FMA__
     template<class T,memory::simd O, int N>
     void vec_simd<T,O,N>::ma(const vec_simd& lhs, const vec_simd& rhs){
