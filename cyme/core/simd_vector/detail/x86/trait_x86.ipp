@@ -35,6 +35,8 @@
 #include <smmintrin.h> //type SIMD, memory::sse4.1
 #endif
 
+#include "cyme/core/simd_vector/detail/x86/simd_svml.h"
+
 namespace numeric{
 
     template<class T, memory::simd O>

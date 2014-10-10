@@ -170,7 +170,7 @@ namespace numeric{
     forceinline typename simd_trait<T,O,N>::register_type _mm_nfms(typename simd_trait<T,O,N>::register_type xmm0, typename simd_trait<T,O,N>::register_type xmm1, typename simd_trait<T,O,N>::register_type xmm2);
 
 #endif
-} //end namespace 
+} //end namespace
 
 #ifdef __SSE__
     #include "cyme/core/simd_vector/detail/x86/simd_wrapper_sse.ipp"

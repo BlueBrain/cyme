@@ -661,6 +661,60 @@ namespace numeric{
                                                                _mm256_log_pd(xmm0.r3)
                                                                );
     }
+#else
+    /**
+
+     \brief Compute the exponential value of e raised to the power of packed double-precision (64-bit) floating-point elements in xmm0, and store the results in dst.
+     */
+    template<>
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_exp<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0){
+        return __svml_exp4(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_exp<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0){
+        return simd_trait<double,memory::avx,2>::register_type(
+                                                                 __svml_exp4(xmm0.r0),
+                                                                 __svml_exp4(xmm0.r1)
+                                                               );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_exp<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0){
+        return simd_trait<double,memory::avx,4>::register_type(
+                                                               __svml_exp4(xmm0.r0),
+                                                               __svml_exp4(xmm0.r1),
+                                                               __svml_exp4(xmm0.r2),
+                                                               __svml_exp4(xmm0.r3)
+                                                               );
+    }
+
+    /**
+     \brief Compute the natural logarithm of packed double-precision (64-bit) floating-point elements in xmm0, and store the results in dst.
+     */
+    template<>
+    forceinline  simd_trait<double,memory::avx,1>::register_type _mm_log<double,memory::avx,1>( simd_trait<double,memory::avx,1>::register_type xmm0){
+        return __svml_log4(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,2>::register_type _mm_log<double,memory::avx,2>( simd_trait<double,memory::avx,2>::register_type xmm0){
+        return simd_trait<double,memory::avx,2>::register_type(
+                                                               __svml_log4(xmm0.r0),
+                                                               __svml_log4(xmm0.r1)
+                                                               );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::avx,4>::register_type _mm_log<double,memory::avx,4>( simd_trait<double,memory::avx,4>::register_type xmm0){
+        return simd_trait<double,memory::avx,4>::register_type(
+                                                               __svml_log4(xmm0.r0),
+                                                               __svml_log4(xmm0.r1),
+                                                               __svml_log4(xmm0.r2),
+                                                               __svml_log4(xmm0.r3)
+                                                               );
+    }
+
 #endif
 
 #ifdef __FMA__
@@ -1375,6 +1429,57 @@ namespace numeric{
                                                               _mm256_log_ps(xmm0.r1),
                                                               _mm256_log_ps(xmm0.r2),
                                                               _mm256_log_ps(xmm0.r3)
+                                                              );
+    }
+#else
+    /**
+     \brief Compute the exponential value of e raised to the power of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
+     */
+    template<>
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_exp<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0){
+        return __svml_expf8(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_exp<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0){
+        return simd_trait<float,memory::avx,2>::register_type(
+                                                              __svml_expf8(xmm0.r0),
+                                                              __svml_expf8(xmm0.r1)
+                                                              );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_exp<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0){
+        return simd_trait<float,memory::avx,4>::register_type(
+                                                              __svml_expf8(xmm0.r0),
+                                                              __svml_expf8(xmm0.r1),
+                                                              __svml_expf8(xmm0.r2),
+                                                              __svml_expf8(xmm0.r3)
+                                                              );
+    }
+    /**
+     \brief Compute the natural logarithm of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
+     */
+    template<>
+    forceinline simd_trait<float,memory::avx,1>::register_type _mm_log<float,memory::avx,1>( simd_trait<float,memory::avx,1>::register_type xmm0){
+        return __svml_logf8(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::avx,2>::register_type _mm_log<float,memory::avx,2>( simd_trait<float,memory::avx,2>::register_type xmm0){
+        return simd_trait<float,memory::avx,2>::register_type(
+                                                              __svml_logf8(xmm0.r0),
+                                                              __svml_logf8(xmm0.r1)
+                                                              );
+    }
+    
+    template<>
+    forceinline  simd_trait<float,memory::avx,4>::register_type _mm_log<float,memory::avx,4>( simd_trait<float,memory::avx,4>::register_type xmm0){
+        return simd_trait<float,memory::avx,4>::register_type(
+                                                              __svml_logf8(xmm0.r0),
+                                                              __svml_logf8(xmm0.r1),
+                                                              __svml_logf8(xmm0.r2),
+                                                              __svml_logf8(xmm0.r3)
                                                               );
     }
 #endif

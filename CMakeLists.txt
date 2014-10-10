@@ -189,13 +189,23 @@ include_directories ("${PROJECT_SOURCE_DIR}/cyme")
 #
 ########################################################################
 if(CYME_MATH)
-find_library(MASS_LIBRARY
-             NAMES mass
-             PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
+    if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ppc64")
+        find_library(MASS_LIBRARY
+                     NAMES mass
+                     PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
 
-find_library(SIMD_MASS_LIBRARY
-             NAMES mass_simd
-             PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
+        find_library(SIMD_MASS_LIBRARY
+                     NAMES mass_simd
+                     PATHS /opt/ibmcmp/xlmass/bg/7.3/bglib64/)
+    else()
+         find_library(SIMD_SVML_LIBRARY
+                      NAMES libsvml.a
+                      PATHS /gpfs/bbp.cscs.ch/apps/viz/intel/composer_xe_2015.0.090/compiler/lib/intel64/)
+         set(SIMD_SVML_LIBRARY ${SIMD_SVML_LIBRARY} "-lintlc")
+    endif()
+
+
+
 endif(CYME_MATH)
 
 ########################################################################

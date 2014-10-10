@@ -564,6 +564,60 @@ namespace numeric{
                                                                _mm_log_pd(xmm0.r3)
                                                                );
     }
+#else
+    /**
+     \brief Compute the exponential value of e raised to the power of packed double-precision (64-bit) floating-point elements in xmm0, and store the results in dst.
+     \warning Intel compiler only
+     */
+    template<>
+    forceinline  simd_trait<double,memory::sse,1>::register_type _mm_exp<double,memory::sse,1>( simd_trait<double,memory::sse,1>::register_type xmm0){
+        return __svml_exp2(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::sse,2>::register_type _mm_exp<double,memory::sse,2>( simd_trait<double,memory::sse,2>::register_type xmm0){
+        return simd_trait<double,memory::sse,2>::register_type(
+                                                               __svml_exp2(xmm0.r0),
+                                                               __svml_exp2(xmm0.r1)
+                                                               );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::sse,4>::register_type _mm_exp<double,memory::sse,4>( simd_trait<double,memory::sse,4>::register_type xmm0){
+        return simd_trait<double,memory::sse,4>::register_type(
+                                                               __svml_exp2(xmm0.r0),
+                                                               __svml_exp2(xmm0.r1),
+                                                               __svml_exp2(xmm0.r2),
+                                                               __svml_exp2(xmm0.r3)
+                                                               );
+    }
+    /**
+     \brief Compute the natural logarithm of packed double-precision (64-bit) floating-point elements in xmm0, and store the results in dst.
+     \warning Intel compiler only
+     */
+    template<>
+    forceinline  simd_trait<double,memory::sse,1>::register_type _mm_log<double,memory::sse,1>( simd_trait<double,memory::sse,1>::register_type xmm0){
+        return __svml_log2(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::sse,2>::register_type _mm_log<double,memory::sse,2>( simd_trait<double,memory::sse,2>::register_type xmm0){
+        return simd_trait<double,memory::sse,2>::register_type(
+                                                               __svml_log2(xmm0.r0),
+                                                               __svml_log2(xmm0.r1)
+                                                               );
+    }
+
+    template<>
+    forceinline  simd_trait<double,memory::sse,4>::register_type _mm_log<double,memory::sse,4>( simd_trait<double,memory::sse,4>::register_type xmm0){
+        return simd_trait<double,memory::sse,4>::register_type(
+                                                               __svml_log2(xmm0.r0),
+                                                               __svml_log2(xmm0.r1),
+                                                               __svml_log2(xmm0.r2),
+                                                               __svml_log2(xmm0.r3)
+                                                               );
+    }
+
 #endif
 
 #ifdef __FMA__
@@ -1209,6 +1263,58 @@ namespace numeric{
                                                               _mm_log_ps(xmm0.r3)
                                                               );
     }
+#else
+    /**
+     \brief   Compute the exponential value of e raised to the power of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
+     */
+    template<>
+    forceinline  simd_trait<float,memory::sse,1>::register_type _mm_exp<float,memory::sse,1>( simd_trait<float,memory::sse,1>::register_type xmm0){
+        return __svml_expf4(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::sse,2>::register_type _mm_exp<float,memory::sse,2>( simd_trait<float,memory::sse,2>::register_type xmm0){
+        return simd_trait<float,memory::sse,2>::register_type(
+                                                              __svml_expf4(xmm0.r0),
+                                                              __svml_expf4(xmm0.r1)
+                                                              );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::sse,4>::register_type _mm_exp<float,memory::sse,4>( simd_trait<float,memory::sse,4>::register_type xmm0){
+        return simd_trait<float,memory::sse,4>::register_type(
+                                                              __svml_expf4(xmm0.r0),
+                                                              __svml_expf4(xmm0.r1),
+                                                              __svml_expf4(xmm0.r2),
+                                                              __svml_expf4(xmm0.r3)
+                                                              );
+    }
+
+    /**
+     \brief   Compute the logarithm value of e raised to the power of packed single-precision (32-bit) floating-point elements in xmm0, and store the results in dst.
+     */
+    template<>
+    forceinline  simd_trait<float,memory::sse,1>::register_type _mm_log<float,memory::sse,1>( simd_trait<float,memory::sse,1>::register_type xmm0){
+        return __svml_logf4(xmm0);
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::sse,2>::register_type _mm_log<float,memory::sse,2>( simd_trait<float,memory::sse,2>::register_type xmm0){
+        return simd_trait<float,memory::sse,2>::register_type(
+                                                              __svml_logf4(xmm0.r0),
+                                                              __svml_logf4(xmm0.r1)
+                                                              );
+    }
+
+    template<>
+    forceinline  simd_trait<float,memory::sse,4>::register_type _mm_log<float,memory::sse,4>( simd_trait<float,memory::sse,4>::register_type xmm0){
+        return simd_trait<float,memory::sse,4>::register_type(
+                                                              __svml_logf4(xmm0.r0),
+                                                              __svml_logf4(xmm0.r1),
+                                                              __svml_logf4(xmm0.r2),
+                                                              __svml_logf4(xmm0.r3)
+                                                              );
+    }
 #endif
 
 #ifdef __FMA__
@@ -1231,7 +1337,7 @@ namespace numeric{
                                                               _mm_fmadd_ps(xmm0.r1, xmm1.r1, xmm2.r1)
                                                               );
     }
-    
+
     template<>
     forceinline  simd_trait<float,memory::sse,4>::register_type _mm_fma<float,memory::sse,4>(simd_trait<float,memory::sse,4>::register_type xmm0,
                                                                                              simd_trait<float,memory::sse,4>::register_type xmm1,
@@ -1243,7 +1349,7 @@ namespace numeric{
                                                               _mm_fmadd_ps(xmm0.r3, xmm1.r3, xmm2.r3)
                                                               );
     }
-    
+
     /**
      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, add the negated intermediate result to packed elements in xmm2, and store the results in dst.
      */
@@ -1253,7 +1359,7 @@ namespace numeric{
                                                                                               simd_trait<float,memory::sse,1>::register_type xmm2){
         return _mm_fnmadd_ps(xmm0, xmm1, xmm2);
     }
-    
+
     template<>
     forceinline  simd_trait<float,memory::sse,2>::register_type _mm_nfma<float,memory::sse,2>(simd_trait<float,memory::sse,2>::register_type xmm0,
                                                                                               simd_trait<float,memory::sse,2>::register_type xmm1,
@@ -1263,7 +1369,7 @@ namespace numeric{
                                                               _mm_fnmadd_ps(xmm0.r1, xmm1.r1, xmm2.r1)
                                                               );
     }
-    
+
     template<>
     forceinline  simd_trait<float,memory::sse,4>::register_type _mm_nfma<float,memory::sse,4>(simd_trait<float,memory::sse,4>::register_type xmm0,
                                                                                               simd_trait<float,memory::sse,4>::register_type xmm1,
@@ -1275,7 +1381,7 @@ namespace numeric{
                                                               _mm_fnmadd_ps(xmm0.r3, xmm1.r3, xmm2.r3)
                                                               );
     }
-    
+
     /**
      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the intermediate result, and store the results in dst.
      */

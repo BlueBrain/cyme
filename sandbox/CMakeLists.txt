@@ -42,9 +42,8 @@ endfunction(compil_flag)
 
 function(make_program main_ flag_ simd_ unroll_)
     add_executable(${main_}_${simd_}_${unroll} ${main_}.cpp)
-    SET_TARGET_PROPERTIES(${main_}_${simd_}_${unroll} PROPERTIES COMPILE_FLAGS
-"-D__CYME_SIMD_VALUE__=${SIMD_TECH} -D__CYME_UNROLL_VALUE__=${unroll_} ${flag_} ${CYME_FMA_FLAGS}")
-    target_link_libraries(${main_}_${simd_}_${unroll} ${Boost_CHRONO_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${CYME_TIME} ${CYME_MIC})
+    SET_TARGET_PROPERTIES(${main_}_${simd_}_${unroll} PROPERTIES COMPILE_FLAGS "-D__CYME_SIMD_VALUE__=${SIMD_TECH} -D__CYME_UNROLL_VALUE__=${unroll_} ${flag_} ${CYME_FMA_FLAGS}")
+    target_link_libraries(${main_}_${simd_}_${unroll} ${Boost_CHRONO_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${SIMD_SVML_LIBRARY} ${CYME_TIME} ${CYME_MIC})
 endfunction(make_program)
 
 set(listunroll 1 2 4)

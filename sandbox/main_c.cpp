@@ -37,18 +37,9 @@ namespace Na{
     template<class T>
     static inline void cnrn_states(T& W){
         T const & R = W;
-//IACA_START
-        W[0] = sqrt(R[3]);
-        W[1] = sqrt(R[4]);
-        W[2] = sqrt(R[5]);
-
-        
-        //IACA_END
-/*
         cnrn_rates<T>(W);
         W[m] += (1.-exp(-0.1/R[mTau]))*(R[mInf]-R[m]);
         W[h] += (1.-exp(-0.1/R[hTau]))*(R[hInf]-R[h]);
-*/
     }
 
     template<class T>
@@ -64,7 +55,7 @@ typedef  cyme::vector<Na::channel<float>, memory::AoSoA> Vec_f_AoSoA_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoS> Vec_d_AoS_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoSoA> Vec_d_AoSoA_Na;
 
-typedef boost::mpl::vector<Vec_f_AoS_Na,Vec_f_AoSoA_Na,Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
+typedef boost::mpl::vector<Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
 
 template<typename T>
 struct name<Na::channel<T> > {
@@ -102,7 +93,7 @@ struct test_case{
     void operator()(T const&){
         int limit = 4;
         typedef typename T::storage_type storage_type;
-        const std::size_t N(0xfffff);
+        const std::size_t N(0xffffff);
         T v(N,0);
 
 #ifdef _OPENMP
