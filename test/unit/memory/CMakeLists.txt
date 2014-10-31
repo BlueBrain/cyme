@@ -2,7 +2,7 @@
 add_definitions (-Wno-unused-variable)
 
 #list tests
-set(tests alignment array core_engine vector serial)
+set(tests alignment array core_engine core_scalar vector serial)
 set(unrolls 1 2 4)
 
 #loop over SIMD techno

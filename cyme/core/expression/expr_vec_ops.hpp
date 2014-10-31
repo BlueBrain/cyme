@@ -214,16 +214,16 @@ namespace numeric{
         return operator/(static_cast<T>(s),b); 
     }
     
-    //v / lambda(double)
+    //v / lambda(double)   =   v * (1/lambda ) [optimization for scalars]
     template<class T, memory::simd O, int N, class R2>
-    forceinline rvec<T,O,N, vec_div<T,O,N, R2,vec_scalar<T,O,N> > >
+    forceinline rvec<T,O,N, vec_mul<T,O,N, R2,vec_scalar<T,O,N> > >
     operator /(rvec<T,O,N, R2> const& b, double const& s){
-        return  rvec<T,O,N,vec_div<T,O,N,R2,vec_scalar<T,O,N> > >(vec_div<T,O,N,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(s)));
+        return  rvec<T,O,N,vec_mul<T,O,N,R2,vec_scalar<T,O,N> > >(vec_mul<T,O,N,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(1./s)));
     }
 
     //v / lambda(int)
     template<class T, memory::simd O, int N, class R2>
-    forceinline rvec<T,O,N, vec_div<T,O,N,vec_scalar<T,O,N>,R2> >
+    forceinline rvec<T,O,N, vec_mul<T,O,N,R2,vec_scalar<T,O,N> > >
     operator /(rvec<T,O,N,R2> const& b, int const& s){
         return operator/(b,static_cast<T>(s));
     }
