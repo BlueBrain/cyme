@@ -545,7 +545,6 @@ namespace numeric{
         pointer data_pointer;
         Rep expr_rep;
     };
-    
  }
 
 #include "cyme/core/expression/expr_vec_ops.hpp"

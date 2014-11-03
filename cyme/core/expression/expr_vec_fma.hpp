@@ -38,17 +38,10 @@ namespace numeric{
         return  rvec<T,O,N,vec_muladd<T,O,N,R1,R2,R3> >(vec_muladd<T,O,N,R1,R2,R3>(a.rep(),b.rep()));
     }
 
-    //mul add a*b + c where c (double or float)
+    //mul add a*b + c where c (lambda)
     template<class T, memory::simd O, int N, class R1, class R2>
     rvec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator +(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, double const& b){
-        return  rvec<T,O,N,vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(b)));
-    }
-
-    //mul add a*b + c where c (int)
-    template<class T, memory::simd O, int N, class R1, class R2>
-    rvec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator +(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, int const& b){
+    forceinline operator +(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, typename identity<T>::value_type const& b){
         return  rvec<T,O,N,vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(b))));
     }
 
@@ -59,17 +52,10 @@ namespace numeric{
         return operator+(a,b); //take previous one ^_^, as the addition is commutative 
     }
 
-    //mul add c+ a*b  where c (double or float)
+    //mul add c+ a*b  where c (lambda)
     template<class T, memory::simd O, int N, class R1, class R2>
     rvec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator +(double const& b, rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
-        return operator+(a,b);
-    }
-
-    //mul add c + a*b  where c (int)
-    template<class T, memory::simd O, int N, class R1, class R2>
-    rvec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator +(int const& b, rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
+    forceinline operator +(typename identity<T>::value_type const& b, rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
         return operator+(a,b);
     }
 
@@ -87,17 +73,10 @@ namespace numeric{
         return  rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,R3> >(vec_mulsub<T,O,N,R1,R2,R3>(a.rep(),b.rep()));
     }
 
-    //mul add a*b - c where c (double or float)
+    //mul add a*b - c where c (lambda)
     template<class T, memory::simd O, int N, class R1, class R2>
     rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator -(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, double const& b){
-        return  rvec<T,O,N,vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(b)));
-    }
-
-    //mul add a*b - c where c (int)
-    template<class T, memory::simd O, int N, class R1, class R2>
-    rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator -(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, int const& b){
+    forceinline operator -(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, typename identity<T>::value_type const& b){
         return  rvec<T,O,N,vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(b))));
     }
 
@@ -108,17 +87,10 @@ namespace numeric{
         return  rvec<T,O,N, vec_negate_muladd<T,O,N,R1,R2,R3> >(vec_negate_muladd<T,O,N,R1,R2,R3>(b.rep(),a.rep()));
     }
 
-    //mul add c - a*b  where c (double or float)
+    //mul add c - a*b  where c (lambda)
     template<class T, memory::simd O, int N, class R1, class R2>
     rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator -(double const& a,rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
-        return  rvec<T,O,N,vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(a)));
-    }
-
-    //mul add a*b - c where c (int)
-    template<class T, memory::simd O, int N, class R1, class R2>
-    rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator -(int const& a,rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
+    forceinline operator -(typename identity<T>::value_type const& a,rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
         return  rvec<T,O,N,vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >(vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(static_cast<T>(a))));
     }
 

@@ -55,7 +55,7 @@ typedef  cyme::vector<Na::channel<float>, memory::AoSoA> Vec_f_AoSoA_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoS> Vec_d_AoS_Na;
 typedef  cyme::vector<Na::channel<double>, memory::AoSoA> Vec_d_AoSoA_Na;
 
-typedef boost::mpl::vector<Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
+typedef boost::mpl::vector<Vec_f_AoS_Na,Vec_f_AoSoA_Na,Vec_d_AoS_Na,Vec_d_AoSoA_Na> vector_list;
 
 template<typename T>
 struct name<Na::channel<T> > {
