@@ -262,6 +262,9 @@ install(DIRECTORY test/validity/channels DESTINATION share/cyme/validity FILES_M
 
 
 if(CYME_BUILDYARD)
-include(CPackConfig)
+set(GIT_DOCUMENTATION_REPO BBPDocumentation)
+set(COMMON_ORGANIZATION_NAME BBP)
+set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
 include(DoxygenRule)
+include(CPackConfig)
 endif(CYME_BUILDYARD)
