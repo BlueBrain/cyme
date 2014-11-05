@@ -1234,8 +1234,8 @@ namespace numeric{
         __m128i tmp1 =  _mm256_extractf128_si256(TMP,1);
         tmp1 = _mm_and_si128(tmp1,_mm_set1_epi32(0x7fffff));
         tmp1 = _mm_add_epi32(tmp1,_mm_set1_epi32(0x3f800000));
-        TMP =   _mm256_insertf128_si256(xmm0, tmp0,0);
-        TMP =   _mm256_insertf128_si256(xmm0, tmp1,1);
+        TMP =   _mm256_insertf128_si256(TMP, tmp0,0);
+        TMP =   _mm256_insertf128_si256(TMP, tmp1,1);
         return _mm256_castsi256_ps(TMP);
     }
 
