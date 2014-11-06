@@ -4,6 +4,8 @@
 
 \section tuto1 Initialization and memory layout
 
+This tutorial and the following are inspired from a neuroscientific application. In particular, they represent various stages of the numerical approximation of an Hodgkin-Huxley model.
+
 In this first tutorial, we create an instance of a cyme container. For the beginning,
 we need and define a structure of 5 elements (here a channel).
 
@@ -13,36 +15,36 @@ we need and define a structure of 5 elements (here a channel).
         static const int value_size = 5;
     };
 
-then we declare a cyme::array of 5 elements with AoS memory layout:
+then we declare a cyme::array of 7 elements with AoS memory layout:
 
-    cyme::array<channel<float>,5, memory::AoS> a;
+    cyme::array<channel<float>,7, memory::AoS> a;
 
-If we prefer the memory layout AoSoS, we modify the declaration by:
+If we prefer the memory layout AoSoA, we modify the declaration by:
 
-    cyme::array<channel<float>,5, memory::AoSoA> a;
+    cyme::array<channel<float>,7, memory::AoSoA> a;
 
-For the memory the difference is fondamental. In the first case element are consecutive one after one, where 
-in the second case they are interleaved on the size of the SIMD register desired. 
+For the memory the difference is fundamental. In the first case elements are consecutive one after the other, whereas 
+in the second case they are interleaved on the size of the target SIMD register.
 
-\image html memoryAoS_AoSoA.tiff Memory layout of the container in function of the declaration memory::AoS or memory::AoSoA  
+\image html memoryAoS_AoSoA.tiff Memory layout of the container in function of the declaration memory::AoS or memory::AoSoA
 
-For the initialization, the bracket operator (i,j) is implemented. For both memory layout it will pick up element following the AoS layout ideology. 
-We make this choice as it is easier for user to represent AoS layout in mind. 
+For the initialization, the bracket operator (i,j) is implemented. For both memory layouts it will pick up elements following the AoS layout ideology. 
+We make this choice as it is easier for the user to write code with the AoS layout in mind.
 
 \image html memory_access.tiff Memory access following the AoS ideology
 
-Thus we can write :
+Let's say we want to initialize the fourth (out of seven) channel structure inside the array, but only want to initialize its first (out of five) element. Then we can write the same code for both memory layouts:
 
-     cyme::array<channel<float>,5, memory::AoS> a;
-     cyme::array<channel<float>,5, memory::AoSoA> b;
+     cyme::array<channel<float>,7, memory::AoS> a;
+     cyme::array<channel<float>,7, memory::AoSoA> b;
 
      a(3,0) = 3.4;
      b(3,0) = 3.4;
 
 \section tuto2 Iterator and memory manipulation
 
-Based on the std::vector and std::array, cyme allows iterator mechanism, it is the main advantage of the library. As usual, the iterator manipulates the memory:
-for the AoS layout, a simple iteration, move from one element to the next element. For the AoSoA, it will move for the next element which is four times « bigger ».
+Based on the std::vector and std::array, cyme allows iterator mechanism which is the main advantage of the library. As usual, the iterator manipulates the memory:
+for the AoS layout, a simple iteration moves from one element to the next element. For the AoSoA, it will move to the next element which is a step of size « one SIMD register » further.
 \image html iterator.tiff Manipulation into the container with the iterator
 
 Thus we can write
@@ -52,8 +54,8 @@ Thus we can write
     for(; it < a.end(); ++it,++cit)
         I do something
 
-A second operator [i] completes the first one (i,j), it reads the memory with « scalar access » for AoS but with « vectorial access » with AoSoA. 
-When we request an element from the iterator with AoS layout, we manipulate one element of data, and four for the AoSoA layout with the help
+A second operator [i] completes the first one (i,j) by reading the memory with « scalar access » for AoS but with « vectorial access » with AoSoA. 
+When we request an element from the iterator with AoS layout, we manipulate one element of data, and « one SIMD register » for the AoSoA layout with the help
 of SIMD technology.
 
 \image html iterator2.tiff Manipulation of the data with the iterator
@@ -63,13 +65,13 @@ Thus, we can rewrite a new initialization as
     for(typename cyme::array<channel<float>,5, memory::AoSoA>::iterator it = a.begin(); it < a.end(); ++it)
         (*it)[1] = 3.4;
 
-In 2 steps with the AoSoA layout the initialization is done, against  5 steps for AoS layout. In both case the algorithm is generic.
- 
-\section tuto3 Computation 
-  
-The last tutorial  operations. We simply request data from the iterator and execute operations. But with the AoSoA layout,
+In 2 steps with the AoSoA layout the initialization is done, against 5 steps for AoS layout. In both case the algorithm is generic.
+
+\section tuto3 Computation
+
+The last tutorial concerns operations. We simply request data from the iterator and execute operations. But with the AoSoA layout,
 we can compute our operations 4 times faster. Do not forget to declare a const iterator for the rhs.
- 
+
     cyme::array<synapse<float>,5, memory::AoSoA> b;
     init(b); // init function
     cyme::array<synapse<float>,5, memory::AoSoA>::iterator it = b.begin();
@@ -77,8 +79,8 @@ we can compute our operations 4 times faster. Do not forget to declare a const i
     for(; it < b.end(); ++it,++cit)
        (*it)[0] = (*cit)[1]*(*cit)[2]+(*cit)[3]/1.2;
 
-The framework is more and less compatible with C++ features specially algorithm concept. The previous example my be rewritten using a functor and std::for_each,
-do not forget to declare a const reference to make the distinction read/write
+The framework is more or less compatible with C++ features, especially the algorithm concept. The previous example my be rewritten using a functor and std::for_each,
+but take care to not forget to declare a const reference to make the distinction between read and write operations
 
     template<class T>
     struct functor{
@@ -96,7 +98,7 @@ Alternatively with c++11 using lambda function,
     std::for_each(b.begin(), b.end(), [](my_vector::storage_type& S){S[0] = S[1]*S[2]+S[3]/1.2; } );
 
 Other algorithms work well as std::fill but can differ for the representation as std::generate (iterators are not the same).
-Until now containers can be mix, but algorithms mixing containers (AoS - AoSoA) are not possible as std::transform.
+Until now containers can be mixed, but algorithms mixing containers (AoS - AoSoA) such as std::transform are not possible.
 
 \section tuto4 Code
 
