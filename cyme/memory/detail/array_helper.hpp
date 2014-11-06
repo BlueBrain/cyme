@@ -1,32 +1,21 @@
-/* The following code declares class array_helper,
- * an STL container (as wrapper) for array_helpers of constant size.
+/*
+ * Cyme - array_helper.hpp, Copyright (c), 2014,
+ * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
+ * timothee.ewart@epfl.ch,
+ * All rights reserved.
  *
- * See
- *      http://www.boost.org/libs/array_helper/
- * for documentation.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
  *
- * The original author site is at: http://www.josuttis.com/
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * (C) Copyright Nicolai M. Josuttis 2001.
- *
- * Distributed under the Boost Software License, Version 1.0. (See
- * accompanying file LICENSE_1_0.txt or copy at
- * http://www.boost.org/LICENSE_1_0.txt)
- *
- * 30 jan 2014 - Tim big clean up (limited support)
- * 14 Apr 2012 - (mtc) Added support for boost::hash
- * 28 Dec 2010 - (mtc) Added cbegin and cend (and crbegin and crend) for C++Ox compatibility.
- * 10 Mar 2010 - (mtc) fill method added, matching resolution of the standard library working group.
- *      See <http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#776> or Trac issue #3168
- *      Eventually, we should remove "assign" which is now a synonym for "fill" (Marshall Clow)
- * 10 Mar 2010 - added workaround for SUNCC and !STLPort [trac #3893] (Marshall Clow)
- * 29 Jan 2004 - c_array_helper() added, BOOST_NO_PRIVATE_IN_AGGREGATE removed (Nico Josuttis)
- * 23 Aug 2002 - fix for Non-MSVC compilers combined with MSVC libraries.
- * 05 Aug 2001 - minor update (Nico Josuttis)
- * 20 Jan 2001 - STLport fix (Beman Dawes)
- * 29 Sep 2000 - Initial Revision (Nico Josuttis)
- *
- * Jan 29, 2004
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
  */
 
 

@@ -1,10 +1,27 @@
- #include <iostream>
+/*
+ * Cyme - test_print.cpp, Copyright (c), 2014,
+ * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
+ * timothee.ewart@epfl.ch,
+ * All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
+
+#include <iostream>
  #include <vector>
 
- //#include <boost/math/tools/test.hpp>
-
- //#include "utils/timer.h"
-#include "cyme/cyme.hpp"
+ #include "cyme/cyme.hpp"
 
  #include <boost/chrono.hpp>
 
@@ -19,10 +36,6 @@
  #include <boost/mpl/for_each.hpp>
  #include <boost/mpl/vector.hpp>
  #include <boost/mpl/push_back.hpp>
-
-//#include "/Users/ewart/Documents/IACA_SALAH/include/iacaMarks.h"
-
-
  #include <functional>
 
  #include <algorithm>
