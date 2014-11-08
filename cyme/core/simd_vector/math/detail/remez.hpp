@@ -103,62 +103,72 @@ namespace numeric{
 
     template<class T>
     struct coeff_remez_log<T,0>{
-        const static inline T coeff() {return -3.729238862193660957811783293222740510794;}
+        const static inline T coeff() {return 0;}
     };
 
     template<class T>
     struct coeff_remez_log<T,1>{
-        const static inline T coeff() {return 1.019612728175781108164019504667581445852e1;}
+        const static inline T coeff() {return 0.999999999881463517864L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,2>{
-        const static inline T coeff() {return -1.611554885225759903973000795223844544002e1;}
+        const static inline T coeff() {return -0.499999964958725095026L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,3>{
-        const static inline T coeff() {return 2.000425769325862220327264498480262353227e1;}
+        const static inline T coeff() {return 0.333331601133431864538L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,4>{
-        const static inline T coeff() {return -1.822239267936272927002531502608284571471e1;}
+        const static inline T coeff() {return -0.249966118317788475791L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,5>{
-        const static inline T coeff() {return 1.206869988690446231164357876665054299520e1;}
+        const static inline T coeff() {return 0.199652928083999845561L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,6>{
-        const static inline T coeff() {return -5.747823236208994623152312079705235442186;}
+        const static inline T coeff() {return -0.164528321547744695595L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,7>{
-        const static inline T coeff() {return 1.919426543641694862700126394009259305801;}
+        const static inline T coeff() {return 0.13426431588538376696L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,8>{
-        const static inline T coeff() {return -4.269150848927487851134287626219437042508e-1;}
+        const static inline T coeff() {return -0.101241750098569221963L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,9>{
-        const static inline T coeff() {return 5.683540997833432288883804114099282351234e-2;}
+        const static inline T coeff() {return 0.0640055965188409194363L;}
     };
 
     template<class T>
     struct coeff_remez_log<T,10>{
-        const static inline T coeff() {return -3.428099605121591517216849043431045669904e-3;}
+        const static inline T coeff() {return -0.0301709422209463258125L;}
+    };
+
+    template<class T>
+    struct coeff_remez_log<T,11>{
+        const static inline T coeff() {return 0.00908032467092469922091L;}
+    };
+
+    template<class T>
+    struct coeff_remez_log<T,12>{
+        const static inline T coeff() {return -0.00128048855206694750818L;}
     };
 
     template<class T>
     struct poly_order<T,coeff_remez_log> {
-        static const std::size_t value=10;
+        static const std::size_t value=12;
     };
   
     /**

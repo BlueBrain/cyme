@@ -29,17 +29,7 @@ using namespace cyme::test;
 #define NN memory::unroll_factor::N*memory::trait_register<TYPE,memory::__GETSIMD__()>::size/sizeof(TYPE)
 
 template<class T>
-T precision_log();
-
-template<>
-double precision_log(){
-    return 0.005;
-}
-
-template<>
-float precision_log(){
-    return 5.0;
-}
+T precision_log(){return 0.005;};
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));

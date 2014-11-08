@@ -35,9 +35,11 @@ namespace numeric{
         which is x = s*x0*2^n (where s the sign, always +), x0 (fraction) belongs between 1<=x0<2 and n the exponent (integer).
         Thus, log2(x) = log2(x0) + log2(2^n)
               log2(x) = log2(x0) + n
-              log(x) = log(2) * log2(x)
-        x0 and n are determinated by bit tips (manipulating the float representation), log2(x) as the "exponential solver"
-        utilizes Remez approximation between 1 and 2.
+              log(x) = log(2)*log2(x0) + log2*n
+              log(x) = log(x0) + log2*n
+        x0 and n are determinated by bit tips (manipulating the float representation). log(x0) as the "exponential solver"
+        utilizes Remez approximation of log(1+x0) between 0 and 1. Using this tips I avoid rounding error, consenquently
+        I must translate my x by -1.
     */
   template<class T, memory::simd O, int N,std::size_t n = poly_order<T,coeff_remez_log>::value, class Solver = Remez_log<T,O,N,n> >
     struct my_log{
@@ -45,7 +47,13 @@ namespace numeric{
             vec_simd<T,O,N> log2(0.6931471805599453); // note futur: change this we get log10, etc ....
             vec_simd<T,O,N> e = ge(x); // ge = get exponent
             vec_simd<T,O,N> f = gf(x); // gf = get fraction
-            x = log2*(Solver::log(f)+e);
+#ifdef __FMA__
+            f-=vec_simd<T,O,N>(1.0); //translate for rounding see comment before
+            x = muladd(log2,e,Solver::log(f));
+#else
+            f-=vec_simd<T,O,N>(1.0);
+            x = Solver::log(f)+log2*e;
+#endif
             return x;
         }
     };
