@@ -50,12 +50,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) 
         va.store(res);
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], res[i], precision_log<TYPE>()); // precision soso on x86 try to understand why for float 0<x<=1 
-                                                                     // {system : -0.00051404332} and me: -0.000523375755
+          BOOST_REQUIRE_CLOSE( a[i], res[i], precision_log<TYPE>());
+                                                                    
     }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparisoni_serial, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison_serial, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
 

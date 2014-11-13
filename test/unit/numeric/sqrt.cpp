@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_sqrt_comparison, T, floating_point_test_types)
         va.store(res);
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
+          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.005);
     }
 }
 
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_sqrt_comparisoni_serial, T, floating_point_tes
         }
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], sa[i], 0.001);
+          BOOST_REQUIRE_CLOSE( a[i], sa[i], 0.005);
     }
 }
 

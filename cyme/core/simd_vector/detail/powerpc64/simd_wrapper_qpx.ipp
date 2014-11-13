@@ -377,7 +377,7 @@ namespace numeric{
      \brief Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not support QPX integer the computation is done serialy using C trick
      */
     template<>
-    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_twok<float,memory::qpx,1>(simd_trait<int,memory::qpx,1>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,1>::register_type _mm_twok<float,memory::qpx,1>(simd_trait<int,memory::qpx,1>::register_type xmm0){
         boost::int32_t n;
         for(int i=0; i<4; ++i){
             ieee754 u;
@@ -390,7 +390,7 @@ namespace numeric{
     }
 
     template<>
-    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_twok<float,memory::qpx,2>(simd_trait<int,memory::qpx,2>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,2>::register_type _mm_twok<float,memory::qpx,2>(simd_trait<int,memory::qpx,2>::register_type xmm0){
         boost::int32_t n1,n2;
         for(int i=0; i<4; ++i){
             ieee754 u1,u2;
@@ -403,11 +403,11 @@ namespace numeric{
             xmm0.r0 = vec_insert(d1,xmm0.r0,i);
             xmm0.r1 = vec_insert(d2,xmm0.r1,i);
         }
-        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0, xmm0.r1);
+        return simd_trait<float,memory::qpx,2>::register_type(xmm0.r0, xmm0.r1);
     }
 
     template<>
-    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_twok<float,memory::qpx,4>(simd_trait<int,memory::qpx,4>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,4>::register_type _mm_twok<float,memory::qpx,4>(simd_trait<int,memory::qpx,4>::register_type xmm0){
         boost::int32_t n1,n2,n3,n4;
         for(int i=0; i<4; ++i){
             ieee754 u1,u2,u3,u4;
@@ -439,7 +439,7 @@ namespace numeric{
       arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
      */
     template<>
-    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_ge<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,1>::register_type _mm_ge<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0){
         for(int i=0; i<4; ++i){
             ieee754 u;
             u.d = vec_extract(xmm0,i);
@@ -450,7 +450,7 @@ namespace numeric{
     }
 
     template<>
-    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_ge<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,2>::register_type _mm_ge<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0){
         for(int i=0; i<4; ++i){
             ieee754 u1,u2;
             u1.d = vec_extract(xmm0.r0,i);
@@ -460,11 +460,11 @@ namespace numeric{
             xmm0.r0 = vec_insert((double)u1.ll,xmm0.r0,i);
             xmm0.r1 = vec_insert((double)u2.ll,xmm0.r1,i);
         }
-        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0,xmm0.r1);
+        return simd_trait<float,memory::qpx,2>::register_type(xmm0.r0,xmm0.r1);
     }
 
     template<>
-    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_ge<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,4>::register_type _mm_ge<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0){
         for(int i=0; i<4; ++i){
             ieee754 u1,u2,u3,u4;
             u1.d = vec_extract(xmm0.r0,i);
@@ -480,14 +480,14 @@ namespace numeric{
             xmm0.r2 = vec_insert((double)u3.ll,xmm0.r2,i);
             xmm0.r3 = vec_insert((double)u4.ll,xmm0.r3,i);
         }
-        return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
+        return simd_trait<float,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
     }
 
     /**
      \brief Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
      */
     template<>
-    forceinline  simd_trait<double,memory::qpx,1>::register_type _mm_gf<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,1>::register_type _mm_gf<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0){
         for(int i=0; i<4; ++i){
             ieee754 u;
             u.d = vec_extract(xmm0,i);
@@ -498,7 +498,7 @@ namespace numeric{
     }
 
     template<>
-    forceinline  simd_trait<double,memory::qpx,2>::register_type _mm_gf<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,2>::register_type _mm_gf<float,memory::qpx,2>(simd_trait<float,memory::qpx,2>::register_type xmm0){
         for(int i=0; i<4; ++i){
             ieee754 u1,u2;
             u1.d = vec_extract(xmm0.r0,i);
@@ -508,11 +508,11 @@ namespace numeric{
             xmm0.r0 = vec_insert(u1.d,xmm0.r0,i);
             xmm0.r1 = vec_insert(u2.d,xmm0.r1,i);
         }
-        return simd_trait<double,memory::qpx,2>::register_type(xmm0.r0,xmm0.r1);
+        return simd_trait<float,memory::qpx,2>::register_type(xmm0.r0,xmm0.r1);
     }
 
     template<>
-    forceinline  simd_trait<double,memory::qpx,4>::register_type _mm_gf<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0){
+    forceinline  simd_trait<float,memory::qpx,4>::register_type _mm_gf<float,memory::qpx,4>(simd_trait<float,memory::qpx,4>::register_type xmm0){
         for(int i=0; i<4; ++i){
             ieee754 u1,u2,u3,u4;
             u1.d = vec_extract(xmm0.r0,i);
@@ -525,10 +525,10 @@ namespace numeric{
             u4.ll = (u4.ll&0xfffffffffffff)+0x3ff0000000000000;
             xmm0.r0 = vec_insert(u1.d,xmm0.r0,i);
             xmm0.r1 = vec_insert(u2.d,xmm0.r1,i);
-            xmm0.r2 = vec_insert(u3.d,xmm0.r3,i);
+            xmm0.r2 = vec_insert(u3.d,xmm0.r2,i);
             xmm0.r3 = vec_insert(u4.d,xmm0.r3,i);
         }
-        return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
+        return simd_trait<float,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
     }
 
 #ifdef __FMA__
@@ -1098,7 +1098,7 @@ namespace numeric{
             u4.ll = (u4.ll&0xfffffffffffff)+0x3ff0000000000000;
             xmm0.r0 = vec_insert(u1.d,xmm0.r0,i);
             xmm0.r1 = vec_insert(u2.d,xmm0.r1,i);
-            xmm0.r2 = vec_insert(u3.d,xmm0.r3,i);
+            xmm0.r2 = vec_insert(u3.d,xmm0.r2,i);
             xmm0.r3 = vec_insert(u4.d,xmm0.r3,i);
         }
         return simd_trait<double,memory::qpx,4>::register_type(xmm0.r0,xmm0.r1,xmm0.r2,xmm0.r3);
