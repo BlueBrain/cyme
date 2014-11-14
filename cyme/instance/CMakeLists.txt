@@ -1,5 +1,12 @@
-
-add_library(cyme cyme.cpp)
+if(CYME_BUILDYARD)
+source_group(\\ FILES CMakeLists.txt)
+ set(CYME_LIBRARY_TYPE STATIC)
+ set(CYME_PUBLIC_HEADERS ${COMMON_INCLUDES} "cyme.h")
+ set(CYME_SOURCES ${COMMON_SOURCES} "cyme.cpp")
+ common_library(cyme)
+else(CYME_BUILDYARD)
+ add_library(cyme cyme.cpp)
+endif(CYME_BUILDYARD)
 
 if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ppc64")
     set_target_properties(cyme PROPERTIES COMPILE_FLAGS "-D__CYME_SIMD_VALUE__=qpx -D__CYME_UNROLL_VALUE__=1 ${CYME_FMA_FLAGS}")

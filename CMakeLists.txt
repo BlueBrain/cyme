@@ -44,7 +44,7 @@ endif(NOT MACHINE_CONFIG)
 
 project (cyme)
 
-option(CYME_BUILDYARD "Build with Buildyard"  OFF)
+option(CYME_BUILDYARD "Build with Buildyard"  ON)
 set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OS X" FORCE) #overwrite Builyard setting 32 bit is outdate
 
 set(LAST_RELEASE 1.0.0)
@@ -257,7 +257,7 @@ endif(CYME_TESTS)
 ########################################################################
 
 install(DIRECTORY cyme DESTINATION include FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.ipp")
-install(FILES ${PROJECT_BINARY_DIR}/cyme/instance/libcyme.a DESTINATION lib)
+#install(FILES ${PROJECT_BINARY_DIR}/cyme/instance/libcyme.a DESTINATION lib)
 install(DIRECTORY test/validity/channels DESTINATION share/cyme/validity FILES_MATCHING PATTERN "*.cpp" PATTERN "*.hpp" PATTERN "README")
 
 
