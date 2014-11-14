@@ -98,7 +98,7 @@ namespace numeric{
         /**
          \brief function for load only one value type, serial library
         */
-        forceinline vec_simd& single(const value_type b);
+        forceinline vec_simd& single(const value_type& b);
 
         /**
          \brief function for load only one value type, serial library
