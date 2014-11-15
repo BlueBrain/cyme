@@ -50,10 +50,8 @@ namespace numeric{
      \brief  Load a single-precision (32-bit) floating-point element from memory into lower element of dst.
      */
     template<>
-    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_single_load<float,memory::qpx,1>(simd_trait<float,memory::qpx,1>::register_type xmm0,
-                                                                                                    const simd_trait<float,memory::qpx,1>::value_type b){
-        xmm0 = vec_lds(0,(float*)(void*)&b);
-        return xmm0;
+    forceinline simd_trait<float,memory::qpx,1>::register_type _mm_single_load<float,memory::qpx,1>(const simd_trait<float,memory::qpx,1>::value_type b){
+        return vec_lds(0,(float*)(void*)&b);
     }
 
     /**
@@ -626,8 +624,7 @@ namespace numeric{
      \brief  Load a double-precision (64-bit) floating-point element from memory into lower element of dst.
      */
     template<>
-    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_single_load<double,memory::qpx,1>(simd_trait<double,memory::qpx,1>::register_type xmm0,
-                                                                                                      const simd_trait<double,memory::qpx,1>::value_type b){
+    forceinline simd_trait<double,memory::qpx,1>::register_type _mm_single_load<double,memory::qpx,1>(const simd_trait<double,memory::qpx,1>::value_type b){
         return vec_lds(0,(double*)(void*)&b);
     }
 

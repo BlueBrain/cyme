@@ -140,8 +140,7 @@ namespace numeric{
      \brief free function load a simd vector with a single value
      */
     template<class T, memory::simd O, int N>
-    forceinline typename simd_trait<T,O,N>::register_type _mm_single_load(typename simd_trait<T,O,N>::register_type xmm0,
-                                                                          const typename simd_trait<T,O,N>::value_type);
+    forceinline typename simd_trait<T,O,N>::register_type _mm_single_load(const typename simd_trait<T,O,N>::value_type);
 
     /**
      \brief free function return a single value from a vector

@@ -78,7 +78,7 @@ namespace numeric{
 
     template<class T,memory::simd O, int N>
     vec_simd<T,O,N>& vec_simd<T,O,N>::single(const typename vec_simd<T,O,N>::value_type& b){
-        this->xmm = _mm_single_load<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,b);
+        this->xmm = _mm_single_load<typename simd_trait<T,O,N>::value_type,O,N>(b);
         return *this;
     }
 
