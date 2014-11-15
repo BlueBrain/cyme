@@ -35,7 +35,6 @@ struct synapse{
 };
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_default_constructor, T, floating_point_block_types) {
-     cyme::serial<TYPE,ORDER> a;
      cyme::vector<synapse<TYPE,1>,ORDER> v(memory::stride<TYPE,ORDER>::helper_stride(),0.);
      for(size_t i = 0;  i< memory::stride<TYPE,ORDER>::helper_stride()/sizeof(TYPE);++i)
           BOOST_CHECK_CLOSE(v(i*ORDER,0),0,relative_error<TYPE>());

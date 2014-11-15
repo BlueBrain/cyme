@@ -62,8 +62,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison_serial, T, floating_point_test_
     TYPE sa[NN] __attribute__((aligned(64)));
     TYPE sb[NN] __attribute__((aligned(64)));
 
-
-    TYPE res[NN] __attribute__((aligned(64)));
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
             sa[i] = a[i] = fabs(GetRandom<TYPE>());
