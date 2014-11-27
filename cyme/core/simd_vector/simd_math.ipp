@@ -20,21 +20,21 @@
 
 #ifndef CYME_SIMD_MATH_HPP
 #define CYME_SIMD_MATH_HPP
-// C - order mater !
-    #include "cyme/core/simd_vector/math/simd_neg.hpp" 
-    #include "cyme/core/simd_vector/math/simd_recsqrt.hpp"
-    #include "cyme/core/simd_vector/math/simd_rec.hpp"
-    #include "cyme/core/simd_vector/math/simd_div.hpp"
-    #include "cyme/core/simd_vector/math/simd_add.hpp"
-    #include "cyme/core/simd_vector/math/simd_sub.hpp"
-    #include "cyme/core/simd_vector/math/simd_mul.hpp"
-    #include "cyme/core/simd_vector/math/simd_exp.hpp"
-    #include "cyme/core/simd_vector/math/simd_log.hpp"
-    #include "cyme/core/simd_vector/math/simd_sqrt.hpp"
-    #include "cyme/core/simd_vector/math/simd_pow.hpp"
+
+    #include "cyme/core/simd_vector/math/simd_neg.ipp" 
+    #include "cyme/core/simd_vector/math/simd_recsqrt.ipp"
+    #include "cyme/core/simd_vector/math/simd_rec.ipp"
+    #include "cyme/core/simd_vector/math/simd_div.ipp"
+    #include "cyme/core/simd_vector/math/simd_add.ipp"
+    #include "cyme/core/simd_vector/math/simd_sub.ipp"
+    #include "cyme/core/simd_vector/math/simd_mul.ipp"
+    #include "cyme/core/simd_vector/math/simd_exp.ipp"
+    #include "cyme/core/simd_vector/math/simd_log.ipp"
+    #include "cyme/core/simd_vector/math/simd_sqrt.ipp"
+    #include "cyme/core/simd_vector/math/simd_pow.ipp"
 #ifdef __FMA__
-    #include "cyme/core/simd_vector/math/simd_fma.hpp"
-    #include "cyme/core/simd_vector/math/simd_fms.hpp"
+    #include "cyme/core/simd_vector/math/simd_fma.ipp"
+    #include "cyme/core/simd_vector/math/simd_fms.ipp"
 #endif
 
 #endif

@@ -169,35 +169,101 @@ namespace numeric{
     forceinline vec_simd<int,O,N> floor(vec_simd<T,O,N>& rhs);
 
     /**
-    \brief free function for call the vendor exponential, this function uses the return value optimization
+    \brief free function + operator between two vectors, this function uses the return value optimization
     */
     template<class T,memory::simd O, int N>
-    forceinline vec_simd<T,O,N> exp_v(const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(_mm_exp<T,O,N>(rhs.xmm));
-        return nrv;
-    }
+    forceinline vec_simd<T,O,N> operator+ (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
 
     /**
-    \brief free function for call the vendor logarithm, this function uses the return value optimization
+    \brief free function - operator between two vectors, this function uses the return value optimization
     */
     template<class T,memory::simd O, int N>
-    forceinline vec_simd<T,O,N> log_v(const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(_mm_log<T,O,N>(rhs.xmm));
-        return nrv;
-    }
+    forceinline vec_simd<T,O,N> operator- (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
 
     /**
-    \brief free function for call the vendor square root, this function uses the return value optimization
+    \brief free function * operator between two vectors, this function uses the return value optimization
     */
     template<class T,memory::simd O, int N>
-    forceinline vec_simd<T,O,N> sqrt_v(const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(_mm_sqrt<T,O,N>(rhs.xmm));
-        return nrv;
-    }
+    forceinline vec_simd<T,O,N> operator* (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
+
+    /**
+     \brief free function / operator between two vectors this function uses the return value optimization
+     */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> operator/ (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
+
+    /**
+    \brief free function for call the reciprocal for the Newton-Raphson division (initialization only), this function uses the return value optimization
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> rec(vec_simd<T,O,N> const& rhs);
+
+    /**
+    \brief free function for call the reciprocal for the Newton-Raphson square root (initialization only), this function uses the return value optimization
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> recsqrt(vec_simd<T,O,N> const& rhs);
+
+    /**
+        \brief free function for the negation
+    */
+    template<class T,memory::simd O,int N>
+    forceinline vec_simd<T,O,N> neg(const vec_simd<T,O,N>& rhs);
+
+    /**
+        \brief free function for the pow
+    */
+    template<class T,memory::simd O, int N, int M>
+    forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs);
+
+    /**
+        \brief free function for the exp
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> exp(const vec_simd<T,O,N>& rhs);
+
+    /**
+        \brief free function for the log
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> log(const vec_simd<T,O,N>& rhs);
+
+    /**
+        \brief free function for the sqrt 
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> sqrt(const vec_simd<T,O,N>& rhs);
+
+#ifdef __FMA__
+    /**
+    \brief free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> muladd(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
+
+    /**
+     \brief free function nFMA
+     */
+    template<class T,memory::simd O,int N>
+    forceinline vec_simd<T,O,N> negatemuladd(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
+
+    /**
+    \brief free function FMS between 3 vectors, only a*b - c, - is not commutative
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> mulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
+
+    /**
+     \brief free function nFMS 
+     */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> negatemulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
+#endif
+
 } //end namespace
 
 #include "cyme/core/simd_vector/simd_vec.ipp"
-#include "cyme/core/simd_vector/simd_math.hpp" // contains all math operations include
+#include "cyme/core/simd_vector/simd_math.ipp" // contains all math operations include
 
 #endif
 

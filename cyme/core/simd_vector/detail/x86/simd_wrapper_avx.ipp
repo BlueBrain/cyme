@@ -374,6 +374,7 @@ namespace numeric{
                                                                );
     }
 
+    
     /**
      \brief Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
@@ -384,7 +385,11 @@ namespace numeric{
         __m128d hi = _mm256_extractf128_pd(xmm0,1);
         hi = _mm_ge<double,memory::sse,1>(hi);
         lo = _mm_ge<double,memory::sse,1>(lo);
+
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
         __m256d r(_mm256_insertf128_pd(r,lo,0));
+        #pragma GCC diagnostic pop
         r =  _mm256_insertf128_pd(r,hi,1);
         return r;
     }
@@ -401,8 +406,11 @@ namespace numeric{
         hi1 = _mm_ge<double,memory::sse,1>(hi1);
         lo1 = _mm_ge<double,memory::sse,1>(lo1);
 
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
         __m256d r0(_mm256_insertf128_pd(r0,lo0,0));
         __m256d r1(_mm256_insertf128_pd(r1,lo1,0));
+        #pragma GCC diagnostic pop
 
         r0 =  _mm256_insertf128_pd(r0,hi0,1);
         r1 =  _mm256_insertf128_pd(r1,hi1,1);
@@ -430,11 +438,13 @@ namespace numeric{
         hi3 = _mm_ge<double,memory::sse,1>(hi3);
         lo3 = _mm_ge<double,memory::sse,1>(lo3);
 
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
         __m256d r0(_mm256_insertf128_pd(r0,lo0,0));
         __m256d r1(_mm256_insertf128_pd(r1,lo1,0));
         __m256d r2(_mm256_insertf128_pd(r1,lo2,0));
         __m256d r3(_mm256_insertf128_pd(r1,lo3,0));
-
+        #pragma GCC diagnostic pop
 
         r0 =  _mm256_insertf128_pd(r0,hi0,1);
         r1 =  _mm256_insertf128_pd(r1,hi1,1);
@@ -1154,7 +1164,10 @@ namespace numeric{
         __m128 hi = _mm256_extractf128_ps(xmm0,1);
         hi = _mm_ge<float,memory::sse,1>(hi);
         lo = _mm_ge<float,memory::sse,1>(lo);
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
         __m256 r(_mm256_insertf128_ps(r,lo,0));
+        #pragma GCC diagnostic pop
         r =  _mm256_insertf128_ps(r,hi,1);
         return r;
     }
@@ -1171,8 +1184,11 @@ namespace numeric{
         hi1 = _mm_ge<float,memory::sse,1>(hi1);
         lo1 = _mm_ge<float,memory::sse,1>(lo1);
 
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
         __m256 r0(_mm256_insertf128_ps(r0,lo0,0));
         __m256 r1(_mm256_insertf128_ps(r1,lo1,0));
+        #pragma GCC diagnostic pop
 
         r0 =  _mm256_insertf128_ps(r0,hi0,1);
         r1 =  _mm256_insertf128_ps(r1,hi1,1);
@@ -1200,11 +1216,13 @@ namespace numeric{
         hi3 = _mm_ge<float,memory::sse,1>(hi3);
         lo3 = _mm_ge<float,memory::sse,1>(lo3);
 
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
         __m256 r0(_mm256_insertf128_ps(r0,lo0,0));
         __m256 r1(_mm256_insertf128_ps(r1,lo1,0));
         __m256 r2(_mm256_insertf128_ps(r1,lo2,0));
         __m256 r3(_mm256_insertf128_ps(r1,lo3,0));
-
+        #pragma GCC diagnostic pop
 
         r0 =  _mm256_insertf128_ps(r0,hi0,1);
         r1 =  _mm256_insertf128_ps(r1,hi1,1);

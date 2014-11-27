@@ -26,7 +26,7 @@
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "cyme/cyme.hpp"
+#include <cyme/cyme.h>
 #include "helpers.hpp"
 
 namespace ProbAMPANMDA_EMS{

@@ -21,8 +21,6 @@
 #ifndef CYME_TRAIT_HPP
 #define CYME_TRAIT_HPP
 
-#include "cyme/memory/detail/simd.hpp"
-
 namespace numeric{
     /**
         \cond I do not need this part in the doc

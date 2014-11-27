@@ -21,6 +21,7 @@
 #ifndef CYME_SIMD_SVML_H
 #define CYME_SIMD_SVML_H
 
+#ifndef _ARCH_QP
 #ifdef __AVX__
 extern "C"{
     __m128 __svml_expf4(__m128);
@@ -43,6 +44,7 @@ extern "C"{
     __m128d __svml_exp2(__m128d);
     __m128d __svml_log2(__m128d);
 }
+#endif
 #endif
 
 #endif

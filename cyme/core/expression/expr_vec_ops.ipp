@@ -25,13 +25,13 @@ namespace numeric{
 /** \cond I do not need this part in the doc */
     /*
         this extructure helps to transform the integer argument of pow(x,e) here e
-        as a template parameter for the pow_helper wrapper
+        as a template parameter for the pow_helper wrapper. The compiler will complain
+        because the e will be not used. Consenquently I disable the warning for the wrapper. 
     */
     template<int M>
     struct exponent{
         const static int e = M;
     };
-
 
     /*
         curious idendity object ^_^ : 
@@ -43,35 +43,35 @@ namespace numeric{
         typedef T value_type;
     };
     
-    /* parser for the exp */
+    /* wrapper node for the exp */
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,vec_sqrt<T,O,N,R1> >
     forceinline sqrt(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_sqrt<T,O,N,R1> >(vec_sqrt<T,O,N,R1>(a.rep()));
     }
     
-    /* parser for the exp */
+    /* wrapper node for the exp */
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,vec_exp<T,O,N,R1> >
     forceinline exp(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_exp<T,O,N,R1> >(vec_exp<T,O,N,R1>(a.rep()));
     }
 
-    /* parser for the log */
+    /* wrapper node for the log */
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,vec_log<T,O,N,R1> >
     forceinline log(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_log<T,O,N,R1> >(vec_log<T,O,N,R1>(a.rep()));
     }
     
-    /* parser for pow */
+    /* wrapper node for pow */
     template<class T, memory::simd O, int N, class R1, int M>
     rvec<T,O,N,vec_pow<T,O,N,R1,M> >
-    forceinline pow(rvec<T,O,N,R1> const& a, exponent<M> const& e){
+    forceinline pow(rvec<T,O,N,R1> const& a, exponent<M> const&  __attribute__((unused))e){ // fake for compiler 
         return rvec<T,O,N,vec_pow<T,O,N,R1,M> >(vec_pow<T,O,N,R1,M>(a.rep()));
     }
     
-    /* parser for neg */
+    /* wrapper node for neg */
     // optimization -*- = +
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,R1>
@@ -86,7 +86,7 @@ namespace numeric{
         return rvec<T,O,N,vec_neg<T,O,N,R1> >(vec_neg<T,O,N,R1>(a.rep()));
     }
     
-    /* this is the key of parser, describe every possibilities */
+    /* this is the key of wrapper node, describe every possibilities */
     //addition of two vectors v+w
     template<class T, memory::simd O, int N, class R1, class R2>
     rvec<T,O, N,vec_add<T,O,N,R1,R2> >
@@ -115,8 +115,6 @@ namespace numeric{
         return rvec<T,O,N,vec_mul<T,O,N,R1,R2> >(vec_mul<T,O,N,R1,R2>(a.rep(),b.rep()));
     }
 
-    /* OK I give the type because the compiler makes me partial specialization*/
-    /* C - TIM TO DO, PLEASE FIND A SOLUTION DUPLICATION IS EVIL */
 
     //addition of scalar/vector, lambda+v
     template<class T, memory::simd O, int N, class R2>

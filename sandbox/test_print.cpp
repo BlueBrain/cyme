@@ -18,10 +18,10 @@
  * License along with this library.
  */
 
-#include <iostream>
+ #include <iostream>
  #include <vector>
 
- #include "cyme/cyme.hpp"
+ #include <cyme/cyme.h>
 
  #include <boost/chrono.hpp>
 

@@ -20,6 +20,8 @@
 
 #ifndef CYME_MATH_H
 #define CYME_MATH_H
+
+#ifndef __cplusplus
     /*
         This file (cyme.h) exposed signature for serial use library C-only. cyme.hpp contains
         everything, specially perform computation with the cyme container. 
@@ -54,4 +56,6 @@
      \brief double-precision 64-bit serial exponential base e, C library only
     */
     double cyme_sqrt(double a);
+#endif
+
 #endif 

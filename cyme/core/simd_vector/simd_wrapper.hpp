@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_O_WRAPPER_H
-#define CYME_O_WRAPPER_H
+#ifndef CYME_WRAPPER_H
+#define CYME_WRAPPER_H
 
 namespace numeric{
 
@@ -176,6 +176,8 @@ namespace numeric{
 
 #endif
 } //end namespace
+
+    #include "cyme/core/simd_vector/detail/x86/simd_svml.ipp" // mix GCC/clang and intel svml
 
 #ifdef __SSE__
     #include "cyme/core/simd_vector/detail/x86/simd_wrapper_sse.ipp"

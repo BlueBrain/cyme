@@ -19,5 +19,6 @@
  */
 
 #include <iostream>
-#include "cyme/cyme.hpp"
-#include "cyme/instance/instance.h" 
+#include <cyme/cyme.h>
+#include "cyme/instance/instance.h"
+

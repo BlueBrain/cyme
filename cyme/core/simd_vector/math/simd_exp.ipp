@@ -21,7 +21,7 @@
 #ifndef CYME_SIMD_EXP_HPP
 #define CYME_SIMD_EXP_HPP
 
-#include "cyme/core/simd_vector/math/detail/remez.hpp"
+#include "cyme/core/simd_vector/math/detail/remez.ipp"
 
 namespace numeric{
 
@@ -82,6 +82,15 @@ namespace numeric{
     };
 
     /**
+    \brief free function for call the vendor exponential, this function uses the return value optimization
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> exp_v(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(_mm_exp<T,O,N>(rhs.xmm));
+        return nrv;
+    }
+
+    /**
      \brief function object for the vendor exponential algorithm
      */
     template<class T, memory::simd O, int N, std::size_t n>
@@ -103,7 +112,7 @@ namespace numeric{
     };
 
     /**
-        \brief final wrapper for the exp
+        \brief free function for the  exp
     */
     template<class T,memory::simd O, int N>
     forceinline vec_simd<T,O,N> exp(const vec_simd<T,O,N>& rhs){

@@ -21,6 +21,7 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 
 #include <boost/chrono.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -29,7 +30,7 @@
 #define BOOST_TEST_MODULE validty_test
 #include <boost/test/unit_test.hpp>
 
-#include "cyme/cyme.hpp"
+#include <cyme/cyme.h>
 #include "helpers.hpp"
 
 namespace Na{

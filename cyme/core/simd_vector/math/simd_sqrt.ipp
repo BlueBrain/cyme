@@ -59,6 +59,15 @@ namespace numeric{
     };
 
     /**
+    \brief free function for call the vendor square root, this function uses the return value optimization
+    */
+    template<class T,memory::simd O, int N>
+    forceinline vec_simd<T,O,N> sqrt_v(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv(_mm_sqrt<T,O,N>(rhs.xmm));
+        return nrv;
+    }
+
+    /**
      \brief Vendor implementation of the sqrtarithm
      */
     template<class T, memory::simd O, int N>

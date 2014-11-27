@@ -24,7 +24,7 @@ part fail (Newton-Raphson):
 
 It fails for an unroll of 2 and double only if the number of successive
 division is larger than 3. I check the corresponding wrapper __mm__rec() and
-_mm_nfma(), I do not find any issues.It works for float. Test works if I
+_mm_nfma(), I do not find any issues. It works for float. Test works if I
 perform the normal division
 
 Sqrt fails also because it is built over Newton-Raphson
@@ -45,7 +45,7 @@ Release 1.2.0
 - Better catch of the FMA
 - Simplification of the template expression when I mix float/double, implement unity concept 
 - Prepare for open source release
-- Ameliorate CMake during the installation a file is created with the needed define
+- Ameliorate CMake during the installation, configuration file is created with the needed define
 
 Release 1.1.0
 

@@ -22,7 +22,6 @@
 #define CYME_SERIAL_HPP
 
 namespace cyme{
-
     /**
        \brief The serial class provides a solution for temporary object into mechanism.
        it the order is AoS, it will provide a basic float/double, else it encapsulates

@@ -32,7 +32,6 @@ namespace memory{
 
     #define __GETSIMD__() __CYME_SIMD_VALUE__
 
-
     template<class T, memory::simd O>
     struct trait_register;
 
@@ -70,7 +69,6 @@ namespace memory{
         const static size_t size=32;
         const static size_t a=32;
     };
-
 
     template<class T, order O>
     struct stride;

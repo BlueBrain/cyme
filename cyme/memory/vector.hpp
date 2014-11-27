@@ -22,7 +22,6 @@
 #define CYME_VECTOR_HPP
 
 #include <vector>
-#include "cyme/memory/detail/simd.hpp"
 #include "cyme/memory/allocator.hpp"
 #include "cyme/memory/detail/storage.hpp"
 
@@ -48,16 +47,16 @@ namespace cyme{
         typedef typename base_type::iterator iterator;
         typedef typename base_type::const_iterator const_iterator;
 
-        vector(const size_t size=1, value_type value=value_type())
-        :data(size,value){
+        vector(const size_t Size=1, value_type value=value_type())
+        :data(Size,value){
         }
 
         vector(vector& v):data(v.size()){
             std::copy(v.begin(),v.end(),this->begin());
         }
 
-        void resize(size_type size){
-            this->data.resize(size);
+        void resize(size_type Size){
+            this->data.resize(Size);
         }
 
         iterator begin(){
@@ -118,16 +117,16 @@ namespace cyme{
         typedef typename base_type::iterator iterator;
         typedef typename base_type::const_iterator const_iterator;
 
-        vector(const size_t size=1  , value_type value=value_type())
-        :data(size/(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type))+1,value),size_cyme(size){
+        vector(const size_t Size=1  , value_type value=value_type())
+        :data(Size/(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type))+1,value),size_cyme(Size){
         }
 
         vector(vector& v):data(v.size()),size_cyme(v.cyme_size()){
             std::copy(v.begin(),v.end(),this->begin());
         }
 
-        void resize(size_type size){
-            this->data.resize(size/(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type))+1);
+        void resize(size_type Size){
+            this->data.resize(Size/(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type))+1);
         }
 
         iterator begin(){

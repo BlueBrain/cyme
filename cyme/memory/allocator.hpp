@@ -23,7 +23,7 @@
 
 #include <assert.h> 
 #include <stdlib.h> // POSIX, size_t is inside
-#include "cyme/memory/detail/simd.hpp"
+#include "cyme/memory/detail/simd.hpp" // enum only
 #include <limits>
 
 namespace memory{

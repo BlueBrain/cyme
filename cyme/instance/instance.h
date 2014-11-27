@@ -22,7 +22,6 @@
 #define CYME_INSTANCE_H
 
 
-// wtf, at the tech selection should desapear for a number
 #if defined ( __SSE__) ||  (__AVX__)
    #define  __SIMD_VALUE__ sse
 #endif
@@ -109,9 +108,6 @@
         return res; 
     }
 
-    /*
-        declaration of the function for creating the C-library. For C++ directly used s**** functions
-    */
     extern "C"{
         float cyme_fexp(float a){return sexp(a);} 
         float cyme_flog(float a){return slog(a);} 
@@ -121,4 +117,5 @@
         double cyme_log(double a){return slog(a);} 
         double cyme_sqrt(double a){return ssqrt(a);} 
     }
+
 #endif

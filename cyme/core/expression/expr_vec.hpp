@@ -31,9 +31,15 @@ namespace numeric{
      /* helper traits class to select how to refer to an ''expression template node'' * - in general: by reference
      * - for scalars: by value
      */
-    //forward declaration
+    //forward declarations
     template<class T, memory::simd O, int N>
     class vec_scalar;
+
+    template<class T,memory::simd O, int N>
+    struct vec_simd;
+
+    template<class T,memory::simd O, int N, int M>
+    forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs);
 
     //primary template, generic
     template<class T, memory::simd O, int N>
@@ -539,9 +545,9 @@ namespace numeric{
     };
  }
 
-#include "cyme/core/expression/expr_vec_ops.hpp"
+#include "cyme/core/expression/expr_vec_ops.ipp"
 #ifdef __FMA__
-#include "cyme/core/expression/expr_vec_fma.hpp"
+#include "cyme/core/expression/expr_vec_fma.ipp"
 #endif
 
 #endif

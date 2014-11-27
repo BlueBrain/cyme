@@ -68,7 +68,7 @@ if(CYME_FMA_FOUND)
 endif(CYME_FMA_FOUND)
 
 #generate the define file
-configure_file(${CMAKE_CURRENT_LIST_DIR}/define_meta.h.in ${PROJECT_BINARY_DIR}/include/${PROJECT_INCLUDE_NAME}/define_meta.h @ONLY)
-list(APPEND COMMON_INCLUDES ${PROJECT_BINARY_DIR}/include/${PROJECT_INCLUDE_NAME}/define_meta.h)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/configuration.h.in ${PROJECT_BINARY_DIR}/include/${PROJECT_INCLUDE_NAME}/configuration.h @ONLY)
+list(APPEND COMMON_INCLUDES ${PROJECT_BINARY_DIR}/include/${PROJECT_INCLUDE_NAME}/configuration.h)
 
 

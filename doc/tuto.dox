@@ -85,7 +85,7 @@ but take care to not forget to declare a const reference to make the distinction
     template<class T>
     struct functor{
         void operator()(typename T::storage_type& W ){ // cyme::vector and cyme::array are built over cyme::storage
-             typename T::storage_type const& R = W
+             typename T::storage_type const& R = W;
              W[0] = R[1]*R[2]+R[3]/1.2;
         }
     };
@@ -95,8 +95,8 @@ but take care to not forget to declare a const reference to make the distinction
 
 Alternatively with c++11 using lambda function,
 
-    typename T::storage_type const& R = W
-    std::for_each(b.begin(), b.end(), [](my_vector::storage_type& S){W[0] = R[1]*R[2]+R[3]/1.2; } );
+    typename T::storage_type const& R = W;
+    std::for_each(b.begin(), b.end(), [](my_vector::storage_type& S){W[0] = R[1]*R[2]+R[3]/1.2;} );
 
 Other algorithms work well as std::fill but can differ for the representation as std::generate (iterators are not the same).
 Until now containers can be mixed, but algorithms mixing containers (AoS - AoSoA) such as std::transform are not possible.
