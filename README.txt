@@ -27,10 +27,33 @@ division is larger than 3. I check the corresponding wrapper __mm__rec() and
 _mm_nfma(), I do not find any issues.It works for float. Test works if I
 perform the normal division
 
+Sqrt fails also because it is built over Newton-Raphson
+
 2) the validity test also fail for an unroll of 2
 
 RELEASE:
 
 The serial test unroll 4 fails, again for the division. It is very wierd
 as the operator /= call the system division and not Newton-Raphson
+
+
+Release 1.2.0
+
+- Add new elementary function (sqrt)
+- Fix bug in log
+- Better DAG construction for operations with scalar operations
+- Better catch of the FMA
+- Simplification of the template expression when I mix float/double, implement unity concept 
+- Prepare for open source release
+- Ameliorate CMake during the installation a file is created with the needed define
+
+Release 1.1.0
+
+- Add new elementary function (pow/log)
+- Ameliorate the tree creation by distinction Read/Write operators - const/ non const
+- better DAG construction for -- 
+
+Release 1.0.0
+
+- First release oc cyme
 

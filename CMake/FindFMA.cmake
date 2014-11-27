@@ -35,6 +35,7 @@ ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 
 IF (CYME_FMA_FOUND_X)
+   set(__FMA__ true)
    set(CYME_FMA_FOUND true CACHE BOOL "FMA available on host")
    ELSEIF(CYME_FMA_FOUND_P)
       set(CYME_FMA_FOUND true CACHE BOOL "FMA available on host")

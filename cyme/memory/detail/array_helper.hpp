@@ -34,7 +34,7 @@
 #include <boost/functional/hash_fwd.hpp>
 #include <algorithm>
 
-#include "cyme/memory/detail/simd.h"
+#include "cyme/memory/detail/simd.hpp"
 
 
 namespace cyme { 

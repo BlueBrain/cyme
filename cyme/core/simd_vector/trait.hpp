@@ -21,7 +21,7 @@
 #ifndef CYME_TRAIT_HPP
 #define CYME_TRAIT_HPP
 
-#include "cyme/memory/detail/simd.h"
+#include "cyme/memory/detail/simd.hpp"
 
 namespace numeric{
     /**

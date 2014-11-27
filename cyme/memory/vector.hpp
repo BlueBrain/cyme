@@ -22,12 +22,16 @@
 #define CYME_VECTOR_HPP
 
 #include <vector>
-#include "cyme/memory/detail/simd.h"
+#include "cyme/memory/detail/simd.hpp"
 #include "cyme/memory/allocator.hpp"
 #include "cyme/memory/detail/storage.hpp"
 
 namespace cyme{
 
+/**
+    \brief  This class facilitates the creation of a vector of synapses (or whatever), the condition the class
+    must encapsulate the basic type (value_type) and the size (value_size) of the basic object
+*/
     template<class T, memory::order O>
     class vector{};
 

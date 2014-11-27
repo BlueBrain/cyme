@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_H
-#define CYME_H
+#ifndef CYME_MATH_H
+#define CYME_MATH_H
     /*
         This file (cyme.h) exposed signature for serial use library C-only. cyme.hpp contains
         everything, specially perform computation with the cyme container. 

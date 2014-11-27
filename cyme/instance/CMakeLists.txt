@@ -1,7 +1,7 @@
 if(CYME_BUILDYARD)
 source_group(\\ FILES CMakeLists.txt)
  set(CYME_LIBRARY_TYPE STATIC)
- set(CYME_PUBLIC_HEADERS ${COMMON_INCLUDES} "cyme.h")
+ set(CYME_PUBLIC_HEADERS ${COMMON_INCLUDES} "cyme_math.h" "../cyme.hpp")
  set(CYME_SOURCES ${COMMON_SOURCES} "cyme.cpp")
  common_library(cyme)
 else(CYME_BUILDYARD)

@@ -33,7 +33,7 @@ the flag -mfma (x86) or to be sure -D__FMA__.
  </TR>
 </TABLE>
 
-cyme has been tested with 4 compilers GCC (>4.6), CLANG (3.2), ICC (14.0) and XLC (12.1). 
+cyme has been tested with 4 compilers GCC (>4.6), CLANG (>3.2), ICC (>13.0) and XLC (>12.0). 
 For AoS, the performance is good whatever the compiler.
 For the AoSoA memory layout, performance is excellent with GCC/CLANG, medium with ICC, and bad with XLC.
 This demonstrates the ability of the compiler to construct/simplify the DAG  with the expression template method.
@@ -50,9 +50,9 @@ This demonstrates the ability of the compiler to construct/simplify the DAG  wit
  <TR>
  <TH> Cyme:AoSoA </TH>
  <TD  align="center" bgcolor=#1D9A2F> excellent   </TD>
- <TD  align="center" bgcolor=#1D9A2F> good   </TD>
+ <TD  align="center" bgcolor=#1D9A2F> excellent   </TD>
  <TD  align="center" bgcolor=#CF2E31> bad    </TD>
- <TD  align="center" bgcolor=#E3BD1C> medium </TD>
+ <TD  align="center" bgcolor=#1D9A2F> good </TD>
  </TR>
  <TR>
  <TH> Cyme:AoS </TH>
@@ -72,5 +72,12 @@ Moreover, if you perform operations with a specialised library, it will require 
 
     g++  -D__CYME_SIMD_VALUE__=qpx -O3 my_program.cpp -lsimd_mass
 
+An alternative to preprocessor macro is possible. When  you install the library in the include directory, you should find the file define_meta.h.
+This file has been constructed during the CMake phase. Inside you will find the value of macro directive, therefor you do not have to compile with 
+the -D directive. Nevertheless, you should compile with -msse4.2, -mavx (and) -mfma on X86. In your program you will simply write:
+
+
+    #include "cyme/define_meta.h" 
+    #include "cyme/cyme.hpp" 
 
 */
