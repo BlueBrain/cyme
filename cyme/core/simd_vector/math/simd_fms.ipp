@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_FMS_HPP
-#define CYME_SIMD_FMS_HPP
+#ifndef CYME_SIMD_FMS_IPP
+#define CYME_SIMD_FMS_IPP
 
 namespace numeric{
     /**
@@ -33,7 +33,7 @@ namespace numeric{
     }
 
     /**
-     \brief free function nFMS 
+     \brief free function nFMS
      */
     template<class T,memory::simd O, int N>
     forceinline vec_simd<T,O,N> negatemulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs){

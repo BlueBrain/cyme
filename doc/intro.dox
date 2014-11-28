@@ -3,16 +3,17 @@
 \mainpage Cyme notice
 
 The main purpose of the cyme framework is to facilitate SIMD programming, without any tedious SIMD intrinsics.
-To achieve the performance, cyme is composed of two parts: containers (inspired from equivalent in the STL), 
+To achieve the performance, cyme is composed of two parts: containers (inspired from equivalent in the STL),
 and a powerful core engine than produces SIMD code.
 
 The cyme framework supports two kinds of containers: the cyme::vector and cyme::array emulating the same behaviour than their STL equivalent.
 The core engine can generate various sets of SIMD code for different devices: X86 processors (SSE4 and AVX), Power64 (BG/Q, processor A2) and MIC intel accelerator.
-The goal of the framework is to generate a Direct Acyclic Graph (DAG) of the wanted expressions containing SIMD operations, in which copy and move instructions are reduced to 
+The goal of the framework is to generate a Direct Acyclic Graph (DAG) of the wanted expressions containing SIMD operations, in which copy and move instructions are reduced to
 the minimum.
 
 
-cyme, what is it ? The cyme (pronounced 'saim', from the French cime in the sense ‘top, summit’), is a group or cluster of flowers arranged on a stem that is composed of a main branch or a complicated arrangement of branches (wikipedia). It is a good analogy with 
+cyme, what is it ? The cyme (pronounced 'saim', from the French cime in the sense ‘top, summit’), is a group or cluster of flowers arranged
+ on a stem that is composed of a main branch or a complicated arrangement of branches (wikipedia). It is a good analogy with
 Direct Acyclic Graph in computer science.
 
 \image html Inflorescences_Panicle_Kwiatostan_Wiecha.svg Panicle cyme

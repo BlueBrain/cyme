@@ -18,16 +18,16 @@
 * License along with this library.
 */
 
-#ifndef CYME_SIMD_WRAPPER_QPX_HPP
-#define CYME_SIMD_WRAPPER_QPX_HPP
+#ifndef CYME_SIMD_WRAPPER_QPX_IPP
+#define CYME_SIMD_WRAPPER_QPX_IPP
 
 #include <boost/cstdint.hpp>
 
-extern "C" vector4double expd4(vector4double);// link to the fortran one 
-extern "C" vector4double logd4(vector4double);// link to the fortran one 
+extern "C" vector4double expd4(vector4double);// link to the fortran one
+extern "C" vector4double logd4(vector4double);// link to the fortran one
 
 namespace numeric{
-    // tools to make calculate 2^k as vectorial integer operations are not supported 
+    // tools to make calculate 2^k as vectorial integer operations are not supported
 
     /**
      \cond
@@ -189,7 +189,7 @@ namespace numeric{
                                                                vec_add(xmm0.r2,xmm1.r2),
                                                                vec_add(xmm0.r3,xmm1.r3));
     };
-    
+
     /**
      \brief Returns a vector containing the result of subtracting each element of b from the corresponding element of a.
      */
@@ -431,8 +431,8 @@ namespace numeric{
                                                                xmm0.r2,
                                                                xmm0.r3);
     }
-    
-       /**
+
+    /**
      \brief Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
       arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
      */

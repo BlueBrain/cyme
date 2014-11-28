@@ -18,15 +18,15 @@
  * License along with this library.
  */
 
-#ifndef CYME_EXPR_VEC_OPS_HPP
-#define CYME_EXPR_VEC_OPS_HPP
+#ifndef CYME_EXPR_VEC_OPS_IPP
+#define CYME_EXPR_VEC_OPS_IPP
 
 namespace numeric{
 /** \cond I do not need this part in the doc */
     /*
         this extructure helps to transform the integer argument of pow(x,e) here e
         as a template parameter for the pow_helper wrapper. The compiler will complain
-        because the e will be not used. Consenquently I disable the warning for the wrapper. 
+        because the e will be not used. Consenquently I disable the warning for the wrapper.
     */
     template<int M>
     struct exponent{
@@ -34,22 +34,22 @@ namespace numeric{
     };
 
     /*
-        curious idendity object ^_^ : 
-        - thread on stackoverlow : http://stackoverflow.com/questions/26705581/operator-and-float-argument 
+        curious idendity object ^_^ :
+        - thread on stackoverlow : http://stackoverflow.com/questions/26705581/operator-and-float-argument
         - why?  http://en.cppreference.com/w/cpp/language/template_argument_deduction#Deduction_from_a_function_call
     */
     template <typename T>
     struct identity {
         typedef T value_type;
     };
-    
+
     /* wrapper node for the exp */
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,vec_sqrt<T,O,N,R1> >
     forceinline sqrt(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_sqrt<T,O,N,R1> >(vec_sqrt<T,O,N,R1>(a.rep()));
     }
-    
+
     /* wrapper node for the exp */
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,vec_exp<T,O,N,R1> >
@@ -63,14 +63,14 @@ namespace numeric{
     forceinline log(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_log<T,O,N,R1> >(vec_log<T,O,N,R1>(a.rep()));
     }
-    
+
     /* wrapper node for pow */
     template<class T, memory::simd O, int N, class R1, int M>
     rvec<T,O,N,vec_pow<T,O,N,R1,M> >
-    forceinline pow(rvec<T,O,N,R1> const& a, exponent<M> const&  __attribute__((unused))e){ // fake for compiler 
+    forceinline pow(rvec<T,O,N,R1> const& a, exponent<M> const&  __attribute__((unused))e){ // fake for compiler
         return rvec<T,O,N,vec_pow<T,O,N,R1,M> >(vec_pow<T,O,N,R1,M>(a.rep()));
     }
-    
+
     /* wrapper node for neg */
     // optimization -*- = +
     template<class T, memory::simd O, int N, class R1>
@@ -78,14 +78,14 @@ namespace numeric{
     forceinline operator-(rvec<T,O,N,vec_neg<T,O,N,R1> > const& a){
         return rvec<T,O,N,R1>(a.rep().op1());
     }
-    
+
     // orginal negation
     template<class T, memory::simd O, int N, class R1>
     rvec<T,O,N,vec_neg<T,O,N,R1> >
     forceinline operator-(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_neg<T,O,N,R1> >(vec_neg<T,O,N,R1>(a.rep()));
     }
-    
+
     /* this is the key of wrapper node, describe every possibilities */
     //addition of two vectors v+w
     template<class T, memory::simd O, int N, class R1, class R2>
@@ -151,15 +151,15 @@ namespace numeric{
         return rvec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>, R2> >(vec_mul<T,O,N,vec_scalar<T,O,N>,R2>(vec_scalar<T,O,N>(static_cast<T>(s)),b.rep()));
     }
 
-    //multiplication of scalar/vector, lambda*v 
+    //multiplication of scalar/vector, lambda*v
     template<class T, memory::simd O, int N, class R2>
     forceinline rvec<T,O,N, vec_mul<T,O,N,vec_scalar<T,O,N>,R2> >
     operator *(rvec<T,O,N,R2> const& b, typename identity<T>::value_type const& s){
-        return operator*(s,b); 
+        return operator*(s,b);
     }
-    
+
     // Tim to Tim FYI A/B != B/A
-    //division of scalar/vector, lambda*v 
+    //division of scalar/vector, lambda*v
     template<class T, memory::simd O, int N, class R2>
     forceinline rvec<T,O,N, vec_div<T,O,N, vec_scalar<T,O,N>,R2> >
     operator /(typename identity<T>::value_type const& s, rvec<T,O,N,R2> const& b){
@@ -175,5 +175,5 @@ namespace numeric{
 
 /** \endcond I do not need this part in the doc */
 }
-    
+
 #endif

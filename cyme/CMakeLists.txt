@@ -1,6 +1,6 @@
 source_group(\\ FILES CMakeLists.txt)
 set(CYME_LIBRARY_TYPE STATIC)
-set(CYME_PUBLIC_HEADERS ${COMMON_INCLUDES} 
+set(CYME_PUBLIC_HEADERS ${COMMON_INCLUDES}
                                            "memory/detail/simd.hpp"
                                            "core/simd_vector/trait.hpp"
                                            "core/simd_vector/simd_math.ipp"

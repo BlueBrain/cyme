@@ -45,15 +45,15 @@ namespace cyme{
         serial(value_type m=value_type()):a(m){}
 
         /**
-         \brief assignement operatior for basic type 
+         \brief assignement operatior for basic type
          */
         inline serial& operator =(value_type b){
             a = b;
-            return *this; 
+            return *this;
         }
 
         /**
-         \brief implicit conversion operator 
+         \brief implicit conversion operator
          */
         inline operator value_type (){
             return a;

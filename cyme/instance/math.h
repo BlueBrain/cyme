@@ -24,7 +24,7 @@
 #ifndef __cplusplus
     /*
         This file (cyme.h) exposed signature for serial use library C-only. cyme.hpp contains
-        everything, specially perform computation with the cyme container. 
+        everything, specially perform computation with the cyme container.
     */
 
     /**
@@ -58,4 +58,4 @@
     double cyme_sqrt(double a);
 #endif
 
-#endif 
+#endif

@@ -18,10 +18,10 @@
  * License along with this library.
  */
 
-#ifndef CYME_ALLOCATOR_HPP 
+#ifndef CYME_ALLOCATOR_HPP
 #define CYME_ALLOCATOR_HPP
 
-#include <assert.h> 
+#include <assert.h>
 #include <stdlib.h> // POSIX, size_t is inside
 #include "cyme/memory/detail/simd.hpp" // enum only
 #include <limits>
@@ -57,7 +57,7 @@ namespace memory{
     };
 
     /**
-        \brief this class is an allocator for STL container especailly std::vector, I garanty the allocated buffer is bound 
+        \brief this class is an allocator for STL container especailly std::vector, I garanty the allocated buffer is bound
         on 8-16 or 32 byte memory. It is a copy past from standard allocator, the only difference is the functions allocate
         and deallocate where I call my own function with the help of the policy pattern
     */
@@ -87,7 +87,7 @@ namespace memory{
         inline ~Allocator() {}
         inline explicit Allocator(Allocator const&) {}
         template<typename U>
-        inline explicit Allocator(Allocator<U, Policy> const&) {} 
+        inline explicit Allocator(Allocator<U, Policy> const&) {}
 
         //adress
         inline pointer adress(reference r){return &r; }
@@ -115,12 +115,12 @@ namespace memory{
     };
 
     template <class T, class TPolicy, class U, class UPolicy>
-    inline bool operator== (Allocator<T,TPolicy> const& lhs, Allocator<U, UPolicy> const& rhs){ 
+    inline bool operator== (Allocator<T,TPolicy> const& lhs, Allocator<U, UPolicy> const& rhs){
         return operator==(static_cast<TPolicy&>(lhs), static_cast<UPolicy&>(rhs));
     }
 
     template <class T, class TPolicy, class U, class UPolicy>
-    inline bool operator!= (Allocator<T,TPolicy> const& lhs, Allocator<U, UPolicy> const& rhs){ 
+    inline bool operator!= (Allocator<T,TPolicy> const& lhs, Allocator<U, UPolicy> const& rhs){
         return operator!=(static_cast<TPolicy&>(lhs), static_cast<UPolicy&>(rhs));
     }
 

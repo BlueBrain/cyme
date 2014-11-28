@@ -25,7 +25,7 @@
 
 namespace numeric{
     /** \cond I do not need this part in the doc
-        \brief Specialization trait for float with MIC SIMD 
+        \brief Specialization trait for float with MIC SIMD
     */
     template<>
     struct register_trait<float, memory::mic>{

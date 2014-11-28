@@ -5,7 +5,8 @@
 
 Cyme uses a method of programming called expression template, developed by Vandervoorde and Jousuttis 2002. (Text from their book)
 
-The key to resolve our problem is to attempt to not evaluate part of an expression until the whole expression has been seen, i.e. until the assignment operator is invoked. Thus, before the evaluation, we must record which operations are being applied to which objects. The 
+The key to resolve our problem is to attempt to not evaluate part of an expression until the whole expression has been seen, i.e. until the assignment
+ operator is invoked. Thus, before the evaluation, we must record which operations are being applied to which objects. The
 operations are determined at compile time and can therefore be encoded in a template argument. For the expression
 
     (*it)[1]*(*it)[2]+(*it)[3]/1.2;

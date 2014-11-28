@@ -6,13 +6,13 @@ The cyme library is an include library. It does not require any link, except for
 
 The include is cyme/cyme.hpp
 
-    #include "cyme/cyme.hpp" 
+    #include "cyme/cyme.hpp"
 
 If cyme has been installed to a non-standard location then it may be necessary to use -I compiler flags to point to the right directories.
 Unfortunately, for now, cyme can not detect the platform where your are compiling. Therefore, you have to specify a series of flags of compilation
-specific to your target platform. As usual you should add optimisation flags e.g. -O3. Moreover, cyme allows composite vector e.g. several SIMD vector are packed 
+specific to your target platform. As usual you should add optimisation flags e.g. -O3. Moreover, cyme allows composite vector e.g. several SIMD vector are packed
 together to build a "big one", this option is passed to the compiler by the flag -D__CYME_UNROLL_VALUE__=1 (a single SIMD vector), 2 (2 vectors packed)
-or 4. A big unroll factor does not guarantee a faster code, test and try ! Cyme performs FMA operations, if your machine supports the technology, add the 
+or 4. A big unroll factor does not guarantee a faster code, test and try ! Cyme performs FMA operations, if your machine supports the technology, add the
 the flag -mfma (x86) or to be sure -D__FMA__.
 
 <TABLE BORDER="1">
@@ -33,7 +33,7 @@ the flag -mfma (x86) or to be sure -D__FMA__.
  </TR>
 </TABLE>
 
-cyme has been tested with 4 compilers GCC (>4.6), CLANG (>3.2), ICC (>13.0) and XLC (>12.0). 
+cyme has been tested with 4 compilers GCC (>4.6), CLANG (>3.2), ICC (>13.0) and XLC (>12.0).
 For AoS, the performance is good whatever the compiler.
 For the AoSoA memory layout, performance is excellent with GCC/CLANG, medium with ICC, and bad with XLC.
 This demonstrates the ability of the compiler to construct/simplify the DAG  with the expression template method.
@@ -66,18 +66,17 @@ This demonstrates the ability of the compiler to construct/simplify the DAG  wit
 If the library is installed in the standard location, for AVX on x86, you will compile by
 
     g++  -D__CYME_SIMD_VALUE__=avx -D__CYME_UNROLL_VALUE__=2 -mavx -O3 my_program.cpp  (unroll of 2)
-                            
 
 Moreover, if you perform operations with a specialised library, it will require additional links to the corresponding one (IBM simd_mass per example), e.g.
 
     g++  -D__CYME_SIMD_VALUE__=qpx -O3 my_program.cpp -lsimd_mass
 
 An alternative to preprocessor macro is possible. When  you install the library in the include directory, you should find the file define_meta.h.
-This file has been constructed during the CMake phase. Inside you will find the value of macro directive, therefor you do not have to compile with 
+This file has been constructed during the CMake phase. Inside you will find the value of macro directive, therefor you do not have to compile with
 the -D directive. Nevertheless, you should compile with -msse4.2, -mavx (and) -mfma on X86. In your program you will simply write:
 
 
-    #include "cyme/define_meta.h" 
-    #include "cyme/cyme.hpp" 
+    #include "cyme/define_meta.h"
+    #include "cyme/cyme.hpp"
 
 */

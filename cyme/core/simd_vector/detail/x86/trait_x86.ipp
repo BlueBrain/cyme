@@ -165,13 +165,12 @@ namespace numeric{
     struct sqrt_recursion<double, memory::sse>{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
-    
+
     template<>
     struct sqrt_recursion<double, memory::avx>{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
 
-    
 #ifdef __AVX__
     /**
         \brief definition of the type for the trait class, with unroll 4,2 and 1 for double/sse

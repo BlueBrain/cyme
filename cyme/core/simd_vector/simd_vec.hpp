@@ -229,7 +229,7 @@ namespace numeric{
     forceinline vec_simd<T,O,N> log(const vec_simd<T,O,N>& rhs);
 
     /**
-        \brief free function for the sqrt 
+        \brief free function for the sqrt
     */
     template<class T,memory::simd O, int N>
     forceinline vec_simd<T,O,N> sqrt(const vec_simd<T,O,N>& rhs);
@@ -254,7 +254,7 @@ namespace numeric{
     forceinline vec_simd<T,O,N> mulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
 
     /**
-     \brief free function nFMS 
+     \brief free function nFMS
      */
     template<class T,memory::simd O, int N>
     forceinline vec_simd<T,O,N> negatemulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);

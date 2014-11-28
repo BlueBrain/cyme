@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_SQRT_HPP
-#define CYME_SIMD_SQRT_HPP
+#ifndef CYME_SIMD_SQRT_IPP
+#define CYME_SIMD_SQRT_IPP
 
 namespace numeric{
 

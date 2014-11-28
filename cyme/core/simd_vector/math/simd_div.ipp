@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_DIV_HPP
-#define CYME_SIMD_DIV_HPP
+#ifndef CYME_SIMD_DIV_IPP
+#define CYME_SIMD_DIV_IPP
 
 namespace numeric{
     /**
@@ -67,7 +67,7 @@ namespace numeric{
              nrv /= rhs;
              return nrv;
         }
-    };    
+    };
 
     /**
     \brief selector for the division algorithm (vendor or Newton-Raphson)

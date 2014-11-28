@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_WRAPPER_H
-#define CYME_WRAPPER_H
+#ifndef CYME_WRAPPER_HPP
+#define CYME_WRAPPER_HPP
 
 namespace numeric{
 
@@ -148,7 +148,7 @@ namespace numeric{
     template<class T, memory::simd O, int N>
     forceinline typename simd_trait<T,O,N>::value_type _mm_single_store(typename simd_trait<T,O,N>::register_type xmm0,
                                                                         const typename simd_trait<T,O,N>::pointer);
-    
+
 #ifdef __FMA__ // This macro is a compiler one
     /**
     \brief free function (wrapper) for the FMA between three registers

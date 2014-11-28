@@ -18,10 +18,9 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_MATH_HPP
-#define CYME_SIMD_MATH_HPP
-
-    #include "cyme/core/simd_vector/math/simd_neg.ipp" 
+#ifndef CYME_SIMD_MATH_IPP
+#define CYME_SIMD_MATH_IPP
+    #include "cyme/core/simd_vector/math/simd_neg.ipp"
     #include "cyme/core/simd_vector/math/simd_recsqrt.ipp"
     #include "cyme/core/simd_vector/math/simd_rec.ipp"
     #include "cyme/core/simd_vector/math/simd_div.ipp"

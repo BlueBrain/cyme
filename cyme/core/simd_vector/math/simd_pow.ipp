@@ -18,14 +18,14 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_POW_HPP
-#define CYME_SIMD_POW_HPP
+#ifndef CYME_SIMD_POW_IPP
+#define CYME_SIMD_POW_IPP
 
 namespace numeric{
-  
+
     /**
         \brief final specialization for the even number, tips with an additional default
-        template parameter K (default value exponent%2 true) which make the selection 
+        template parameter K (default value exponent%2 true) which make the selection
         if it is a multiple of 2
     */
     template<class T,memory::simd O, int N, int M, int K = M%2>
@@ -36,7 +36,7 @@ namespace numeric{
     };
 
     /**
-        \brief  specialization n is an odd number, remarks with integer M/2 is equivalent 
+        \brief  specialization n is an odd number, remarks with integer M/2 is equivalent
         to (M-1)/2 e.g. 7/2 = 3.5 rounds to 3
     */
     template<class T,memory::simd O, int N, int M>
@@ -55,7 +55,7 @@ namespace numeric{
              return lhs;
         }
     };
-    
+
     /**
         \brief final wrapper for the pow (of M), the algo to calculate the power of n (uint given)
          is the following: x^n is decomposed following n

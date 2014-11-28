@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_SVML_H
-#define CYME_SIMD_SVML_H
+#ifndef CYME_SIMD_SVML_IPP
+#define CYME_SIMD_SVML_IPP
 
 #ifndef _ARCH_QP
 #ifdef __AVX__

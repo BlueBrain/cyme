@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_EXPR_VEC_FMA_HPP
-#define CYME_EXPR_VEC_FMA_HPP
+#ifndef CYME_EXPR_VEC_FMA_IPP
+#define CYME_EXPR_VEC_FMA_IPP
 
 namespace numeric{
 /** \cond I do not need this part in the doc */
@@ -41,7 +41,7 @@ namespace numeric{
     template<class T, memory::simd O, int N, class R1, class R2, class R3>
     rvec<T,O,N, vec_muladd<T,O,N,R1,R2,R3> >
     forceinline operator +(rvec<T,O,N,R3> const& b, rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
-        return operator+(a,b); //take previous one ^_^, as the addition is commutative 
+        return operator+(a,b); //take previous one ^_^, as the addition is commutative
     }
 
     //mul add c+ a*b  where c (lambda)

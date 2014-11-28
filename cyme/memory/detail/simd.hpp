@@ -27,7 +27,7 @@ namespace memory{
     };
 
     /** \cond I do not need this part in the doc*/
-    enum simd{sse, avx, qpx, mic}; 
+    enum simd{sse, avx, qpx, mic};
     enum order{AoS, AoSoA};
 
     #define __GETSIMD__() __CYME_SIMD_VALUE__

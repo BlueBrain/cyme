@@ -18,9 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_LOG_HPP
-#define CYME_SIMD_LOG_HPP
-
+#ifndef CYME_SIMD_LOG_IPP
+#define CYME_SIMD_LOG_IPP
 
 namespace numeric{
     template<class T, memory::simd O, int N,std::size_t n>

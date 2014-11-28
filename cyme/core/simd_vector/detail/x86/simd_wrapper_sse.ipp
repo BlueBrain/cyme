@@ -18,8 +18,8 @@
 * License along with this library.
 */
 
-#ifndef CYME_SIMD_WRAPPER_SSE_HPP
-#define CYME_SIMD_WRAPPER_SSE_HPP
+#ifndef CYME_SIMD_WRAPPER_SSE_IPP
+#define CYME_SIMD_WRAPPER_SSE_IPP
 
 namespace numeric{
 
@@ -40,7 +40,7 @@ namespace numeric{
         _mm_storel_pd(b,xmm0);
         return *b;
     }
-    
+
     /**
      \brief  Load a double-precision (64-bit) floating-point element from memory into both elements of dst.
      */
@@ -472,8 +472,7 @@ namespace numeric{
     forceinline  simd_trait<double,memory::sse,1>::register_type _mm_sqrt<double,memory::sse,1>( simd_trait<double,memory::sse,1>::register_type xmm0){
         return _mm_sqrt_pd(xmm0);
     }
-    
-    
+
     template<>
     forceinline  simd_trait<double,memory::sse,2>::register_type _mm_sqrt<double,memory::sse,2>( simd_trait<double,memory::sse,2>::register_type xmm0){
         return simd_trait<double,memory::sse,2>::register_type(
@@ -481,7 +480,7 @@ namespace numeric{
                                                                _mm_sqrt_pd(xmm0.r1)
                                                                );
     }
-    
+
     template<>
     forceinline  simd_trait<double,memory::sse,4>::register_type _mm_sqrt<double,memory::sse,4>( simd_trait<double,memory::sse,4>::register_type xmm0){
         return simd_trait<double,memory::sse,4>::register_type(
@@ -491,7 +490,7 @@ namespace numeric{
                                                                _mm_sqrt_pd(xmm0.r3)
                                                                );
     }
-    
+
     /**
      \brief Compute 1/recsqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit) floating-point elements, and store the results in dst.
      precision 12 bits
@@ -508,7 +507,7 @@ namespace numeric{
                                                                _mm_cvtps_pd(_mm_rsqrt_ps(_mm_cvtpd_ps(xmm0.r1)))
                                                                );
     }
-    
+
     template<>
     forceinline  simd_trait<double,memory::sse,4>::register_type _mm_rsqrt<double,memory::sse,4>( simd_trait<double,memory::sse,4>::register_type xmm0){
         return simd_trait<double,memory::sse,4>::register_type(
@@ -1417,7 +1416,7 @@ namespace numeric{
                                                                                              simd_trait<float,memory::sse,1>::register_type xmm2){
         return _mm_fmsub_ps(xmm0, xmm1, xmm2);
     }
-    
+
     template<>
     forceinline  simd_trait<float,memory::sse,2>::register_type _mm_fms<float,memory::sse,2>(simd_trait<float,memory::sse,2>::register_type xmm0,
                                                                                              simd_trait<float,memory::sse,2>::register_type xmm1,
@@ -1427,7 +1426,7 @@ namespace numeric{
                                                               _mm_fmsub_ps(xmm0.r1, xmm1.r1, xmm2.r1)
                                                               );
     }
-    
+
     template<>
     forceinline  simd_trait<float,memory::sse,4>::register_type _mm_fms<float,memory::sse,4>(simd_trait<float,memory::sse,4>::register_type xmm0,
                                                                                              simd_trait<float,memory::sse,4>::register_type xmm1,
@@ -1439,7 +1438,7 @@ namespace numeric{
                                                               _mm_fmsub_ps(xmm0.r3, xmm1.r3, xmm2.r3)
                                                               );
     }
-    
+
     /**
      \brief Multiply packed single-precision (32-bit) floating-point elements in xmm0 and xmm1, subtract packed elements in xmm2 from the negated intermediate result, and store the results in dst.
      */
@@ -1449,7 +1448,7 @@ namespace numeric{
                                                                                               simd_trait<float,memory::sse,1>::register_type xmm2){
         return _mm_fnmsub_ps(xmm0, xmm1, xmm2);
     }
-    
+
     template<>
     forceinline  simd_trait<float,memory::sse,2>::register_type _mm_nfms<float,memory::sse,2>(simd_trait<float,memory::sse,2>::register_type xmm0,
                                                                                               simd_trait<float,memory::sse,2>::register_type xmm1,
@@ -1459,7 +1458,7 @@ namespace numeric{
                                                               _mm_fnmsub_ps(xmm0.r1, xmm1.r1, xmm2.r1)
                                                               );
     }
-    
+
     template<>
     forceinline  simd_trait<float,memory::sse,4>::register_type _mm_nfms<float,memory::sse,4>(simd_trait<float,memory::sse,4>::register_type xmm0,
                                                                                               simd_trait<float,memory::sse,4>::register_type xmm1,
@@ -1471,10 +1470,9 @@ namespace numeric{
                                                               _mm_fnmsub_ps(xmm0.r3, xmm1.r3, xmm2.r3)
                                                               );
     }
-    
-#endif //end FMA
-    
-    
-} //end namespace 
 
-#endif 
+#endif //end FMA
+
+} //end namespace
+
+#endif

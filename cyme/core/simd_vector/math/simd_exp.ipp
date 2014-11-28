@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_EXP_HPP
-#define CYME_SIMD_EXP_HPP
+#ifndef CYME_SIMD_EXP_IPP
+#define CYME_SIMD_EXP_IPP
 
 #include "cyme/core/simd_vector/math/detail/remez.ipp"
 

@@ -18,8 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_SIMD_FMA_HPP
-#define CYME_SIMD_FMA_HPP
+#ifndef CYME_SIMD_FMA_IPP
+#define CYME_SIMD_FMA_IPP
 
 namespace numeric{
     /**

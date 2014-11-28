@@ -5,37 +5,37 @@
 Cyme provides its own mathematical library, because elementary functions are not provided with native
 intrinsics (except sqrt). Vendors furnish these functions in the following libraries: svml (intel)  or massv (IBM).
 We also provide an alternative to the native division: The Newton-Raphson's method.
-The implementations of these elementary functions may be up to 40% faster than the corresponding solutions 
+The implementations of these elementary functions may be up to 40% faster than the corresponding solutions
 from the vendor, but they do not respect the IEEE specification and the precision is inferior to the standard.
 
 The elementary functions implemented into the cyme math library are:
 
 \li exponential, \f$ e^x \f$
-\li logarithm base e, \f$ log_e(x) \f$ 
+\li logarithm base e, \f$ log_e(x) \f$
 \li division, \f$ a/b \f$
 \li square root, \f$ \sqrt{x} \f$
 \li power of n, \f$ x^n \f$ (\f$ n \f$ unsigned integer)
 
-All these elementary functions will execute FMA instructions, if the technology exists on the target platform. 
+All these elementary functions will execute FMA instructions, if the technology exists on the target platform.
 
 \section op0 Exponential
 
 Suppose we have a real number \f$x\f$,  then
 \f$ \forall x  \in \textrm{R}, \exists y \in [0, log_e(2)] \textrm{  and  } k \in \textrm{Z}  \f$, \f$x\f$ can then be rewritten as follows:
-\f[ 
+\f[
  x   =    y + k \times log_e(2).
 \f]
 This equation has two unknowns; \f$y\f$ and \f$k\f$; however it can be solved with the following
 manipulation (the mathematical symbols  \f$\lfloor\f$ and \f$\rfloor\f$ indicate the floor function)
 
 \f[
- x/log_e(2)   =    y/log_e(2) + k  
+ x/log_e(2)   =    y/log_e(2) + k
 \f]
 \f[
-\lfloor x/log_e(2)\rfloor   =    \lfloor y/log_e(2) \rfloor + \lfloor k \rfloor   
+\lfloor x/log_e(2)\rfloor   =    \lfloor y/log_e(2) \rfloor + \lfloor k \rfloor
 \f]
 \f[
-k  =  \lfloor x/log_e(2)\rfloor , 
+k  =  \lfloor x/log_e(2)\rfloor ,
 \f]
 \f$y \f$ is obtained by substitution. Then, the previous equation is rewritten:
 \f[
@@ -45,7 +45,7 @@ For efficiency reasons, \f$2^k\f$ is
 computed using the internal hardware implementation of the floating point numbers, by manipulation of
 the exponent. On the other hand \f$e^y\f$ is computed using a polynomial approximation;  \f$P(x) = \sum_{i=0}^n a_i x^i\f$, where \f$ P(x) \f$
 is based on the Remez algorithm. The coefficients \f$a_i\f$ are computed using an external program.
-The order of the polynomial is set to 11, guaranteeing an optimal tradeoff between precision and efficiency. 
+The order of the polynomial is set to 11, guaranteeing an optimal tradeoff between precision and efficiency.
 The computation of the polynomial is carried out using Horner's method.
 
 \section op1 Logarithm
@@ -55,10 +55,10 @@ is approximated by \f$ x = s*x_0*2^n \f$ (where \f$ s \f$ the sign, always + for
 (fraction) belongs to the interval  \f$ 1<=x_0<2 \f$ and \f$ n \f$ is the exponent (integer).  Thus,
 
 \f[
-         log2(x) = log2(x_0) + log2(2^n) 
+         log2(x) = log2(x_0) + log2(2^n)
 \f]
 \f[
-              log2(x) = log2(x_0) + n 
+              log2(x) = log2(x_0) + n
 \f]
 \f[
               log(x) = log(2) * log2(x)
@@ -67,7 +67,7 @@ is approximated by \f$ x = s*x_0*2^n \f$ (where \f$ s \f$ the sign, always + for
         utilizes Remez approximation between 1 and 2. FMA will be performed if the technology exists on the hardware.
 
 
-\section op2 Division 
+\section op2 Division
 
 To compute \f$ a/b \f$, one can rearrange the operations to be \f$a \times 1/b.\f$ The Newton-Raphson's method computes
 iteratevily a better approximation for the reciprocal of \f$b\f$. In the final step, we multiply the reciprocal \f$1/b\f$ by \f$a\f$ to obtain the quotient.
@@ -76,26 +76,26 @@ In order to approximate the reciprocal of $b$, a function $f(x)$ which has a zer
 be defined. The function \f$f(x)\f$ should also be differentiable and defined over \f$R\f$. A convenient
 representation for \f$f(x)\f$ in our case would be:
 
-\f[   
+\f[
 f(x) = 1/x - b.
 \f]
 
 The Newton-Raphson iterative scheme can then be defined as:
 
-\f[   
+\f[
 x_{n+1} = x_n - \frac{f(x_n)}{f^{'}(x_n)}.
 \f]
 
 
 Thus, the quantity \f$f^{'}(x)\f$ can be analytically computed from previous equation as:
 
-\f[   
+\f[
 f^{'}(x) = -\left( \frac{1}{x} \right)^2,
 \f]
 
 at \f$x = x_n\f$ and after substitution, the recursive equation becomes
 
-\f[   
+\f[
 x_{n+1} = x_n(2-bx_n).
 \f]
 
@@ -106,25 +106,25 @@ Newton-Raphson iterations is determined to be 4 on x86 architecture, and 5 on BG
 \section op3 Square root
 The square root implementation is based on the following remark: \f$ \sqrt{x} = \frac{x}{\sqrt{x}} \f$. Applying
 the Newton-Raphson method (previously explained) where \f$ f(x) = 1/\sqrt{x}\f$. Following the same
-method of the previous section we get  
+method of the previous section we get
 
-\f[   
+\f[
 x_{n+1} = \frac{1}{2}x_n(3-bx_n^2).
 \f]
 
 This method is privileged because an instrinsics SIMD \f$ \frac{1}{\sqrt{x}} \f$ with low precision 12-bit
-(x86 or 8-bit on the BG/Q)exist. 
+(x86 or 8-bit on the BG/Q)exist.
 
 \section op4 Power of n
 
-The power function only work for integer exponent, it is based on pure meta-programming and the famous factorial example. 
+The power function only work for integer exponent, it is based on pure meta-programming and the famous factorial example.
 
-\section serial Serial library 
+\section serial Serial library
 
 Cyme generates also a serial C-library for the following function:
 
-\li \f$ e^x, \f$ cyme_fexp(float) and cyme_exp(double) 
-\li \f$ log_e(x), \f$ cyme_flog(float) and cyme_log(double) 
-\li \f$ \sqrt{x}, \f$ cyme_fsqrt(float) and cyme_sqrt(double) 
+\li \f$ e^x, \f$ cyme_fexp(float) and cyme_exp(double)
+\li \f$ log_e(x), \f$ cyme_flog(float) and cyme_log(double)
+\li \f$ \sqrt{x}, \f$ cyme_fsqrt(float) and cyme_sqrt(double)
 
 */

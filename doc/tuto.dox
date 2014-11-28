@@ -23,12 +23,12 @@ If we prefer the memory layout AoSoA, we modify the declaration by:
 
     cyme::array<channel<float>,7, memory::AoSoA> a;
 
-For the memory the difference is fundamental. In the first case elements are consecutive one after the other, whereas 
+For the memory the difference is fundamental. In the first case elements are consecutive one after the other, whereas
 in the second case they are interleaved on the size of the target SIMD register.
 
 \image html memoryAoS_AoSoA.tiff Memory layout of the container in function of the declaration memory::AoS or memory::AoSoA
 
-For the initialization, the bracket operator (i,j) is implemented. For both memory layouts it will pick up elements following the AoS layout ideology. 
+For the initialization, the bracket operator (i,j) is implemented. For both memory layouts it will pick up elements following the AoS layout ideology.
 We make this choice as it is easier for the user to write code with the AoS layout in mind.
 
 \image html memory_access.tiff Memory access following the AoS ideology
@@ -75,7 +75,7 @@ we can compute our operations 4 times faster. Do not forget to declare a const i
     cyme::array<synapse<float>,5, memory::AoSoA> b;
     init(b); // init function
     cyme::array<synapse<float>,5, memory::AoSoA>::iterator it = b.begin();
-    cyme::array<synapse<float>,5, memory::AoSoA>::const_iterator cit = b.begin(); 
+    cyme::array<synapse<float>,5, memory::AoSoA>::const_iterator cit = b.begin();
     for(; it < b.end(); ++it,++cit)
        (*it)[0] = (*cit)[1]*(*cit)[2]+(*cit)[3]/1.2;
 

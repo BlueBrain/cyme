@@ -31,7 +31,7 @@
 #endif
 
     /*
-    \brief Construction of the serial exponential, 32-bit precision. Ths single function load/unload 
+    \brief Construction of the serial exponential, 32-bit precision. Ths single function load/unload
     a serial number only.
     */
     inline float sexp(float a){
@@ -40,11 +40,11 @@
         v.single(a);
         v = exp(v);
         v.single(&res);
-        return res; 
+        return res;
     }
 
     /*
-    \brief Construction of the serial logarithm, 32-bit precision. Ths single function load/unload 
+    \brief Construction of the serial logarithm, 32-bit precision. Ths single function load/unload
     a serial number only.
     */
     inline float slog(float a){
@@ -53,11 +53,11 @@
         v.single(a);
         v = log(v);
         v.single(&res);
-        return res; 
+        return res;
     }
 
     /*
-    \brief Construction of the serial square root, 32-bit precision. Ths single function load/unload 
+    \brief Construction of the serial square root, 32-bit precision. Ths single function load/unload
     a serial number only.
     */
     inline float ssqrt(float a){
@@ -66,11 +66,11 @@
         v.single(a);
         v = sqrt(v);
         v.single(&res);
-        return res; 
+        return res;
     }
-    
+
     /*
-    \brief Construction of the serial exponential, 64-bit precision. Ths single function load/unload 
+    \brief Construction of the serial exponential, 64-bit precision. Ths single function load/unload
     a serial number only.
     */
     inline double sexp(double a){
@@ -79,11 +79,11 @@
         v.single(a);
         v = exp(v);
         v.single(&res);
-        return res; 
+        return res;
     }
-   
+
     /*
-    \brief Construction of the serial logarithm, 64-bit precision. Ths single function load/unload 
+    \brief Construction of the serial logarithm, 64-bit precision. Ths single function load/unload
     a serial number only.
     */
     inline double slog(double a){
@@ -92,11 +92,11 @@
         v.single(a);
         v = log(v);
         v.single(&res);
-        return res; 
+        return res;
     }
-   
+
     /*
-    \brief Construction of the serial square root, 64-bit precision. Ths single function load/unload 
+    \brief Construction of the serial square root, 64-bit precision. Ths single function load/unload
     a serial number only.
     */
     inline double ssqrt(double a){
@@ -105,17 +105,16 @@
         v.single(a);
         v = sqrt(v);
         v.single(&res);
-        return res; 
+        return res;
     }
 
     extern "C"{
-        float cyme_fexp(float a){return sexp(a);} 
-        float cyme_flog(float a){return slog(a);} 
-        float cyme_fsqrt(float a){return ssqrt(a);} 
-    
-        double cyme_exp(double a){return sexp(a);} 
-        double cyme_log(double a){return slog(a);} 
-        double cyme_sqrt(double a){return ssqrt(a);} 
-    }
+        float cyme_fexp(float a){return sexp(a);}
+        float cyme_flog(float a){return slog(a);}
+        float cyme_fsqrt(float a){return ssqrt(a);}
 
+        double cyme_exp(double a){return sexp(a);}
+        double cyme_log(double a){return slog(a);}
+        double cyme_sqrt(double a){return ssqrt(a);}
+    }
 #endif

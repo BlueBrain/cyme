@@ -18,9 +18,8 @@
  * License along with this library.
  */
 
-#ifndef CYME_REMEZ_HPP
-#define CYME_REMEZ_HPP
-
+#ifndef CYME_REMEZ_IPP
+#define CYME_REMEZ_IPP
 
 namespace numeric{
 
@@ -170,7 +169,7 @@ namespace numeric{
     struct poly_order<T,coeff_remez_log> {
         static const std::size_t value=12;
     };
-  
+
     /**
      \brief Implementation of a polynomial computation using Horner's method (http://en.wikipedia.org/wiki/Horner's_method)
      the template parameter C represents the coefficients described (log or exp coeff). This function is called
@@ -200,4 +199,4 @@ namespace numeric{
     /* \endcond I do not need this part in the doc*/
 } //end namespace
 
-#endif 
+#endif

@@ -22,8 +22,8 @@
 // this file is just a copy past of the boost array_helper, clean up, I need to align to get better performance
 
 
-#ifndef BOOST_ARRAY_CYME_HPP
-#define BOOST_ARRAY_CYME_HPP
+#ifndef BOOST_ARRAY_CYME_IPP
+#define BOOST_ARRAY_CYME_IPP
 
 #include <cstddef>
 #include <stdexcept>
@@ -37,7 +37,7 @@
 #include "cyme/memory/detail/simd.hpp"
 
 
-namespace cyme { 
+namespace cyme {
 
     template<class T, std::size_t N>
     class array_helper {
@@ -58,7 +58,7 @@ namespace cyme {
         iterator        begin()       { return elems; }
         const_iterator  begin() const { return elems; }
         const_iterator cbegin() const { return elems; }
-        
+
         iterator        end()       { return elems+N; }
         const_iterator  end() const { return elems+N; }
         const_iterator cend() const { return elems+N; }
@@ -88,31 +88,31 @@ namespace cyme {
             BOOST_ASSERT_MSG( i < N, "out of range" );
             return elems[i];
         }
-        
+
         const_reference operator[](size_type i) const {
             BOOST_ASSERT_MSG( i < N, "out of range" );
-            return elems[i]; 
+            return elems[i];
         }
 
         // at() with range check
         reference at(size_type i) { rangecheck(i); return elems[i]; }
         const_reference at(size_type i) const { rangecheck(i); return elems[i]; }
-    
+
         // front() and back()
         reference front() {
-            return elems[0]; 
+            return elems[0];
         }
-        
+
         const_reference front() const {
             return elems[0];
         }
-        
+
         reference back() {
-            return elems[N-1]; 
+            return elems[N-1];
         }
-        
+
         const_reference back() const {
-            return elems[N-1]; 
+            return elems[N-1];
         }
 
         // size is constant
