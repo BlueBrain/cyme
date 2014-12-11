@@ -23,7 +23,7 @@
 
 namespace numeric{
      /* \cond */
-    /* 
+    /*
      *  this works template expressions to parse a series of basic operations into a tree (during compile time). Therefore I limited
      *  the number of local copy to the minimum. Directly inspired (copy/past and modify ^_^) from C++ template the complete guide, chapter XVIII
      */
@@ -52,7 +52,7 @@ namespace numeric{
     struct vec_traits< vec_scalar<T,O,N>, O, N>{
         typedef vec_scalar<T,O,N> value_type;
     };
-    
+
     /* \endcond */
 
     /**
@@ -61,17 +61,17 @@ namespace numeric{
     template<class T, memory::simd O, int N, class OP1>
     class vec_sqrt{
         typename vec_traits<OP1,O,N>::value_type op1;
-        
+
     public:
         forceinline vec_sqrt(OP1 const& a):op1(a){
         }
-        
+
         forceinline vec_simd<T,O,N> operator()() const{
             return sqrt(op1());
         }
     };
-    
-    
+
+
     /**
     \brief this class participates to the tree creation by recursive process, wrap exp e.g exp((*it)[0])
     */
@@ -103,7 +103,7 @@ namespace numeric{
             return log(op1());
         }
     };
-    
+
         /**
     \brief this class participates to the tree creation by recursive process, wrap pow e.g log((*it)[0])
     */
@@ -136,7 +136,7 @@ namespace numeric{
         }
     };
 
-    /** 
+    /**
       \brief this class participates to the tree creation by recursive process, wrap subtraction (*it)[0] - (*it)[1]
     */
     template<class T, memory::simd O, int N, class OP1, class OP2>
@@ -153,7 +153,7 @@ namespace numeric{
         }
     };
 
-    /** 
+    /**
       \brief this class participates to the tree creation by recursive process, wrap negation -(*it)[1],
       contrary to other class it is a structure, I did an optimization in case I get multiple negate e.g.
       -(-(R[0])) for this I need to get the original operator (op1)
@@ -171,7 +171,7 @@ namespace numeric{
         }
     };
 
-    /** 
+    /**
       \brief this class participates to the tree creation by recursive process, wrap subtraction (*it)[0] * (*it)[1]
     */
     template<class T, memory::simd O, int N, class OP1, class OP2>
@@ -196,9 +196,9 @@ namespace numeric{
         forceinline const typename vec_traits<OP2,O,N>::value_type& getop2() const{
              return op2;
         }
-    };    
-    
-    /** 
+    };
+
+    /**
       \brief this class participates to the tree creation by recursive process, wrap fma (*it)[0]*(*it)[1] + (*it)[2]
       \warning it is experimental
     */
@@ -257,7 +257,7 @@ namespace numeric{
         forceinline vec_mul_sub_mul(vec_mul<T,O,N,OP1,OP2> const& a, vec_mul<T,O,N,OP3,OP4> const& b):op1(a.getop1()), op2(a.getop2()), op3(b.getop1()), op4(b.getop2()){}
     };
 
-    /** 
+    /**
       \brief this class participates to the tree creation by recursive process, wrap fms (*it)[0]*(*it)[1] - (*it)[2]
       \warning it is experimental
     */
@@ -298,7 +298,7 @@ namespace numeric{
     };
 
 
-    /** 
+    /**
       \brief this class participates to the tree creation by recursive process, wrap division (*it)[0] * (*it)[1]
     */
     template<class T, memory::simd O, int N, class OP1, class OP2>
@@ -314,7 +314,7 @@ namespace numeric{
         forceinline vec_div(OP1 const& a, OP2 const& b):op1(a), op2(b){}
     };
 
-    /** 
+    /**
       \brief this class participates to the tree creation by recursive process, wrap scalar operations it return a vector
     */
     template<class T, memory::simd O, int N>
@@ -330,7 +330,7 @@ namespace numeric{
     private:
         vec_simd<T,O,N> const s; // valuer of the scalar
     };
-    
+
     /**
         \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
          During the compilation, we will create the tree of operations or DAG. The three is built on the read only vector
@@ -344,7 +344,7 @@ namespace numeric{
         typedef value_type* pointer;
         typedef value_type const* const_pointer;
         typedef Rep base_type;
- 
+
         /**
            \brief default constructor nothing special
         */
@@ -364,7 +364,7 @@ namespace numeric{
         }
 
         /**
-           \brief constructor for a given value 
+           \brief constructor for a given value
         */
         forceinline explicit rvec(value_type a):expr_rep(a){
         }
@@ -385,7 +385,7 @@ namespace numeric{
         forceinline rvec& operator= (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->rep() = rhs.rep()(); //evaluate the three compile time, and execute calculation
             return *this;
-        } 
+        }
 
         /**
            \brief operator +=, create the tree and execute  in normal condition
@@ -442,7 +442,7 @@ namespace numeric{
         Rep expr_rep;
     };
 
-    /** 
+    /**
         \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
         During the compilation, we will create the tree of operations or DAG. It is  write only (lhs)
         the operators [] of the storage class is not const
@@ -464,6 +464,13 @@ namespace numeric{
         forceinline explicit wvec(const_pointer rb):data_pointer(rb),expr_rep(rb){
         }
 
+        /**
+           RAII for the store is it correct ? Altough, we do not allocate memory, we allocate a SIMD register.
+            If not rewrite this command after the tree creation into the +=, *=, etc ....
+        */
+        ~wvec(){
+            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
+        }
 
         /**
            \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
@@ -479,7 +486,6 @@ namespace numeric{
         template<class T2, memory::simd O2, int N2, class Rep2>
         forceinline wvec& operator= (rvec<T2,O2,N2,Rep2> const& rhs){
             this->expr_rep() = rhs.rep()(); //basic register copy no three
-            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -489,7 +495,6 @@ namespace numeric{
         template<class T2, memory::simd O2, int N2, class Rep2>
         forceinline wvec& operator+= (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->expr_rep() += rhs.rep()(); //basic register copy no three
-            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -499,7 +504,6 @@ namespace numeric{
         template<class T2, memory::simd O2, int N2, class Rep2>
         forceinline wvec& operator-=  (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->expr_rep() -= rhs.rep()(); //basic register copy no three
-            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -509,7 +513,6 @@ namespace numeric{
         template<class T2, memory::simd O2, int N2, class Rep2>
         forceinline wvec& operator*=  (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->expr_rep() *= rhs.rep()(); //basic register copy no three
-            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
@@ -519,7 +522,6 @@ namespace numeric{
         template<class T2, memory::simd O2, int N2, class Rep2>
         forceinline wvec& operator/=  (rvec<T2,O2,N2,Rep2 > const& rhs){
             this->expr_rep() /= rhs.rep()(); //basic register copy no three
-            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
             return *this;
         }
 
