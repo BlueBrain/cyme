@@ -27,8 +27,9 @@
 namespace numeric{
 
     /**
-      \brief Vector computation class. The SIMD register (hardware) is encapsulated. It is generic, it can be SEE, AVX or QPX.
-      the type is given by the trait class (simd_trait)
+      \brief Vector computation class. The SIMD register (hardware) is encapsulated.
+      It is generic, it can be SSE, AVX or QPX.
+      The type is given by the trait class (simd_trait)
     */
     template<class T,memory::simd O, int N>
     struct vec_simd{

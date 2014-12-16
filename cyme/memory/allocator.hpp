@@ -30,7 +30,7 @@ namespace memory{
 
    /**
         \brief This class encapsulated the function allocate and deallocate for the memory allocation. I used POSX
-        to allign on special memory bound.
+        to align on special memory bound.
     */
     template<class T, memory::simd O>
     class Align_POSIX{
@@ -57,7 +57,7 @@ namespace memory{
     };
 
     /**
-        \brief this class is an allocator for STL container especailly std::vector, I garanty the allocated buffer is bound
+        \brief this class is an allocator for STL container especially std::vector, I guaranty the allocated buffer is bound
         on 8-16 or 32 byte memory. It is a copy past from standard allocator, the only difference is the functions allocate
         and deallocate where I call my own function with the help of the policy pattern
     */
@@ -66,7 +66,7 @@ namespace memory{
         using Policy::allocate_policy;
         using Policy::deallocate_policy;
     public:
-        // stl compatibity
+        // STL compatibility
         typedef T                  value_type;
         typedef value_type*        pointer;
         typedef const value_type*  const_pointer;
@@ -89,7 +89,7 @@ namespace memory{
         template<typename U>
         inline explicit Allocator(Allocator<U, Policy> const&) {}
 
-        //adress
+        //address
         inline pointer adress(reference r){return &r; }
         inline const_pointer adress(const_reference r){return &r;}
 
@@ -99,7 +99,7 @@ namespace memory{
         }
 
         inline void deallocate(pointer p, size_type){
-            deallocate_policy(p); // I call my dealocator
+            deallocate_policy(p); // I call my deallocator
         }
 
         inline size_type max_size() const {

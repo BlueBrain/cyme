@@ -25,7 +25,7 @@ namespace cyme{
     /**
        \brief The serial class provides a solution for temporary object into mechanism.
        it the order is AoS, it will provide a basic float/double, else it encapsulates
-       a SIMD vector. Note for AoSoA version: is serial = ... , it will generates the
+       a SIMD vector. Note for AoSoA version: is serial = ... , it will generates
        the tree but it will not save the data into memory.
     */
     template<class T, memory::order O, int N = memory::unroll_factor::N>
@@ -45,7 +45,7 @@ namespace cyme{
         serial(value_type m=value_type()):a(m){}
 
         /**
-         \brief assignement operatior for basic type
+         \brief assignment operator for basic type
          */
         inline serial& operator =(value_type b){
             a = b;
@@ -98,7 +98,7 @@ namespace cyme{
         }
 
         /**
-        \brief normal situation initialize serial by vector returned by the iteratos serial = (*it)[1];
+        \brief normal situation initialize serial by vector returned by the iterates serial = (*it)[1];
         */
         inline serial& operator=(base_type b){
             a.rep()() = b.rep()();

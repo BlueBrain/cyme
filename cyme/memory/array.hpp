@@ -27,7 +27,7 @@
 namespace cyme{
 
 /**
-    \brief  This class facilitates the creation of an array of synapses (or whatever), the condition the class
+    \brief This class facilitates the creation of an array of structures (ex: synapses), the condition the class
     must encapsulate the basic type (value_type) and the size (value_size) of the basic object
 */
 template<class T, std::size_t N, memory::order O>
@@ -37,12 +37,12 @@ class array{};
 template<class T, std::size_t N>
 class array<T,N,memory::AoS>{
 public:
-    const static memory::order order_value = memory::AoSoA;
-    typedef std::size_t size_type;
-    typedef typename    T::value_type value_type;
-    typedef value_type&                                               reference;
-    typedef const value_type&                                         const_reference;
-    typedef memory::storage<value_type,T::value_size,memory::AoS>              storage_type;
+    const static memory::order     order_value = memory::AoSoA;
+    typedef std::size_t            size_type;
+    typedef typename T::value_type value_type;
+    typedef value_type&            reference;
+    typedef const value_type&      const_reference;
+    typedef memory::storage<value_type,T::value_size,memory::AoS>     storage_type;
     typedef cyme::array_helper<storage_type,N>   base_type; //default template seems impossible on partial specialization
 
     typedef typename base_type::iterator iterator;
@@ -100,14 +100,15 @@ private:
 template<class T, std::size_t N>
 class array<T,N,memory::AoSoA>{
 public:
-    const static memory::order order_value = memory::AoSoA;
-    typedef std::size_t size_type;
-    typedef typename    T::value_type value_type;
-    typedef value_type&                                               reference;
-    typedef const value_type&                                         const_reference;
+    const static memory::order     order_value = memory::AoSoA;
+    typedef std::size_t            size_type;
+    typedef typename T::value_type value_type;
+    typedef value_type&            reference;
+    typedef const value_type&      const_reference;
     static const size_type  storage_width = N/(memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type))+1;
     typedef memory::storage<value_type,memory::unroll_factor::N*memory::trait_register<value_type,memory::__GETSIMD__()>::size/sizeof(value_type)*T::value_size,memory::AoSoA>                storage_type;
     typedef cyme::array_helper<storage_type,storage_width> base_type; //default template seems impossible on partial specialization
+
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
 
