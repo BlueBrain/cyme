@@ -26,12 +26,12 @@ If we prefer the memory layout AoSoA, we modify the declaration by:
 For the memory the difference is fundamental. In the first case elements are consecutive one after the other, whereas
 in the second case they are interleaved on the size of the target SIMD register.
 
-\image html memoryAoS_AoSoA.tiff Memory layout of the container in function of the declaration memory::AoS or memory::AoSoA
+\image html memoryAoS_AoSoA.png Memory layout of the container in function of the declaration memory::AoS or memory::AoSoA
 
 For the initialization, the bracket operator (i,j) is implemented. For both memory layouts it will pick up elements following the AoS layout ideology.
 We make this choice as it is easier for the user to write code with the AoS layout in mind.
 
-\image html memory_access.tiff Memory access following the AoS ideology
+\image html memory_access.png Memory access following the AoS ideology
 
 Let's say we want to initialize the fourth (out of seven) channel structure inside the array, but only want to initialize its first (out of five) element. Then we can write the same code for both memory layouts:
 
@@ -45,7 +45,7 @@ Let's say we want to initialize the fourth (out of seven) channel structure insi
 
 Based on the std::vector and std::array, cyme allows iterator mechanism which is the main advantage of the library. As usual, the iterator manipulates the memory:
 for the AoS layout, a simple iteration moves from one element to the next element. For the AoSoA, it will move to the next element which is a step of size « one SIMD register » further.
-\image html iterator.tiff Manipulation into the container with the iterator
+\image html iterator.png Manipulation into the container with the iterator
 
 Thus we can write
 
@@ -58,7 +58,7 @@ A second operator [i] completes the first one (i,j) by reading the memory with �
 When we request an element from the iterator with AoS layout, we manipulate one element of data, and « one SIMD register » for the AoSoA layout with the help
 of SIMD technology.
 
-\image html iterator2.tiff Manipulation of the data with the iterator
+\image html iterator2.png Manipulation of the data with the iterator
 
 Thus, we can rewrite a new initialization as
 
