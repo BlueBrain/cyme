@@ -1,5 +1,5 @@
 /*
- * Cyme - alignement.cpp, Copyright (c), 2014,
+ * Cyme - cyme.cpp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
@@ -18,18 +18,17 @@
  * License along with this library.
  */
 
-#include <test/unit/test_header.hpp>
-#include <vector>
-
-#include "cyme/memory/allocator.hpp" 
-
-using namespace cyme::test;
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(alignement_test, T, full_test_types)
+#include <iostream>
+#include <cyme/cyme.h>
+#include <cyme/math/math.h>
+// Compile the library for C version only
+extern "C"
 {
-    std::vector<T, memory::Allocator<T, memory::Align_POSIX<T, memory::__GETSIMD__()> > > simd_vec(128);
-    boost::uint64_t align = memory::trait_register<T,memory::__GETSIMD__()>::size;
-    boost::uint64_t adress = (boost::uint64_t)(const void* )(&simd_vec[0]); // convert the adress to a real number, and I calculate the rest, it should be zero c++11 -> (uintptr_t)ptr
-    boost::uint64_t res = adress%align; // should be a multiple of the alignment
-    BOOST_CHECK_EQUAL(res,0);
+    float cyme_fexp(float a){return cyme::sexp(a);}
+    float cyme_flog(float a){return cyme::slog(a);}
+    float cyme_fsqrt(float a){return cyme::ssqrt(a);}
+
+    double cyme_exp(double a){return cyme::sexp(a);}
+    double cyme_log(double a){return cyme::slog(a);}
+    double cyme_sqrt(double a){return cyme::ssqrt(a);}
 }

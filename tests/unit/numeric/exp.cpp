@@ -1,5 +1,5 @@
 /*
- * Cyme - sqrt.cpp, Copyright (c), 2014,
+ * Cyme - exp.cpp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
@@ -18,7 +18,8 @@
  * License along with this library.
  */
 
-#include <test/unit/test_header.hpp>
+#include <tests/unit/test_header.hpp>
+#include "cyme/math/math.h"
 
 using namespace cyme::test;
 
@@ -28,31 +29,31 @@ using namespace cyme::test;
 
 #define NN memory::unroll_factor::N*memory::trait_register<TYPE,memory::__GETSIMD__()>::size/sizeof(TYPE)
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_sqrt_comparison, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
     TYPE res[NN] __attribute__((aligned(64)));
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            a[i] = fabs(GetRandom<TYPE>());
-            b[i] = fabs(GetRandom<TYPE>());
+            a[i] = GetRandom<TYPE>();
+            b[i] = GetRandom<TYPE>();
         }
 
         numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
         numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
 
         for(size_t i=0; i<NN; ++i)
-            a[i] = sqrt(b[i]);
+            a[i] = exp(b[i]);
 
-        va = sqrt(vb);
+        va = exp(vb);
         va.store(res);
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.005);
+          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
     }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_sqrt_comparisoni_serial, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparisoni_serial, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
 
@@ -61,18 +62,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_sqrt_comparisoni_serial, T, floating_point_tes
 
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            sa[i] = a[i] = fabs(GetRandom<TYPE>());
-            sb[i] = b[i] = fabs(GetRandom<TYPE>());
+            sa[i] = a[i] = GetRandom<TYPE>();
+            sb[i] = b[i] = GetRandom<TYPE>();
         }
 
 
         for(size_t i=0; i<NN; ++i){
-            a[i] = sqrt(b[i]);
-            sa[i] = ssqrt(sb[i]);
+            a[i] = exp(b[i]);
+            sa[i] = cyme::sexp(sb[i]);
         }
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], sa[i], 0.005);
+          BOOST_REQUIRE_CLOSE( a[i], sa[i], 0.001);
     }
 }
 

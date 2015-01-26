@@ -1,5 +1,5 @@
 /*
- * Cyme - cyme.cpp, Copyright (c), 2014,
+ * Cyme - alignement.cpp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
@@ -18,7 +18,18 @@
  * License along with this library.
  */
 
-#include <iostream>
-#include <cyme/cyme.h>
-#include "cyme/instance/instance.h"
+#include <tests/unit/test_header.hpp>
+#include <vector>
 
+#include "cyme/memory/allocator.hpp" 
+
+using namespace cyme::test;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(alignement_test, T, full_test_types)
+{
+    std::vector<T, memory::Allocator<T, memory::Align_POSIX<T, memory::__GETSIMD__()> > > simd_vec(128);
+    boost::uint64_t align = memory::trait_register<T,memory::__GETSIMD__()>::size;
+    boost::uint64_t adress = (boost::uint64_t)(const void* )(&simd_vec[0]); // convert the adress to a real number, and I calculate the rest, it should be zero c++11 -> (uintptr_t)ptr
+    boost::uint64_t res = adress%align; // should be a multiple of the alignment
+    BOOST_CHECK_EQUAL(res,0);
+}

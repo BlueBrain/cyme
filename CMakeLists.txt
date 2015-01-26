@@ -32,7 +32,7 @@ set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake ${CMAKE_SOURCE_DIR}/CMake/common)
 
 # some common set up of two version
-set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common 
+set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common
 set(BOOST_MIN_VERSION "1.49.0") #old is bad
 
 set(COMMON_USE_CXX03 "ON" CACHE STRING "C++11 features are disabled " FORCE)
@@ -72,7 +72,7 @@ if(CYME_MIC_HOST)
    find_package (MIC)
 endif(CYME_MIC_HOST)
 
-include(SelectTech) 
+include(SelectTech)
 
 ########################################################################
 #
@@ -106,9 +106,9 @@ endif(CYME_MAIN)
 ########################################################################
 
 if(CYME_TESTS)
-    include(CTest)
-    enable_testing()
-    add_subdirectory (test)
+  include(CTest)
+  enable_testing()
+  add_subdirectory(tests)
 endif(CYME_TESTS)
 
 ########################################################################

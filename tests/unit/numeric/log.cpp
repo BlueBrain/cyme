@@ -1,5 +1,5 @@
 /*
- * Cyme - exp.cpp, Copyright (c), 2014,
+ * Cyme - log.cpp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
@@ -18,8 +18,7 @@
  * License along with this library.
  */
 
-#include <test/unit/test_header.hpp>
-#include "cyme/instance/instance.h"
+#include <tests/unit/test_header.hpp>
 
 using namespace cyme::test;
 
@@ -29,31 +28,33 @@ using namespace cyme::test;
 
 #define NN memory::unroll_factor::N*memory::trait_register<TYPE,memory::__GETSIMD__()>::size/sizeof(TYPE)
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) {
+template<class T>
+T precision_log(){return 0.005;};
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
     TYPE res[NN] __attribute__((aligned(64)));
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            a[i] = GetRandom<TYPE>();
-            b[i] = GetRandom<TYPE>();
+            b[i] = fabs(GetRandom<TYPE>());
         }
 
-        numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
+        numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va;
         numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
 
         for(size_t i=0; i<NN; ++i)
-            a[i] = exp(b[i]);
+            a[i] = log(b[i]);
 
-        va = exp(vb);
+        va = log(vb);
         va.store(res);
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
+          BOOST_REQUIRE_CLOSE( a[i], res[i], precision_log<TYPE>());
     }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparisoni_serial, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison_serial, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
 
@@ -62,21 +63,20 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparisoni_serial, T, floating_point_test
 
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            sa[i] = a[i] = GetRandom<TYPE>();
-            sb[i] = b[i] = GetRandom<TYPE>();
+            sa[i] = a[i] = fabs(GetRandom<TYPE>());
+            sb[i] = b[i] = fabs(GetRandom<TYPE>());
         }
 
 
         for(size_t i=0; i<NN; ++i){
-            a[i] = exp(b[i]);
-            sa[i] = sexp(sb[i]);
+            a[i] = log(b[i]);
+            sa[i] = cyme::slog(sb[i]);
         }
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], sa[i], 0.001);
+          BOOST_REQUIRE_CLOSE( a[i], sa[i], precision_log<TYPE>());
     }
 }
-
 #undef NN
 #undef TYPE
 #undef MAX

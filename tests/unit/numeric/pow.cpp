@@ -1,5 +1,5 @@
 /*
- * Cyme - log.cpp, Copyright (c), 2014,
+ * Cyme - pow.cpp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
@@ -18,7 +18,7 @@
  * License along with this library.
  */
 
-#include <test/unit/test_header.hpp>
+#include <tests/unit/test_header.hpp>
 
 using namespace cyme::test;
 
@@ -28,56 +28,38 @@ using namespace cyme::test;
 
 #define NN memory::unroll_factor::N*memory::trait_register<TYPE,memory::__GETSIMD__()>::size/sizeof(TYPE)
 
-template<class T>
-T precision_log(){return 0.005;};
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_pow_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
     TYPE res[NN] __attribute__((aligned(64)));
-    for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            b[i] = fabs(GetRandom<TYPE>());
+            a[i] = GetRandom<TYPE>();
+            b[i] = GetRandom<TYPE>();
         }
 
-        numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va;
+        numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> va(a);
         numeric::vec_simd<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N> vb(b);
 
         for(size_t i=0; i<NN; ++i)
-            a[i] = log(b[i]);
+            a[i] = std::pow(b[i],7);
 
-        va = log(vb);
+        va = numeric::pow<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N,7>(vb);
         va.store(res);
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], res[i], precision_log<TYPE>());
-                                                                    
-    }
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison_serial, T, floating_point_test_types) {
-    TYPE a[NN] __attribute__((aligned(64)));
-    TYPE b[NN] __attribute__((aligned(64)));
-
-    TYPE sa[NN] __attribute__((aligned(64)));
-    TYPE sb[NN] __attribute__((aligned(64)));
-
-    for(size_t k=0; k<100; ++k){
-        for(size_t i=0; i<NN; ++i){
-            sa[i] = a[i] = fabs(GetRandom<TYPE>());
-            sb[i] = b[i] = fabs(GetRandom<TYPE>());
-        }
-
-
-        for(size_t i=0; i<NN; ++i){
-            a[i] = log(b[i]);
-            sa[i] = slog(sb[i]);
-        }
+          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], sa[i], precision_log<TYPE>());
-    }
+            a[i] = std::pow(b[i],6);
+
+        va = numeric::pow<TYPE,memory::__GETSIMD__(),memory::unroll_factor::N,6>(vb);
+
+        va.store(res);
+
+        for(size_t i=0; i<NN; ++i)
+          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
 }
+
 #undef NN
 #undef TYPE
 #undef MAX
