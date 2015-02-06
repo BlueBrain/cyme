@@ -22,7 +22,7 @@
 #define CYME_SIMD_VEC_IPP
 
 namespace numeric{
-
+/* \cond */
     template<class T,memory::simd O, int N>
     vec_simd<T,O,N>::vec_simd(const typename simd_trait<T,O,N>::value_type& a){
         this->xmm = _mm_load1<typename simd_trait<T,O,N>::value_type,O,N>(a);
@@ -154,7 +154,7 @@ namespace numeric{
         this->xmm = _mm_nfms<typename simd_trait<T,O,N>::value_type,O,N>(this->xmm,lhs.xmm,rhs.xmm);
     }
 #endif
-
+/* \endcond */
 } //end namespace
 
 #endif
