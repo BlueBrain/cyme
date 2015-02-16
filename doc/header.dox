@@ -2,18 +2,29 @@
 
 \page Page2 Headers and Library
 
-The cyme library is an include library. It does not require any link, except for advanced functionalities (e.g. linking a specialized math library from a vendor)
+\section  Preprocessor-Approach
 
-The include is cyme/cyme.hpp
+The cyme library is an include-only library. It does not require any linking, except
+for possibly some advanced functionalities, for example when linking with a specialized
+math library from a vendor.
 
-    #include "cyme/cyme.hpp"
+The include file is cyme/cyme.h:
 
-If cyme has been installed to a non-standard location then it may be necessary to use -I compiler flags to point to the right directories.
-Unfortunately, for now, cyme can not detect the platform where your are compiling. Therefore, you have to specify a series of flags of compilation
-specific to your target platform. As usual you should add optimisation flags e.g. -O3. Moreover, cyme allows composite vector e.g. several SIMD vector are packed
-together to build a "big one", this option is passed to the compiler by the flag -D__CYME_UNROLL_VALUE__=1 (a single SIMD vector), 2 (2 vectors packed)
-or 4. A big unroll factor does not guarantee a faster code, test and try ! Cyme performs FMA operations, if your machine supports the technology, add the
-the flag -mfma (x86) or to be sure -D__FMA__.
+\code{.cpp}
+    #include "cyme/cyme.h"
+\endcode
+
+If cyme has been installed to a non-standard location then it may be necessary
+to use -I compiler flags to point to the right directories.  Unfortunately, for
+now, cyme can not detect the platform where your are compiling. Therefore, you
+have to specify a series of flags of compilation specific to your target
+platform. As usual you should add optimisation flags e.g. -O3. Moreover, cyme
+supports composite vectors, where multiple SIMD vectors are packed together.
+This option is governed by \__CYME_UNROLL_VALUE__, passed to the compiler by the flag
+-D__CYME_UNROLL_VALUE__=1 (a single SIMD vector), 2 (2 vectors packed) or 4. A
+big unroll factor does not guarantee faster code &mdash; test and try! Cyme
+performs FMA operations, if your machine supports the technology; use the
+compiler flag -mfma (for x86), or to be sure -D__FMA__.
 
 <TABLE BORDER="1">
 <CAPTION> Flags and options of compilation </CAPTION>
@@ -25,7 +36,7 @@ the flag -mfma (x86) or to be sure -D__FMA__.
  <TH> Intel - MIC      </TH>
  </TR>
  <TR>
- <TH> needed Flags  </TH>
+ <TH> required flags  </TH>
  <TD  align="center">  -D__CYME_SIMD_VALUE__=sse <br> -D__CYME_UNROLL_VALUE__=4 <br> -msse4   </TD>
  <TD  align="center">  -D__CYME_SIMD_VALUE__=avx <br> -D__CYME_UNROLL_VALUE__=4 <br> -mavx    </TD>
  <TD  align="center">  -D__CYME_SIMD_VALUE__=qpx <br> -D__CYME_UNROLL_VALUE__=4          </TD>
@@ -33,25 +44,26 @@ the flag -mfma (x86) or to be sure -D__FMA__.
  </TR>
 </TABLE>
 
-cyme has been tested with 4 compilers GCC (>4.6), CLANG (>3.2), ICC (>13.0) and XLC (>12.0).
-For AoS, the performance is good whatever the compiler.
-For the AoSoA memory layout, performance is excellent with GCC/CLANG, medium with ICC, and bad with XLC.
-This demonstrates the ability of the compiler to construct/simplify the DAG  with the expression template method.
+cyme has been tested with 4 compilers GCC (>4.6), Clang (>3.2), ICC (>13.0) and
+XL&nbsp;C (>12.0).  With AoS memory layout, the performance is good across all tested compilers.
+For the AoSoA memory layout, performance is excellent with GCC/Clang, good with ICC,
+and poor with XL&nbsp;C.  Performance reflects the ability of the compiler to
+construct and simplify the DAG with the expression template method.
 
 <TABLE BORDER="1">
 <CAPTION> Compiler performance  </CAPTION>
  <TR>
  <TH>                  </TH>
  <TH> GCC              </TH>
- <TH> CLANG            </TH>
- <TH> XLC              </TH>
+ <TH> Clang            </TH>
+ <TH> XL&nbsp;C        </TH>
  <TH> ICC              </TH>
  </TR>
  <TR>
  <TH> Cyme:AoSoA </TH>
  <TD  align="center" bgcolor=#1D9A2F> excellent   </TD>
  <TD  align="center" bgcolor=#1D9A2F> excellent   </TD>
- <TD  align="center" bgcolor=#CF2E31> bad    </TD>
+ <TD  align="center" bgcolor=#CF2E31> poor    </TD>
  <TD  align="center" bgcolor=#1D9A2F> good </TD>
  </TR>
  <TR>
@@ -63,20 +75,29 @@ This demonstrates the ability of the compiler to construct/simplify the DAG  wit
  </TR>
 </TABLE>
 
-If the library is installed in the standard location, for AVX on x86, you will compile by
+If the library is installed in the standard location, compiling for AVX on x86, the compiler
+options should be
+\code{.bash}
+    g++  -D__CYME_SIMD_VALUE__=avx -D__CYME_UNROLL_VALUE__=2 -mavx -O3 my_program.cpp
+\endcode
 
-    g++  -D__CYME_SIMD_VALUE__=avx -D__CYME_UNROLL_VALUE__=2 -mavx -O3 my_program.cpp  (unroll of 2)
-
-Moreover, if you perform operations with a specialised library, it will require additional links to the corresponding one (IBM simd_mass per example), e.g.
-
+Use of operations from a specialized vendor library will require additional link options. For example to
+use the IBM simd_mass library,
+\code{.bash}
     g++  -D__CYME_SIMD_VALUE__=qpx -O3 my_program.cpp -lsimd_mass
+\endcode
 
-An alternative to preprocessor macro is possible. When  you install the library in the include directory, you should find the file define_meta.h.
-This file has been constructed during the CMake phase. Inside you will find the value of macro directive, therefor you do not have to compile with
-the -D directive. Nevertheless, you should compile with -msse4.2, -mavx (and) -mfma on X86. In your program you will simply write:
+\section Alternative
 
+As an alternative to specifying the preprocessor defines on the command line,
+one can modify the installed cyme/configuration.h header. This header is constructed
+with default values when cyme is built with CMake. and is automatically included
+in cyme/cyme.h. Edit the settings in CMake/configuration.h.in before running CMake.
 
-    #include "cyme/define_meta.h"
-    #include "cyme/cyme.hpp"
+In your program you will simply include the cyme/cyme.h header:
+
+\code{.cpp}
+    #include "cyme/cyme.h"
+\endcode
 
 */

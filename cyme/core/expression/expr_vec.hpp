@@ -3,6 +3,7 @@
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,50 +19,55 @@
  * License along with this library.
  */
 
+/**
+ * @file cyme/core/expression/expr_vec.hpp
+ * Defines vertex class, rvec and wvec vector class
+ *
+ *  This uses template expressions to parse a series of basic operations into a tree at compile time.
+ *  Effort was made to limit the number of local copies.
+ *  Directly inspired (copy/paste and modify ^_^) from
+ *  'C++ Templates: The Complete Guide' (Josuttis, Vandevoorde), Chapter XVIII
+ *  To summarize every mathematical operations are transformed in a vertex
+ *  during the compilation, every vertex has a corresponding SIMD wrapper
+ *
+ *
+ * helper traits class to select how to refer to an ''expression template vertex''
+ * - in general: by reference
+ * - for scalars: by value
+ */
+
 #ifndef CYME_EXPR_VEC_HPP
 #define CYME_EXPR_VEC_HPP
 
-namespace numeric{
-     /* \cond */
-    /*
-     *  This uses template expressions to parse a series of basic operations into a tree at compile time.
-     *  Effort was made to limit the number of local copies.
-     *  Directly inspired (copy/paste and modify ^_^) from
-     *  'C++ Templates: The Complete Guide' (Josuttis, Vandevoorde), Chapter XVIII
-     */
-
-     /* helper traits class to select how to refer to an ''expression template node''
-      * - in general: by reference
-      * - for scalars: by value
-      */
+namespace cyme{
+    /** \cond */
     //forward declarations
-    template<class T, memory::simd O, int N>
+    template<class T, cyme::simd O, int N>
     class vec_scalar;
 
-    template<class T,memory::simd O, int N>
+    //forward declarations
+    template<class T,cyme::simd O, int N>
     struct vec_simd;
 
-    template<class T,memory::simd O, int N, int M>
+    //forward declarations
+    template<class T,cyme::simd O, int N, int M>
     forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs);
+    /** \endcond */
 
-    //primary template, generic
-    template<class T, memory::simd O, int N>
+    /** Primary vertex */
+    template<class T, cyme::simd O, int N>
     struct vec_traits{
         typedef T const& value_type;
     };
 
-    //partial specialization for scalars
-    template<class T, memory::simd O, int N>
+    /** Partial specialization of the primary vertex for scalar */
+    template<class T, cyme::simd O, int N>
     struct vec_traits< vec_scalar<T,O,N>, O, N>{
         typedef vec_scalar<T,O,N> value_type;
     };
 
-    /* \endcond */
-
-    /**
-     \brief Wrap sqrt e.g. sqrt((*it)[0]), for use in recursive tree
-     */
-    template<class T, memory::simd O, int N, class OP1>
+    /** sqrt vertex in the DAG from sqrt(a) */
+    template<class T, cyme::simd O, int N, class OP1>
     class vec_sqrt{
         typename vec_traits<OP1,O,N>::value_type op1;
 
@@ -74,11 +80,8 @@ namespace numeric{
         }
     };
 
-
-    /**
-    \brief Wrap exp e.g. exp((*it)[0]), for use in recursive tree
-    */
-    template<class T, memory::simd O, int N, class OP1>
+    /** exp vertex in the DAG from exp(a) */
+    template<class T, cyme::simd O, int N, class OP1>
     class vec_exp{
         typename vec_traits<OP1,O,N>::value_type op1;
 
@@ -91,10 +94,8 @@ namespace numeric{
         }
     };
 
-    /**
-    \brief Wrap log e.g. log((*it)[0]), for use in recursive tree
-    */
-    template<class T, memory::simd O, int N, class OP1>
+    /** log vertex in the DAG from log(a) */
+    template<class T, cyme::simd O, int N, class OP1>
     class vec_log{
         typename vec_traits<OP1,O,N>::value_type op1;
 
@@ -107,12 +108,11 @@ namespace numeric{
         }
     };
 
-        /**
-    \brief Wrap pow e.g. pow((*it)[0]), for use in recursive tree
-    */
-    template<class T, memory::simd O, int N, class OP1, int M>
+    /** pow vertex in the DAG from pow(a,n), integer exponent only */
+    template<class T, cyme::simd O, int N, class OP1, int M>
     class vec_pow{
         typename vec_traits<OP1,O,N>::value_type op1;
+
     public:
         forceinline vec_pow(OP1 const& a):op1(a){
         }
@@ -122,10 +122,8 @@ namespace numeric{
         }
     };
 
-    /**
-      \brief Wrap addition e.g. (*it)[0] + (*it)[1], for use in recursive tree
-    */
-    template<class T, memory::simd O, int N, class OP1, class OP2>
+    /** add vertex in the DAG from a+b */
+    template<class T, cyme::simd O, int N, class OP1, class OP2>
     class vec_add{
         typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
@@ -139,10 +137,8 @@ namespace numeric{
         }
     };
 
-    /**
-      \brief Wrap subtraction (*it)[0] - (*it)[1], for use in recursive tree
-    */
-    template<class T, memory::simd O, int N, class OP1, class OP2>
+    /** sub vertex in the DAG from a-b */
+    template<class T, cyme::simd O, int N, class OP1, class OP2>
     class vec_sub{
         typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
@@ -156,13 +152,13 @@ namespace numeric{
         }
     };
 
-    /**
-      \brief Wrap negation -(*it)[1], for use in recursive tree
-      Contrary to other class it is a structure, I did an optimization in case 
-      I get multiple negate e.g. -(-(R[0])) 
-      For this I need to get the original operator (op1)
+    /** negate vertex in the DAG from -a
+
+    Contrary to other class it is a structure, I did an optimization in case
+    I get multiple negate e.g. -(-(a)) the vertex is transformed to a.
+    For this I need to get the original operator (op1)
     */
-    template<class T, memory::simd O, int N, class OP1>
+    template<class T, cyme::simd O, int N, class OP1>
     struct vec_neg{
         typename vec_traits<OP1,O,N>::value_type op1;
 
@@ -175,10 +171,8 @@ namespace numeric{
         }
     };
 
-    /**
-      \brief Wrap multiplication e.g. (*it)[0] * (*it)[1], for use in recursive tree
-    */
-    template<class T, memory::simd O, int N, class OP1, class OP2>
+    /** mul vertex in the DAG from a*b */
+    template<class T, cyme::simd O, int N, class OP1, class OP2>
     class vec_mul{
         typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
@@ -202,11 +196,10 @@ namespace numeric{
         }
     };
 
-    /**
-      \brief Wrap fma (*it)[0]*(*it)[1] + (*it)[2], for use in recursive tree
-      \warning Experimental
+    /** fma vertex in the DAG from a*b+c
+    \warning Experimental, I may not catch all FMA
     */
-    template<class T, memory::simd O, int N, class OP1, class OP2, class OP3>
+    template<class T, cyme::simd O, int N, class OP1, class OP2, class OP3>
     class vec_muladd{
         typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
@@ -221,11 +214,11 @@ namespace numeric{
         forceinline vec_muladd(vec_mul<T,O,N,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){}
     };
 
-    /**
-      \brief Wrap fma (*it)[0]*(*it)[1] + (*it)[2]*(*it)[3], for use in recursive tree
-      \warning Experimental
-     */
-    template<class T, memory::simd O, int N, class OP1, class OP2, class OP3, class OP4>
+    /** fma vertex in the DAG from a*b+c*d
+    \warning Althoug the following version requests less operation (one FMA and one mul), it is slower of 2 cycles,
+    because the two multiplications are done in parallel
+    */
+    template<class T, cyme::simd O, int N, class OP1, class OP2, class OP3, class OP4>
     class vec_mul_add_mul{
         typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
@@ -233,23 +226,21 @@ namespace numeric{
         typename vec_traits<OP4,O,N>::value_type op4;
 
     public:
-        /*
-           Althoug the following version requests less operation (one FMA and one mul), it is slower of 2 cycles,
-           because the two multiplications are done in // because they are independent
-           return muladd(op1(),op2(),op3()*op4()); // FMA version to replug when FMA ops become faster 
-        */
+
         forceinline vec_simd<T,O,N> operator()() const{
+        // return muladd(op1(),op2(),op3()*op4()); // FMA version to replug when FMA ops become faster
             return op1()*op2()+op3()*op4();
         }
 
-        forceinline vec_mul_add_mul(vec_mul<T,O,N,OP1,OP2> const& a, vec_mul<T,O,N,OP3,OP4> const& b):op1(a.getop1()), op2(a.getop2()), op3(b.getop1()), op4(b.getop2()){}
+        forceinline vec_mul_add_mul(vec_mul<T,O,N,OP1,OP2> const& a, vec_mul<T,O,N,OP3,OP4> const& b):
+            op1(a.getop1()), op2(a.getop2()), op3(b.getop1()), op4(b.getop2()){}
     };
 
-    /**
-     \brief Wrap fma (*it)[0]*(*it)[1] - (*it)[2]*(*it)[3], for use in recursive tree
-     \warning Experimental
-     */
-    template<class T, memory::simd O, int N, class OP1, class OP2, class OP3, class OP4>
+    /** fms vertex in the DAG from a*b-c*d
+    \warning Althoug the following version requests less operation (one FMA and one mul), it is slower of 2 cycles,
+    because the two multiplications are done in parallel
+    */
+    template<class T, cyme::simd O, int N, class OP1, class OP2, class OP3, class OP4>
     class vec_mul_sub_mul{
         typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
@@ -258,23 +249,19 @@ namespace numeric{
 
     public:
 
-        /*
-           Althoug the following version requests less operation (one FMA and one mul), it is slower of 2 cycles,
-           because the two multiplications are done in // because they are independent
-           return mulsub(op1(),op2(),op3()*op4()); // FMA version to replug when FMA ops become faster 
-        */
         forceinline vec_simd<T,O,N> operator()() const{
+        // return mulsub(op1(),op2(),op3()*op4()); // FMA version to replug when FMA ops become faster
             return op1()*op2()-op3()*op4();
         }
 
-        forceinline vec_mul_sub_mul(vec_mul<T,O,N,OP1,OP2> const& a, vec_mul<T,O,N,OP3,OP4> const& b):op1(a.getop1()), op2(a.getop2()), op3(b.getop1()), op4(b.getop2()){}
+        forceinline vec_mul_sub_mul(vec_mul<T,O,N,OP1,OP2> const& a, vec_mul<T,O,N,OP3,OP4> const& b):
+            op1(a.getop1()), op2(a.getop2()), op3(b.getop1()), op4(b.getop2()){}
     };
 
-    /**
-      \brief Wrap fms (*it)[0]*(*it)[1] - (*it)[2], for use in recursive tree
-      \warning it is experimental
+    /** fms vertex in the DAG from a*b-c
+    \warning it is experimental, I may not capture all FMA
     */
-    template<class T, memory::simd O, int N, class OP1, class OP2, class OP3>
+    template<class T, cyme::simd O, int N, class OP1, class OP2, class OP3>
     class vec_mulsub{
         typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
@@ -286,16 +273,15 @@ namespace numeric{
             return mulsub(op1(),op2(),op3());
         }
 
-        forceinline vec_mulsub(vec_mul<T,O,N,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){}
+        forceinline vec_mulsub(vec_mul<T,O,N,OP1,OP2> const& a, OP3 const& b):
+            op1(a.getop1()), op2(a.getop2()), op3(b){}
     };
 
 
-    /**
-     \brief Help to wrap fms (*it)[2] - (*it)[0]*(*it)[1], for use in recursive tree
-     As (*it)[2] - (*it)[0]*(*it)[1], it exists an operator for this at least on X86
-     \warning Experimental
-     */
-    template<class T, memory::simd O, int N, class OP1, class OP2, class OP3>
+    /** fms vertex in the DAG from a-b*c
+    \warning it is experimental, I may not capture all FMA
+    */
+    template<class T, cyme::simd O, int N, class OP1, class OP2, class OP3>
     class vec_negate_muladd{
         typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
@@ -307,16 +293,18 @@ namespace numeric{
             return negatemuladd(op1(),op2(),op3()); // -a*b+c <=> c - a*b
         }
 
-        forceinline vec_negate_muladd(vec_mul<T,O,N,OP1,OP2> const& a, OP3 const& b):op1(a.getop1()), op2(a.getop2()), op3(b){}
+        forceinline vec_negate_muladd(vec_mul<T,O,N,OP1,OP2> const& a, OP3 const& b):
+            op1(a.getop1()), op2(a.getop2()), op3(b){}
     };
 
 
-    /**
-      \brief Wrap division (*it)[0] / (*it)[1], for use in recursive tree
+    /** div vertex in the DAG from a/b
+
+    I made a distinction between operands specially if b is scalar
     */
-    template<class T, memory::simd O, int N, class OP1, class OP2>
+    template<class T, cyme::simd O, int N, class OP1, class OP2>
     class vec_div{
-        typename vec_traits<OP1,O,N>::value_type op1; // I made distinction between operands it can be scalar or vector
+        typename vec_traits<OP1,O,N>::value_type op1;
         typename vec_traits<OP2,O,N>::value_type op2;
     public:
 
@@ -327,10 +315,8 @@ namespace numeric{
         forceinline vec_div(OP1 const& a, OP2 const& b):op1(a), op2(b){}
     };
 
-    /**
-      \brief Wrap scalar operations and return a SIMD vector
-    */
-    template<class T, memory::simd O, int N>
+    /** scalar vertex */
+    template<class T, cyme::simd O, int N>
     class vec_scalar{
     public:
         explicit forceinline vec_scalar(T const& a):s(a){
@@ -344,13 +330,21 @@ namespace numeric{
         vec_simd<T,O,N> const s; // value of the scalar
     };
 
-    /**
-        \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
-         During compilation, we will create the tree of operations which is a DAG. The tree is built on the read only vector
-         consequently this object is called only with the const [] operators of the class storage.
-         \remark constrary the wrec I do not keep trace of the pointer of the input. I do not want generate a tree with a useless pointer.
+    /** read vector used during the construction of the DAG, rhs only !
+
+    This class is an "interface" between the iterator and the computation
+    vector class (SIMD register). During compilation, the DAG is created.
+    The tree is built on the read only vector consequently.
+    rvec is called only with the const [] operators of the
+    class storage.
+
+    If the user utilises rvec like and lhs and rhs, it should be very careful
+    because the results will be note save. You need a wvec for that.
+
+    \remark constrary the wrec I do not keep trace of the pointer of the input.
+    I do not want generate a tree with a useless pointer.
     */
-    template<class T, memory::simd O, int N = memory::unroll_factor::N, class Rep = vec_simd<T,O,N> >
+    template<class T, cyme::simd O, int N = cyme::unroll_factor::N, class Rep = vec_simd<T,O,N> >
     class rvec{
     public:
         typedef T value_type;
@@ -358,195 +352,205 @@ namespace numeric{
         typedef value_type const* const_pointer;
         typedef Rep base_type;
 
-        /**
-           \brief default constructor nothing special
-        */
+        /** default constructor nothing special */
         forceinline explicit rvec():expr_rep(){
         }
 
-        /**
-           \brief constructor rhs of the operator =, I do not care to save the pointer, as I read only the memory on this side
-        */
+        /** constructor rhs of the operator= I do not save the pointer, as I read only the cyme on this side */
         forceinline explicit rvec(Rep const& rb):expr_rep(rb){
         }
 
-        /**
-           \brief constructor lhs of the operator =, I need to save the pointer to save the data into the memory after the calculation
-        */
+        /** constructor lhs of the operator= */
         forceinline explicit rvec(const_pointer rb):expr_rep(rb){
         }
 
-        /**
-           \brief constructor for a given value
-        */
+        /** constructor for a given value */
         forceinline explicit rvec(value_type a):expr_rep(a){
         }
 
         /**
-           \brief operator =, create the tree and execute in normal condition
+        operator= creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline rvec& operator= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->rep() = rhs.rep()(); //evaluate the three compile time, and execute calculation
+            rep() = rhs.rep()();
             return *this;
         }
 
         /**
-           \brief operator +=, create the tree and execute in normal condition
+        operator+=, creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline rvec& operator+= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->rep() += rhs.rep()(); //evaluate the three compile time, and execute calculation
+            rep() += rhs.rep()();
             return *this;
         }
 
         /**
-           \brief operator -=, create the tree and execute in normal condition
+        operator-=, creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline rvec& operator-= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->rep() -= rhs.rep()(); //evaluate the three compile time, and execute calculation
+            rep() -= rhs.rep()();
             return *this;
         }
 
         /**
-           \brief operator *=, create the tree and execute in normal condition
+        operator*=, creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
-        forceinline rvec& operator*= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->rep() *= rhs.rep()(); //evaluate the three compile time, and execute calculation
+        template<class T2, cyme::simd O2, int N2, class Rep2>
+        forceinline rvec& operator*= (rvec<T2,O2,N2,Rep2 > const& rhs){ rep() *= rhs.rep()();
             return *this;
         }
 
         /**
-        \brief operator /=, create the tree and execute in normal condition
+        operator/=, creates the tree and execute in normal condition
+        \warning the division is the system one not my version
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline rvec& operator/= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->rep() /= rhs.rep()(); //evaluate the three compile time, and execute calculation
+            rep() /= rhs.rep()();
             return *this;
         }
 
-        /**
-           \brief get the vector class, read only
-        */
+        /** Get the vector class, read only */
         forceinline Rep const& rep() const{
             return expr_rep;
         }
-        /**
-           \brief get the vector class, writable
-        */
+
+        /** Get the vector class, writable */
         forceinline Rep& rep(){
             return expr_rep;
         }
     private:
-        /**
-        \brief this is the vector_simd class
-        */
+        /** Composition with cyme::vec_simd */
         Rep expr_rep;
     };
 
-    /**
-        \brief This class is an "interface" between the iterator and the computation vector class (SIMD register).
-        During the compilation, we will create the tree of operations or DAG. It is write only (lhs)
-        the operators [] of the storage class is not const
-        \remark the class saves a pointer to bring back the data into memory when the computation has been done
+    /** write vector used during the construction of the DAG, lhs only !
+
+    This class is an "interface" between the iterator and the computation
+    vector class (SIMD register). During compilation, the DAG is created.
+    The tree is built on the read only vector consequently.
+    rvec is called only with the non-const [] operators of the class storage.
+
+    \remark The wrec keep trace of the pointer of the input.
     */
-    template<class T, memory::simd O, int N = memory::unroll_factor::N, class Rep = vec_simd<T,O,N> >
+    template<class T, cyme::simd O, int N = cyme::unroll_factor::N, class Rep = vec_simd<T,O,N> >
     class wvec{
-    public:
+        public:
         typedef rvec<T,O,N,Rep> V;
         typedef T value_type;
         typedef value_type* pointer;
         typedef Rep base_type;
 
-
-        /**
-           \brief constructor lhs of the operator =, I need to save the pointer to save the data into the memory after the calculation
-        */
+        /** Constructor lhs of the operator=, I save the data into the cyme after the computation */
         forceinline explicit wvec(pointer rb):data_pointer(rb),expr_rep(rb){
         }
 
         /**
-           RAII for the store is it correct ? Altough, we do not allocate memory, we allocate a SIMD register.
-            If not rewrite this command after the tree creation into the +=, *=, etc ....
+        RAII for the store. Altough, we do not allocate cyme, we allocate a SIMD register.
+        If not rewrite this command after the tree creation into the +=, *=, etc ....
         */
         ~wvec(){
-            this->expr_rep.store(data_pointer); //store the SIMD register into main memory
+            expr_rep.store(data_pointer); //store the SIMD register into main cyme
         }
 
         /**
-           \brief operator =, create the tree and execute
+        operator= initializes the wvec to a given value. The full vector has
+        the same value.
         */
         forceinline wvec& operator= (value_type a){
             rvec<T,O,N,Rep> v(a);
-            this->expr_rep() = v.rep()(); //basic register copy no three
+            expr_rep() = v.rep()();
             return *this;
         }
 
         /**
-           \brief operator =, create the tree and execute in normal condition
+        operator= creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
+        we call the operator(). The datas are saved when the destructor is called.
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline wvec& operator= (rvec<T2,O2,N2,Rep2> const& rhs){
-            this->expr_rep() = rhs.rep()(); //basic register copy no three
+            expr_rep() = rhs.rep()();
             return *this;
         }
 
         /**
-           \brief operator +=, create the tree and execute in normal condition
+        operator+= creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
+        we call the operator(). The datas are saved when the destructor is called.
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline wvec& operator+= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->expr_rep() += rhs.rep()(); //basic register copy no three
+            expr_rep() += rhs.rep()();
             return *this;
         }
 
         /**
-           \brief operator -=, create the tree and execute in normal condition
+        operator-= creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
+        we call the operator().The datas are saved when the destructor is called.
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline wvec& operator-= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->expr_rep() -= rhs.rep()(); //basic register copy no three
+            expr_rep() -= rhs.rep()();
             return *this;
         }
 
         /**
-           \brief operator *=, create the tree and execute in normal condition
+        operator*= creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
+        we call the operator().The datas are saved when the destructor is called.
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline wvec& operator*= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->expr_rep() *= rhs.rep()(); //basic register copy no three
+            expr_rep() *= rhs.rep()();
             return *this;
         }
 
         /**
-        \brief operator /=, create the tree and execute in normal condition
+        operator/= creates the tree and execute in normal condition
+        The tree is built at the compilation, the full tree is stored in rhs argument.
+        The execution of the tree is performed when we call the operator()
+        we call the operator().The datas are saved when the destructor is called.
         */
-        template<class T2, memory::simd O2, int N2, class Rep2>
+        template<class T2, cyme::simd O2, int N2, class Rep2>
         forceinline wvec& operator/= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            this->expr_rep() /= rhs.rep()(); //basic register copy no three
+            expr_rep() /= rhs.rep()(); //basic register copy no three
             return *this;
         }
 
         /**
-           \brief get the vector class, read only
+        Get the vector class, read only
         */
         forceinline Rep const& rep() const{
             return expr_rep;
         }
         /**
-           \brief get the vector class, write only
+        Get the vector class, write only
         */
         forceinline Rep& rep(){
             return expr_rep;
         }
 
     private:
-        /**
-        \brief need pointer for the operator=, to store the data into the memory, unfortunately I can not have an access to the lfs
-        */
+        /** Pointer to save the data */
         pointer data_pointer;
+        /** Composition with cyme::vec_simd */
         Rep expr_rep;
     };
  }

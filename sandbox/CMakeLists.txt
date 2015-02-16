@@ -31,12 +31,12 @@ function(compil_flag techno_ main_ unroll_)
          make_program(${main_} " " "qpx" ${unroll_})
      endif (CYME_TRUE)
 
-     STRING(REGEX REPLACE "^.*(mic).*$" "\\1" CYME_THERE ${techno_})
-     STRING(COMPARE EQUAL "mic" "${CYME_THERE}" CYME_TRUE)
-     IF (CYME_TRUE)
-         set(simd_test "mic")
-         make_program(${main_} "-mmic -D__FMA__" "mic" ${unroll_})
-     endif (CYME_TRUE)
+#    STRING(REGEX REPLACE "^.*(mic).*$" "\\1" CYME_THERE ${techno_})
+#    STRING(COMPARE EQUAL "mic" "${CYME_THERE}" CYME_TRUE)
+#    IF (CYME_TRUE)
+#        set(simd_test "mic")
+#        make_program(${main_} "-mmic -D__FMA__" "mic" ${unroll_})
+#    endif (CYME_TRUE)
 
 endfunction(compil_flag)
 
@@ -54,7 +54,3 @@ foreach(test ${listmain})
         compil_flag(${SIMD_TECH} ${test} ${unroll})
     endforeach()
 endforeach()
-
-
-
-

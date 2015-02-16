@@ -3,6 +3,7 @@
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,20 +19,23 @@
  * License along with this library.
  */
 
+/**
+* @file cyme/memory/detail/storage.hpp
+* Defines Defines the basic subblock of a cyme container
+*/
+
 #ifndef CYME_STORAGE_HPP
 #define CYME_STORAGE_HPP
 
 #include "cyme/core/simd_vector/simd_vec.hpp"
 #include "cyme/core/expression/expr_vec.hpp"
 
-namespace memory{
-     /** \brief  Basic subblock of memory for the cyme container*/
+namespace cyme{
+     /**   Basic subblock of cyme for the cyme container*/
      template <class T, std::size_t Size, order O>
      class storage;
 
-     /**
-     \brief subblock of memory needed by the block class, AoS specialization
-     */
+     /** subblock of cyme needed by the block class, AoS specialization */
      template <class T, std::size_t Size>
      class storage<T,Size,AoS>{
          public:
@@ -45,46 +49,33 @@ namespace memory{
 
          static const int size = Size;
 
-         /**
-         \brief Default constructor, the subblock is set up to 0
-         */
+         /** Default constructor, the subblock is set up to 0 */
          storage();
-         /**
-         \brief Default constructor, the subblock is set up to a desired value
-         */
+
+         /** Default constructor, the subblock is set up to a desired value */
          storage(value_type value);
-         /**
-         \brief write access operator, only use to a direct access to the datas
-         */
+
+         /** write access operator, only use to a direct access to the datas */
          inline reference operator()(size_type i);
-         /**
-         \brief read access operator, only use to a direct access to the datas
-         */
+
+         /** read access operator, only use to a direct access to the datas */
          inline const_reference operator()(size_type i) const;
-         /**
-         \brief write access operator, only use by the iterator when calculations are performed
-         */
+
+         /** write access operator, only use by the iterator when calculations are performed */
          inline reference operator[](size_type i);
-         /**
-         \brief read access operator, only use by the iterator when calculations are performed
-         */
+
+         /** read access operator, only use by the iterator when calculations are performed */
          inline const_reference operator[](size_type i) const;
 
-         /**
-         \brief return memory layout of the container
-         */
-         static const memory::order MemoryOrder = AoS;
+         /** return cyme layout of the container */
+         static const cyme::order MemoryOrder = AoS;
 
          private:
-         /**
-         \brief a basic array is the container
-         */
+         /** a basic array is the container */
          value_type data[Size];
      };
 
-     /**
-     \brief subblock of memory needed by the block class, AoSoA specialization
-     */
+     /** subblock of cyme needed by the block class, AoSoA specialization */
      template <class T, std::size_t Size>
      class storage<T,Size,AoSoA>{
          public:
@@ -98,33 +89,28 @@ namespace memory{
 
          static const int size = Size;
 
-         /**
-         \brief Default constructor, the subblock is set up to 0
-         */
+         /** Default constructor, the subblock is set up to 0 */
          storage();
-         /**
-         \brief Default constructor, the subblock is set up to a desired value
-         */
+
+         /** Default constructor, the subblock is set up to a desired value */
          storage(value_type value);
-         /**
-         \brief write access operator, only use to a direct access to the datas
-         */
+
+         /** write access operator, only use to a direct access to the datas */
          inline reference operator()(size_type i);
-         /**
-         \brief read access operator, only use to a direct access to the datas
-         */
+
+         /** read access operator, only use to a direct access to the datas */
          inline const_reference operator()(size_type i) const;
 
-         inline numeric::wvec<T,memory::__GETSIMD__()> operator[](size_type i);
+         inline cyme::wvec<T,cyme::__GETSIMD__()> operator[](size_type i);
 
-         inline const numeric::rvec<T,memory::__GETSIMD__()> operator[](size_type i) const;
-         /**
-         \brief return memory layout of the container
-         */
-         static const memory::order MemoryOrder = AoSoA;
+         inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](size_type i) const;
+
+         /** return cyme layout of the container */
+         static const cyme::order MemoryOrder = AoSoA;
 
          private:
-         value_type data[Size]; // need for std algo
+         /**  storage type is basic array for AoSoA*/
+         value_type data[Size];
      };
 } //end namespace
 

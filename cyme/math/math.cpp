@@ -3,6 +3,7 @@
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,12 +19,16 @@
  * License along with this library.
  */
 
+/**
+ * @file cyme/math/math.cpp
+ * Signature for the C library
+ */
+
 #include <iostream>
 #include <cyme/cyme.h>
 #include <cyme/math/math.h>
-// Compile the library for C version only
-extern "C"
-{
+
+extern "C" {
     float cyme_fexp(float a){return cyme::sexp(a);}
     float cyme_flog(float a){return cyme::slog(a);}
     float cyme_fsqrt(float a){return cyme::ssqrt(a);}

@@ -3,6 +3,7 @@
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,42 +19,43 @@
  * License along with this library.
  */
 
+/**
+ * @file cyme/core/simd_vector/math/simd_exp.ipp
+ * Implements exp for vec_simd class
+ */
+
 #ifndef CYME_SIMD_EXP_IPP
 #define CYME_SIMD_EXP_IPP
 
 #include "cyme/core/simd_vector/math/detail/remez.ipp"
 
-namespace numeric{
+namespace cyme{
 
-    /**
-     \cond
-     */
-    template<class T, memory::simd O, int N,std::size_t n>
+    /** Function object that compute the Remez approximation of e^x using Horner method */
+    template<class T, cyme::simd O, int N,std::size_t n>
     struct Remez_exp{
         static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> const& a){
             return helper_horner<T,O,N,coeff_remez_exp,n>::horner(a);
         }
     };
-    /**
-     \endcond
-     */
 
-    /** \brief implementation of the exp,the algorithm is based on e^x = 2^k e^y, where k is signed integer and y belongs to [0,log 2].
-               e^y is determined using a Pade approximation of the order n with an third value program.
-               The algo does:
-                    x = y + k*log(2)
-                    x/log(2) = y/log(2) + k
-                    floor(x/log(2)) =floor(y/log(2)) + floor(k)
-                    floor(x/log(2)) = k
+    /** Implementation of the exp,the algorithm is based on e^x = 2^k e^y
 
-               We get k so easy y.
-
-               e^y simply calculates with the approximation
-               2^k use the internal representation of the floating point number
+         where k is signed integer and y belongs to [0,log 2].
+         e^y is determined using a Pade approximation of the order n with an third value program.
+         The algo does:
+         \code{.cpp}
+                x = y + k*log(2)
+                x/log(2) = y/log(2) + k
+                floor(x/log(2)) =floor(y/log(2)) + floor(k)
+                floor(x/log(2)) = k
+         \endcode
+         We get k so easy y.  e^y simply calculates with the approximation
+         2^k use the internal representation of the floating point number
     */
-
-    template<class T, memory::simd O, int N,std::size_t n = poly_order<T,coeff_remez_exp>::value, class Solver = Remez_exp<T,O,N,n> > // Remez, series ...
-    struct my_exp{
+    template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_exp>::value,
+             class Solver = Remez_exp<T,O,N,n> > // Remez, series ...
+    struct cyme_exp{
         static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> x){
             /* calculate k,  k = (int)floor(a); p = (float)k; */
             vec_simd<T,O,N>   log2e(1.4426950408889634073599);
@@ -81,29 +83,24 @@ namespace numeric{
         }
     };
 
-    /**
-    \brief free function for call the vendor exponential, this function uses the return value optimization
-    */
-    template<class T,memory::simd O, int N>
+    /** Free function for call the vendor exp */
+    template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp_v(const vec_simd<T,O,N>& rhs){
         vec_simd<T,O,N> nrv(_mm_exp<T,O,N>(rhs.xmm));
         return nrv;
     }
 
-    /**
-     \brief function object for the vendor exponential algorithm
-     */
-    template<class T, memory::simd O, int N, std::size_t n>
+    /** Function object for the vendor exp algorithm */
+    template<class T, cyme::simd O, int N, std::size_t n>
     struct Vendor_exp{
         static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> const& a){
             return exp_v(a); /* call vendor wrapper */
         }
     };
 
-    /**
-     \brief selector for the exponential algorithm (vendor or my implementation)
-     */
-    template<class T, memory::simd O, int N, std::size_t n = poly_order<T,coeff_remez_exp>::value, class Solver = my_exp<T,O,N,n> > // my_exp ou vendor
+    /** Selector for the exp algorithm (vendor or cyme implementation) */
+    template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_exp>::value,
+             class Solver = cyme_exp<T,O,N,n> > // cyme_exp ou vendor
     struct Selector_exp{
          static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> x){
                x = Solver::exp(x);
@@ -111,10 +108,8 @@ namespace numeric{
          }
     };
 
-    /**
-        \brief free function for the  exp
-    */
-    template<class T,memory::simd O, int N>
+    /** free function for the exp */
+    template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp(const vec_simd<T,O,N>& rhs){
         return Selector_exp<T,O,N>::exp(rhs);
     }

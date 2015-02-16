@@ -97,9 +97,9 @@ if(APPLE)
      STRING "Build architectures for OS X" FORCE)
 endif()
 
-if($ENV{CLUSTER} STREQUAL bgq) #it is dirty ...
-#i am on BG/Q with clang
-   string(REPLACE "-std=c++11" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+set(VAR $ENV{CLUSTER})
+if(VAR STREQUAL bgq) #it is dirty ...
+  string(REPLACE "-std=c++11" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 endif()
 
 ########################################################################
@@ -134,5 +134,11 @@ endif(CYME_TESTS)
 set(GIT_DOCUMENTATION_REPO BBPDocumentation)
 set(COMMON_ORGANIZATION_NAME BBP)
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
+
+set(DOXYGEN_CONFIG_FILE "${CMAKE_BINARY_DIR}/doc/Doxyfile")
+set(DOXYGEN_BIB_FILES "cyme.bib")
+file(COPY "${CMAKE_SOURCE_DIR}/doc/${DOXYGEN_BIB_FILES}" DESTINATION "${CMAKE_BINARY_DIR}/doc/")
+configure_file("${CMAKE_SOURCE_DIR}/CMake/Doxyfile.in" "${DOXYGEN_CONFIG_FILE}" @ONLY)
 include(DoxygenRule)
+
 include(CPackConfig)

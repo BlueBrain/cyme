@@ -73,8 +73,8 @@ namespace Na{
     };
 }
 
-typedef  cyme::vector<Na::channel<float>, memory::AoSoA> Vec_f_AoSoA_Na;
-typedef  cyme::vector<Na::channel<double>, memory::AoSoA> Vec_d_AoSoA_Na;
+typedef  cyme::vector<Na::channel<float>, cyme::AoSoA> Vec_f_AoSoA_Na;
+typedef  cyme::vector<Na::channel<double>, cyme::AoSoA> Vec_d_AoSoA_Na;
 
 typedef boost::mpl::vector<Vec_f_AoSoA_Na,Vec_d_AoSoA_Na> vector_list;
 
@@ -123,10 +123,10 @@ struct test_case{
         typedef typename storage_type::value_type value_type;
         const std::size_t N(0xffff);
         T Vec_AoSoA_Na(N,0); // vector AoSoA from the boost mpl
-        cyme::vector<Na::channel<value_type>, memory::AoS> Vec_AoS_Na(N,0); // AoS - serial version
+        cyme::vector<Na::channel<value_type>, cyme::AoS> Vec_AoS_Na(N,0); // AoS - serial version
         f_init(Vec_AoSoA_Na,Vec_AoS_Na);
         std::for_each(Vec_AoSoA_Na.begin(), Vec_AoSoA_Na.end(), Na::f_compute<storage_type>() ); //AoSoS compute
-        std::for_each(Vec_AoS_Na.begin(), Vec_AoS_Na.end(), Na::f_compute<typename cyme::vector<Na::channel<value_type>, memory::AoS>::storage_type>() ); //AoS compute
+        std::for_each(Vec_AoS_Na.begin(), Vec_AoS_Na.end(), Na::f_compute<typename cyme::vector<Na::channel<value_type>, cyme::AoS>::storage_type>() ); //AoS compute
         f_check(Vec_AoSoA_Na,Vec_AoS_Na); //check with an epsilon
     }
 };

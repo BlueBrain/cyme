@@ -1,8 +1,9 @@
 /*
- * Cyme - simd_math.hpp, Copyright (c), 2014,
+ * Cyme - simd_math.ipp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,6 +17,11 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
+ */
+
+/**
+ * @file cyme/core/simd_vector/simd_math.ipp
+ * Defines "include" order for the mathematical operators and functions
  */
 
 #ifndef CYME_SIMD_MATH_IPP

@@ -43,7 +43,7 @@ Release 1.2.0
 - Fix bug in log
 - Better DAG construction for operations with scalar operations
 - Better catch of the FMA
-- Simplification of the template expression when I mix float/double, implement unity concept 
+- Simplification of the template expression when I mix float/double, implement unity concept
 - Prepare for open source release
 - Ameliorate CMake during the installation, configuration file is created with the needed define
 
@@ -51,7 +51,7 @@ Release 1.1.0
 
 - Add new elementary function (pow/log)
 - Ameliorate the tree creation by distinction Read/Write operators - const/ non const
-- better DAG construction for -- 
+- better DAG construction for --
 
 Release 1.0.0
 

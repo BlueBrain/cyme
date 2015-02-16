@@ -88,57 +88,57 @@ namespace cyme {
             }
     }
 
-    template<class T, std::size_t m, memory::order o>
+    template<class T, std::size_t m, cyme::order o>
     struct data{
         typedef T value_type;
         static const std::size_t n = m;
         static const std::size_t size = 16/sizeof(T); // for SIMD SSE
-        static const memory::order order = o;
+        static const cyme::order order = o;
     };
 
-    template<class T, std::size_t M, std::size_t N, memory::order O>
+    template<class T, std::size_t M, std::size_t N, cyme::order O>
     struct data_block{
         typedef T value_type;
         static const std::size_t m = M;
         static const std::size_t n = N;
-        static const memory::order order = O;
+        static const cyme::order order = O;
     };
 
     typedef boost::mpl::list<float,double> full_test_types;
 
     typedef boost::mpl::list<
-                                data<float,14,memory::AoS>,
-                                data<float,14,memory::AoSoA>,
-                                data<double,14,memory::AoS>,
-                                data<double,14,memory::AoSoA>
+                                data<float,14,cyme::AoS>,
+                                data<float,14,cyme::AoSoA>,
+                                data<double,14,cyme::AoS>,
+                                data<double,14,cyme::AoSoA>
                             > floating_point_test_types;
     //max 20 elements, because MPL must emulate variadic template
     typedef boost::mpl::list<
-                                data_block<double,3,3,memory::AoS>,
-                                data_block<float,4,3,memory::AoSoA>,
-                                data_block<double,5,3,memory::AoSoA>,
+                                data_block<double,3,3,cyme::AoS>,
+                                data_block<float,4,3,cyme::AoSoA>,
+                                data_block<double,5,3,cyme::AoSoA>,
 
-                                data_block<double,3,4,memory::AoS>,
-                                data_block<float,4,4,memory::AoSoA>,
-                                data_block<double,5,4,memory::AoSoA>,
+                                data_block<double,3,4,cyme::AoS>,
+                                data_block<float,4,4,cyme::AoSoA>,
+                                data_block<double,5,4,cyme::AoSoA>,
 
-                                data_block<double,3,5,memory::AoS>,
-                                data_block<float,4,5,memory::AoSoA>,
-                                data_block<double,5,5,memory::AoSoA>,
+                                data_block<double,3,5,cyme::AoS>,
+                                data_block<float,4,5,cyme::AoSoA>,
+                                data_block<double,5,5,cyme::AoSoA>,
 
-                                data_block<double,3,6,memory::AoS>,
-                                data_block<float,4,6,memory::AoSoA>,
-                                data_block<double,5,6,memory::AoSoA>
+                                data_block<double,3,6,cyme::AoS>,
+                                data_block<float,4,6,cyme::AoSoA>,
+                                data_block<double,5,6,cyme::AoSoA>
 
                             > floating_point_torture_list;
 
     typedef boost::mpl::list<
-                                data_block<float,6,15,memory::AoS>,
-                                data_block<float,7,13,memory::AoSoA>,
-                                data_block<float,8,11,memory::AoS>,
-                                data_block<double,6,15,memory::AoS>,
-                                data_block<double,7,13,memory::AoSoA>,
-                                data_block<double,8,11,memory::AoS>
+                                data_block<float,6,15,cyme::AoS>,
+                                data_block<float,7,13,cyme::AoSoA>,
+                                data_block<float,8,11,cyme::AoS>,
+                                data_block<double,6,15,cyme::AoS>,
+                                data_block<double,7,13,cyme::AoSoA>,
+                                data_block<double,8,11,cyme::AoS>
                             > floating_point_block_types;
 
 

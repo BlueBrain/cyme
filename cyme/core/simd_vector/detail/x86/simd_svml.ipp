@@ -3,6 +3,7 @@
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,6 +17,11 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
+ */
+
+/**
+ * @file cyme/core/simd_vector/detail/x86/simd_svml.ipp
+ * Declaration of the Intel SVML function "C" siganture
  */
 
 #ifndef CYME_SIMD_SVML_IPP

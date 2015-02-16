@@ -25,8 +25,8 @@ using namespace cyme::test;
 #define TYPE typename T::value_type
 #define N T::n
 #define M T::m
-#define ORDER T::order 
-#define MAX 1000 
+#define ORDER T::order
+#define MAX 1000
 
     template<class S, size_t m>
     struct synapse{
@@ -39,16 +39,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_default_constructor, T, floating_point_
      TYPE test[M*N];
      memset((void*)test, 0, M*N*sizeof(TYPE));
      size_t b = memcmp((void*)test, (void*)&block_a(0,0), M*N*sizeof(TYPE));
-     BOOST_CHECK_EQUAL( b,0); 
+     BOOST_CHECK_EQUAL( b,0);
 }
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_value_constructor, T, floating_point_block_types) {
-     TYPE random = GetRandom<TYPE>(); 
+     TYPE random = GetRandom<TYPE>();
      cyme::array<synapse<TYPE,M>,N,ORDER> block_a(random);
      TYPE test[M*N];
      for(std::size_t i=0; i < M*N; ++i)
          test[i]=random;
      size_t b = memcmp((void*)test, (void*)&block_a(0,0), M*N*sizeof(TYPE));
-     BOOST_CHECK_EQUAL(b,0); 
+     BOOST_CHECK_EQUAL(b,0);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_init_operator_bracket, T, floating_point_block_types) {
@@ -75,18 +75,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_copy_constructor, T, floating_point_block_ty
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal, T, floating_point_block_types) {
-    cyme::array<synapse<TYPE,M>,N,memory::AoS> block_a;
-    cyme::array<synapse<TYPE,M>,N,memory::AoSoA> block_b;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoS> block_a;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoSoA> block_b;
 
     init(block_a, block_b);
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoS>::iterator it_AoS_w = block_a.begin();
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoS>::const_iterator  it_AoS_r = block_a.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoS>::iterator it_AoS_w = block_a.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoS>::const_iterator  it_AoS_r = block_a.begin();
     for(; it_AoS_r != block_a.end(); ++it_AoS_r,++it_AoS_w)
         (*it_AoS_w)[0] = (*it_AoS_r)[1];
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::iterator it_AoSoA_w = block_b.begin();
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::const_iterator  it_AoSoA_r = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::const_iterator  it_AoSoA_r = block_b.begin();
     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_r, ++it_AoSoA_w)
         (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1];
 
@@ -94,17 +94,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal, T, floating_point_block_type
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_negate, T, floating_point_block_types) {
-    cyme::array<synapse<TYPE,M>,N,memory::AoS> block_a;
-    cyme::array<synapse<TYPE,M>,N,memory::AoSoA> block_b;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoS> block_a;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoSoA> block_b;
 
     init(block_a, block_b);
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
         (*it_AoS)[0] = -(*it_AoS)[1];
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::iterator it_AoSoA_w = block_b.begin();
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::const_iterator  it_AoSoA_r = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::const_iterator  it_AoSoA_r = block_b.begin();
 
     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_r,++it_AoSoA_w)
         (*it_AoSoA_w)[0] = -(*it_AoSoA_r)[1];
@@ -145,12 +145,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_negate, T, floating_point_block_typ
     check(block_a, block_b);
 }
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal_assign, T, floating_point_block_types) {
-    cyme::array<synapse<TYPE,4>,N,memory::AoS> block_a;
-    cyme::array<synapse<TYPE,4>,N,memory::AoSoA> block_b;
+    cyme::array<synapse<TYPE,4>,N,cyme::AoS> block_a;
+    cyme::array<synapse<TYPE,4>,N,cyme::AoSoA> block_b;
 
     init(block_a, block_b);
 
-    typename cyme::array<synapse<TYPE,4>,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    typename cyme::array<synapse<TYPE,4>,N,cyme::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS){
         (*it_AoS)[0] = (*it_AoS)[0];
         (*it_AoS)[0] = (*it_AoS)[1];
@@ -174,8 +174,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal_assign, T, floating_point_blo
     }
 
 
-    typename cyme::array<synapse<TYPE,4>,N,memory::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
-    typename cyme::array<synapse<TYPE,4>,N,memory::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::array<synapse<TYPE,4>,N,cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    typename cyme::array<synapse<TYPE,4>,N,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
 
     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_r,++it_AoSoA_w){
         (*it_AoSoA_w)[0] = (*it_AoSoA_r)[0];
@@ -203,17 +203,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal_assign, T, floating_point_blo
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_plusequal, T, floating_point_block_types) {
-    cyme::array<synapse<TYPE,M>,N,memory::AoS> block_a;
-    cyme::array<synapse<TYPE,M>,N,memory::AoSoA> block_b;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoS> block_a;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoSoA> block_b;
 
     init(block_a, block_b);
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
         (*it_AoS)[0] += (*it_AoS)[1];
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
 
     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_r,++it_AoSoA_w)
         (*it_AoSoA_w)[0] += (*it_AoSoA_r)[1];
@@ -230,21 +230,20 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_plusequal, T, floating_point_block_
         (*it_AoSoA_w)[0] += (*it_AoSoA_r)[1];
 
     check(block_a, block_b);
-    
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_minusequal, T, floating_point_block_types) {
-    cyme::array<synapse<TYPE,M>,N,memory::AoS> block_a;
-    cyme::array<synapse<TYPE,M>,N,memory::AoSoA> block_b;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoS> block_a;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoSoA> block_b;
 
     init(block_a, block_b);
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
         (*it_AoS)[0] -= (*it_AoS)[1];
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
 
     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_r,++it_AoSoA_w)
         (*it_AoSoA_w)[0] -= (*it_AoSoA_r)[1];
@@ -264,19 +263,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_minusequal, T, floating_point_block
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_minus_basic_type, T, floating_point_block_types) {
-    cyme::array<synapse<TYPE,M>,N,memory::AoS> block_a;
-    cyme::array<synapse<TYPE,M>,N,memory::AoSoA> block_b;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoS> block_a;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoSoA> block_b;
 
     init(block_a, block_b);
 
     TYPE one(1);
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
         (*it_AoS)[0] = (*it_AoS)[1] - one;
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_r,++it_AoSoA_w)
         (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1] - one;
 
@@ -317,17 +316,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_minus_basic_type, T, floating_point
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_multiplyequal, T, floating_point_block_types) {
-    cyme::array<synapse<TYPE,M>,N,memory::AoS> block_a;
-    cyme::array<synapse<TYPE,M>,N,memory::AoSoA> block_b;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoS> block_a;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoSoA> block_b;
 
     init(block_a, block_b);
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
         (*it_AoS)[0] *= (*it_AoS)[1];
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_r,++it_AoSoA_w)
         (*it_AoSoA_w)[0] *= (*it_AoSoA_r)[1];
 
@@ -346,17 +345,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_multiplyequal, T, floating_point_bl
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_divideequal, T, floating_point_block_types) {
-    cyme::array<synapse<TYPE,M>,N,memory::AoS> block_a;
-    cyme::array<synapse<TYPE,M>,N,memory::AoSoA> block_b;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoS> block_a;
+    cyme::array<synapse<TYPE,M>,N,cyme::AoSoA> block_b;
 
     init(block_a, block_b);
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoS>::iterator it_AoS = block_a.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoS>::iterator it_AoS = block_a.begin();
     for(; it_AoS != block_a.end(); ++it_AoS)
         (*it_AoS)[0] /= (*it_AoS)[1];
 
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
-    typename cyme::array<synapse<TYPE,M>,N,memory::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    typename cyme::array<synapse<TYPE,M>,N,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_r,++it_AoSoA_w)
         (*it_AoSoA_w)[0] /= (*it_AoSoA_r)[1];
 

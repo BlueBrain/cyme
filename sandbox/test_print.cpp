@@ -46,16 +46,16 @@
      static const size_t value_size = 18;
  };
 
- typedef cyme::array<synapse<float>,1024, memory::AoS> block_f_aos;
- typedef cyme::array<synapse<float>,1024, memory::AoSoA> block_f_aosoa;
- typedef cyme::array<synapse<double>,1024, memory::AoS> block_d_aos;
- typedef cyme::array<synapse<double>,1024, memory::AoSoA> block_d_aosoa;
+ typedef cyme::array<synapse<float>,1024, cyme::AoS> block_f_aos;
+ typedef cyme::array<synapse<float>,1024, cyme::AoSoA> block_f_aosoa;
+ typedef cyme::array<synapse<double>,1024, cyme::AoS> block_d_aos;
+ typedef cyme::array<synapse<double>,1024, cyme::AoSoA> block_d_aosoa;
 
 
- typedef cyme::vector<synapse<float>, memory::AoS> vector_f_aos;
- typedef cyme::vector<synapse<float>, memory::AoSoA> vector_f_aosoa;
- typedef cyme::vector<synapse<double>, memory::AoS> vector_d_aos;
- typedef cyme::vector<synapse<double>, memory::AoSoA> vector_d_aosoa;
+ typedef cyme::vector<synapse<float>, cyme::AoS> vector_f_aos;
+ typedef cyme::vector<synapse<float>, cyme::AoSoA> vector_f_aosoa;
+ typedef cyme::vector<synapse<double>, cyme::AoS> vector_d_aos;
+ typedef cyme::vector<synapse<double>, cyme::AoSoA> vector_d_aosoa;
 
  using namespace boost::accumulators;
 
@@ -108,7 +108,7 @@
      typedef double value_type;
 
 
-     template<class T, memory::order O>
+     template<class T, cyme::order O>
      static inline void cnrn_functions(T& W){
          cnrn_states(W);
      }
@@ -134,7 +134,7 @@
         W[4] += (1.-exp(dt*(-1.0/R[11])))*(-(R[10]/R[11])/(-1.0/R[11])-R[4]);
      }
 /*
-     template<class iterator, memory::order O>
+     template<class iterator, cyme::order O>
      static inline  cyme::serial<value_type,O> cnrn_current(iterator it, value_type t = value_type()){
          (*it)[16] = t;
          (*it)[2] = (*it)[0] * (*it)[3] * (*it)[3] * (*it)[3] * (*it)[4];
@@ -151,7 +151,7 @@
          (*it)[4] = (*it)[10];
      }
 
-     template<class iterator, memory::order O>
+     template<class iterator, cyme::order O>
      static inline void cnrn_cur(iterator it){
          double _v=-33.33; // _v voltage fron a node random number
          cyme::serial<value_type,O> tmp  = cnrn_current<iterator, O>(it, _v + 0.001);
@@ -170,7 +170,7 @@
  };
 
 
- template<class mechanism, class container = cyme::vector<mechanism, memory::AoSoA> > // should use cyme container there
+ template<class mechanism, class container = cyme::vector<mechanism, cyme::AoSoA> > // should use cyme container there
  class pack{
  public:
      typedef typename mechanism::value_type value_type;
@@ -187,15 +187,15 @@
      }
 
      value_type& operator()(size_t i, size_t j){
-         return this->cont(i,j);
+         return cont(i,j);
      }
 
      std::size_t size(){
-         return this->cont.size();
+         return cont.size();
      }
 
      std::size_t size_block(){
-         return this->cont.size_block();
+         return cont.size_block();
      }
 
  private:
@@ -226,13 +226,13 @@
  int main(){
      stack s;
 
-     pack<Na,cyme::vector<Na, memory::AoSoA> > a(256,0); // pack 16384 synapse, AoSoA
-     pack<Na,cyme::vector<Na, memory::AoS> > b(256,0); // pack 16384 synapse, AoSoA
+     pack<Na,cyme::vector<Na, cyme::AoSoA> > a(256,0); // pack 16384 synapse, AoSoA
+     pack<Na,cyme::vector<Na, cyme::AoS> > b(256,0); // pack 16384 synapse, AoSoA
 
      init(a,b);
 
-     s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoSoA> >::execution,&a)); // fill up the stack
-     s.push_back(boost::bind(&pack<Na,cyme::vector<Na, memory::AoS> >::execution,&b)); // fill up the stack
+     s.push_back(boost::bind(&pack<Na,cyme::vector<Na, cyme::AoSoA> >::execution,&a)); // fill up the stack
+     s.push_back(boost::bind(&pack<Na,cyme::vector<Na, cyme::AoS> >::execution,&b)); // fill up the stack
 
      boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
      s.flush(); // execute the stack

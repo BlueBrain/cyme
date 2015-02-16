@@ -3,6 +3,7 @@
 * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
 * timothee.ewart@epfl.ch,
 * All rights reserved.
+* This file is part of Cyme <https://github.com/BlueBrain/cyme>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -18,215 +19,222 @@
 * License along with this library.
 */
 
+/**
+ * @file cyme/core/simd_vector/detail/x86/trait_x86.ipp
+ * Specialisation of the register_trait, simd_trait, Newton-Raphson
+ * classes for the x86 architecture
+ */
+
 #ifndef CYME_TRAIT_X86_IPP
 #define CYME_TRAIT_X86_IPP
 
 #ifdef __AVX__
-#include <immintrin.h> //type SIMD, memory::memory::avx
+#include <immintrin.h> //type SIMD, avx
 #else
-#include <smmintrin.h> //type SIMD, memory::sse4.1
+#include <smmintrin.h> //type SIMD, sse4.1
 #endif
 
-namespace numeric{
+namespace cyme{
 
-    template<class T, memory::simd O>
+    /** trait class that defined the hardware register  */
+    template<class T, cyme::simd O>
     struct register_trait;
 
+    /** Specialisation of the trait class for int, cyme::sse  */
     template<>
-    struct register_trait<int, memory::sse>{
+    struct register_trait<int, cyme::sse>{
         typedef __m128i trait_register_type;
     };
 
+    /** Specialisation of the trait class for float, cyme::sse  */
     template<>
-    struct register_trait<float, memory::sse>{
+    struct register_trait<float, cyme::sse>{
         typedef __m128 trait_register_type;
     };
 
+    /** Specialisation of the trait class for double, cyme::sse  */
     template<>
-    struct register_trait<double, memory::sse>{
+    struct register_trait<double, cyme::sse>{
         typedef __m128d trait_register_type;
     };
 
 #ifdef __AVX__
+    /** Specialisation of the trait class for int, cyme::avx  */
     template<>
-    struct register_trait<int, memory::avx>{
+    struct register_trait<int, cyme::avx>{
         typedef __m256i trait_register_type;
     };
 
+    /** Specialisation of the trait class for float, cyme::avx  */
     template<>
-    struct register_trait<float, memory::avx>{
+    struct register_trait<float, cyme::avx>{
         typedef __m256 trait_register_type;
     };
 
+    /** Specialisation of the trait class for double, cyme::avx  */
     template<>
-    struct register_trait<double, memory::avx>{
+    struct register_trait<double, cyme::avx>{
         typedef __m256d trait_register_type;
     };
 #endif
 
-    /**
-        \brief definition of the type for the trait class, with unroll 4,2 and 1 for double/sse
-    */
+    /** Specialisation of the trait class for the composite vector double,cyme::sse,4 regs*/
     template <>
-    struct simd_trait<double, memory::sse, 4> : trait<double>{
-        typedef simd_unroll<double, memory::sse, 4> register_type;
+    struct simd_trait<double, cyme::sse, 4> : trait<double>{
+        typedef simd_unroll<double, cyme::sse, 4> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector double,cyme::sse,2 regs */
     template <>
-    struct simd_trait<double, memory::sse, 2> : trait<double>{
-        typedef simd_unroll<double,  memory::sse, 2> register_type;
+    struct simd_trait<double, cyme::sse, 2> : trait<double>{
+        typedef simd_unroll<double,  cyme::sse, 2> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector double,cyme::sse,1 reg */
     template <>
-    struct simd_trait<double, memory::sse, 1> : trait<double>{
+    struct simd_trait<double, cyme::sse, 1> : trait<double>{
         typedef __m128d register_type;
     };
 
-    /**
-        \brief definition of the type for the trait class, with unroll 4,2 and 1 for float/sse
-    */
+    /** Specialisation of the trait class for the composite vector float,cyme::sse,4 regs*/
     template <>
-    struct simd_trait<float, memory::sse, 4> : trait<float>{
-        typedef simd_unroll<float, memory::sse, 4> register_type;
+    struct simd_trait<float, cyme::sse, 4> : trait<float>{
+        typedef simd_unroll<float, cyme::sse, 4> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector float,cyme::sse,2 regs*/
     template <>
-    struct simd_trait<float, memory::sse, 2> : trait<float>{
-        typedef simd_unroll<float,  memory::sse, 2> register_type;
+    struct simd_trait<float, cyme::sse, 2> : trait<float>{
+        typedef simd_unroll<float,  cyme::sse, 2> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector float,cyme::sse,1 reg*/
     template <>
-    struct simd_trait<float, memory::sse, 1> : trait<float>{
+    struct simd_trait<float, cyme::sse, 1> : trait<float>{
         typedef __m128 register_type;
     };
 
-    /**
-    \brief definition of the type for the trait class, with unroll 4,2 and 1 for int/sse
-    */
+    /** Specialisation of the trait class for the composite vector int,cyme::sse,4 regs*/
     template <>
-    struct simd_trait<int, memory::sse, 4> : trait<int>{
-        typedef simd_unroll<int, memory::sse, 4> register_type;
+    struct simd_trait<int, cyme::sse, 4> : trait<int>{
+        typedef simd_unroll<int, cyme::sse, 4> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector int,cyme::sse,2 regs*/
     template <>
-    struct simd_trait<int, memory::sse, 2> : trait<int>{
-        typedef simd_unroll<int,  memory::sse, 2> register_type;
+    struct simd_trait<int, cyme::sse, 2> : trait<int>{
+        typedef simd_unroll<int,  cyme::sse, 2> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector int,cyme::sse,1 reg*/
     template <>
-    struct simd_trait<int, memory::sse, 1> : trait<int>{
+    struct simd_trait<int, cyme::sse, 1> : trait<int>{
         typedef __m128i register_type;
     };
 
-    /**
-     \brief Specialization trait for float  Newton-Raphson division
-     */
+    /** Specialization trait for float  Newton-Raphson division: number of iteration */
     template<>
-    struct div_recursion<float, memory::sse>{
+    struct div_recursion<float, cyme::sse>{
         static const std::size_t value = 1; // cardinal([0-1])=2
     };
 
+    /** Specialization trait for float  Newton-Raphson division: number of iteration */
     template<>
-    struct div_recursion<float, memory::avx>{
+    struct div_recursion<float, cyme::avx>{
         static const std::size_t value = 1; // cardinal([0-1])=2
     };
 
-    /**
-     \brief Specialization trait for double  Newton-Raphson division
-     */
+    /** Specialization trait for double Newton-Raphson division: number of iteration */
     template<>
-    struct div_recursion<double, memory::sse>{
+    struct div_recursion<double, cyme::sse>{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
 
+    /** Specialization trait for double Newton-Raphson division: number of iteration */
     template<>
-    struct div_recursion<double, memory::avx>{
-        static const std::size_t value = 2; // card([0-2])=3, should be 3
-    };
-    
-    
-    /**
-     \brief Specialization trait for float  Newton-Raphson square root 
-     */
-    template<>
-    struct sqrt_recursion<float, memory::sse>{
-        static const std::size_t value = 1; // cardinal([0-1])=2
-    };
-    
-    template<>
-    struct sqrt_recursion<float, memory::avx>{
-        static const std::size_t value = 1; // cardinal([0-1])=2
-    };
-    
-    /**
-     \brief Specialization trait for double  Newton-Raphson square root 
-     */
-    template<>
-    struct sqrt_recursion<double, memory::sse>{
+    struct div_recursion<double, cyme::avx>{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
 
+    /** Specialization trait for float  Newton-Raphson sqrt: number of iteration */
     template<>
-    struct sqrt_recursion<double, memory::avx>{
+    struct sqrt_recursion<float, cyme::sse>{
+        static const std::size_t value = 1; // cardinal([0-1])=2
+    };
+
+    /** Specialization trait for float Newton-Raphson sqrt: number of iteration */
+    template<>
+    struct sqrt_recursion<float, cyme::avx>{
+        static const std::size_t value = 1; // cardinal([0-1])=2
+    };
+
+    /** Specialization trait for double Newton-Raphson sqrt: number of iteration */
+    template<>
+    struct sqrt_recursion<double, cyme::sse>{
+        static const std::size_t value = 2; // card([0-2])=3, should be 3
+    };
+
+    /** Specialization trait for double Newton-Raphson sqrt: number of iteration */
+    template<>
+    struct sqrt_recursion<double, cyme::avx>{
         static const std::size_t value = 2; // card([0-2])=3, should be 3
     };
 
 #ifdef __AVX__
-    /**
-        \brief definition of the type for the trait class, with unroll 4,2 and 1 for double/sse
-    */
+    /** Specialisation of the trait class for the composite vector double,cyme::avx,4 regs*/
     template <>
-    struct simd_trait<double, memory::avx, 4> : trait<double>{
-        typedef simd_unroll<double, memory::avx, 4> register_type;
+    struct simd_trait<double, cyme::avx, 4> : trait<double>{
+        typedef simd_unroll<double, cyme::avx, 4> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector double,cyme::avx,2 regs*/
     template <>
-    struct simd_trait<double, memory::avx, 2> : trait<double>{
-        typedef simd_unroll<double,  memory::avx, 2> register_type;
+    struct simd_trait<double, cyme::avx, 2> : trait<double>{
+        typedef simd_unroll<double,  cyme::avx, 2> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector double,cyme::avx,1 reg*/
     template <>
-    struct simd_trait<double, memory::avx, 1> : trait<double>{
+    struct simd_trait<double, cyme::avx, 1> : trait<double>{
         typedef __m256d register_type;
     };
 
-    /**
-        \brief definition of the type for the trait class, with unroll 4,2 and 1 for float/avx
-    */
+    /** Specialisation of the trait class for the composite vector float,cyme::avx,4 regs*/
     template <>
-    struct simd_trait<float, memory::avx, 4> : trait<float>{
-        typedef simd_unroll<float, memory::avx, 4> register_type;
+    struct simd_trait<float, cyme::avx, 4> : trait<float>{
+        typedef simd_unroll<float, cyme::avx, 4> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector float,cyme::avx,2 regs*/
     template <>
-    struct simd_trait<float, memory::avx, 2> : trait<float>{
-        typedef simd_unroll<float,  memory::avx, 2> register_type;
+    struct simd_trait<float, cyme::avx, 2> : trait<float>{
+        typedef simd_unroll<float,  cyme::avx, 2> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector float,cyme::avx,1 reg*/
     template <>
-    struct simd_trait<float, memory::avx, 1> : trait<float>{
+    struct simd_trait<float, cyme::avx, 1> : trait<float>{
         typedef __m256 register_type;
     };
 
-    /**
-        \brief definition of the type for the trait class, with unroll 4,2 and 1 for int/avx
-    */
-
+    /** Specialisation of the trait class for the composite vector int,cyme::avx,4 regs*/
     template <>
-    struct simd_trait<int, memory::avx, 4> : trait<int>{
-        typedef simd_unroll<int, memory::avx, 4> register_type;
+    struct simd_trait<int, cyme::avx, 4> : trait<int>{
+        typedef simd_unroll<int, cyme::avx, 4> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector int,cyme::avx,2 regs*/
     template <>
-    struct simd_trait<int, memory::avx, 2> : trait<int>{
-        typedef simd_unroll<int,  memory::avx, 2> register_type;
+    struct simd_trait<int, cyme::avx, 2> : trait<int>{
+        typedef simd_unroll<int,  cyme::avx, 2> register_type;
     };
 
+    /** Specialisation of the trait class for the composite vector int,cyme::avx,1 reg*/
     template <>
-    struct simd_trait<int, memory::avx, 1> : trait<int>{
+    struct simd_trait<int, cyme::avx, 1> : trait<int>{
         typedef __m256i register_type;
     };
 #endif
-    /** \endcond I do not need this part in the doc */
+    /** \endcond */
 }
 #endif

@@ -3,6 +3,7 @@
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,32 +19,39 @@
  * License along with this library.
  */
 
+/**
+* @file cyme/memory/allocator.hpp
+* Defines allocator class for memory alignment
+*/
+
 #ifndef CYME_ALLOCATOR_HPP
 #define CYME_ALLOCATOR_HPP
 
 #include <assert.h>
 #include <stdlib.h> // POSIX, size_t is inside
-#include "cyme/memory/detail/simd.hpp" // enum only
 #include <limits>
 
-namespace memory{
+#include "cyme/memory/detail/simd.hpp" // enum only
 
-   /**
-        \brief This class encapsulated the function allocate and deallocate for the memory allocation. I used POSX
-        to align on special memory bound.
-    */
-    template<class T, memory::simd O>
-    class Align_POSIX{
-    public:
-        typedef std::size_t        size_type;
-    protected:
-        void* allocate_policy(size_type size) {
-            assert((memory::trait_register<T,memory::__GETSIMD__()>::size) >=  sizeof(void*));
-            if (size == 0)
-                return NULL;
+namespace cyme{
+
+/**  allocator to align the memory on a specific boundary 16, 32 or 64 byte
+*
+*      This class encapsulates the function allocate_policy and
+*      deallocate_policy for the cyme allocation using a policy pattern. The
+*      allocation is performed using the POSIX: posix_memalign
+ */
+    template<class T, cyme::simd O> class Align_POSIX{ public: typedef
+std::size_t        size_type; protected:
+	/**   The allocate function used in the policy
+        *   \param size std::size_t the size of the buffer
+        */
+	void* allocate_policy(size_type size) {
+assert((cyme::trait_register<T,cyme::__GETSIMD__()>::size) >=  sizeof(void*));
+if (size == 0) return NULL;
 
             void* ptr = NULL;
-            int rc = posix_memalign(&ptr, memory::trait_register<T,memory::__GETSIMD__()>::a, size);
+            int rc = posix_memalign(&ptr, cyme::trait_register<T,cyme::__GETSIMD__()>::a, size);
 
             if (rc != 0)
                 return NULL;
@@ -51,32 +59,30 @@ namespace memory{
             return ptr;
         }
 
+        /** The deallocate function used in the policy */
         void deallocate_policy(void* ptr){
             free(ptr);
         }
     };
 
-    /**
-        \brief this class is an allocator for STL container especially std::vector, I guaranty the allocated buffer is bound
-        on 8-16 or 32 byte memory. It is a copy past from standard allocator, the only difference is the functions allocate
-        and deallocate where I call my own function with the help of the policy pattern
+    /**  This class is an allocator for STL container: std::vectorr.
+    *
+    *    I guarantee the allocated buffer is bound on 8-16 or 32 byte cyme. It
+    *    is a copy paste from standard allocator, the only difference is the
+    *    functions allocate and deallocate where I call my own function with
+    *    the help of the policy pattern
     */
-    template<class T, class Policy = Align_POSIX<T,__GETSIMD__()> >
-    class Allocator : private Policy {
-        using Policy::allocate_policy;
-        using Policy::deallocate_policy;
-    public:
-        // STL compatibility
-        typedef T                  value_type;
-        typedef value_type*        pointer;
-        typedef const value_type*  const_pointer;
-        typedef value_type&        reference;
-        typedef const value_type&  const_reference;
-        typedef std::size_t        size_type;
-        typedef std::ptrdiff_t     difference_type;
+    template<class T, class Policy = Align_POSIX<T,__GETSIMD__()> > class
+Allocator : private Policy { using Policy::allocate_policy; using
+Policy::deallocate_policy; public: typedef T                  value_type;
+typedef value_type*        pointer; typedef const value_type*  const_pointer;
+typedef value_type&        reference; typedef const value_type&
+const_reference; typedef std::size_t        size_type; typedef std::ptrdiff_t
+difference_type;
 
     public:
-        // convert allocator<T, Policy> to allocator <U, Policy>
+
+        /** convert allocator<T, Policy> to allocator <U, Policy> */
         template<class U>
         struct rebind{
             typedef Allocator<U, Policy> other;
@@ -93,7 +99,7 @@ namespace memory{
         inline pointer adress(reference r){return &r; }
         inline const_pointer adress(const_reference r){return &r;}
 
-        //memory allocation
+        //cyme allocation
         inline pointer allocate(size_type cnt, typename std::allocator<void>::const_pointer = 0){
             return reinterpret_cast<pointer>(allocate_policy(cnt*sizeof(T))); // I call my allocator using my pattern
         }

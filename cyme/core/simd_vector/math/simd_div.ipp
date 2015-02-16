@@ -3,6 +3,7 @@
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,38 +19,39 @@
  * License along with this library.
  */
 
+/**
+ * @file cyme/core/simd_vector/math/simd_div.ipp
+ * Implements operator/ for vec_simd class
+ */
+
 #ifndef CYME_SIMD_DIV_IPP
 #define CYME_SIMD_DIV_IPP
 
-namespace numeric{
-    /**
-     \brief reccursive implementation of the Newton-Raphson algo
-     */
-    template<class T, memory::simd O, int N, std::size_t n>
+namespace cyme{
+
+    /** Reccursive implementation of the Newton-Raphson algo for the division */
+    template<class T, cyme::simd O, int N, std::size_t n>
     struct helper_div{
         static forceinline vec_simd<T,O,N> div(vec_simd<T,O,N> const& rhs){
 #ifdef __FMA__
-            return helper_div<T,O,N,n-1>::div(rhs)*negatemuladd(rhs,helper_div<T,O,N,n-1>::div(rhs),vec_simd<T,O,N>(2.0)); // FMA negate operations are differents between INTEL-IBM
+            /** FMA negate operations are differents between INTEL-IBM */
+            return helper_div<T,O,N,n-1>::div(rhs)*negatemuladd(rhs,helper_div<T,O,N,n-1>::div(rhs),vec_simd<T,O,N>(2.0));
 #else
             return helper_div<T,O,N,n-1>::div(rhs)*(vec_simd<T,O,N>(2.0)-rhs*helper_div<T,O,N,n-1>::div(rhs));
 #endif
         }
     };
 
-    /**
-     \brief reccursive init with 1/r approximation
-     */
-    template<class T, memory::simd O, int N>
+    /** Final specialisation of cyme::helper_div and computation of an approximation of 1/r */
+    template<class T, cyme::simd O, int N>
     struct helper_div<T,O,N,0>{
         static forceinline vec_simd<T,O,N> div(vec_simd<T,O,N> const& rhs){
             return rec<T,O,N>(rhs);
         }
     };
 
-    /**
-     \brief function object calling Newton-Raphson algo <3, ^_^'
-     */
-    template<class T,memory::simd O, int N>
+    /** Function object calling Newton-Raphson algo <3, ^_^' */
+    template<class T,cyme::simd O, int N>
     struct NewtonRaphson_div{
         static forceinline vec_simd<T,O,N> div (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){ // lhs/rhs
             vec_simd<T,O,N> nrv = lhs*helper_div<T,O,N,div_recursion<T,O>::value>::div(rhs);
@@ -57,10 +59,8 @@ namespace numeric{
         }
     };
 
-    /**
-     \brief function object calling vendor algo
-     */
-    template<class T,memory::simd O, int N>
+    /** Function object calling vendor algo */
+    template<class T,cyme::simd O, int N>
     struct Vendor_div{
         static forceinline vec_simd<T,O,N> div(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){ // lhs/rhs
              vec_simd<T,O,N> nrv(lhs);
@@ -69,20 +69,16 @@ namespace numeric{
         }
     };
 
-    /**
-    \brief selector for the division algorithm (vendor or Newton-Raphson)
-    */
-    template<class T, memory::simd O, int N, class Solver = NewtonRaphson_div<T,O,N> >
+    /** Selector for the division algorithm (vendor or Newton-Raphson) */
+    template<class T, cyme::simd O, int N, class Solver = NewtonRaphson_div<T,O,N> >
     struct Helper_div{
         static forceinline  vec_simd<T,O,N> div (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){ // lhs/rhs
             return Solver::div(lhs,rhs);
         }
     };
 
-    /**
-     \brief free function / operator between two vectors this function uses the return value optimization
-     */
-    template<class T,memory::simd O, int N>
+    /** Implements operator/ for syme::vec_simd */
+    template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> operator/ (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
            return Helper_div<T,O,N>::div(lhs,rhs);
     }

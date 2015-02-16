@@ -2,25 +2,33 @@
 
 \mainpage Cyme notice
 
-The purpose of the cyme framework is to facilitate SIMD programming, without any
-tedious SIMD intrinsics. To achieve performance, cyme is composed of two parts:
-containers (inspired from equivalent in the STL), and a powerful core engine
-than produces SIMD code.
+The purpose of the cyme framework is to facilitate SIMD programming, without
+the use of any tedious SIMD intrinsics. To achieve its highperformance,
+cyme is composed of two parts: containers (inspired from theirs equivalents in the STL),
+and a powerful core engine that produces SIMD code.
 
 The cyme framework supports two kinds of containers: the cyme::vector and
-cyme::array emulating the same behaviour as their STL equivalent. The core
-engine can generate various sets of SIMD code for different devices: X86
-processors (SSE4 and AVX), Power64 (BG/Q, processor A2) and MIC intel
-accelerator. The framework generates a Direct Acyclic Graph (DAG) of the wanted
-expressions containing SIMD operations, in which copy and move instructions are
-reduced to the minimum.
+cyme::array. Each emulates the behaviour of its STL equivalent, but supporting
+two different memory layouts: Array of Structure (AoS) or Array of Structure of
+Array (AoSoA).  The core engine can generate SIMD code for different devices:
+X86 processors (SSE4 and AVX), Power64 (BG/Q, processor A2) and the Intel MIC
+based Phi processors. The framework generates at compile-time a Direct Acyclic
+Graph (DAG) of the expressions containing SIMD operations, in which copy and
+move instructions are reduced to the minimum.
 
+Cyme was presented for the first time at the International Supercomputing Conference 2014
+in Leipzig <a href="http://link.springer.com/chapter/10.1007%2F978-3-319-07518-1_29">Cyme-ISC2014</a>.
 
-cyme [noun]: Pronounced 'saim', from the French cime in the sense ‘top,
- summit’), is a group or cluster of flowers arranged on a stem that is composed
- of a main branch or a complicated arrangement of branches (wikipedia). It is a
- good analogy with Direct Acyclic Graph in computer science.
+<EM> cyme </EM> [noun]: Pronounced /saɪm/, from the French &lsquo;cime&rsquo;, meaning
+top or summit. <a href="http://www.oxforddictionaries.com/definition/english/cyme">
+A flower cluster with a central stem bearing a single terminal flower that develops
+first, the other flowers in the cluster developing as terminal buds of lateral stems.</a>
 
-\image html Inflorescences_Panicle_Kwiatostan_Wiecha.svg Panicle cyme
+The branching structure of a cyme forms an analogy for the Direct Acyclic Graph.
+
+\image html Dichasium_inflorescence.svg "Dichasial cyme"
+\image html gypsophila_elegans_sm.jpg "Gypsophila elegans"
+
+<I>Gypsohila elegans</I> or Annual Baby's-breath is <a href="http://www.luontoportti.com/suomi/en/kukkakasvit/annual-babys-breath">an annual native to central and eastern Europe</a>, with dichasial cyme.
 
 */

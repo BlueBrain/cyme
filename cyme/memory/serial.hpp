@@ -3,6 +3,7 @@
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,50 +19,44 @@
  * License along with this library.
  */
 
+/**
+* @file cyme/memory/serial.hpp
+* Defines serial class for temporary object
+*/
+
 #ifndef CYME_SERIAL_HPP
 #define CYME_SERIAL_HPP
 
 namespace cyme{
-    /**
-       \brief The serial class provides a solution for temporary object into mechanism.
-       it the order is AoS, it will provide a basic float/double, else it encapsulates
-       a SIMD vector. Note for AoSoA version: is serial = ... , it will generates
-       the tree but it will not save the data into memory.
-    */
-    template<class T, memory::order O, int N = memory::unroll_factor::N>
-    class serial{
-    };
+/**     The serial class provides a solution for temporary object.
+*
+*  if the order is AoS, it will provide a basic float/double, else it
+*  encapsulates a SIMD vector. Note for AoSoA version: is serial = ... , it
+*  will generates the tree but it will not save the data into cyme.
+*/
+    template<class T, cyme::order O, int N = cyme::unroll_factor::N> class
+serial{ };
 
-    /**
-     \brief The serial class for AoS layout
-    */
+    /** Specialisation of the cyme::serial for AoS layout */
     template<class T, int N>
-    struct serial<T,memory::AoS,N>{
+    struct serial<T,cyme::AoS,N>{
         typedef T value_type;
 
-        /**
-         \brief Default constructor, nothing special
-         */
+        /** Default constructor, nothing special */
         serial(value_type m=value_type()):a(m){}
 
-        /**
-         \brief assignment operator for basic type
-         */
+        /** Assignment operator for basic type */
         inline serial& operator =(value_type b){
             a = b;
             return *this;
         }
 
-        /**
-         \brief implicit conversion operator
-         */
+        /** Implicit conversion operator */
         inline operator value_type (){
             return a;
         }
 
-        /**
-         \brief bracket operator to fit with AoSoA syntax
-         */
+        /** Bracket operator to fit with AoSoA syntax */
         inline const value_type& operator ()() const{
             return a;
         }
@@ -69,52 +64,40 @@ namespace cyme{
         T a;
     };
 
-    /**
-     \brief The serial class for AoSoA layout
-     */
+    /** Specialisation of the cyme::serial for AoSoA layout */
     template<class T, int N>
-    struct serial<T,memory::AoSoA,N>{
+    struct serial<T,cyme::AoSoA,N>{
         typedef T value_type;
-        typedef numeric::rvec<value_type,memory::__GETSIMD__(),N> base_type;
+        typedef cyme::rvec<value_type,cyme::__GETSIMD__(),N> base_type;
 
-        /**
-         \brief constructor
-         */
+        /** constructor */
         serial(base_type m = base_type()):a(m){}
 
-        /**
-         \brief constructor constant
-         */
+        /** constructor constant */
         explicit serial(typename base_type::value_type m):a(m){}
 
 
-        /**
-         \brief copy constructor create the tree with bracket operator call
-                 not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
+        /** copy constructor create the tree with bracket operator call
+
+           \warning   not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
          */
-        template<class T2, memory::simd O, class Rep>
-        serial(numeric::rvec<T2,O,N,Rep > const& rhs){
+        template<class T2, cyme::simd O, class Rep>
+        serial(cyme::rvec<T2,O,N,Rep > const& rhs){
             a.rep()() = rhs.rep()();
         }
 
-        /**
-        \brief normal situation initialize serial by vector returned by the iterates serial = (*it)[1];
-        */
+        /** normal situation initialize serial by vector returned by the iterates serial = (*it)[1]; */
         inline serial& operator=(base_type b){
             a.rep()() = b.rep()();
             return *this;
         }
 
-        /**
-         \brief implicit conversion operator
-         */
+        /** implicit conversion operator */
         inline operator base_type (){
             return a;
         }
 
-        /**
-         \brief bracket operator return the vector
-         */
+        /** bracket operator return the vector */
         inline const base_type& operator ()() const{
             return a;
         }

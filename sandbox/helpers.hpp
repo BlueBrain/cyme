@@ -45,7 +45,7 @@ struct name<double> {
 };
 
 template<typename T>
-struct name<cyme::vector<T, memory::AoS> > {
+struct name<cyme::vector<T, cyme::AoS> > {
     static const std::string print() {
         std::stringstream s;
         s << "cyme::vector<" << name<T>::print() << ",\tAoS>";
@@ -54,7 +54,7 @@ struct name<cyme::vector<T, memory::AoS> > {
 };
 
 template<typename T>
-struct name<cyme::vector<T, memory::AoSoA> > {
+struct name<cyme::vector<T, cyme::AoSoA> > {
     static const std::string print() {
         std::stringstream s;
         s << "cyme::vector<" << name<T>::print() << ",\tAoSoA>";

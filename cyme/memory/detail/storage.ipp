@@ -3,6 +3,7 @@
 * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
 * timothee.ewart@epfl.ch,
 * All rights reserved.
+* This file is part of Cyme <https://github.com/BlueBrain/cyme>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -18,22 +19,27 @@
 * License along with this library.
 */
 
+/**
+* @file cyme/memory/detail/storage.ipp
+* Implements the basic subblock of a cyme container
+*/
+
 #ifndef CYME_STORAGE_IPP
 #define CYME_STORAGE_IPP
-namespace memory{
 
+namespace cyme{
     /* --------------------------------------- AOS --------------------------------------- */
 
     template <class T, std::size_t Size>
     storage<T, Size, AoS>::storage(){
         for(size_type i=0; i<Size; ++i)
-            this->data[i] = T();
+            data[i] = T();
     }
 
     template <class T, std::size_t Size>
     storage<T, Size, AoS>::storage(value_type value){
         for(size_type i=0; i<Size; ++i)
-            this->data[i] = value;
+            data[i] = value;
     }
 
     template <class T, std::size_t Size>
@@ -65,13 +71,13 @@ namespace memory{
     template <class T, std::size_t Size>
     storage<T, Size, AoSoA>::storage(){
         for(size_type i=0; i<Size; ++i)
-            this->data[i] = T();
+            data[i] = T();
     }
 
     template <class T, std::size_t Size>
     storage<T, Size, AoSoA>::storage(value_type value){
         for(size_type i=0; i<Size; ++i)
-            this->data[i] = value;
+            data[i] = value;
     }
 
     template <class T, std::size_t Size>
@@ -89,14 +95,14 @@ namespace memory{
     }
 
     template <class T, std::size_t Size>
-    numeric::wvec<T,memory::__GETSIMD__()>
+    cyme::wvec<T,cyme::__GETSIMD__()>
     storage<T, Size, AoSoA>::operator[](size_type i){
-        return numeric::wvec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
+        return cyme::wvec<T,cyme::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 
     template <class T, std::size_t Size>
-    const numeric::rvec<T,memory::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
-        return numeric::rvec<T,memory::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
+    const cyme::rvec<T,cyme::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
+        return cyme::rvec<T,cyme::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 } //end namespace
-#endif 
+#endif

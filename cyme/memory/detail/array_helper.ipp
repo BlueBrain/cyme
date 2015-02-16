@@ -1,26 +1,39 @@
-/*
- * Cyme - array_helper.hpp, Copyright (c), 2014,
- * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
- * timothee.ewart@epfl.ch,
- * All rights reserved.
+/* The following code declares class array,
+ * an STL container (as wrapper) for arrays of constant size.
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3.0 of the License, or (at your option) any later version.
+ * See
+ *      http://www.boost.org/libs/array/
+ * for documentation.
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * The original author site is at: http://www.josuttis.com/
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.
+ * (C) Copyright Nicolai M. Josuttis 2001.
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See
+ * accompanying file LICENSE_1_0.txt or copy at
+ * http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * 14 Apr 2012 - (mtc) Added support for boost::hash
+ * 28 Dec 2010 - (mtc) Added cbegin and cend (and crbegin and crend) for C++Ox compatibility.
+ * 10 Mar 2010 - (mtc) fill method added, matching resolution of the standard library working group.
+ *      See <http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#776> or Trac issue #3168
+ *      Eventually, we should remove "assign" which is now a synonym for "fill" (Marshall Clow)
+ * 10 Mar 2010 - added workaround for SUNCC and !STLPort [trac #3893] (Marshall Clow)
+ * 29 Jan 2004 - c_array() added, BOOST_NO_PRIVATE_IN_AGGREGATE removed (Nico Josuttis)
+ * 23 Aug 2002 - fix for Non-MSVC compilers combined with MSVC libraries.
+ * 05 Aug 2001 - minor update (Nico Josuttis)
+ * 20 Jan 2001 - STLport fix (Beman Dawes)
+ * 29 Sep 2000 - Initial Revision (Nico Josuttis)
+ * 16 Feb 2015 - Modification for Cyme (Tim Ewart)
+ *
+ * Jan 29, 2004
  */
 
 
-// this file is just a copy past of the boost array_helper, clean up, I need to align to get better performance
-
+/**
+* @file cyme/memory/detail/array_helper.ipp
+* Modify boost::array
+*/
 
 #ifndef BOOST_ARRAY_CYME_IPP
 #define BOOST_ARRAY_CYME_IPP
@@ -36,14 +49,13 @@
 
 #include "cyme/memory/detail/simd.hpp"
 
-
 namespace cyme {
-
+/** \cond  */
     template<class T, std::size_t N>
     class array_helper {
       public:
-        T elems[N] __attribute__((aligned(static_cast<int>(memory::trait_register<T,memory::__GETSIMD__()>::size))));    // fixed-size array_helper of elements of type T, align
-      //  T elems[N];    // fixed-size array_helper of elements of type T, align
+         // fixed-size array_helper of elements of type T, align
+        T elems[N] __attribute__((aligned(static_cast<int>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
       public:
         // type definitions
         typedef T              value_type;
@@ -194,10 +206,7 @@ namespace cyme {
     std::size_t hash_value(const array_helper<T,N>& arr) {
         return boost::hash_range(arr.begin(), arr.end());
     }
-
+/** \endcond */
 } /* namespace boost */
 
-
 #endif /*BOOST_ARRAY_HPP*/
-
-    /* \endcond I do not need this part in the doc*/
