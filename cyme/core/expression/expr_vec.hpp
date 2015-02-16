@@ -26,7 +26,7 @@ namespace numeric{
     /*
      *  This uses template expressions to parse a series of basic operations into a tree at compile time.
      *  Effort was made to limit the number of local copies.
-     *  Directly inspired (copy/paste and modify ^_^) from 
+     *  Directly inspired (copy/paste and modify ^_^) from
      *  'C++ Templates: The Complete Guide' (Josuttis, Vandevoorde), Chapter XVIII
      */
 
@@ -477,10 +477,11 @@ namespace numeric{
         }
 
         /**
-           \brief operator =, create the tree and execute if I do something like *it[0] = *it[0]
+           \brief operator =, create the tree and execute
         */
         forceinline wvec& operator= (value_type a){
-            *(data_pointer) = a;
+            rvec<T,O,N,Rep> v(a);
+            this->expr_rep() = v.rep()(); //basic register copy no three
             return *this;
         }
 
