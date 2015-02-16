@@ -13,9 +13,6 @@ cmake_minimum_required (VERSION 2.8)
 
 project (cyme)
 
-option(CYME_BUILDYARD "Build with Buildyard"  ON)
-set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OS X" FORCE) #overwrite Builyard setting 32 bit is outdated
-
 set(LAST_RELEASE 1.1.0)
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "2")
@@ -29,21 +26,22 @@ set(VERSION_ABI "1")
 ######################################################################
 set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake ${CMAKE_SOURCE_DIR}/CMake/common)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake
+  ${PROJECT_SOURCE_DIR}/CMake/common)
+include(GitExternal)
 
 # some common set up of two version
-set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common
-set(BOOST_MIN_VERSION "1.49.0") #old is bad
-
-set(COMMON_USE_CXX03 "ON" CACHE STRING "C++11 features are disabled " FORCE)
-include(GitExternal)
+if(COMMON_LIBRARY_TYPE MATCHES "STATIC")
+  set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common
+endif()
+set(BOOST_MIN_VERSION "1.49.0") # old is bad
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
 include(Common)
 include(FindPackages)
 
 ########################################################################
 #
-# options
+# Options
 #
 ########################################################################
 
@@ -80,12 +78,29 @@ include(SelectTech)
 #
 ########################################################################
 
-#boost test has a dependency with system time
-IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set(CYME_TIME "-lrt")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    set(CYME_TIME) #nothing
-ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set(CYME_TIME "-lrt") #boost test has a dependency with system time
+endif()
+
+########################################################################
+#
+# Machine dependencies
+#
+# - Apple: x86 only
+# - BG/Q: remove dynamic link and c++11
+#
+########################################################################
+
+if(APPLE)
+   list(REMOVE_ITEM CMAKE_OSX_ARCHITECTURES i386) # cyme does not support 32bit
+   set(CMAKE_OSX_ARCHITECTURES ${CMAKE_OSX_ARCHITECTURES} CACHE
+     STRING "Build architectures for OS X" FORCE)
+endif()
+
+if($ENV{CLUSTER} STREQUAL bgq) #it is dirty ...
+#i am on BG/Q with clang
+   string(REPLACE "-std=c++11" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+endif()
 
 ########################################################################
 #
@@ -94,9 +109,8 @@ ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
 ########################################################################
 
 add_subdirectory(cyme)
-
 if(CYME_MAIN)
-    add_subdirectory(sandbox/)
+  add_subdirectory(sandbox/)
 endif(CYME_MAIN)
 
 ########################################################################

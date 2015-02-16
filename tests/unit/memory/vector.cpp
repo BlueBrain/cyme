@@ -24,7 +24,7 @@ using namespace cyme::test;
 
 #define TYPE typename T::value_type
 #define N T::n
-#define ORDER T::order 
+#define ORDER T::order
 
     template<class T, size_t M>
     struct synapse{
@@ -34,7 +34,7 @@ using namespace cyme::test;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vector_init_default_constructor, T, floating_point_block_types) {
      cyme::vector<synapse<TYPE,N>,ORDER> a;
-     BOOST_CHECK_EQUAL(a(0,0),0); 
+     BOOST_CHECK_EQUAL(a(0,0),0);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vector_init_default_size_constructor, T, floating_point_block_types) {
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_init_value_size_constructor, T, floating_po
         test[i] = 3;
 
      size_t b = memcmp((void*)test, (void*)&a(0,0), N*10*sizeof(TYPE));
-     BOOST_CHECK_EQUAL(b,0); 
+     BOOST_CHECK_EQUAL(b,0);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vector_init_operator_bracket, T, floating_point_block_types) {
@@ -88,18 +88,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_resize_operator_bracket, T, floating_point_
     init(vector_a, vector_b);
     check(vector_a, vector_b);
 
-    vector_a.resize(999); 
-    vector_b.resize(999); 
+    vector_a.resize(999);
+    vector_b.resize(999);
 
     check(vector_a, vector_b);
 
-    vector_a.resize(777); 
-    vector_b.resize(777); 
+    vector_a.resize(777);
+    vector_b.resize(777);
 
     check(vector_a, vector_b);
 
-    vector_a.resize(7); 
-    vector_b.resize(7); 
+    vector_a.resize(7);
+    vector_b.resize(7);
 
     check(vector_a, vector_b);
 }
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_equal_multiple, T, floating_point_
         (*it_AoSoA_w)[3] = (*it_AoSoA_r)[2];
         (*it_AoSoA_w)[3] = (*it_AoSoA_r)[3];
     }
-    
+
     check(vector_a, vector_b);
 }
 
@@ -326,4 +326,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vector_operator_divideequal, T, floating_point_tor
 
 #undef TYPE
 #undef N
-#undef ORRDER
+#undef ORDER
