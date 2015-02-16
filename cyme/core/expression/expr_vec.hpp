@@ -458,14 +458,13 @@ namespace numeric{
         typedef rvec<T,O,N,Rep> V;
         typedef T value_type;
         typedef value_type* pointer;
-        typedef const pointer const_pointer;
         typedef Rep base_type;
 
 
         /**
            \brief constructor lhs of the operator =, I need to save the pointer to save the data into the memory after the calculation
         */
-        forceinline explicit wvec(const_pointer rb):data_pointer(rb),expr_rep(rb){
+        forceinline explicit wvec(pointer rb):data_pointer(rb),expr_rep(rb){
         }
 
         /**
