@@ -1,0 +1,214 @@
+/*!
+
+\page Page3 Tutorials
+
+\section tuto1 Initialization and memory layout
+
+This tutorial and the following are inspired from a neuroscientific application. In particular, they represent various stages of the numerical approximation of an Hodgkin-Huxley model.
+
+In this first tutorial, we create an instance of a cyme container.
+To start with, we define a structure that describes the type and length of the data in one element.
+Here we will be representing the state of a channel with five float components.
+
+\code{.cpp}
+    struct channel {
+        typedef float value_type;
+        static const int value_size = 5;
+    };
+\endcode
+
+We then declare a cyme::array of 5 elements with AoS memory layout:
+
+\code{.cpp}
+    cyme::array<channel, 5, memory::AoS> a;
+\endcode
+
+If we prefer the AoSoA memory layout, we would instead make the declaration:
+
+\code{.cpp}
+    cyme::array<channel, 5, memory::AoSoA> a;
+\endcode
+
+The memory template parameter determines whether the components are laid out contiguously,
+or interleaved so that the one component across multiple elements can be operated upon 
+simultaneously with SIMD operations.
+
+\image html memoryAoS_AoSoA.png Memory layout of the container in function of the declaration memory::AoS or memory::AoSoA
+
+Individual components within the array can be addressed with the parenthesis
+operator. For a cyme::array a in either memory layout, a(i,J) will reference
+the jth component of the ith element (counting from zero), even though the
+position of that component will be different in each case.
+
+\image html memory_access.png Memory access following the AoS ideology
+
+Let's say we want to initialize the fourth channel structure inside the array, but only the first of its
+five components. The code is the same for both memory layouts:
+
+\code{.cpp}
+     cyme::array<channel<float>,5, memory::AoS> a;
+     cyme::array<channel<float>,5, memory::AoSoA> b;
+
+     a(3,0) = 3.4;
+     b(3,0) = 3.4;
+\endcode
+
+\section tuto2 Iterator and memory manipulation
+
+Similar to the the STL vector and array classes, cyme arrays can be accessed via an iterator interface.
+The iterator interface exposes a key difference between the memory layouts: iterators over
+AoS containers reference a single element, while iterators over AoSoA containers reference
+a contiguous set of elements, where the number of elements corresponds to the size of the
+underlying SIMD vector type.
+
+\image html iterator.png Manipulation into the container with the iterator
+
+\code{.cpp}
+    // AoS layout
+    typedef cyme::array<channel, 5, memory::AoS> channel_AoS;
+
+    // loop will perform 5 iterations
+    channel_AoS a;
+    for(channel_AoS::iterator it = a.begin(); it < a.end(); ++it) {
+        // perform operation on (*it), which represents one channel element
+        /* ... */
+    }
+
+    // AoSoA layout
+    typedef cyme::array<channel, 5, memory::AoSoA> channel_AoSoA;
+
+    // loop will perform 2 iterations (presuming 4-float wide SIMD register)
+    channel_AoSoA b;
+    for(channel_AoSoA::iterator it = b.begin(); it < b.end(); ++it) {
+        // perform operation on (*it), which represents four channel elements
+        /* ... */
+    }
+\endcode
+
+An individual component of an element (AoS) or contiguous set of elements (AoSoA) is accessed
+with the subscript operator (operator[]):
+
+\image html iterator2.png Manipulation of the data with the iterator
+
+For example, to initialise the second component of each element to some constant,
+the same looping construct is used in both AoS and AoSoA layouts, even though the
+number of loop iterations will differ.
+
+\code{.cpp}
+    typedef cyme::array<channel, 5, memory::AoS> channel_AoS;
+
+    channel_AoS a;
+    for(channel_AoS::iterator it = a.begin(); it < a.end(); ++it)
+        (*it)[1] = 3.4;
+
+    typedef cyme::array<channel, 5, memory::AoSoA> channel_AoSoA;
+
+    channel_AoSoA b;
+    for(channel_AoSoA::iterator it = b.begin(); it < b.end(); ++it)
+        (*it)[1] = 3.4;
+\endcode
+
+\section tuto3 Computation
+
+This last tutorial covers the mathematical operations.
+
+The expression templates are built up from const accesses to cyme container objects,
+and then evaluated when assigned to a (non-const) object. When operating over
+the full container, the code is again equivalent; the AoSoA layout will allow
+SIMD operators to be applied, and will require fewer loop iterations.
+
+\code{.cpp}
+    typedef cyme::array<channel, 5, memory::AoSoA> channel_AoSoA;
+
+    channel_AoSoA b;
+
+    /* ... */    // initalise b
+
+    channel_AoSoA::iterator it = b.begin();
+    channel_AoSoA::const_iterator cit = b.begin();
+    for(; it < b.end(); ++it,++cit)
+       (*it)[0] = (*cit)[1]*(*cit)[2]+(*cit)[3]/1.2;
+
+\endcode
+
+The framework is broadly compatible with the STL algorithm interface.
+The computation step, for example can be encapsulated in a functor object
+or C++11 lambda, provided due care is taken to make the distinction between
+the const and non-const access to the elements.
+
+\code{.cpp}
+    // Using a functor class:
+
+    template<class T>
+    struct functor{
+        // The data referenced by an iterator over a cyme container C is of type C::storage_type
+        void operator()(typename T::storage_type& W ){
+             typename T::storage_type const& R = W;
+             W[0] = R[1]*R[2]+R[3]/1.2;
+        }
+    };
+
+    typedef cyme::vector<channel, 20, memory::AoSoA> my_array;
+    std::for_each(b.begin(), b.end(), functor<my_array>() );
+
+    // Using C++11 lambda:
+
+    std::for_each(b.begin(), b.end(),
+        [](my_array::storage_type& W){
+            my_array::storage_type const& R = W;
+            W[0] = R[1]*R[2]+R[3]/1.2;
+        });
+\endcode
+
+While STL algorithm functions such as std::fill will operate as expected on cyme
+containers, others, such as std::generate, will differ in behaviour when applied
+to AoS and AoSoA containers, owing to the differing number of elements referenced
+by an iterator across the two different memory layouts.
+
+\section tuto4 Code
+
+We summarize the above with a basic example.
+
+\code{.cpp}
+    #include <iostream>
+    #include <algorithm>
+    #include <boost/chrono.hpp>
+
+    #include "cyme/cyme.h"
+
+    template<class T>
+    struct synapse{
+        typedef T value_type;
+        static const int value_size = 18;
+    };
+
+    template<class T>
+    struct f_compute{
+        void operator()(typename T::storage_type& W ){
+             typename T::storage_type const& R = W;
+             W[0] = exp(R[1])*R[2]+exp(R[3])/1.2;
+        }
+    };
+
+    template<class T>
+    struct f_init{
+        void operator()(typename T::storage_type& W ){
+            for(int i=0;i <T::size_block(); ++i)
+                W[i] = drand48();
+        }
+    };
+
+    int main(int argc, char* argv[]){
+       typedef  cyme::vector<synapse<double>, memory::AoS> my_vector;
+       my_vector b(0xfffff,0); // 1048575 elements, intial value zero.
+
+       std::for_each(b.begin(), b.end(), f_init<my_vector>() );
+
+       boost::chrono::system_clock::time_point start =  boost::chrono::system_clock::now();
+       std::for_each(b.begin(), b.end(), f_compute<my_vector>() );
+       boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
+
+       std::cout << " sec " << sec.count() << "\n";
+    }
+\endcode
+*/

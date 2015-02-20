@@ -1,0 +1,14 @@
+
+
+Na.cpp
+test: main
+   - This test executes the Na channel, for cyme vector,  all layouts i.e. AoS, AoSoA, float and double.
+     This regression test checks results obtain with AoSoA (with cyme.math) to AoS layout (with compiler.math).
+
+To compile the test (x86) you will have to fix dependencies (paths!) nevertheless I provide a example for avx, an unroll factor of 4 without fma. The main is built over boost.test so
+do not forget to make appropirate link
+
+    g++ Na.cpp -Iinclude_of_cyme -DBOOST_TEST_DYN_LINK -O3 -m64  -mavx -D__CYME_SIMD_VALUE__=avx  -D__CYME_UNROLL_VALUE__=4 -Iusr/local/boost/1.54/include
+        /usr/local/boost/1.54/lib/libboost_chrono.a /usr/local/boost/1.54/lib/libboost_system.a /usr/local/boost/1.54/lib/libboost_unit_test_framework.a
+
+

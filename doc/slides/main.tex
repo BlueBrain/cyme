@@ -1,0 +1,224 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                   % ... or a4paper or a5paper or ...  
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage{xcolor}
+
+\usepackage{tikz}
+
+\usepackage{color}
+\usepackage{listings}
+\lstset{ %
+language=C++,                % choose the language of the code
+basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=5pt,                  % how far the line-numbers are from the code
+backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,           % adds a frame around the code
+tabsize=2,          % sets default tabsize to 2 spaces
+captionpos=b,           % sets the caption-position to bottom
+breaklines=true,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)}          % if you want to add a comment within your code
+}
+
+
+\definecolor{gold}{rgb}{0.85,.66,0}
+
+\begin{document}
+
+\subsection*{Objective}
+
+We are looking for a generic container where we could do serial and SIMD operations. The user should not type any line of SIMD, it will be done by the compiler. The user should only writes only generic solver, the choice of SIMD or serial solver 
+are done during the instantiation of the container. It should be independent of the architecture of the machine x86/ppc64.  It should be friendly  with accelerator technology especially the memory layout.
+
+\subsection*{Implementation} Considering a series of object of 5 elements ($a_i b_i c_i d_i e_i$), it exists at least three method to organize the memory layout: the array of structure (AoS), the structure of array (SoA - SIMD friendly) and the array of structure of array (AoSoA - very SIMD friendly). We illustrate the structures and the repartition of the first element over the layout in the next example (contiguous in the memory whatever the data format). The choice of the format is important as it can help the execution of the SIMD instructions.
+\vspace{0.2cm}
+\begin{center}
+\tiny{
+\begin{tabular}{ c  c  c  c  c c c c c c}
+ \textbf{AoS}:  \colorbox{gold}{$a_0 b_0 c_0 d_0 e_0$} &  $a_1 b_1 c_1 d_1 e_1$ & $a_2 b_2 c_2 d_2 e_2$ & $a_3 b_3 c_3 d_3 e_3$ & $a_4 b_4 c_4 d_4 e_4$  &&&&& \\
+
+ \textbf{SoA}:  \colorbox{gold}{$a_0$}$a_1 a_2 a_3 a_4$ &   \colorbox{gold}{$b_0$}$ b_1 b_2 b_3 b_4$ &  \colorbox{gold}{$c_0$}$ c_1 c_2 c_3 c_4$ &  \colorbox{gold}{$d_0$}$d_1 d_2 d_3 d_4$ &  \colorbox{gold}{$e_0$}$e_1 e_2 e_3 e_4$ &&&&& \\
+
+ \textbf{AoSoA}:  \colorbox{gold}{$a_0$}$a_1 a_2 a_3$ &   \colorbox{gold}{$b_0$}$ b_1 b_2 b_3$ &  \colorbox{gold}{$c_0$}$ c_1 c_2 c_3$ &  \colorbox{gold}{$d_0$}$d_1 d_2 d_3$ &  \colorbox{gold}{$e_0$}$e_1 e_2 e_3$   & \colorbox{gold}{$a_4$}$000$ &   $b_4000$ &  $c_4000$ &  $d_4000$ &  $e_4000$  \\
+\end{tabular}}
+\end{center}
+\vspace{0.2cm}
+
+The first format AoS is well know, it is just an instance of an  "array" of element. The second format SoA interleaves the coefficients. Thus, the last format AoSoA also interleaved the coefficient but on a fix stride (here 4), it may necessiate extra element 
+to fill up correctly the last element.
+
+Our container supports by  default the AoS for portability, and the AoSoA format. This last format format is the most SIMD friendly (the stride should be equal to a SIMD register size  $.e.g.$  for double: SSE = stride(2), AVX/QPX = stride(4)  )
+ and it is cache line efficient.
+\subsection*{Implementation and API}
+
+The implementation of our container is based on static memory. We implement the following format:
+\\
+\begin{lstlisting}
+using namespace memory;
+block<float,5,5,AoS> block_a; // default constructor set up to 0
+block<double,5,5,AoSoA> block_b;
+\end{lstlisting}
+The first template argument (float-double only supported now (int ?)) indicates the floating point type of the container. The first number (16) indicates the size of the basic element (e.g. synapse) and the second number the full number
+of element (e.g. number of synapse). The last argument indicates the data format (AoS or AoSoA). The size of the stride is provided by the hardware (presently hard coded, should be give by an option of compilation).  The container can be set up by the classic bracket operator $(i,j)$, where $i$ is the number of the element, and $j$ the needed element.
+\\
+\begin{lstlisting}
+block_a(1,2) = 2.14; block_a(2,3) = 3.14;
+block_b(1,2) = 2.14; block_b(2,3) = 3.14;
+\end{lstlisting}
+For the memory, the previous example will modify the memory as:
+
+\vspace{0.2cm}
+\begin{center}
+\tiny{
+\begin{tabular}{ c  c  c  c  c c c c c c}
+ \textbf{AoS}:  0 0 0 0 0 &  0 0 2.14 0 0 & 0 0 0 3.14 0 & 0 0 0 0 0 & 0 0 0 0 0 &&&&& \\
+
+ \textbf{AoSoA}:  0 0 0 0 & 0 0 0 0 & 0 0 2.14 0 & 0 0 3.14 0 & 0 0 0 0 & 0 0 0 0 & 0 0 0 0 & 0 0 0 0 & 0 0 0 0 & 0 0 0 0\\
+\end{tabular}}
+\end{center}
+\vspace{0.2cm}
+
+The bracket operator may be used only for the initialization but should be avoid for calculation as it necessitates extra calculation for reach the element, especially for the AoSoA layout. 
+
+Our container is built on a std::array$<$ value\_type[n],m$>$ (or boost::array if no c++11). Therefore, we can use use an iterator to move in. For both containers, \textbar \,\, indicates 
+the limit of std::container between the elements.
+
+\begin{center}
+\tiny{
+\begin{tabular}{ c | c  | c  | c  | c  c c c c c}
+                           \multicolumn{5}{c}{  \hspace{0.7cm} ++it \hspace{1cm}   ++it   \hspace{1cm}    ++it   \hspace{1cm}    ++it } &&&&& \\  
+                           \multicolumn{5}{c}{  \hspace{0.6cm} $\curvearrowright$ \hspace{1.3cm}  $\curvearrowright$  \hspace{1.2cm}   $\curvearrowright$  \hspace{1.2cm}   $\curvearrowright$} &&&&& \\  
+ \textbf{AoS}:  $a_0 b_0 c_0 d_0 e_0$ &  $a_1 b_1 c_1 d_1 e_1$ & $a_2 b_2 c_2 d_2 e_2$ & $a_3 b_3 c_3 d_3 e_3$ & $a_4 b_4 c_4 d_4 e_4$ &&&&& \\
+\end{tabular}}
+\end{center}
+\vspace{0.2cm}
+\begin{center}
+\tiny{
+\begin{tabular}{ c  c   c   c   c |  c c c c c}
+  \multicolumn{10}{c}{  \hspace{3.1cm}  ++it } \\ 
+  \multicolumn{10}{c}{  \hspace{3.1cm}  $\curvearrowright$ } \\
+ \textbf{AoSoA}:  $a_0a_1 a_2 a_3$ &  $b_0 b_1 b_2 b_3$ & $c_0 c_1 c_2 c_3$ &  $d_0d_1 d_2 d_3$ & $e_0e_1 e_2 e_3$   &$a_4000$ &   $b_4000$ &  $c_4000$ &  $d_4000$ &  $e_4000$  \\
+\\
+\end{tabular}}
+\end{center}
+
+Using an iterator, we run through the full container where we perform operation using [] operator (it returns the element in AoS or the packet of element into AoSoA). As illustrate in the following example: \\
+
+\begin{lstlisting}
+    // ORDER = AoS or AoSoA
+    typename block<float,5,5,ORDER>::iterator it = block.begin(); 
+    for(; it  != block.end(); ++it)
+           add<float>((*it)[0],(*it)[3]); 
+ \end{lstlisting}
+\vspace{0.2cm}
+For the AoS format the previous calculation will do successively $x_0 += x_3$ with  $x \in [a...e]$. For the AoSoA, it will do the same operation but by packet of 4 $e.g.$ $[a_0a_1a_2a_3] += [d_0d_1d_2d_3]$.
+The solver is generic whatever the format. We free the user of fastidious programming, we get during the compilation a serial or parallel version of our algorithm.
+
+\subsection*{Benchmarks} 
+
+We perform a very basic test of usual arithmetic operations addition, multiplication and our SIMD exponential (TYPE = $\verb+float+$ or $\verb+double+$). This benchmark 
+ represents a typical test case (kinda fist order differential equation).
+
+\begin{lstlisting}
+memory::block<TYPE,16,1024,memory::AoS> block_a;  //init
+
+typename memory::block<TYPE,16,1024,memory::AoS>::iterator it; // get  an iterator
+    
+    for(it = block_a.begin(); it != block_a.end(); ++it){
+        for(int i=0  ; i<16 ; ++i)
+            (*it)[0] = GetRandom<TYPE>(); //Random generator
+    }
+
+    for(it = block_a.begin(); it != block_a.end(); ++it){
+           numeric::add<TYPE>((*it)[15],(*it)[1]);
+           numeric::mul<TYPE>((*it)[14],(*it)[2]);
+           numeric::add<TYPE>((*it)[13],(*it)[3]);
+           numeric::exp<TYPE>((*it)[12],(*it)[9]);
+           numeric::add<TYPE>((*it)[12],(*it)[4]);
+           numeric::add<TYPE>((*it)[11],(*it)[5]);
+           numeric::add<TYPE>((*it)[10],(*it)[6]);
+           numeric::add<TYPE>((*it)[9],(*it)[7]);
+           numeric::add<TYPE>((*it)[8],(*it)[8]);
+           numeric::mul<TYPE>((*it)[7],(*it)[9]);
+           numeric::exp<TYPE>((*it)[12],(*it)[8]);
+           numeric::mul<TYPE>((*it)[6],(*it)[11]);
+           numeric::mul<TYPE>((*it)[5],(*it)[12]);
+           numeric::mul<TYPE>((*it)[4],(*it)[13]);
+           numeric::mul<TYPE>((*it)[3],(*it)[14]);
+           numeric::exp<TYPE>((*it)[12],(*it)[7]);
+           numeric::mul<TYPE>((*it)[2],(*it)[15]);
+           numeric::exp<TYPE>((*it)[2],(*it)[15]);
+    }
+
+ \end{lstlisting}
+
+The same benchmark is applied on the AoSoA format by simply switching AoS by AoSoA. Benchmark has been performed on the Castor machine of the CSCS (GCC 4.8.1 and BOOST 1.54 are set up correctly) using SSE (no AVX) technology with float/double. As I am performing micro-benchmark ($< 0.001$ [s]), I use a \verb+rdtsc+ assembly counter. It counts the total number of cycle.
+\begin{center}
+\begin{tabular}{c c c }
+           &  float & double \\
+           \hline
+serial &  930 072  & 926 552  \\
+sse     &  337 528  & 676 512 \\
+\end{tabular}
+\end{center}
+
+The float version does not change anything for the serial version, but it gives a speed up of two for the SIMD as excepted.
+
+\subsection*{Issues}
+
+Presently I can have a big issue (for the performance), if I do something like 
+
+\begin{lstlisting}
+   numeric::add<TYPE>((*it)[0],(*it)[1]);
+   numeric::mul<TYPE>((*it)[0],(*it)[1]);
+\end{lstlisting}
+\vspace{0.2cm}
+I will have extra \verb+mov+ for the SIMD, they really destroy the performance. The previous lines give:
+\vspace{0.2cm}
+\begin{lstlisting}
+   movups  -131872(%rbp,%rsi), %xmm1 // load SIMD register, OK
+   movups  -131744(%rbp,%rsi), %xmm0 // load SIMD register, OK
+   addps   %xmm1, %xmm0 // add register-register only, OK
+   movups  %xmm0, -131872(%rbp,%rsi)  // store stupid, NOT OK
+   movups  -131872(%rbp,%rsi), %xmm1 // reload stupid, NOT OK
+   movups  -131744(%rbp,%rsi), %xmm0 // reload stupid, NOT OK
+   mulps   %xmm1, %xmm0  // mul register-register only, OK 
+\end{lstlisting}
+\vspace{0.2cm}
+5  \verb+mov+   and 2 arithmetic instructions. Contrary, to the serial version:
+\vspace{0.2cm}
+\begin{lstlisting}
+   movss   -65840(%rbp,%rdx), %xmm0 // one load only OK
+   addss   -65808(%rbp,%rdx), %xmm0 // add can be done memory/register OK
+   mulss   -65804(%rbp,%rdx), %xmm0 // mul can be done memory/register OK
+\end{lstlisting}
+\vspace{0.2cm}
+1  \verb+mov+   and 2 arithmetic instructions, it is just really faster as \verb+mov/mul/add+  (serial and SIMD) have the same latency (1 op. per cycle).
+
+conclusion:  I may a \underline{huge} workload of dummy \verb+mov+ instructions for my SIMD. I know why, I made some hypothesis with the compiler, I was wrong. I need to change the design (not easy).
+
+\subsection*{Conclusions}
+
+\begin{itemize}
+\item Top priority: Solve  \verb+mov+ issue
+\item QPX support
+\item Simplify syntax
+\item Implement AoS
+\item Need support dynamic memory
+\item Complementary to point 1: need to talk to a compiler guy to see how delete copy, or at least limited the usage (Costas contact ?, CSCS Jeff ?)
+\item Complementary to point 1:  C++ (STL) guru will be highly appreciated for code review and improvement,  some people in  IBM (Costas contact ?), CSCS ?
+\end{itemize}
+
+
+\end{document}  

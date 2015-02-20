@@ -1,0 +1,51 @@
+
+/*
+ * Cyme - define_meta.h, Copyright (c), 2014,
+ * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
+ * timothee.ewart@epfl.ch,
+ * All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
+
+#ifndef CYME_DEFINE_META_H
+#define CYME_DEFINE_META_H
+
+#define forceinline inline __attribute__((always_inline))
+
+/*
+   Selected by cmake it should be set up correctly on X86 can be set up with sse, avx or qpx
+   compile with -msse4.1 (sse) or -mavx (avx)
+*/
+#if !defined(__CYME_SIMD_VALUE__)
+#define  __CYME_SIMD_VALUE__ @SIMD_TECH@ 
+#endif
+
+/*
+   The unroll factor can be 1 (default), 2 or 4.   
+   The Best result depend of your machine and compiler.
+   More the unroll factor is large, more the code is "fat", which
+   main discrease the performance.
+*/
+#if !defined(__CYME_UNROLL_VALUE__)
+#define  __CYME_UNROLL_VALUE__ 1
+#endif
+
+/*
+   compile with -mfma on x86, if #define __FMA__  else nothing
+*/
+#if !defined(__FMA__)
+#cmakedefine  __FMA__
+#endif
+#endif

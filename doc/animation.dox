@@ -1,0 +1,9 @@
+/*!
+
+\page Page5 Final ASM graph
+
+This graph presents the assembly generated for cyme with an unroll value of 1, for a complicated kernel representing a Na ion channel in an Hodgkin-Huxley model. The source code can be found inside the regression test folder. Arrows indicate a data dependency while the numbers indicate the execution order.
+
+\htmlinclude ASM.html
+
+*/
