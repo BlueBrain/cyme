@@ -140,5 +140,3 @@ set(DOXYGEN_BIB_FILES "cyme.bib")
 file(COPY "${CMAKE_SOURCE_DIR}/doc/${DOXYGEN_BIB_FILES}" DESTINATION "${CMAKE_BINARY_DIR}/doc/")
 configure_file("${CMAKE_SOURCE_DIR}/CMake/Doxyfile.in" "${DOXYGEN_CONFIG_FILE}" @ONLY)
 include(DoxygenRule)
-
-include(CPackConfig)
