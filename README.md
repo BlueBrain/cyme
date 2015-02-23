@@ -1,7 +1,7 @@
 # cyme
 Framework to facilitate SIMD programming, without any tedious SIMD intrinsics.
 
-Installation (need boost, doxygen, gcc >= 4.4)
+Installation (need boost, doxygen, gcc >= 4.4, the doc provides tutorials, etc ... )
 
     mkdir b
     cmake ..
