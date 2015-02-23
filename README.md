@@ -15,23 +15,23 @@ Compilation:
 
 Know issues:
 
-- BG/Q: a bug may appear with Newton-Raphson algorithm (division/sqrt).
+- BG/Q: bug Newton-Raphson algorithm (division/sqrt).
 
 DEBUG mode:
 
-1) the core engine test: core_operator_bracket_torture - the division
-part fail (Newton-Raphson):
+1) the core engine test: core_operator_bracket_torture - Newton-Raphson algo for the 
+division fails:
 
-     it_AoS = block_a.begin();
-     for(; it_AoS != block_a.end(); ++it_AoS)
+    it_AoS = block_a.begin();
+        for(; it_AoS != block_a.end(); ++it_AoS)
          (*it_AoS)[0]   = (((((*it_AoS)[1] /(*it_AoS)[2])/(*it_AoS)[3])/(*it_AoS)[4])/(*it_AoS)[5]);
 
-     it_AoSoA_w = block_b.begin();
-     it_AoSoA_r = block_b.begin();
-     for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+    it_AoSoA_w = block_b.begin();
+    it_AoSoA_r = block_b.begin();
+    for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
          (*it_AoSoA_w)[0] = (((((*it_AoSoA_r)[1]/(*it_AoSoA_r)[2])/(*it_AoSoA_r)[3])/(*it_AoSoA_r)[4])/(*it_AoSoA_r)[5]);
 
-It fails for an unroll of 2 and double only if the number of successive
+It fails for an unroll of 2 and double, only if the number of successive
 division is larger than 3. I check the corresponding wrapper __mm__rec() and
 _mm_nfma(), I do not find any issues. It works for float. Test works if I
 perform the normal division
