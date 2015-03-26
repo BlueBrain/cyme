@@ -45,7 +45,7 @@ as the operator /= call the system division and not Newton-Raphson
 
 Release 1.3.0
 
-- New lisense lgpl 3.0
+- New license lgpl 3.0
 - Open Source Standard
 - Add new elementary function (1/sqrt)
 - Tiny optimization in the tree
