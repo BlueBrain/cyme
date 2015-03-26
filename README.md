@@ -43,6 +43,12 @@ RELEASE:
 The serial test unroll 4 fails, again for the division. It is very wierd
 as the operator /= call the system division and not Newton-Raphson
 
+Release 1.3.0
+
+- New lisense lgpl 3.0
+- Open Source Standard
+- Add new elementary function (1/sqrt)
+- Tiny optimization in the tree
 
 Release 1.2.0
 
