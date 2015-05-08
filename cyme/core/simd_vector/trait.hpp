@@ -101,13 +101,15 @@ namespace cyme{
     #include "cyme/core/simd_vector/detail/x86/trait_x86.ipp"
 #endif
 
-#ifdef _ARCH_QP
+
+#if defined (_ARCH_QP)|| defined(__PPC64__)
     #include "cyme/core/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
 #endif
+
 
 #ifdef __MIC__
     #include "cyme/core/simd_vector/detail/mic/trait_mic.ipp"
 #endif
 
-#endif
+#endif //CYME_TRAIT_HPP
 
