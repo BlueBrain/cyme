@@ -946,7 +946,7 @@ namespace cyme{
                                                              vec_nmadd(xmm0.r2,xmm1.r2,xmm2.r2),
                                                              vec_nmadd(xmm0.r3,xmm1.r3,xmm2.r3));
     };
-#endif
+#endif //__FMA__
 /*--------------------------------------------------------------------- double ---------------*/
     /**
        Single load a double-precision (64-bit) floating-point element from cyme into lower element of dst.
@@ -1845,7 +1845,7 @@ namespace cyme{
                                                               vec_nmadd(xmm0.r2,xmm1.r2,xmm2.r2),
                                                               vec_nmadd(xmm0.r3,xmm1.r3,xmm2.r3));
     };
-#endif
+#endif //__FMA__
 } //end namespace
 
-#endif
+#endif //CYME_SIMD_WRAPPER_QPX_IPP
