@@ -102,7 +102,7 @@ namespace cyme{
 #endif
 
 
-#if defined (_ARCH_QP)|| defined(__PPC64)
+#if defined (_ARCH_QP)|| defined(__PPC64__)
     #include "cyme/core/simd_vector/detail/powerpc64/trait_powerpc64.ipp"
 #endif
 
