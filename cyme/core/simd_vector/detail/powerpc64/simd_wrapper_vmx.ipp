@@ -32,18 +32,6 @@ extern "C" vector4double expd4(vector4double);// link to the fortran one
 extern "C" vector4double logd4(vector4double);// link to the fortran one
 */
 namespace cyme{
-
-    /**helper to calculate 2^k because vectorial integer operations are not supported */
-    typedef union {
-        double d;
-        boost::int64_t ll;
-    } ieee754;
-
-    /**helper to calculate 2^k because vectorial integer operations are not supported */
-    forceinline double uint642dp(boost::uint64_t ll) {
-        assert(false);
-    }
-
     /**
        Load a single-precision (32-bit) floating-point element from cyme into lower element of dst.
      */

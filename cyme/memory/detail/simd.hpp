@@ -53,7 +53,7 @@ namespace cyme{
 *  cyme::simd defines the simd technology for which the cyme code will be
 *  compiled. This is automatically detected by CMake at compile time.
 */
-    enum simd{sse, vmx, avx, qpx, mic};
+    enum simd{sse, avx, vmx, qpx, mic};
 
 /**   Memory layout of composite vector.
 *
