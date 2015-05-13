@@ -27,8 +27,6 @@
 #ifndef CYME_SIMD_LOG_IPP
 #define CYME_SIMD_LOG_IPP
 
-#include <iostream>
-
 namespace cyme{
 
     /** Function object that compute the Remez approximation of ln(x) using Horner method */
@@ -59,7 +57,7 @@ namespace cyme{
              class Solver = Remez_log<T,O,N,n> >
     struct cyme_log{
         static forceinline vec_simd<T,O,N> log(vec_simd<T,O,N> x){
-            vec_simd<T,O,N> log2(0.6931471805599453); // note futur: change this we get log10, etc ....
+            vec_simd<T,O,N> ln2(0.6931471805599453); // get the const value ln(2)
             vec_simd<T,O,N> e = ge(x); // ge = get exponent
             vec_simd<T,O,N> f = gf(x); // gf = get fraction
 	    
@@ -67,10 +65,10 @@ namespace cyme{
 	    
 #ifdef __FMA__
             f-=vec_simd<T,O,N>(1.0); //translate for rounding see comment before
-            x = muladd(log2,e,Solver::log(f));
+            x = muladd(ln2,e,Solver::log(f));
 #else
             f-=vec_simd<T,O,N>(1.0);
-            x = Solver::log(f)+log2*e;
+            x = Solver::log(f)+ln2*e;
 #endif
             return x;
         }
@@ -96,14 +94,14 @@ namespace cyme{
         static forceinline vec_simd<T,O,N> log2(vec_simd<T,O,N> x){
             vec_simd<T,O,N> e = ge(x); // ge = get exponent
             vec_simd<T,O,N> f = gf(x); // gf = get fraction
-	    vec_simd<T,O,N> c(1.4426950408889634); //get const value log2(e)
+	    vec_simd<T,O,N> log2e(1.4426950408889634); //get const value log2(e)
 	    
 #ifdef __FMA__
 	    f-=vec_simd<T,O,N>(1.0); //translate for rounding see comment before
-            x = muladd(Solver::log(f), c, e);
+            x = muladd(Solver::log(f), log2e, e);
 #else
             f-=vec_simd<T,O,N>(1.0);
-            x = (Solver::log(f))*c + e;
+            x = (Solver::log(f))*log2e + e;
 #endif
 	    return x;
         }
@@ -117,29 +115,21 @@ namespace cyme{
          \code{.cpp}
             log2(x) = log2(x0) + log2(2^n)
             log2(x) = log2(x0) + n
-
             log10(x) = log10(2)*log2(x)
-            log10(x) = log10(2)*(log2(x0) + n)
-            log10(x) = log10(2)*(log2(e)*ln(x0) + n)
-            log10(x) = log10(2)*log2(e)*ln(x0) + log10(2)*n
          \endcode
     x0 and n are determinated by bit tips (manipulating the float representation). log(x0) as the "exponential solver"
     utilizes Remez approximation of log(1+x0) between 0 and 1. Using this tips I avoid rounding error, consenquently
     I must translate my x by -1.
     */
-   /* template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_log>::value,
+    template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_log>::value,
              class Solver = Remez_log<T,O,N,n> >
-    struct cyme_log2{
-        static forceinline vec_simd<T,O,N> log2(vec_simd<T,O,N> x){
-            vec_simd<T,O,N> e = ge(x); // ge = get exponent
-            vec_simd<T,O,N> f = gf(x); // gf = get fraction
-	    //get const value log2(e)
-	    //c = log2(e)
-            f-=vec_simd<T,O,N>(1.0); //translate for rounding see comment before
-            x = (Solver::log(f))*c + e;
-            return x;
+    struct cyme_log10{
+        static forceinline vec_simd<T,O,N> log10(vec_simd<T,O,N> x){
+	    vec_simd<T,O,N> log10_2(0.3010299956639811); //get const value log10(2)
+	    x = log10_2*log2(x);
+	    return x;
         }
-    };*/
+    };
     
     /** Free function for call the vendor log */
     template<class T,cyme::simd O, int N>
@@ -172,8 +162,7 @@ namespace cyme{
         return Selector_log<T,O,N>::log(rhs);
     }
     
-    
-    /** Selector for the log algorithm (vendor or cyme implementation) */
+    /** Selector for the log2 algorithm (vendor or cyme implementation) */
     template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_log>::value,
              class Solver = cyme_log2<T,O,N,n> > // cyme_log (to do) or vendor
     struct Selector_log2{
@@ -187,6 +176,23 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> log2(const vec_simd<T,O,N>& rhs){
         return Selector_log2<T,O,N>::log2(rhs);
+    }
+    
+        
+    /** Selector for the log10 algorithm (vendor or cyme implementation) */
+    template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_log>::value,
+             class Solver = cyme_log10<T,O,N,n> > // cyme_log (to do) or vendor
+    struct Selector_log10{
+         static forceinline vec_simd<T,O,N> log10(vec_simd<T,O,N> x){
+               x = Solver::log10(x);
+               return x;
+         }
+    };
+
+    /** free function for the log10 */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> log10(const vec_simd<T,O,N>& rhs){
+        return Selector_log10<T,O,N>::log10(rhs);
     }
 }
 #endif
