@@ -1,5 +1,5 @@
 /*
- * Cyme - log.cpp, Copyright (c), 2014,
+ * Cyme - log2.cpp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
@@ -29,9 +29,9 @@ using namespace cyme::test;
 #define NN cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE)
 
 template<class T>
-T precision_log(){return 0.005;};
+T precision_log2(){return 0.005;};
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_log2_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
     TYPE res[NN] __attribute__((aligned(64)));
@@ -44,17 +44,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) 
         cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
 
         for(size_t i=0; i<NN; ++i)
-            a[i] = log(b[i]);
+            a[i] = log2(b[i]);
 
-        va = log(vb);
+        va = log2(vb);
         va.store(res);
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], res[i], precision_log<TYPE>());
+          BOOST_REQUIRE_CLOSE( a[i], res[i], precision_log2<TYPE>());
     }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison_serial, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_log2_comparison_serial, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
 
@@ -69,12 +69,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison_serial, T, floating_point_test_
 
 
         for(size_t i=0; i<NN; ++i){
-            a[i] = log(b[i]);
-            sa[i] = cyme::slog(sb[i]);
+            a[i] = log2(b[i]);
+            sa[i] = cyme::slog2(sb[i]);
         }
 
         for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], sa[i], precision_log<TYPE>());
+          BOOST_REQUIRE_CLOSE( a[i], sa[i], precision_log2<TYPE>());
     }
 }
 #undef NN
