@@ -57,7 +57,7 @@ inline float sexp(float a){
     return res;
 }
 
-/**  Construction of the serial logarithm, 32-bit precision.
+/**  Construction of the serial logarithm base e, 32-bit precision.
 
   The single function load/unload a serial number only.
 */
@@ -66,6 +66,32 @@ inline float slog(float a){
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = log(v);
+    v.single(&res);
+    return res;
+}
+
+/**  Construction of the serial logarithm base 2, 32-bit precision.
+
+  The single function load/unload a serial number only.
+*/
+inline float slog2(float a){
+    float res __attribute__((aligned (32)));
+    cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = log2(v);
+    v.single(&res);
+    return res;
+}
+
+/**  Construction of the serial logarithm base 10, 32-bit precision.
+
+  The single function load/unload a serial number only.
+*/
+inline float slog10(float a){
+    float res __attribute__((aligned (32)));
+    cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = log10(v);
     v.single(&res);
     return res;
 }
@@ -96,7 +122,7 @@ inline double sexp(double a){
     return res;
 }
 
-/** Construction of the serial logarithm, 64-bit precision.
+/** Construction of the serial logarithm base e, 64-bit precision.
 
    The single function load/unload a serial number only.
 */
@@ -105,6 +131,32 @@ inline double slog(double a){
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = log(v);
+    v.single(&res);
+    return res;
+}
+
+/** Construction of the serial logarithm base 2, 64-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline double slog2(double a){
+    double res __attribute__((aligned (32)));
+    cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = log2(v);
+    v.single(&res);
+    return res;
+}
+
+/** Construction of the serial logarithm base 10, 64-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline double slog10(double a){
+    double res __attribute__((aligned (32)));
+    cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = log10(v);
     v.single(&res);
     return res;
 }
@@ -134,6 +186,12 @@ float  cyme_fexp(float a);
 /** single-precision 32-bit serial logarithm base e, C library only */
 float  cyme_flog(float a);
 
+/** single-precision 32-bit serial logarithm base 2, C library only */
+float  cyme_flog2(float a);
+
+/** single-precision 32-bit serial logarithm base 10, C library only */
+float  cyme_flog10(float a);
+
 /** single-precision 32-bit serial sqrt, C library only */
 float  cyme_fsqrt(float a);
 
@@ -142,6 +200,12 @@ double cyme_exp(double a);
 
 /** double-precision 64-bit serial exponential base e, C library only */
 double cyme_log(double a);
+
+/** double-precision 64-bit serial exponential base 2, C library only */
+double cyme_log2(double a);
+
+/** double-precision 64-bit serial exponential base 10, C library only */
+double cyme_log10(double a);
 
 /** double-precision 64-bit serial exponential base e, C library only */
 double cyme_sqrt(double a);
