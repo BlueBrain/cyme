@@ -55,26 +55,39 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison, T, floating_point_test_types) 
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_log_comparison_serial, T, floating_point_test_types) {
-    TYPE a[NN] __attribute__((aligned(64)));
+    TYPE a1[NN] __attribute__((aligned(64)));
+    TYPE a2[NN] __attribute__((aligned(64)));
+    TYPE a3[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
 
-    TYPE sa[NN] __attribute__((aligned(64)));
+    TYPE sa1[NN] __attribute__((aligned(64)));
+    TYPE sa2[NN] __attribute__((aligned(64)));
+    TYPE sa3[NN] __attribute__((aligned(64)));
     TYPE sb[NN] __attribute__((aligned(64)));
 
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            sa[i] = a[i] = fabs(GetRandom<TYPE>());
+            sa1[i] = a1[i] = fabs(GetRandom<TYPE>());	    
+            sa2[i] = a2[i] = fabs(GetRandom<TYPE>());
+            sa3[i] = a3[i] = fabs(GetRandom<TYPE>());
             sb[i] = b[i] = fabs(GetRandom<TYPE>());
         }
 
 
-        for(size_t i=0; i<NN; ++i){
-            a[i] = log(b[i]);
-            sa[i] = cyme::slog(sb[i]);
+        for(size_t i=0; i<NN; ++i) {
+            a1[i] = log(b[i]);
+	    a2[i] = log2(b[i]);
+	    a3[i] = log10(b[i]);
+            sa1[i] = cyme::slog(sb[i]);
+	    sa2[i] = cyme::slog2(sb[i]);
+	    sa3[i] = cyme::slog10(sb[i]);
         }
 
-        for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], sa[i], precision_log<TYPE>());
+        for(size_t i=0; i<NN; ++i) {
+          BOOST_REQUIRE_CLOSE( a1[i], sa1[i], precision_log<TYPE>());
+          BOOST_REQUIRE_CLOSE( a2[i], sa2[i], precision_log<TYPE>());
+          BOOST_REQUIRE_CLOSE( a3[i], sa3[i], precision_log<TYPE>());
+	}
     }
 }
 #undef NN
