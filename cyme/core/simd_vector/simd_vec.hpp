@@ -170,8 +170,8 @@ namespace cyme{
     forceinline vec_simd<T,O,N> log2(const vec_simd<T,O,N>& rhs);
     
     /** Free function for the log10 */
-    /*template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> log10(const vec_simd<T,O,N>& rhs);*/
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> log10(const vec_simd<T,O,N>& rhs);
 
     /** Free function for the sqrt */
     template<class T,cyme::simd O, int N>

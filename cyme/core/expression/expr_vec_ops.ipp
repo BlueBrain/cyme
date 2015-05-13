@@ -86,6 +86,15 @@ namespace cyme{
     }
 
     /**
+    * log10(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_log10<T,O,N,R1> >
+    forceinline log10(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_log10<T,O,N,R1> >(vec_log10<T,O,N,R1>(a.rep()));
+    }
+    
+    /**
     * pow(a,e) function, integer only
     */
     template<class T, cyme::simd O, int N, class R1, int M>
