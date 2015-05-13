@@ -76,58 +76,35 @@ namespace cyme{
     
     /** Implementation of the logarithm log2
 
-    It is built on the binary representation of the float in the machine
-    which is x = s*x0*2^n (where s the sign, always +), x0 (fraction) belongs between 1<=x0<2
-    and n the exponent (integer). Thus,
+    It is based on log(x):
          \code{.cpp}
-            log2(x) = log2(x0) + log2(2^n)
-            log2(x) = log2(x0) + n
-            log2(x) = log2(e)*ln(x0) + n
+            log2(x) = log(x)/log(2)
+            log2(x) = log(x)*(CONSTANT)
          \endcode
-    x0 and n are determinated by bit tips (manipulating the float representation). log(x0) as the "exponential solver"
-    utilizes Remez approximation of log(1+x0) between 0 and 1. Using this tips I avoid rounding error, consenquently
-    I must translate my x by -1.
     */
     template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_log>::value,
              class Solver = Remez_log<T,O,N,n> >
     struct cyme_log2{
         static forceinline vec_simd<T,O,N> log2(vec_simd<T,O,N> x){
-            vec_simd<T,O,N> e = ge(x); // ge = get exponent
-            vec_simd<T,O,N> f = gf(x); // gf = get fraction
-	    vec_simd<T,O,N> log2e(1.4426950408889634); //get const value log2(e)
-	    
-#ifdef __FMA__
-	    f-=vec_simd<T,O,N>(1.0); //translate for rounding see comment before
-            x = muladd(Solver::log(f), log2e, e);
-#else
-            f-=vec_simd<T,O,N>(1.0);
-            x = (Solver::log(f))*log2e + e;
-#endif
-	    return x;
-        }
+            vec_simd<T,O,N> c(1.44269504089); //get const value 1/ln(2)
+            return log(x)*c; 
+	}
     };
     
     /** Implementation of the logarithm log10
 
-    It is built on the binary representation of the float in the machine
-    which is x = s*x0*2^n (where s the sign, always +), x0 (fraction) belongs between 1<=x0<2
-    and n the exponent (integer). Thus,
+    It is also based on log(x):
          \code{.cpp}
-            log2(x) = log2(x0) + log2(2^n)
-            log2(x) = log2(x0) + n
-            log10(x) = log10(2)*log2(x)
+            log10(x) = log(x)/log(10)
+            log10(x) = log(x)*(CONSTANT)
          \endcode
-    x0 and n are determinated by bit tips (manipulating the float representation). log(x0) as the "exponential solver"
-    utilizes Remez approximation of log(1+x0) between 0 and 1. Using this tips I avoid rounding error, consenquently
-    I must translate my x by -1.
     */
     template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_log>::value,
              class Solver = Remez_log<T,O,N,n> >
     struct cyme_log10{
         static forceinline vec_simd<T,O,N> log10(vec_simd<T,O,N> x){
-	    vec_simd<T,O,N> log10_2(0.3010299956639811); //get const value log10(2)
-	    x = log10_2*log2(x);
-	    return x;
+	    vec_simd<T,O,N> c(0.4342944819); //get const value 1/log(10)
+	    return log(x)*c;
         }
     };
     
