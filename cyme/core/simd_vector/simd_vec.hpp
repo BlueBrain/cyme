@@ -160,6 +160,14 @@ namespace cyme{
     /** Free function for the exp */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp(const vec_simd<T,O,N>& rhs);
+    
+    /** Free function for the exp2 */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> exp2(const vec_simd<T,O,N>& rhs);
+    
+    /** Free function for the exp10 */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> exp10(const vec_simd<T,O,N>& rhs);
 
     /** Free function for the log */
     template<class T,cyme::simd O, int N>
