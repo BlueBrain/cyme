@@ -57,6 +57,32 @@ inline float sexp(float a){
     return res;
 }
 
+/** Construction of the serial 2^x, 32-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline float sexp2(float a){
+    float res __attribute__((aligned (32)));
+    cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = exp2(v);
+    v.single(&res);
+    return res;
+}
+
+/** Construction of the serial 10^x, 32-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline float sexp10(float a){
+    float res __attribute__((aligned (32)));
+    cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = exp10(v);
+    v.single(&res);
+    return res;
+}
+
 /**  Construction of the serial logarithm, 32-bit precision.
 
   The single function load/unload a serial number only.
@@ -96,6 +122,32 @@ inline double sexp(double a){
     return res;
 }
 
+/** Construction of the serial 2^x, 64-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline double sexp2(double a){
+    double res __attribute__((aligned (32)));
+    cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = exp2(v);
+    v.single(&res);
+    return res;
+}
+
+/** Construction of the serial 10^x, 64-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline double sexp10(double a){
+    double res __attribute__((aligned (32)));
+    cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = exp10(v);
+    v.single(&res);
+    return res;
+}
+
 /** Construction of the serial logarithm, 64-bit precision.
 
    The single function load/unload a serial number only.
@@ -128,8 +180,14 @@ inline double ssqrt(double a){
 
 
 #ifndef __cplusplus
-/** single-precision 32-bit serial exponential, C library only */
+/** single-precision 32-bit serial exponential base e, C library only */
 float  cyme_fexp(float a);
+
+/** single-precision 32-bit serial exponential base 2, C library only */
+float  cyme_fexp2(float a);
+
+/** single-precision 32-bit serial exponential base 10, C library only */
+float  cyme_fexp10(float a);
 
 /** single-precision 32-bit serial logarithm base e, C library only */
 float  cyme_flog(float a);
@@ -139,6 +197,12 @@ float  cyme_fsqrt(float a);
 
 /** double-precision 64-bit serial exponential base e, C library only */
 double cyme_exp(double a);
+
+/** double-precision 64-bit serial exponential base 2, C library only */
+double cyme_exp2(double a);
+
+/** double-precision 64-bit serial exponential base 10, C library only */
+double cyme_exp10(double a);
 
 /** double-precision 64-bit serial exponential base e, C library only */
 double cyme_log(double a);
