@@ -1,7 +1,7 @@
 /*
  * Cyme - exp10.cpp, Copyright (c), 2014,
- * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
- * timothee.ewart@epfl.ch,
+ * Kai Langen,
+ * kai.langen@usask.ca,
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or

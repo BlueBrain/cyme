@@ -83,54 +83,6 @@ namespace cyme{
         }
     };
     
-     /** Implementation of the function 2^x
-
-         Uses previous function for calculating exp(x), or e^x, using exponential 
-         function identities.
-         \code{.cpp}
-                a^k = e^r
-                
-                where:
-                r = ln(a^k)
-                r = k*ln(a)
-                
-                so for a = 2:
-                a^k = e^(k*CONSTANT)
-         \endcode
-    */
-    template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_exp>::value>
-    struct cyme_exp2{
-        static forceinline vec_simd<T,O,N> exp2(vec_simd<T,O,N> x){
-            /* calculate k,  k = (int)floor(a); p = (float)k; */
-            vec_simd<T,O,N>   ln2(0.6931471805599453094172);
-            return exp(x*ln2);
-        }
-    };
-    
-     /** Implementation of the function 10^x
-
-         Uses previous function for calculating exp(x), or e^x, using exponential 
-         function identities.
-         \code{.cpp}
-                a^k = e^r
-                
-                where:
-                r = ln(a^k)
-                r = k*ln(a)
-                
-                so for a = 10:
-                a^k = e^(k*CONSTANT)
-         \endcode
-    */
-    template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_exp>::value>
-    struct cyme_exp10{
-        static forceinline vec_simd<T,O,N> exp10(vec_simd<T,O,N> x){
-            /* calculate k,  k = (int)floor(a); p = (float)k; */
-            vec_simd<T,O,N>   ln10(2.3025850929940456840179);
-            return exp(x*ln10);
-        }
-    };
-    
     /** Free function for call the vendor exp */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp_v(const vec_simd<T,O,N>& rhs){
@@ -162,36 +114,46 @@ namespace cyme{
         return Selector_exp<T,O,N>::exp(rhs);
     }
     
-        /** Selector for the exp2 algorithm (vendor or cyme implementation) */
-    template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_exp>::value,
-             class Solver = cyme_exp2<T,O,N,n> > // cyme_exp ou vendor
-    struct Selector_exp2{
-         static forceinline vec_simd<T,O,N> exp2(vec_simd<T,O,N> x){
-               x = Solver::exp2(x);
-               return x;
-         }
-    };
+    /** Implementation of the function 2^x
 
-    /** free function for the exp2 */
+	  Uses previous function for calculating exp(x), or e^x, using exponential 
+	  function identities.
+         \code{.cpp}
+                a^k = e^r
+                
+                where:
+                r = ln(a^k)
+                r = k*ln(a)
+                
+                so for a = 2:
+                a^k = e^(k*CONSTANT)
+         \endcode
+    */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp2(const vec_simd<T,O,N>& rhs){
-        return Selector_exp2<T,O,N>::exp2(rhs);
+	vec_simd<T,O,N>   ln2(0.6931471805599453094172);
+	return exp(rhs*ln2);
     }
-    
-        /** Selector for the exp10 algorithm (vendor or cyme implementation) */
-    template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_exp>::value,
-             class Solver = cyme_exp10<T,O,N,n> > // cyme_exp ou vendor
-    struct Selector_exp10{
-         static forceinline vec_simd<T,O,N> exp10(vec_simd<T,O,N> x){
-               x = Solver::exp10(x);
-               return x;
-         }
-    };
 
-    /** free function for the exp */
+    /** Implementation of the function 10^x
+
+         Uses previous function for calculating exp(x), or e^x, using exponential 
+         function identities.
+         \code{.cpp}
+                a^k = e^r
+                
+                where:
+                r = ln(a^k)
+                r = k*ln(a)
+                
+                so for a = 10:
+                a^k = e^(k*CONSTANT)
+         \endcode
+    */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp10(const vec_simd<T,O,N>& rhs){
-        return Selector_exp10<T,O,N>::exp10(rhs);
+	vec_simd<T,O,N>   ln10(2.3025850929940456840179); //
+        return exp(rhs*ln10);
     }
 }
 #endif
