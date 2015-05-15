@@ -72,41 +72,7 @@ namespace cyme{
 #endif
             return x;
         }
-    };
-    
-    /** Implementation of the logarithm log2
-
-    It is based on log(x):
-         \code{.cpp}
-            log2(x) = log(x)/log(2)
-            log2(x) = log(x)*(CONSTANT)
-         \endcode
-    */
-    template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_log>::value,
-             class Solver = Remez_log<T,O,N,n> >
-    struct cyme_log2{
-        static forceinline vec_simd<T,O,N> log2(vec_simd<T,O,N> x){
-            vec_simd<T,O,N> c(1.44269504089); //get const value 1/ln(2)
-            return log(x)*c; 
-	}
-    };
-    
-    /** Implementation of the logarithm log10
-
-    It is also based on log(x):
-         \code{.cpp}
-            log10(x) = log(x)/log(10)
-            log10(x) = log(x)*(CONSTANT)
-         \endcode
-    */
-    template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_log>::value,
-             class Solver = Remez_log<T,O,N,n> >
-    struct cyme_log10{
-        static forceinline vec_simd<T,O,N> log10(vec_simd<T,O,N> x){
-	    vec_simd<T,O,N> c(0.4342944819); //get const value 1/log(10)
-	    return log(x)*c;
-        }
-    };
+    };  
     
     /** Free function for call the vendor log */
     template<class T,cyme::simd O, int N>
@@ -139,37 +105,34 @@ namespace cyme{
         return Selector_log<T,O,N>::log(rhs);
     }
     
-    /** Selector for the log2 algorithm (vendor or cyme implementation) */
-    template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_log>::value,
-             class Solver = cyme_log2<T,O,N,n> > // cyme_log (to do) or vendor
-    struct Selector_log2{
-         static forceinline vec_simd<T,O,N> log2(vec_simd<T,O,N> x){
-               x = Solver::log2(x);
-               return x;
-         }
-    };
-
-    /** free function for the log2 */
+    /** Implementation of the logarithm log2
+    
+    Uses the previous function log(x) and logarithmic identities 
+    to calculate log2(x):
+         \code{.cpp}
+            log2(x) = log(x)/log(2)
+            log2(x) = log(x)*(CONSTANT)
+         \endcode
+    */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> log2(const vec_simd<T,O,N>& rhs){
-        return Selector_log2<T,O,N>::log2(rhs);
+	vec_simd<T,O,N> c(1.44269504089); //get const value 1/ln(2)
+	return log(rhs)*c;
     }
-    
-        
-    /** Selector for the log10 algorithm (vendor or cyme implementation) */
-    template<class T, cyme::simd O, int N, std::size_t n = poly_order<T,coeff_remez_log>::value,
-             class Solver = cyme_log10<T,O,N,n> > // cyme_log (to do) or vendor
-    struct Selector_log10{
-         static forceinline vec_simd<T,O,N> log10(vec_simd<T,O,N> x){
-               x = Solver::log10(x);
-               return x;
-         }
-    };
 
-    /** free function for the log10 */
+    /** Implementation of the logarithm log10
+
+    Uses the previous function log(x) and logarithmic identities 
+    to calculate log10(x):
+         \code{.cpp}
+            log10(x) = log(x)/log(10)
+            log10(x) = log(x)*(CONSTANT)
+         \endcode
+    */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> log10(const vec_simd<T,O,N>& rhs){
-        return Selector_log10<T,O,N>::log10(rhs);
+	vec_simd<T,O,N> c(0.4342944819); //get const value 1/log(10)
+	return log(rhs)*c;
     }
 }
 #endif
