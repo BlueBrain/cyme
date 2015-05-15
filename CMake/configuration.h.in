@@ -29,11 +29,11 @@
    compile with -msse4.1 (sse) or -mavx (avx)
 */
 #if !defined(__CYME_SIMD_VALUE__)
-#define  __CYME_SIMD_VALUE__ @SIMD_TECH@ 
+#define  __CYME_SIMD_VALUE__ @SIMD_TECH@
 #endif
 
 /*
-   The unroll factor can be 1 (default), 2 or 4.   
+   The unroll factor can be 1 (default), 2 or 4.
    The Best result depend of your machine and compiler.
    More the unroll factor is large, more the code is "fat", which
    main discrease the performance.
