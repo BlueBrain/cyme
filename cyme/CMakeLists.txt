@@ -45,8 +45,18 @@ set(CYME_SOURCES ${COMMON_SOURCES} "math/math.cpp") # math lib serial only
 
 common_library(cyme)
 
-if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ppc64")
-    set_target_properties(cyme PROPERTIES COMPILE_FLAGS "-D__CYME_SIMD_VALUE__=qpx -D__CYME_UNROLL_VALUE__=1 ${CYME_FMA_FLAGS}")
-else()
+if(CYME_VMX_FOUND)
+    EXEC_PROGRAM(cat ARGS "/proc/cpuinfo" OUTPUT_VARIABLE CPUINFO)
+    STRING(REGEX MATCH "POWER[7-8]" CYME_PROCESSOR ${CPUINFO} )
+    string(TOLOWER ${CYME_PROCESSOR} CYME_PROCESSOR)
+    set(flag  "-mcpu=${CYME_PROCESSOR} -maltivec -mvsx")
+    set_target_properties(cyme PROPERTIES COMPILE_FLAGS "-D__CYME_SIMD_VALUE__=vmx -D__CYME_UNROLL_VALUE__=1 ${CYME_FMA_FLAGS} ${flag}")
+endif(CYME_VMX_FOUND)
+
+if(CYME_SSE_FOUND OR CYME_AVX_FOUND)
     set_target_properties(cyme PROPERTIES COMPILE_FLAGS "-D__CYME_SIMD_VALUE__=sse -D__CYME_UNROLL_VALUE__=1 -msse4.1 ${CYME_FMA_FLAGS}")
-endif()
+endif(CYME_SSE_FOUND OR CYME_AVX_FOUND)
+
+if(CYME_QPX_FOUND)
+    set_target_properties(cyme PROPERTIES COMPILE_FLAGS "-D__CYME_SIMD_VALUE__=qpx -D__CYME_UNROLL_VALUE__=1 ${CYME_FMA_FLAGS}")
+endif(CYME_QPX_FOUND)

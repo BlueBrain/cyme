@@ -1,17 +1,25 @@
 # cyme
 Framework to facilitate SIMD programming, without any tedious SIMD intrinsics.
 
-Installation (need boost, doxygen, gcc >= 4.4, the doc provides tutorials, etc ... )
+Installation (need boost, doxygen, gcc >= 4.4, the doc provides tutorials, etc ... ).
+There are a few variables to adjust Makefile generation with cmake (can be combined),
+see next examples
 
     mkdir b
-    cmake ..
-    make doxygen 
+    cd b
+    cmake .. # basic
+    cmake .. # your machine supports slurm, specify the environment variable SLURM_ACCOUNT (export SLURM_ACCOUNT="--account=proj16") before !
+    cmake .. -DSLURM_FOUND=false # your machine supports slurm but you do not care
+    cmake .. -DCOMMON_LIBRARY_TYPE=STATIC # you prefer static library (boost lib, e.g. BG/Q)
+    cmake .. -DCYME_POWER_VMX=true # force VMX backend for on BG/Q frontend ambiguity
+    make doxygen
 
 Compilation:
 
      -D__CYME_SIMD_VALUE__=sse -msse4.1 + optional -D__FMA__
      -D__CYME_SIMD_VALUE__=avx -msvx+ optional -D__FMA__
      -D__CYME_SIMD_VALUE__=qpx -D__FMA__
+     -D__CYME_SIMD_VALUE__=vmx -D__FMA__ -mcpu=power7 -maltivec -mvsx
 
 Know issues:
 
@@ -19,7 +27,7 @@ Know issues:
 
 DEBUG mode:
 
-1) the core engine test: core_operator_bracket_torture - Newton-Raphson algo for the 
+1) the core engine test: core_operator_bracket_torture - Newton-Raphson algo for the
 division fails:
 
     it_AoS = block_a.begin();
