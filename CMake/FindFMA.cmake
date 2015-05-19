@@ -10,7 +10,7 @@ if(CYME_SSE_FOUND) # if sse supports FMA, avx supports it
      ENDIF (CYME_TRUE)
 endif()
 
-if(CYME_VMX_FOUND OR CYME_QPX_FOUND) #power it is native
+if(CYME_VMX_FOUND OR CYME_QPX_FOUND OR CYME_NEON_FOUND) #power/arm it is native
    set(CYME_FMA_FOUND true)
 endif()
 

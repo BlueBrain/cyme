@@ -14,6 +14,11 @@ function(compiler_flag testing_ techno_ test_ unroll_)
          test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" "-mavx" "avx" ${unroll_} ${test_})
      endif ()
 
+     CYME_TECH_MATCH(neon ${techno_})
+     IF (CYME_TRUE)
+         test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" "" "neon" ${unroll_} ${test_})
+     endif ()
+
      CYME_TECH_MATCH(qpx ${techno_})
      IF (CYME_TRUE)
          test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" " " "qpx" ${unroll_} ${test_})

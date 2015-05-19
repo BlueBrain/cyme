@@ -45,6 +45,20 @@
    endif(VMX_FLAG)
    endif(CYME_VMX_FOUND)
 
+   if(CYME_NEON_FOUND)
+   set(SIMD_TECH "neon" CACHE STRING "SIMD technology for the sandbox: neon") #overwrite avx better
+   CHECK_CXX_COMPILER_FLAG("" NEON_FLAG)
+   if(NEON_FLAG)
+       CHECK_CXX_SOURCE_COMPILES("#include <arm_neon.h> \n int main(){ uint8x16_t vec_9 = vmovq_n_u8(9); vaddq_u8(vec_9,vec_9); };" NEON_COMPILATION)
+       CHECK_CXX_SOURCE_RUNS("#include <arm_neon.h> \n int main(){ uint8x16_t vec_9 = vmovq_n_u8(9); vaddq_u8(vec_9,vec_9); };" NEON_RUN)
+       if(NEON_FLAG AND NEON_COMPILATION)
+          set(CYME_SIMD_FLAGS "")
+          set(SIMD_LIST_TEST ${SIMD_LIST_TEST} "neon")
+          set(SIMD_LIST_TESTING ${SIMD_LIST_TEST} CACHE STRING "SIMD technology for testing" )
+       endif(NEON_FLAG AND NEON_COMPILATION)
+   endif(NEON_FLAG)
+   endif(CYME_NEON_FOUND)
+
    if(CYME_QPX_FOUND)
       message("-- QPX supported")
       set(SIMD_TECH "qpx" CACHE STRING "SIMD technology for the sandbox: qpx")
@@ -69,7 +83,7 @@ if(CYME_FMA_FOUND)
         if(FMA_FLAG AND FMA_COMPILATION AND FMA_RUN)
            set(CYME_FMA_FLAGS "-mfma")
         endif(FMA_FLAG AND FMA_COMPILATION AND FMA_RUN)
-    elseif(CYME_QPX_FOUND OR CYME_VMX_FOUND) #ISA Power always supports FMA
+    elseif(CYME_QPX_FOUND OR CYME_VMX_FOUND OR CYME_NEON_FOUND) #ISA Power/ARM always supports FMA
            message("-- FMA supported")
            set(CYME_FMA_FLAGS "-D__FMA__")
     endif(CYME_SSE_FOUND)
