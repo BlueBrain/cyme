@@ -2,8 +2,11 @@
 # the project is compiled.
 
 macro(CYME_TECH_MATCH arg0 arg1)
-    STRING(REGEX REPLACE "^.*(${arg0}).*$" "\\1" CYME_THERE ${arg1})
-    STRING(COMPARE EQUAL "${arg0}" "${CYME_THERE}" CYME_TRUE)
+    IF("${arg1}" MATCHES "${arg0}")
+        set(CYME_TRUE "true")
+    ELSE()
+        set(CYME_TRUE "false")
+    ENDIF()
 endmacro()
 
 macro(CYME_TECH_TRUE arg0)
@@ -27,12 +30,13 @@ IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
    EXEC_PROGRAM(cat ARGS "/proc/cpuinfo" OUTPUT_VARIABLE CPUINFO)
 ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
    EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.features" OUTPUT_VARIABLE CPUINFO)
+   string(TOLOWER ${CPUINFO} CPUINFO) #cmake regex are case sensitive
 ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
-CYME_TECH_MATCH(sse4_1 ${CPUINFO})
+CYME_TECH_MATCH("sse4[._]1" ${CPUINFO})
 CYME_TECH_TRUE(SSE)
 
-CYME_TECH_MATCH(avx ${CPUINFO})
+CYME_TECH_MATCH("avx" ${CPUINFO})
 CYME_TECH_TRUE(AVX)
 
 CYME_TECH_MATCH(asimd ${CPUINFO})
