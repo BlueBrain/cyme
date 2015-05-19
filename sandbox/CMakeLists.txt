@@ -10,6 +10,11 @@ function(compil_flag techno_ main_ unroll_)
          make_program(${main_} "-mavx" "avx1.0" ${unroll_})
      endif ()
 
+     CYME_TECH_MATCH(neon ${techno_})
+     IF (CYME_TRUE)
+         make_program(${main_} "" "neon" ${unroll_})
+     endif ()
+
      CYME_TECH_MATCH(vmx ${techno_})
      IF (CYME_TRUE)
          EXEC_PROGRAM(cat ARGS "/proc/cpuinfo" OUTPUT_VARIABLE CPUINFO)
