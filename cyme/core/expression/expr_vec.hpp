@@ -108,6 +108,34 @@ namespace cyme{
         }
     };
 
+    /** log2 vertex in the DAG from log2(a) */
+    template<class T, cyme::simd O, int N, class OP1>
+    class vec_log2{
+        typename vec_traits<OP1,O,N>::value_type op1;
+
+    public:
+        forceinline vec_log2(OP1 const& a):op1(a){
+        }
+
+        forceinline vec_simd<T,O,N> operator()() const{
+            return log2(op1());
+        }
+    };
+    
+    /** log10 vertex in the DAG from log10(a) */
+    template<class T, cyme::simd O, int N, class OP1>
+    class vec_log10{
+        typename vec_traits<OP1,O,N>::value_type op1;
+
+    public:
+        forceinline vec_log10(OP1 const& a):op1(a){
+        }
+
+        forceinline vec_simd<T,O,N> operator()() const{
+            return log10(op1());
+        }
+    };
+    
     /** pow vertex in the DAG from pow(a,n), integer exponent only */
     template<class T, cyme::simd O, int N, class OP1, int M>
     class vec_pow{

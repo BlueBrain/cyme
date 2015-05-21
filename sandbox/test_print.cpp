@@ -110,9 +110,22 @@
 
      template<class T, cyme::order O>
      static inline void cnrn_functions(T& W){
-         cnrn_states(W);
+         //cnrn_states(W);
+       log_functions(W);
      }
 
+     template<class T>
+     static inline void log_functions(T& W){
+       T const & R = W;
+       W[1] = log(R[1]);
+       W[2] = log(R[2]);
+       W[3] = log2(R[3]);
+       W[4] = log2(R[4]);
+       W[5] = log10(R[5]);
+       W[6] = log10(R[6]);
+     };
+     
+     
      template<class T>
      static inline void cnrn_rates(T& W){
          T const & R = W; 

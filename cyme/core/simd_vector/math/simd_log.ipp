@@ -45,7 +45,8 @@ namespace cyme{
          \code{.cpp}
             log2(x) = log2(x0) + log2(2^n)
             log2(x) = log2(x0) + n
-            log(x) = log(2)*log2(x0) + log2*n
+            log(x) = log(2)*log2(x)
+            log(x) = log(2)*log2(x0) + log(2)*n
             log(x) = log(x0) + log2*n
          \endcode
     x0 and n are determinated by bit tips (manipulating the float representation). log(x0) as the "exponential solver"
@@ -56,20 +57,23 @@ namespace cyme{
              class Solver = Remez_log<T,O,N,n> >
     struct cyme_log{
         static forceinline vec_simd<T,O,N> log(vec_simd<T,O,N> x){
-            vec_simd<T,O,N> log2(0.6931471805599453); // note futur: change this we get log10, etc ....
+            vec_simd<T,O,N> ln2(0.6931471805599453); // get the const value ln(2)
             vec_simd<T,O,N> e = ge(x); // ge = get exponent
             vec_simd<T,O,N> f = gf(x); // gf = get fraction
+	    
+	    
+	    
 #ifdef __FMA__
             f-=vec_simd<T,O,N>(1.0); //translate for rounding see comment before
-            x = muladd(log2,e,Solver::log(f));
+            x = muladd(ln2,e,Solver::log(f));
 #else
             f-=vec_simd<T,O,N>(1.0);
-            x = Solver::log(f)+log2*e;
+            x = Solver::log(f)+ln2*e;
 #endif
             return x;
         }
-    };
-
+    };  
+    
     /** Free function for call the vendor log */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> log_v(const vec_simd<T,O,N>& rhs){
@@ -99,6 +103,36 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> log(const vec_simd<T,O,N>& rhs){
         return Selector_log<T,O,N>::log(rhs);
+    }
+    
+    /** Implementation of the logarithm log2
+    
+    Uses the previous function log(x) and logarithmic identities 
+    to calculate log2(x):
+         \code{.cpp}
+            log2(x) = log(x)/log(2)
+            log2(x) = log(x)*(CONSTANT)
+         \endcode
+    */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> log2(const vec_simd<T,O,N>& rhs){
+	vec_simd<T,O,N> c(1.44269504089); //get const value 1/ln(2)
+	return log(rhs)*c;
+    }
+
+    /** Implementation of the logarithm log10
+
+    Uses the previous function log(x) and logarithmic identities 
+    to calculate log10(x):
+         \code{.cpp}
+            log10(x) = log(x)/log(10)
+            log10(x) = log(x)*(CONSTANT)
+         \endcode
+    */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> log10(const vec_simd<T,O,N>& rhs){
+	vec_simd<T,O,N> c(0.4342944819); //get const value 1/log(10)
+	return log(rhs)*c;
     }
 }
 #endif

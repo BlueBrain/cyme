@@ -164,6 +164,14 @@ namespace cyme{
     /** Free function for the log */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> log(const vec_simd<T,O,N>& rhs);
+    
+    /** Free function for the log2 */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> log2(const vec_simd<T,O,N>& rhs);
+    
+    /** Free function for the log10 */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> log10(const vec_simd<T,O,N>& rhs);
 
     /** Free function for the sqrt */
     template<class T,cyme::simd O, int N>
