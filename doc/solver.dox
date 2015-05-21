@@ -66,6 +66,18 @@ where \f$ s \f$ is the sign,  1 or -1,
 binary representation, and \f$ \log_2 x_0 \f$ is computed with a polynomial
 approximation determined by the Remez algorithm.
 
+The logarithms for base 2 and base 10 were calculated with the previous log function
+using the identity: 
+\f{eqnarray*}{
+    \log_a x \!&=&\! \frac{\log_e x }{\log_e a } \\
+	    \!&=&\! \log_e x\, .\, \frac{1}{\log_e a }.
+\f}
+where \f$a\f$ is equal to 2 or 10. So, for example, \f$\log_2 x\f$ would be calculated 
+simply by multiplying the result of \f$log_e x\f$ by the constant \f$c\f$ where 
+\f{eqnarray*}{
+    c  \!&=&\!  \frac{1}{log_e 2 }.
+\f} .
+
 \section op2 Division
 
 To compute \f$ a/b \f$, one can multiply \f$a\f$ by the reciprocal of \f$b\f$,
