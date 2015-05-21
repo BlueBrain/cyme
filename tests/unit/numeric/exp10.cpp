@@ -35,8 +35,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp10_comparison, T, floating_point_test_types
     TYPE res[NN] __attribute__((aligned(64)));
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            a[i] = GetRandom<TYPE>();
-            b[i] = GetRandom<TYPE>();
+            a[i] = GetRandomExp10<TYPE>();
+            b[i] = GetRandomExp10<TYPE>();
         }
 
         cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(a);
@@ -62,8 +62,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp10_comparison_serial, T, floating_point_tes
 
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            sa[i] = a[i] = GetRandom<TYPE>();
-            sb[i] = b[i] = GetRandom<TYPE>();
+            sa[i] = a[i] = GetRandomExp10<TYPE>();
+            sb[i] = b[i] = GetRandomExp10<TYPE>();
         }
 
 

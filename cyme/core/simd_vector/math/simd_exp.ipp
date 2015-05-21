@@ -152,7 +152,7 @@ namespace cyme{
     */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp10(const vec_simd<T,O,N>& rhs){
-	vec_simd<T,O,N>   ln10(2.3025850929940456840179); //
+	vec_simd<T,O,N>   ln10(2.3025850929940456840179);
         return exp(rhs*ln10);
     }
 }
