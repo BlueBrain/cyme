@@ -68,6 +68,24 @@ namespace cyme{
     }
 
     /**
+    * exp2(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_exp2<T,O,N,R1> >
+    forceinline exp2(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_exp2<T,O,N,R1> >(vec_exp2<T,O,N,R1>(a.rep()));
+    }
+
+    /**
+    * exp10(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_exp10<T,O,N,R1> >
+    forceinline exp10(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_exp10<T,O,N,R1> >(vec_exp10<T,O,N,R1>(a.rep()));
+    }
+
+    /**
     * log(a) function
     */
     template<class T, cyme::simd O, int N, class R1>
@@ -75,7 +93,7 @@ namespace cyme{
     forceinline log(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_log<T,O,N,R1> >(vec_log<T,O,N,R1>(a.rep()));
     }
-    
+
     /**
     * log2(a) function
     */

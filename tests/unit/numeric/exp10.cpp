@@ -1,7 +1,7 @@
 /*
- * Cyme - exp.cpp, Copyright (c), 2014,
- * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
- * timothee.ewart@epfl.ch,
+ * Cyme - exp10.cpp, Copyright (c), 2014,
+ * Kai Langen,
+ * kai.langen@usask.ca,
  * All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -29,23 +29,23 @@ using namespace cyme::test;
 
 #define NN cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE)
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp10_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
     TYPE res[NN] __attribute__((aligned(64)));
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            a[i] = GetRandom<TYPE>();
-            b[i] = GetRandom<TYPE>();
+            a[i] = GetRandomExp10<TYPE>();
+            b[i] = GetRandomExp10<TYPE>();
         }
 
         cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(a);
         cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
 
         for(size_t i=0; i<NN; ++i)
-            a[i] = exp(b[i]);
+            a[i] = exp(b[i]*2.3025850929940456840179);
 
-        va = exp(vb);
+        va = exp10(vb);
         va.store(res);
 
         for(size_t i=0; i<NN; ++i)
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison, T, floating_point_test_types) 
     }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison_serial, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp10_comparison_serial, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
 
@@ -62,14 +62,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison_serial, T, floating_point_test_
 
     for(size_t k=0; k<100; ++k){
         for(size_t i=0; i<NN; ++i){
-            sa[i] = a[i] = GetRandom<TYPE>();
-            sb[i] = b[i] = GetRandom<TYPE>();
+            sa[i] = a[i] = GetRandomExp10<TYPE>();
+            sb[i] = b[i] = GetRandomExp10<TYPE>();
         }
 
 
         for(size_t i=0; i<NN; ++i){
-            a[i] = exp(b[i]);
-            sa[i] = cyme::sexp(sb[i]);
+            a[i] = exp(b[i]*2.3025850929940456840179);
+            sa[i] = cyme::sexp10(sb[i]);
         }
 
         for(size_t i=0; i<NN; ++i)
