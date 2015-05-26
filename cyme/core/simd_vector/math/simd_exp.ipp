@@ -82,7 +82,7 @@ namespace cyme{
             return x;
         }
     };
-
+    
     /** Free function for call the vendor exp */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp_v(const vec_simd<T,O,N>& rhs){
@@ -112,6 +112,48 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp(const vec_simd<T,O,N>& rhs){
         return Selector_exp<T,O,N>::exp(rhs);
+    }
+
+    /** Implementation of the function 2^x
+
+	  Uses previous function for calculating exp(x), or e^x, using exponential
+	  function identities.
+         \code{.cpp}
+                a^k = e^r
+
+                where:
+                r = ln(a^k)
+                r = k*ln(a)
+
+                so for a = 2:
+                a^k = e^(k*CONSTANT)
+         \endcode
+    */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> exp2(const vec_simd<T,O,N>& rhs){
+	vec_simd<T,O,N>   ln2(0.6931471805599453094172);
+	return exp(rhs*ln2);
+    }
+
+    /** Implementation of the function 10^x
+
+         Uses previous function for calculating exp(x), or e^x, using exponential
+         function identities.
+         \code{.cpp}
+                a^k = e^r
+
+                where:
+                r = ln(a^k)
+                r = k*ln(a)
+
+                so for a = 10:
+                a^k = e^(k*CONSTANT)
+         \endcode
+    */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> exp10(const vec_simd<T,O,N>& rhs){
+	vec_simd<T,O,N>   ln10(2.3025850929940456840179);
+        return exp(rhs*ln10);
     }
 }
 #endif

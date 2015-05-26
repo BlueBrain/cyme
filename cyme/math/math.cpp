@@ -30,12 +30,16 @@
 
 extern "C" {
     float cyme_fexp(float a){return cyme::sexp(a);}
+    float cyme_fexp2(float a){return cyme::sexp2(a);}
+    float cyme_fexp10(float a){return cyme::sexp10(a);}
     float cyme_flog(float a){return cyme::slog(a);}
     float cyme_flog2(float a){return cyme::slog2(a);}
     float cyme_flog10(float a){return cyme::slog10(a);}
     float cyme_fsqrt(float a){return cyme::ssqrt(a);}
 
-    double cyme_exp(double a){return cyme::sexp(a);}
+    double cyme_exp(double a){return cyme::sexp(a);}    
+    double cyme_exp2(double a){return cyme::sexp2(a);}
+    double cyme_exp10(double a){return cyme::sexp10(a);}
     double cyme_log(double a){return cyme::slog(a);}
     double cyme_log2(double a){return cyme::slog2(a);}
     double cyme_log10(double a){return cyme::slog10(a);}

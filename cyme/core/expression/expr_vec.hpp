@@ -94,6 +94,34 @@ namespace cyme{
         }
     };
 
+    /** exp2 vertex in the DAG from exp2(a) */
+    template<class T, cyme::simd O, int N, class OP1>
+    class vec_exp2{
+        typename vec_traits<OP1,O,N>::value_type op1;
+
+    public:
+        forceinline vec_exp2(OP1 const& a):op1(a){
+        }
+
+        forceinline vec_simd<T,O,N> operator()() const{
+            return exp2(op1());
+        }
+    };
+
+    /** exp10 vertex in the DAG from exp10(a) */
+    template<class T, cyme::simd O, int N, class OP1>
+    class vec_exp10{
+        typename vec_traits<OP1,O,N>::value_type op1;
+
+    public:
+        forceinline vec_exp10(OP1 const& a):op1(a){
+        }
+
+        forceinline vec_simd<T,O,N> operator()() const{
+            return exp10(op1());
+        }
+    };
+
     /** log vertex in the DAG from log(a) */
     template<class T, cyme::simd O, int N, class OP1>
     class vec_log{

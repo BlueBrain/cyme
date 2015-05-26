@@ -102,7 +102,6 @@
                             << ", standard deviation " << sqrt(extract_result< tag::variance >(acc)) << std::endl;
  }
 
-   static double dt = 0.01;
 
  struct Na{
      typedef double value_type;
@@ -124,11 +123,11 @@
        W[5] = log10(R[5]);
        W[6] = log10(R[6]);
      };
-     
-     
+
+
      template<class T>
      static inline void cnrn_rates(T& W){
-         T const & R = W; 
+         T const & R = W;
          W[8]  = (0.182*(R[16]+35.0)) / (1.0 - (exp((-R[16]-35.0)/9.0)));
          W[9]  = (-0.124*(R[16]+35.0))/ (1.0 - (exp((R[16]+35.0)/9.0)));
          W[6]  = R[8]/(R[8]+R[9]);
@@ -141,6 +140,7 @@
 
      template<class T>
      static inline void cnrn_states(T& W){
+         const double dt = 0.01;
         T const & R = W;
         cnrn_rates(W);
         W[3] += (1.-exp(dt*(-1.0/R[7] )))*(-(R[6] /R[7]) /(-1.0/R[7]) -R[3]);

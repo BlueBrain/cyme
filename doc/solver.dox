@@ -52,6 +52,15 @@ The order of the polynomial is set to 11, guaranteeing an optimal tradeoff
 between precision and efficiency.  The computation of the polynomial is carried
 out using Horner's method.
 
+The exponents for base 2 and base 10 ( \f$2^x\f$ and  \f$10^x\f$ ) were calculated
+with the previous exponent function using the exponential identity 
+\f{eqnarray*}{
+    a^k \!&=&\! e^{k.ln(a)} \\
+           \!&=&\! e^{k.c},
+\f}
+where \f$a\f$ was either 2 or 10 and \f$c\f$ was the constant expression \f$ln(a)\f$ .
+
+
 \section op1 Logarithm
 
 The logarithm implementation uses the floating poing binary representation (IEEE 754) of the
