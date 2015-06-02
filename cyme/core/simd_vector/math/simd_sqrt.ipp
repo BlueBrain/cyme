@@ -83,7 +83,7 @@ namespace cyme{
     struct helper_Solver{
 #ifdef __x86_64__
         typedef Vendor_sqrt<T,O,N> Solver_sqrt;
-#elif _ARCH_QP
+#elif defined (_ARCH_QP) || defined(__PPC64__)
         typedef NewtonRaphson_sqrt<T,O,N> Solver_sqrt;
 #endif
     };

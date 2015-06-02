@@ -123,7 +123,7 @@ namespace cyme{
 
     /** Floor the value return a int simd register */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<int,O,N> floor(vec_simd<T,O,N>& rhs);
+    forceinline vec_simd<int,O,N> floor(const vec_simd<T,O,N>& rhs);
 
     /** Free function + operator between two vectors, this function uses the return value optimization */
     template<class T,cyme::simd O, int N>
