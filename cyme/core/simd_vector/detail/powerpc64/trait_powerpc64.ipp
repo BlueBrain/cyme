@@ -39,7 +39,6 @@ namespace cyme{
      */
     template<class T, cyme::simd O>
     struct register_trait;
-    
 
 #ifdef _ARCH_QP
     /** Specialisation of the trait class for int, cyme::qpx  */
@@ -59,7 +58,7 @@ namespace cyme{
     struct register_trait<double,cyme::qpx>{
         typedef vector4double trait_register_type;
     };
-    
+
     /** Specialisation of the trait class for the composite vector int,cyme::qpx,4 regs*/
     template <>
     struct simd_trait<int, cyme::qpx, 4> : trait<int>{
@@ -76,7 +75,7 @@ namespace cyme{
     template <>
     struct simd_trait<int, cyme::qpx, 1> : trait<int>{
         typedef vector4double register_type;
-	
+
     /** Specialisation of the trait class for the composite vector double,cyme::qpx,4 regs*/
     template <>
     struct simd_trait<double, cyme::qpx, 4> : trait<double>{
@@ -138,7 +137,7 @@ namespace cyme{
     };
 
 #endif //_ARCH_QP
-    
+
 #ifdef __PPC64__
     /** Specialisation of the trait class for int, cyme::vmx  */
     template <>
@@ -157,7 +156,7 @@ namespace cyme{
     struct register_trait<double,cyme::vmx>{
         typedef vector double trait_register_type;
     };
-    
+
     /** Specialisation of the trait class for the composite vector int,cyme::vmx,4 regs*/
     template <>
     struct simd_trait<int, cyme::vmx, 4> : trait<int>{
@@ -174,6 +173,8 @@ namespace cyme{
     template <>
     struct simd_trait<int, cyme::vmx, 1> : trait<int>{
         typedef vector int register_type;
+    };
+
     /** Specialisation of the trait class for the composite vector double,cyme::vmx,4 regs*/
     template <>
     struct simd_trait<double, cyme::vmx, 4> : trait<double>{
@@ -235,7 +236,7 @@ namespace cyme{
     };
 
 #endif // __PPC64__
-    
+
 
 }
 #endif //CYME_TRAIT_POWERPC64_IPP

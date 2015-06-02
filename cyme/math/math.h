@@ -38,9 +38,14 @@
 #  define  __SIMD_VALUE__ sse
 #endif
 
+#ifdef __PPC64__
+#  define  __SIMD_VALUE__ vmx
+#endif
+
 #ifdef _ARCH_QP
 #  define  __SIMD_VALUE__ qpx
 #endif
+
 
 //this file is used for c++ only not install for the library
 namespace cyme {

@@ -95,7 +95,7 @@ namespace cyme{
         const static size_t size=16;
         const static size_t a=16;
     };
-    
+
 /** Partial specialisation for avx technology.  */
     template<class T>
     struct trait_register<T,cyme::avx>{
