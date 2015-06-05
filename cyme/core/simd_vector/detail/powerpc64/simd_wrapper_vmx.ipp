@@ -54,7 +54,7 @@ namespace cyme{
     }
 
     /**
-      rETURNS A VECTOR OF WHICH THE VALUE iiiiiiIOF EACH ELEment is set to a.
+      Returns a vector of which the value of eAch element is set to a.
        specialisation float,cyme::vmx,1 regs
      */
     template<>
@@ -211,8 +211,8 @@ namespace cyme{
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_div<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
                                simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
-         return simd_trait<float,cyme::vmx,2>::register_type(vec_div(xmm0.r0,xmm1.r0),
-							     vec_div(xmm0.r1,xmm1.r1));
+        return simd_trait<float,cyme::vmx,2>::register_type(vec_div(xmm0.r0,xmm1.r0),
+							    vec_div(xmm0.r1,xmm1.r1));
     }
 
     /**
@@ -223,10 +223,10 @@ namespace cyme{
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_div<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
                                simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
-         return simd_trait<float,cyme::vmx,4>::register_type(vec_div(xmm0.r0,xmm1.r0),
-							     vec_div(xmm0.r1,xmm1.r1),
-							     vec_div(xmm0.r2,xmm1.r2),
-							     vec_div(xmm0.r3,xmm1.r3));
+        return simd_trait<float,cyme::vmx,4>::register_type(vec_div(xmm0.r0,xmm1.r0),
+							    vec_div(xmm0.r1,xmm1.r1),
+							    vec_div(xmm0.r2,xmm1.r2),
+							    vec_div(xmm0.r3,xmm1.r3));
     }
 
     /**
