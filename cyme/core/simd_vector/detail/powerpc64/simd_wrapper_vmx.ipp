@@ -526,8 +526,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::vmx,1>::register_type
     _mm_floor<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
-	//return vec_floor(xmm0);
-	assert(false);
+	return vec_cts(vec_floor(xmm0),0);
 }
 
     /**
@@ -538,9 +537,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::vmx,2>::register_type
     _mm_floor<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
-        //return simd_trait<float,cyme::vmx,2>::register_type(vec_floor(xmm0.r0),
-	//						    vec_floor(xmm0.r1));
-	assert(false);
+        return simd_trait<int,cyme::vmx,2>::register_type(vec_cts(vec_floor(xmm0.r0),0),
+							    vec_cts(vec_floor(xmm0.r1),0));
 }
 
     /**
@@ -552,11 +550,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::vmx,4>::register_type
     _mm_floor<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
-        //return simd_trait<float,cyme::vmx,4>::register_type(vec_floor(xmm0.r0),
-	//						    vec_floor(xmm0.r1),
-	//						    vec_floor(xmm0.r2),
-	//						    vec_floor(xmm0.r3));
-	assert(false);
+        return simd_trait<int,cyme::vmx,4>::register_type(vec_cts(vec_floor(xmm0.r0),0),
+							    vec_cts(vec_floor(xmm0.r1),0),
+							    vec_cts(vec_floor(xmm0.r2),0),
+							    vec_cts(vec_floor(xmm0.r3),0));
     }
 
     /**
