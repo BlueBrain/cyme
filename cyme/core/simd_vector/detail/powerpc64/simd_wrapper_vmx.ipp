@@ -458,7 +458,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_neg<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
-        assert(false);
+        simd_trait<float,cyme::vmx,1>::register_type mask(vec_ctf(vec_splats(0x80000000),0));
+	return vec_xor(xmm0,mask);
     }
 
     /**
@@ -468,7 +469,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_neg<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
-         assert(false);
+        simd_trait<float,cyme::vmx,1>::register_type mask(vec_ctf(vec_splats(0x80000000),0));
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,mask),
+							    vec_xor(xmm0.r1,mask));
     }
 
     /**
@@ -478,7 +481,11 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_neg<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
-         assert(false);
+        simd_trait<float,cyme::vmx,1>::register_type mask(vec_ctf(vec_splats(0x80000000),0));
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,mask),
+							    vec_xor(xmm0.r1,mask),
+							    vec_xor(xmm0.r2,mask),
+							    vec_xor(xmm0.r3,mask));
     }
 
     /**
