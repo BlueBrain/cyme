@@ -38,7 +38,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_single_load<float,cyme::vmx,1>(const simd_trait<float,cyme::vmx,1>::value_type __attribute__((unused))b){
+    _mm_single_load<float,cyme::vmx,1>(const simd_trait<float,cyme::vmx,1>::value_type b){
         return vec_vsx_ld(0, (vector float*)&b);
     }
 
@@ -47,8 +47,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::value_type
-    _mm_single_store<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                                        simd_trait<float,cyme::vmx,1>::pointer __attribute__((unused))b){
+    _mm_single_store<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0,
+                                        simd_trait<float,cyme::vmx,1>::pointer b){
        vec_vsx_st(xmm0, 0, (vector float*)b);
        return *b;
     }
@@ -59,7 +59,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_load1<float,cyme::vmx,1>(const simd_trait<float,cyme::vmx,1>::value_type __attribute__((unused))&a){
+    _mm_load1<float,cyme::vmx,1>(const simd_trait<float,cyme::vmx,1>::value_type &a){
        return vec_splats(a);
     }
 
@@ -69,7 +69,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_load1<float,cyme::vmx,2>(const simd_trait<float,cyme::vmx,2>::value_type __attribute__((unused))&a){
+    _mm_load1<float,cyme::vmx,2>(const simd_trait<float,cyme::vmx,2>::value_type &a){
         return simd_trait<float,cyme::vmx,2>::register_type(vec_splats(a),vec_splats(a));
     }
 
@@ -79,7 +79,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_load1<float,cyme::vmx,4>(const simd_trait<float,cyme::vmx,4>::value_type __attribute__((unused))&a){
+    _mm_load1<float,cyme::vmx,4>(const simd_trait<float,cyme::vmx,4>::value_type &a){
         return simd_trait<float,cyme::vmx,4>::register_type(vec_splats(a),vec_splats(a),
 							    vec_splats(a),vec_splats(a));
     }
@@ -90,7 +90,7 @@ namespace cyme{
     */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_load<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::const_pointer __attribute__((unused))a){
+    _mm_load<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::const_pointer a){
         return vec_vsx_ld(0, (vector float*)a);
     }
 
@@ -100,7 +100,7 @@ namespace cyme{
     */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_load<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::const_pointer __attribute__((unused))a){
+    _mm_load<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::const_pointer a){
         return simd_trait<float,cyme::vmx,2>::register_type(vec_vsx_ld(0,(vector float*)a),
 							    vec_vsx_ld(16,(vector float*)a));
     }
@@ -111,7 +111,7 @@ namespace cyme{
     */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_load<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::const_pointer __attribute__((unused))a){
+    _mm_load<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::const_pointer a){
         return simd_trait<float,cyme::vmx,4>::register_type(vec_vsx_ld(0,(vector float*)a),
 							    vec_vsx_ld(16,(vector float*)a),
 							    vec_vsx_ld(32,(vector float*)a),
@@ -124,8 +124,8 @@ namespace cyme{
     */
     template<>
     forceinline void
-    _mm_store<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                                 simd_trait<float,cyme::vmx,1>::pointer  __attribute__((unused))a){
+    _mm_store<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0,
+                                 simd_trait<float,cyme::vmx,1>::pointer  a){
         vec_vsx_st(xmm0,0,(vector float*)a);
     }
 
@@ -135,8 +135,8 @@ namespace cyme{
     */
     template<>
     forceinline void
-    _mm_store<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                                 simd_trait<float,cyme::vmx,2>::pointer __attribute__((unused))a){
+    _mm_store<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0,
+                                 simd_trait<float,cyme::vmx,2>::pointer a){
         vec_vsx_st(xmm0.r0,0,(vector float*)a);
 	vec_vsx_st(xmm0.r1,16,(vector float*)a);
     }
@@ -147,8 +147,8 @@ namespace cyme{
     */
     template<>
     forceinline void
-    _mm_store<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                                 simd_trait<float,cyme::vmx,4>::pointer __attribute__((unused))a){
+    _mm_store<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0,
+                                 simd_trait<float,cyme::vmx,4>::pointer a){
         vec_vsx_st(xmm0.r0,0,(vector float*)a);
 	vec_vsx_st(xmm0.r1,16,(vector float*)a);
 	vec_vsx_st(xmm0.r2,32,(vector float*)a);
@@ -161,8 +161,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_mul<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+    _mm_mul<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,1>::register_type xmm1){
         return vec_mul(xmm0, xmm1);
     }
 
@@ -172,8 +172,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_mul<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+    _mm_mul<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,2>::register_type xmm1){
         return simd_trait<float,cyme::vmx,2>::register_type(vec_mul(xmm0.r0,xmm1.r0),
 							    vec_mul(xmm0.r1,xmm1.r1));
     }
@@ -184,8 +184,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_mul<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
+    _mm_mul<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,4>::register_type xmm1){
         return simd_trait<float,cyme::vmx,4>::register_type(vec_mul(xmm0.r0,xmm1.r0),
 							    vec_mul(xmm0.r1,xmm1.r1),
 							    vec_mul(xmm0.r2,xmm1.r2),
@@ -198,8 +198,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_div<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+    _mm_div<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,1>::register_type xmm1){
         return vec_div(xmm0,xmm1);
     }
 
@@ -209,8 +209,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_div<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+    _mm_div<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,2>::register_type xmm1){
         return simd_trait<float,cyme::vmx,2>::register_type(vec_div(xmm0.r0,xmm1.r0),
 							    vec_div(xmm0.r1,xmm1.r1));
     }
@@ -221,8 +221,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_div<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
+    _mm_div<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,4>::register_type xmm1){
         return simd_trait<float,cyme::vmx,4>::register_type(vec_div(xmm0.r0,xmm1.r0),
 							    vec_div(xmm0.r1,xmm1.r1),
 							    vec_div(xmm0.r2,xmm1.r2),
@@ -235,8 +235,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_add<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+    _mm_add<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,1>::register_type xmm1){
         return vec_add(xmm0,xmm1);
     }
 
@@ -246,8 +246,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_add<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+    _mm_add<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,2>::register_type xmm1){
         return simd_trait<float,cyme::vmx,2>::register_type(vec_add(xmm0.r0,xmm1.r0),
 							    vec_add(xmm0.r1,xmm1.r1));
     }
@@ -258,8 +258,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_add<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
+    _mm_add<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,4>::register_type xmm1){
         return simd_trait<float,cyme::vmx,4>::register_type(vec_add(xmm0.r0,xmm1.r0),
 							    vec_add(xmm0.r1,xmm1.r1),
 							    vec_add(xmm0.r2,xmm1.r2),
@@ -273,8 +273,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_sub<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+    _mm_sub<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,1>::register_type xmm1){
         return vec_sub(xmm0,xmm1);
     }
 
@@ -285,8 +285,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_sub<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+    _mm_sub<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,2>::register_type xmm1){
 	return simd_trait<float,cyme::vmx,2>::register_type(vec_sub(xmm0.r0,xmm1.r0),
 							    vec_sub(xmm0.r1,xmm1.r1));
     }
@@ -298,8 +298,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_sub<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                               simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
+    _mm_sub<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0,
+                               simd_trait<float,cyme::vmx,4>::register_type xmm1){
 	return simd_trait<float,cyme::vmx,4>::register_type(vec_sub(xmm0.r0,xmm1.r0),
 							    vec_sub(xmm0.r1,xmm1.r1),
 							    vec_sub(xmm0.r2,xmm1.r2),
@@ -375,7 +375,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_rec<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
+    _mm_rec<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
         return vec_re(xmm0);
     }
 
@@ -388,7 +388,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_rec<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
+    _mm_rec<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
         return simd_trait<float,cyme::vmx,2>::register_type(vec_re(xmm0.r0),
 							    vec_re(xmm0.r1));
     }
@@ -402,7 +402,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_rec<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
+    _mm_rec<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
         return simd_trait<float,cyme::vmx,4>::register_type(vec_re(xmm0.r0),
 							    vec_re(xmm0.r1),
 							    vec_re(xmm0.r2),
@@ -410,7 +410,7 @@ namespace cyme{
     }
 
     /**
-      Compute 1/recsqrt (32-bit) floating point elements in __attribute__((unused))xmm0 to packed double-precision
+      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
      (64-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
@@ -419,12 +419,12 @@ namespace cyme{
      */
     template<>
     forceinline  simd_trait<float,cyme::vmx,1>::register_type
-    _mm_rsqrt<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_rsqrt<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
+        return vec_rsqrte(xmm0);
     }
 
     /**
-      Compute 1/recsqrt (32-bit) floating point elements in __attribute__((unused))xmm0 to packed double-precision
+      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
      (64-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
@@ -433,12 +433,13 @@ namespace cyme{
      */
     template<>
     forceinline  simd_trait<float,cyme::vmx,2>::register_type
-    _mm_rsqrt<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_rsqrt<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
+        return simd_trait<float,cyme::vmx,2>::register_type(vec_rsqrte(xmm0.r0),
+                                                            vec_rsqrte(xmm0.r1));
     }
 
     /**
-      Compute 1/recsqrt (32-bit) floating point elements in __attribute__((unused))xmm0 to packed double-precision
+      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
      (64-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
@@ -447,8 +448,11 @@ namespace cyme{
      */
     template<>
     forceinline  simd_trait<float,cyme::vmx,4>::register_type
-    _mm_rsqrt<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_rsqrt<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
+        return simd_trait<float,cyme::vmx,4>::register_type(vec_rsqrte(xmm0.r0),
+                                                            vec_rsqrte(xmm0.r1),
+                                                            vec_rsqrte(xmm0.r2),
+                                                            vec_rsqrte(xmm0.r3));
     }
 
     /**
@@ -457,9 +461,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_neg<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
+    _mm_neg<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
         simd_trait<float,cyme::vmx,1>::register_type mask(vec_ctf(vec_splats(0x80000000),0));
 	return vec_xor(xmm0,mask);
+	//return vec_neg(xmm0);
     }
 
     /**
@@ -468,7 +473,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_neg<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
+    _mm_neg<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
         simd_trait<float,cyme::vmx,1>::register_type mask(vec_ctf(vec_splats(0x80000000),0));
 	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,mask),
 							    vec_xor(xmm0.r1,mask));
@@ -480,7 +485,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_neg<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
+    _mm_neg<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
         simd_trait<float,cyme::vmx,1>::register_type mask(vec_ctf(vec_splats(0x80000000),0));
 	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,mask),
 							    vec_xor(xmm0.r1,mask),
@@ -489,36 +494,36 @@ namespace cyme{
     }
 
     /**
-      Convert packed 32-bit integers in __attribute__((unused))xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation float,cyme::vmx,1 regs
      */
     template<>
     forceinline  simd_trait<float,cyme::vmx,1>::register_type
-    _mm_cast<float,cyme::vmx,1>(simd_trait<int,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
+    _mm_cast<float,cyme::vmx,1>(simd_trait<int,cyme::vmx,1>::register_type xmm0){
         return vec_ctf(xmm0,0);
     }
 
     /**
-      Convert packed 32-bit integers in __attribute__((unused))xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation float,cyme::vmx,2 regs
      */
     template<>
     forceinline  simd_trait<float,cyme::vmx,2>::register_type
-    _mm_cast<float,cyme::vmx,2>(simd_trait<int,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
+    _mm_cast<float,cyme::vmx,2>(simd_trait<int,cyme::vmx,2>::register_type xmm0){
         return simd_trait<float,cyme::vmx,2>::register_type(vec_ctf(xmm0.r0,0),
 							    vec_ctf(xmm0.r1,0));
     }
 
     /**
-      Convert packed 32-bit integers in __attribute__((unused))xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation float,cyme::vmx,4 regs
      */
     template<>
     forceinline  simd_trait<float,cyme::vmx,4>::register_type
-    _mm_cast<float,cyme::vmx,4>(simd_trait<int,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
+    _mm_cast<float,cyme::vmx,4>(simd_trait<int,cyme::vmx,4>::register_type xmm0){
         return simd_trait<float,cyme::vmx,4>::register_type(vec_ctf(xmm0.r0,0),
 							    vec_ctf(xmm0.r1,0),
 							    vec_ctf(xmm0.r2,0),
@@ -532,7 +537,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<int,cyme::vmx,1>::register_type
-    _mm_floor<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
+    _mm_floor<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
 	return vec_cts(vec_floor(xmm0),0);
 }
 
@@ -543,7 +548,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<int,cyme::vmx,2>::register_type
-    _mm_floor<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
+    _mm_floor<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
         return simd_trait<int,cyme::vmx,2>::register_type(vec_cts(vec_floor(xmm0.r0),0),
 							    vec_cts(vec_floor(xmm0.r1),0));
 }
@@ -556,7 +561,7 @@ namespace cyme{
 
     template<>
     forceinline simd_trait<int,cyme::vmx,4>::register_type
-    _mm_floor<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
+    _mm_floor<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
         return simd_trait<int,cyme::vmx,4>::register_type(vec_cts(vec_floor(xmm0.r0),0),
 							    vec_cts(vec_floor(xmm0.r1),0),
 							    vec_cts(vec_floor(xmm0.r2),0),
@@ -819,7 +824,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_single_load<double,cyme::vmx,1>(const simd_trait<double,cyme::vmx,1>::value_type __attribute__((unused))b){
+    _mm_single_load<double,cyme::vmx,1>(const simd_trait<double,cyme::vmx,1>::value_type b){
         return vec_vsx_ld(0, (vector double*)&b);
     }
 
@@ -828,8 +833,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::value_type
-    _mm_single_store<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                                           simd_trait<double,cyme::vmx,1>::pointer __attribute__((unused))b){
+    _mm_single_store<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0,
+                                           simd_trait<double,cyme::vmx,1>::pointer b){
         vec_vsx_st(xmm0,0,(vector double*)b);
 	return *b;
     }
@@ -840,7 +845,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_load1<double,cyme::vmx,1>(const simd_trait<double,cyme::vmx,1>::value_type __attribute__((unused))&a){
+    _mm_load1<double,cyme::vmx,1>(const simd_trait<double,cyme::vmx,1>::value_type &a){
         return vec_splats(a);
     }
 
@@ -850,7 +855,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_load1<double,cyme::vmx,2>(const simd_trait<double,cyme::vmx,2>::value_type __attribute__((unused))&a){
+    _mm_load1<double,cyme::vmx,2>(const simd_trait<double,cyme::vmx,2>::value_type &a){
         return simd_trait<double,cyme::vmx,2>::register_type(vec_splats(a),vec_splats(a));
     }
 
@@ -860,7 +865,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_load1<double,cyme::vmx,4>(const simd_trait<double,cyme::vmx,4>::value_type __attribute__((unused))&a){
+    _mm_load1<double,cyme::vmx,4>(const simd_trait<double,cyme::vmx,4>::value_type &a){
         return simd_trait<double,cyme::vmx,4>::register_type(vec_splats(a),vec_splats(a),
 							     vec_splats(a),vec_splats(a));
     }
@@ -871,7 +876,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_load<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::const_pointer __attribute__((unused))a){
+    _mm_load<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::const_pointer a){
         return vec_vsx_ld(0,(vector double*)a);
     }
 
@@ -881,7 +886,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_load<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::const_pointer __attribute__((unused))a){
+    _mm_load<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::const_pointer a){
         return simd_trait<double,cyme::vmx,2>::register_type(vec_vsx_ld(0,(vector double*)a),
 							     vec_vsx_ld(32,(vector double*)a));
     }
@@ -892,7 +897,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_load<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::const_pointer __attribute__((unused))a){
+    _mm_load<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::const_pointer a){
         return simd_trait<double,cyme::vmx,4>::register_type(vec_vsx_ld(0,(vector double*)a),
 							     vec_vsx_ld(32,(vector double*)a),
 							     vec_vsx_ld(64,(vector double*)a),
@@ -905,8 +910,8 @@ namespace cyme{
      */
     template<>
     forceinline void
-    _mm_store<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                                  simd_trait<double,cyme::vmx,1>::pointer  __attribute__((unused))a){
+    _mm_store<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0,
+                                  simd_trait<double,cyme::vmx,1>::pointer  a){
         vec_vsx_st(xmm0,0,(vector double*)a);
     }
 
@@ -916,8 +921,8 @@ namespace cyme{
      */
     template<>
     forceinline void
-    _mm_store<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                                  simd_trait<double,cyme::vmx,2>::pointer  __attribute__((unused))a){
+    _mm_store<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0,
+                                  simd_trait<double,cyme::vmx,2>::pointer  a){
         vec_vsx_st(xmm0.r0,0,(vector double*)a);
 	vec_vsx_st(xmm0.r1,32,(vector double*)a);
     }
@@ -928,8 +933,8 @@ namespace cyme{
      */
     template<>
     forceinline void
-    _mm_store<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                                  simd_trait<double,cyme::vmx,4>::pointer  __attribute__((unused))a){
+    _mm_store<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0,
+                                  simd_trait<double,cyme::vmx,4>::pointer  a){
         vec_vsx_st(xmm0.r0,0,(vector double*)a);
 	vec_vsx_st(xmm0.r1,32,(vector double*)a);
 	vec_vsx_st(xmm0.r2,64,(vector double*)a);
@@ -942,8 +947,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_mul<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+    _mm_mul<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,1>::register_type xmm1){
         return vec_mul(xmm0,xmm1);
     }
 
@@ -953,8 +958,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_mul<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+    _mm_mul<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,2>::register_type xmm1){
          return simd_trait<double,cyme::vmx,2>::register_type(vec_mul(xmm0.r0,xmm1.r0),
 							      vec_mul(xmm0.r1,xmm1.r1));
     }
@@ -965,8 +970,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_mul<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
+    _mm_mul<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,4>::register_type xmm1){
          return simd_trait<double,cyme::vmx,4>::register_type(vec_mul(xmm0.r0,xmm1.r0),
          						      vec_mul(xmm0.r1,xmm1.r1),
          						      vec_mul(xmm0.r2,xmm1.r2),
@@ -979,8 +984,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_div<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+    _mm_div<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,1>::register_type xmm1){
         return vec_div(xmm0,xmm1);
     }
 
@@ -990,8 +995,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_div<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+    _mm_div<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,2>::register_type xmm1){
          return simd_trait<double,cyme::vmx,2>::register_type(vec_div(xmm0.r0,xmm1.r0),
 							      vec_div(xmm0.r1,xmm1.r1));
     }
@@ -1002,8 +1007,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_div<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
+    _mm_div<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,4>::register_type xmm1){
          return simd_trait<double,cyme::vmx,4>::register_type(vec_div(xmm0.r0,xmm1.r0),
 							      vec_div(xmm0.r1,xmm1.r1),
 							      vec_div(xmm0.r2,xmm1.r2),
@@ -1016,8 +1021,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_add<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+    _mm_add<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,1>::register_type xmm1){
         return vec_add(xmm0,xmm1);
     }
 
@@ -1027,8 +1032,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_add<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+    _mm_add<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,2>::register_type xmm1){
          return simd_trait<double,cyme::vmx,2>::register_type(vec_add(xmm0.r0,xmm1.r0),
 							      vec_add(xmm0.r1,xmm1.r1));
     }
@@ -1039,8 +1044,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_add<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
+    _mm_add<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,4>::register_type xmm1){
          return simd_trait<double,cyme::vmx,4>::register_type(vec_add(xmm0.r0,xmm1.r0),
          						      vec_add(xmm0.r1,xmm1.r1),
          						      vec_add(xmm0.r2,xmm1.r2),
@@ -1053,8 +1058,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_sub<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+    _mm_sub<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,1>::register_type xmm1){
         return vec_div(xmm0,xmm1);
     }
 
@@ -1064,8 +1069,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_sub<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+    _mm_sub<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,2>::register_type xmm1){
          return simd_trait<double,cyme::vmx,2>::register_type(vec_sub(xmm0.r0,xmm1.r0),
 							      vec_sub(xmm0.r1,xmm1.r1));
     }
@@ -1076,8 +1081,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_sub<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
-                                simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
+    _mm_sub<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0,
+                                simd_trait<double,cyme::vmx,4>::register_type xmm1){
          return simd_trait<double,cyme::vmx,4>::register_type(vec_sub(xmm0.r0,xmm1.r0),
 							      vec_sub(xmm0.r1,xmm1.r1),
 							      vec_sub(xmm0.r2,xmm1.r2),
@@ -1153,7 +1158,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_rec<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
+    _mm_rec<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
         return vec_re(xmm0);
     }
 
@@ -1166,7 +1171,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_rec<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
+    _mm_rec<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
         return simd_trait<double,cyme::vmx,2>::register_type(vec_re(xmm0.r0),
 							     vec_re(xmm0.r1));
     }
@@ -1180,7 +1185,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_rec<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
+    _mm_rec<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
         return simd_trait<double,cyme::vmx,4>::register_type(vec_re(xmm0.r0),
 							     vec_re(xmm0.r1),
 							     vec_re(xmm0.r2),
@@ -1188,7 +1193,7 @@ namespace cyme{
     }
 
     /**
-      Compute 1/recsqrt (64-bit) floating point elements in __attribute__((unused))xmm0 to packed double-precision (64-bit)
+      Compute 1/recsqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit)
      floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
      of a and r is the value of the corresponding element of the result value:
@@ -1197,12 +1202,12 @@ namespace cyme{
      */
     template<>
     forceinline  simd_trait<double,cyme::vmx,1>::register_type
-    _mm_rsqrt<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_rsqrt<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
+        return vec_rsqrte(xmm0);
     }
 
     /**
-      Compute 1/recsqrt (64-bit) floating point elements in __attribute__((unused))xmm0 to packed double-precision (64-bit)
+      Compute 1/recsqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit)
      floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
      of a and r is the value of the corresponding element of the result value:
@@ -1211,12 +1216,13 @@ namespace cyme{
      */
     template<>
     forceinline  simd_trait<double,cyme::vmx,2>::register_type
-    _mm_rsqrt<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_rsqrt<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
+        return simd_trait<double,cyme::vmx,2>::register_type(vec_rsqrte(xmm0.r0),
+							     vec_rsqrte(xmm0.r1));
     }
 
     /**
-      Compute 1/recsqrt (64-bit) floating point elements in __attribute__((unused))xmm0 to packed double-precision (64-bit)
+      Compute 1/recsqrt (64-bit) floating point elements in xmm0 to packed double-precision (64-bit)
      floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
      of a and r is the value of the corresponding element of the result value:
@@ -1225,8 +1231,11 @@ namespace cyme{
      */
     template<>
     forceinline  simd_trait<double,cyme::vmx,4>::register_type
-    _mm_rsqrt<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_rsqrt<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
+        return simd_trait<double,cyme::vmx,4>::register_type(vec_rsqrte(xmm0.r0),
+							     vec_rsqrte(xmm0.r1),
+							     vec_rsqrte(xmm0.r2),
+							     vec_rsqrte(xmm0.r3));
     }
 
 
@@ -1439,7 +1448,7 @@ namespace cyme{
     _mm_gf<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
         assert(false);
     }
-    
+
 #ifdef __FMA__
     /**
       Returns a vector containing the results of performing a fused multiply/add for each corresponding
