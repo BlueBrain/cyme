@@ -34,6 +34,34 @@ extern "C" vector4double logd4(vector4double);// link to the fortran one
 */
 namespace cyme{
     /**
+ 	Union to handle int/float bit conversion.
+     */
+    typedef union{
+	float f;
+	boost::uint32_t i;
+    } ifu;
+
+    forceinline float bitcastf(boost::uint32_t i){
+	ifu tmp;
+	tmp.i = i;
+	return tmp.f;
+    }
+
+    /**
+	Union to handle int/double bit conversion.
+    */
+    typedef union{
+	double d;
+	boost::uint64_t ll;
+    } lldu;
+
+    forceinline double bitcastd(boost::uint64_t ll){
+	lldu tmp;
+	tmp.ll = ll;
+	return tmp.d;
+    }
+
+    /**
        Load a single-precision (32-bit) floating-point element from cyme into lower element of dst.
      */
     template<>
@@ -462,9 +490,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_neg<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
-        simd_trait<float,cyme::vmx,1>::register_type mask(__builtin_vsx_xvcvsxwsp(vec_splats((signed int)0x80000000)));
-	return vec_xor(xmm0,mask);
-	//return vec_neg(xmm0);
+	return vec_xor(xmm0,(vector float)vec_splats(bitcastf(0x80000000)));
     }
 
     /**
@@ -474,9 +500,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_neg<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
-        simd_trait<float,cyme::vmx,1>::register_type mask(__builtin_vsx_xvcvsxwsp(vec_splats((signed int)0x80000000)));
-	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,mask),
-							    vec_xor(xmm0.r1,mask));
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,vec_splats(bitcastf(0x80000000))),
+							    vec_xor(xmm0.r1,vec_splats(bitcastf(0x80000000))));
+
     }
 
     /**
@@ -486,11 +512,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_neg<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
-        simd_trait<float,cyme::vmx,1>::register_type mask(__builtin_vsx_xvcvsxwsp(vec_splats((signed int)0x80000000)));
-	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,mask),
-							    vec_xor(xmm0.r1,mask),
-							    vec_xor(xmm0.r2,mask),
-							    vec_xor(xmm0.r3,mask));
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,vec_splats(bitcastf(0x80000000))),
+							    vec_xor(xmm0.r1,vec_splats(bitcastf(0x80000000))),
+							    vec_xor(xmm0.r2,vec_splats(bitcastf(0x80000000))),
+							    vec_xor(xmm0.r3,vec_splats(bitcastf(0x80000000))));
     }
 
     /**
@@ -1316,8 +1341,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_neg<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-        simd_trait<double,cyme::vmx,1>::register_type mask(__builtin_vsx_xvcvsxwdp(vec_splats((signed int)0x8000000000000000)));
-	return vec_xor(xmm0, mask);
+	return vec_xor(xmm0,vec_splats((bitcastd(0x8000000000000000))));
 }
 
     /**
@@ -1327,9 +1351,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_neg<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-        simd_trait<double,cyme::vmx,1>::register_type mask(__builtin_vsx_xvcvsxwdp(vec_splats((signed int)0x8000000000000000)));
-        return simd_trait<double,cyme::vmx,2>::register_type(vec_xor(xmm0.r0, mask),
-							     vec_xor(xmm0.r1, mask));
+	return simd_trait<double,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,vec_splats(bitcastd(0x8000000000000000))),
+							     vec_xor(xmm0.r1,vec_splats(bitcastd(0x8000000000000000))));
     }
 
     /**
@@ -1339,11 +1362,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_neg<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-        simd_trait<double,cyme::vmx,1>::register_type mask(__builtin_vsx_xvcvsxwdp(vec_splats((signed int)0x8000000000000000)));
-        return simd_trait<double,cyme::vmx,4>::register_type(vec_xor(xmm0.r0, mask),
-							     vec_xor(xmm0.r1, mask),
-							     vec_xor(xmm0.r2, mask),
-							     vec_xor(xmm0.r3, mask));
+	return simd_trait<double,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,vec_splats(bitcastd(0x8000000000000000))),
+							     vec_xor(xmm0.r1,vec_splats(bitcastd(0x8000000000000000))),
+							     vec_xor(xmm0.r2,vec_splats(bitcastd(0x8000000000000000))),
+							     vec_xor(xmm0.r3,vec_splats(bitcastd(0x8000000000000000))));
     }
 
     /**
@@ -1429,7 +1451,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_twok<double,cyme::vmx,1>(simd_trait<int,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
-        assert(false);
+	//return __builtin_vsx_xvcvsxwdp(vec_sl(vec_add(xmm0, ),20));
+	assert(false);
     }
 
     /**
@@ -1461,13 +1484,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_ge<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
-	//vector signed int tmp = __builtin_vsx_xvcvspsxws(xmm0);
-	//tmp = vec_sr(tmp,vec_splats((unsigned int)52));
-	//tmp = vec_sub(tmp,vec_splats(1023));
-	//shuffle???
-	//return __builtin_vsx_xvcvdpsxws(tmp);
-        assert(false);
+    _mm_ge<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
+	vector signed int tmp = __builtin_vsx_xvcvdpsxws(xmm0);
+	tmp = vec_sr(tmp,vec_splats((unsigned int)52));
+	tmp = vec_sub(tmp,vec_splats(1023));
+	return __builtin_vsx_xvcvsxwdp(tmp);
     }
 
    /**
@@ -1477,17 +1498,15 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_ge<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
-	//vector signed int tmp0 = __builtin_vsx_xvcvspsxws(xmm0.r0);
-	//vector signed int tmp1 = __builtin_vsx_xvcvspsxws(xmm0.r1);
-	//tmp0 = vec_sr(tmp0,vec_splats((unsigned int)52));
-	//tmp1 = vec_sr(tmp1,vec_splats((unsigned int)52));
-	//tmp0 = vec_sub(tmp0,vec_splats(1023));
-	//tmp1 = vec_sub(tmp1,vec_splats(1023));
-	//shuffle???
-        //return simd_trait<double,cyme::vmx,2>::register_type(__builtin_vsx_xvcvdpsxws(tmp0),
-        //						       __builtin_vsx_xvcvdpsxws(tmp1));
-        assert(false);
+    _mm_ge<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
+	vector signed int tmp0 = __builtin_vsx_xvcvdpsxws(xmm0.r0);
+	vector signed int tmp1 = __builtin_vsx_xvcvdpsxws(xmm0.r1);
+	tmp0 = vec_sr(tmp0,vec_splats((unsigned int)52));
+	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)52));
+	tmp0 = vec_sub(tmp0,vec_splats(1023));
+	tmp1 = vec_sub(tmp1,vec_splats(1023));
+        return simd_trait<double,cyme::vmx,2>::register_type(__builtin_vsx_xvcvsxwdp(tmp0),
+        						     __builtin_vsx_xvcvsxwdp(tmp1));
     }
 
    /**
@@ -1497,25 +1516,23 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_ge<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
-	//vector signed int tmp0 = __builtin_vsx_xvcvspsxws(xmm0.r0);
-	//vector signed int tmp1 = __builtin_vsx_xvcvspsxws(xmm0.r1);
-	//vector signed int tmp2 = __builtin_vsx_xvcvspsxws(xmm0.r2);
-	//vector signed int tmp3 = __builtin_vsx_xvcvspsxws(xmm0.r3);
-	//tmp0 = vec_sr(tmp0,vec_splats((unsigned int)52));
-	//tmp1 = vec_sr(tmp1,vec_splats((unsigned int)52));
-	//tmp2 = vec_sr(tmp2,vec_splats((unsigned int)52));
-	//tmp3 = vec_sr(tmp3,vec_splats((unsigned int)52));
-	//tmp0 = vec_sub(tmp0,vec_splats(1023));
-	//tmp1 = vec_sub(tmp1,vec_splats(1023));
-	//tmp2 = vec_sub(tmp2,vec_splats(1023));
-	//tmp3 = vec_sub(tmp3,vec_splats(1023));
-	//shuffle???
-        //return simd_trait<double,cyme::vmx,4>::register_type(__builtin_vsx_xvcvdpsxws(tmp0),
-        //						       __builtin_vsx_xvcvdpsxws(tmp1),
-        //						       __builtin_vsx_xvcvdpsxws(tmp2),
-        //						       __builtin_vsx_xvcvdpsxws(tmp3));
-        assert(false);
+    _mm_ge<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
+	vector signed int tmp0 = __builtin_vsx_xvcvdpsxws(xmm0.r0);
+	vector signed int tmp1 = __builtin_vsx_xvcvdpsxws(xmm0.r1);
+	vector signed int tmp2 = __builtin_vsx_xvcvdpsxws(xmm0.r2);
+	vector signed int tmp3 = __builtin_vsx_xvcvdpsxws(xmm0.r3);
+	tmp0 = vec_sr(tmp0,vec_splats((unsigned int)52));
+	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)52));
+	tmp2 = vec_sr(tmp2,vec_splats((unsigned int)52));
+	tmp3 = vec_sr(tmp3,vec_splats((unsigned int)52));
+	tmp0 = vec_sub(tmp0,vec_splats(1023));
+	tmp1 = vec_sub(tmp1,vec_splats(1023));
+	tmp2 = vec_sub(tmp2,vec_splats(1023));
+	tmp3 = vec_sub(tmp3,vec_splats(1023));
+        return simd_trait<double,cyme::vmx,4>::register_type(__builtin_vsx_xvcvsxwdp(tmp0),
+        						     __builtin_vsx_xvcvsxwdp(tmp1),
+        						     __builtin_vsx_xvcvsxwdp(tmp2),
+        						     __builtin_vsx_xvcvsxwdp(tmp3));
     }
 
     /**
