@@ -1155,7 +1155,7 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_sub<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0,
                                 simd_trait<double,cyme::vmx,1>::register_type xmm1){
-        return vec_div(xmm0,xmm1);
+        return vec_sub(xmm0,xmm1);
     }
 
     /**
