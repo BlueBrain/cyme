@@ -166,7 +166,7 @@ namespace cyme{
     /** Specialisation of the trait class for the composite vector int,cyme::vmx,2 regs*/
     template <>
     struct simd_trait<int, cyme::vmx, 2> : trait<int>{
-        typedef simd_unroll<int,  cyme::vmx, 2> register_type;
+        typedef simd_unroll<int, cyme::vmx, 2> register_type;
     };
 
     /** Specialisation of the trait class for the composite vector int,cyme::vmx,1 reg*/
@@ -184,7 +184,7 @@ namespace cyme{
     /** Specialisation of the trait class for the composite vector double,cyme::vmx,2 regs*/
     template <>
     struct simd_trait<double, cyme::vmx, 2> : trait<double>{
-        typedef simd_unroll<double ,  cyme::vmx, 2> register_type;
+        typedef simd_unroll<double, cyme::vmx, 2> register_type;
     };
 
     /** Specialisation of the trait class for the composite vector double,cyme::vmx,1 reg*/
@@ -202,7 +202,7 @@ namespace cyme{
     /** Specialisation of the trait class for the composite vector float,cyme::vmx,2 regs*/
     template <>
     struct simd_trait<float, cyme::vmx, 2> : trait<float>{
-        typedef simd_unroll<float,  cyme::vmx, 2> register_type;
+        typedef simd_unroll<float, cyme::vmx, 2> register_type;
     };
 
     /** Specialisation of the trait class for the composite vector float,cyme::vmx,1 regs*/

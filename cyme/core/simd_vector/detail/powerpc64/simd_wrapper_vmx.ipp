@@ -43,7 +43,7 @@ namespace cyme{
     }
 
     /**
-       store a double-precision (32-bit) floating-point element from register lower element to cyme.
+       store a double-precision (64-bit) floating-point element from register lower element to cyme.
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::value_type
@@ -411,7 +411,7 @@ namespace cyme{
 
     /**
       Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
-     (64-bit) floating-point elements, and store the results in dst.
+     (32-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
      | (r-1/x^0.5) / (1/x^0.5) | ≤ 1/256
@@ -425,7 +425,7 @@ namespace cyme{
 
     /**
       Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
-     (64-bit) floating-point elements, and store the results in dst.
+     (32-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
      | (r-1/x^0.5) / (1/x^0.5) | ≤ 1/256
@@ -440,7 +440,7 @@ namespace cyme{
 
     /**
       Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
-     (64-bit) floating-point elements, and store the results in dst.
+     (32-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
      | (r-1/x^0.5) / (1/x^0.5) | ≤ 1/256
@@ -463,6 +463,7 @@ namespace cyme{
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_neg<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
 	return vec_xor(xmm0,(vector float)vec_splats(0x80000000));
+	//return vec_xor(xmm0, vec_splats((float)-0.));
     }
 
     /**
@@ -603,7 +604,7 @@ namespace cyme{
     }
 
     /**
-      Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
+      Extract the exponent of floating-point exponent (32-bit) elements and store the results in dst.
       arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
        specialisation float,cyme::vmx,1 regs
      */
@@ -617,7 +618,7 @@ namespace cyme{
     }
 
     /**
-      Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
+      Extract the exponent of floating-point exponent (32-bit) elements and store the results in dst.
       arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
        specialisation float,cyme::vmx,2 regs
      */
@@ -635,7 +636,7 @@ namespace cyme{
     }
 
     /**
-      Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
+      Extract the exponent of floating-point exponent (32-bit) elements and store the results in dst.
       arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
        specialisation float,cyme::vmx,4 regs
      */
@@ -661,7 +662,7 @@ namespace cyme{
     }
 
     /**
-      Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
+      Extract the fraction of floating-point exponent (32-bit) elements and store the results in dst.
        specialisation float,cyme::vmx,1 regs
      */
     template<>
@@ -674,7 +675,7 @@ namespace cyme{
     }
 
     /**
-      Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
+      Extract the fraction of floating-point exponent (32-bit) elements and store the results in dst.
        specialisation float,cyme::vmx,2 regs
      */
     template<>
@@ -691,7 +692,7 @@ namespace cyme{
     }
 
     /**
-      Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
+      Extract the fraction of floating-point exponent (32-bit) elements and store the results in dst.
        specialisation float,cyme::vmx,4 regs
      */
     template<>
@@ -955,7 +956,7 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_load<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::const_pointer a){
         return simd_trait<double,cyme::vmx,2>::register_type(vec_vsx_ld(0,(vector double*)a),
-							     vec_vsx_ld(32,(vector double*)a));
+							     vec_vsx_ld(16,(vector double*)a));
     }
 
     /**
@@ -966,9 +967,9 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_load<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::const_pointer a){
         return simd_trait<double,cyme::vmx,4>::register_type(vec_vsx_ld(0,(vector double*)a),
+							     vec_vsx_ld(16,(vector double*)a),
 							     vec_vsx_ld(32,(vector double*)a),
-							     vec_vsx_ld(64,(vector double*)a),
-							     vec_vsx_ld(96,(vector double*)a));
+							     vec_vsx_ld(48,(vector double*)a));
     }
 
     /**
@@ -991,7 +992,7 @@ namespace cyme{
     _mm_store<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0,
                                   simd_trait<double,cyme::vmx,2>::pointer  a){
         vec_vsx_st(xmm0.r0,0,(vector double*)a);
-	vec_vsx_st(xmm0.r1,32,(vector double*)a);
+	vec_vsx_st(xmm0.r1,16,(vector double*)a);
     }
 
     /**
@@ -1003,9 +1004,9 @@ namespace cyme{
     _mm_store<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0,
                                   simd_trait<double,cyme::vmx,4>::pointer  a){
         vec_vsx_st(xmm0.r0,0,(vector double*)a);
-	vec_vsx_st(xmm0.r1,32,(vector double*)a);
-	vec_vsx_st(xmm0.r2,64,(vector double*)a);
-	vec_vsx_st(xmm0.r3,96,(vector double*)a);
+	vec_vsx_st(xmm0.r1,16,(vector double*)a);
+	vec_vsx_st(xmm0.r2,32,(vector double*)a);
+	vec_vsx_st(xmm0.r3,48,(vector double*)a);
     }
 
     /**
@@ -1314,6 +1315,7 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_neg<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
 	return vec_xor(xmm0,(vector double)vec_splats(0x8000000000000000));
+	//return vec_xor(xmm0, vec_splats(-0.));
 }
 
     /**
@@ -1341,7 +1343,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation double,cyme::vmx,1 regs
      */
@@ -1352,7 +1354,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation double,cyme::vmx,2 regs
      */
@@ -1364,7 +1366,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation double,cyme::vmx,4 regs
      */
