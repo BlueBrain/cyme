@@ -43,7 +43,7 @@ namespace cyme{
     }
 
     /**
-       store a double-precision (64-bit) floating-point element from register lower element to cyme.
+       store a single-precision (32-bit) floating-point element from register lower element to cyme.
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::value_type
@@ -410,7 +410,7 @@ namespace cyme{
     }
 
     /**
-      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
+      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed single-precision
      (32-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
@@ -424,7 +424,7 @@ namespace cyme{
     }
 
     /**
-      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
+      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed single-precision
      (32-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
@@ -439,7 +439,7 @@ namespace cyme{
     }
 
     /**
-      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed double-precision
+      Compute 1/recsqrt (32-bit) floating point elements in xmm0 to packed single-precision
      (32-bit) floating-point elements, and store the results in dst.
      \warning The precision guarantee is specified by the following expression, where x is the value of each element
        of a and r is the value of the corresponding element of the result value:
@@ -492,7 +492,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed single-precision (32-bit) floating-point elements,
      and store the results in dst.
        specialisation float,cyme::vmx,1 regs
      */
@@ -503,7 +503,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed single-precision (32-bit) floating-point elements,
      and store the results in dst.
        specialisation float,cyme::vmx,2 regs
      */
@@ -515,7 +515,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed single-precision (32-bit) floating-point elements,
      and store the results in dst.
        specialisation float,cyme::vmx,4 regs
      */
@@ -1343,7 +1343,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation double,cyme::vmx,1 regs
      */
@@ -1354,7 +1354,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation double,cyme::vmx,2 regs
      */
@@ -1366,7 +1366,7 @@ namespace cyme{
     }
 
     /**
-      Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+      Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
      and store the results in dst.
        specialisation double,cyme::vmx,4 regs
      */
