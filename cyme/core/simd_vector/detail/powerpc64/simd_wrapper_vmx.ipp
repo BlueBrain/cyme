@@ -34,34 +34,6 @@ extern "C" vector4double logd4(vector4double);// link to the fortran one
 */
 namespace cyme{
     /**
- 	Union to handle int/float bit conversion.
-     */
-    typedef union{
-	float f;
-	boost::uint32_t i;
-    } ifu;
-
-    forceinline float bitcastf(boost::uint32_t i){
-	ifu tmp;
-	tmp.i = i;
-	return tmp.f;
-    }
-
-    /**
-	Union to handle int/double bit conversion.
-    */
-    typedef union{
-	double d;
-	boost::uint64_t ll;
-    } lldu;
-
-    forceinline double bitcastd(boost::uint64_t ll){
-	lldu tmp;
-	tmp.ll = ll;
-	return tmp.d;
-    }
-
-    /**
        Load a single-precision (32-bit) floating-point element from cyme into lower element of dst.
      */
     template<>
@@ -490,7 +462,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_neg<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
-	return vec_xor(xmm0,(vector float)vec_splats(bitcastf(0x80000000)));
+	return vec_xor(xmm0,(vector float)vec_splats(0x80000000));
     }
 
     /**
@@ -500,8 +472,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_neg<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
-	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,vec_splats(bitcastf(0x80000000))),
-							    vec_xor(xmm0.r1,vec_splats(bitcastf(0x80000000))));
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,(vector float)vec_splats(0x80000000)),
+							    vec_xor(xmm0.r1,(vector float)vec_splats(0x80000000)));
 
     }
 
@@ -512,10 +484,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_neg<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
-	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,vec_splats(bitcastf(0x80000000))),
-							    vec_xor(xmm0.r1,vec_splats(bitcastf(0x80000000))),
-							    vec_xor(xmm0.r2,vec_splats(bitcastf(0x80000000))),
-							    vec_xor(xmm0.r3,vec_splats(bitcastf(0x80000000))));
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,(vector float)vec_splats(0x80000000)),
+							    vec_xor(xmm0.r1,(vector float)vec_splats(0x80000000)),
+							    vec_xor(xmm0.r2,(vector float)vec_splats(0x80000000)),
+							    vec_xor(xmm0.r3,(vector float)vec_splats(0x80000000)));
     }
 
     /**
@@ -1341,7 +1313,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_neg<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	return vec_xor(xmm0,vec_splats((bitcastd(0x8000000000000000))));
+	return vec_xor(xmm0,(vector double)vec_splats(0x8000000000000000));
 }
 
     /**
@@ -1351,8 +1323,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_neg<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,vec_splats(bitcastd(0x8000000000000000))),
-							     vec_xor(xmm0.r1,vec_splats(bitcastd(0x8000000000000000))));
+	return simd_trait<double,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,(vector double)vec_splats(0x8000000000000000)),
+							     vec_xor(xmm0.r1,(vector double)vec_splats(0x8000000000000000)));
     }
 
     /**
@@ -1362,10 +1334,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_neg<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,vec_splats(bitcastd(0x8000000000000000))),
-							     vec_xor(xmm0.r1,vec_splats(bitcastd(0x8000000000000000))),
-							     vec_xor(xmm0.r2,vec_splats(bitcastd(0x8000000000000000))),
-							     vec_xor(xmm0.r3,vec_splats(bitcastd(0x8000000000000000))));
+	return simd_trait<double,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,(vector double)vec_splats(0x8000000000000000)),
+							     vec_xor(xmm0.r1,(vector double)vec_splats(0x8000000000000000)),
+							     vec_xor(xmm0.r2,(vector double)vec_splats(0x8000000000000000)),
+							     vec_xor(xmm0.r3,(vector double)vec_splats(0x8000000000000000)));
     }
 
     /**
