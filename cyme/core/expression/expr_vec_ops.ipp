@@ -111,7 +111,7 @@ namespace cyme{
     forceinline log10(rvec<T,O,N,R1> const& a){
         return rvec<T,O,N,vec_log10<T,O,N,R1> >(vec_log10<T,O,N,R1>(a.rep()));
     }
-    
+
     /**
     * pow(a,e) function, integer only
     */

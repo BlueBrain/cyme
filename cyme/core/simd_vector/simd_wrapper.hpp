@@ -94,13 +94,13 @@ namespace cyme{
     template<class T, cyme::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_neg(typename simd_trait<T,O,N>::register_type xmm0);
 
-    /** Free function (wrapper) for calculating the floor */
-    template<class T, cyme::simd O, int N>
-    forceinline typename simd_trait<int,O,N>::register_type _mm_floor(typename simd_trait<T,O,N>::register_type xmm0);
-
     /** Free function to cast in/to float for the exp */
     template<class T, cyme::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_cast(typename simd_trait<int,O,N>::register_type xmm0);
+
+    /** Free function (wrapper) for calculating the floor */
+    template<class T, cyme::simd O, int N>
+    forceinline typename simd_trait<int,O,N>::register_type _mm_floor(typename simd_trait<T,O,N>::register_type xmm0);
 
     /** Free function to return the float vector 2^k */
     template<class T, cyme::simd O, int N>
@@ -167,6 +167,10 @@ namespace cyme{
 
 #ifdef __MIC__
     #include "cyme/core/simd_vector/detail/mic/simd_wrapper_mic.ipp"
+#endif
+
+#ifdef __PPC64__
+    #include "cyme/core/simd_vector/detail/powerpc64/simd_wrapper_vmx.ipp"
 #endif
 
 #endif
