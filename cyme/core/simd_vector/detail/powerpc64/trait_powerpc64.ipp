@@ -75,6 +75,7 @@ namespace cyme{
     template <>
     struct simd_trait<int, cyme::qpx, 1> : trait<int>{
         typedef vector4double register_type;
+    };
 
     /** Specialisation of the trait class for the composite vector double,cyme::qpx,4 regs*/
     template <>
