@@ -613,7 +613,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_ge<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
-	vector signed int tmp = (vector int)xmm0;
+	vector signed int tmp = (vector signed int)xmm0;
 	tmp = vec_sr(tmp,vec_splats((unsigned int)23));
 	tmp = vec_sub(tmp, vec_splats(127));
 	return (vector float)tmp;
@@ -627,8 +627,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_ge<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
-	vector signed int tmp0 =(vector int)xmm0.r0;
-	vector signed int tmp1 =(vector int)xmm0.r1;
+	vector signed int tmp0 =(vector signed int)xmm0.r0;
+	vector signed int tmp1 =(vector signed int)xmm0.r1;
 	tmp0 = vec_sr(tmp0,vec_splats((unsigned int)23));
 	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)23));
 	tmp0 = vec_sub(tmp0, vec_splats(127));
@@ -645,10 +645,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_ge<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
-	vector signed int tmp0 =(vector int)xmm0.r0;
-	vector signed int tmp1 =(vector int)xmm0.r1;
-	vector signed int tmp2 =(vector int)xmm0.r2;
-	vector signed int tmp3 =(vector int)xmm0.r3;
+	vector signed int tmp0 =(vector signed int)xmm0.r0;
+	vector signed int tmp1 =(vector signed int)xmm0.r1;
+	vector signed int tmp2 =(vector signed int)xmm0.r2;
+	vector signed int tmp3 =(vector signed int)xmm0.r3;
 	tmp0 = vec_sr(tmp0,vec_splats((unsigned int)23));
 	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)23));
 	tmp2 = vec_sr(tmp2,vec_splats((unsigned int)23));
@@ -670,7 +670,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_gf<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
-	vector signed int tmp =(vector int)xmm0;
+	vector signed int tmp =(vector signed int)xmm0;
 	tmp = vec_and(tmp, vec_splats((signed int)0x7fffff));
 	tmp = vec_add(tmp, vec_splats((signed int)0x3f800000));
 	return (vector float)tmp;
@@ -683,8 +683,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_gf<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
-	vector signed int tmp0 = (vector int)xmm0.r0;
-	vector signed int tmp1 = (vector int)xmm0.r1;
+	vector signed int tmp0 = (vector signed int)xmm0.r0;
+	vector signed int tmp1 = (vector signed int)xmm0.r1;
 	tmp0 = vec_and(tmp0, vec_splats((signed int)0x7fffff));
 	tmp1 = vec_and(tmp1, vec_splats((signed int)0x7fffff));
 	tmp0 = vec_add(tmp0, vec_splats((signed int)0x3f800000));
@@ -700,10 +700,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_gf<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
-	vector signed int tmp0 = (vector int)xmm0.r0;
-	vector signed int tmp1 = (vector int)xmm0.r1;
-	vector signed int tmp2 = (vector int)xmm0.r2;
-	vector signed int tmp3 = (vector int)xmm0.r3;
+	vector signed int tmp0 = (vector signed int)xmm0.r0;
+	vector signed int tmp1 = (vector signed int)xmm0.r1;
+	vector signed int tmp2 = (vector signed int)xmm0.r2;
+	vector signed int tmp3 = (vector signed int)xmm0.r3;
 	tmp0 = vec_and(tmp0, vec_splats((signed int)0x7fffff));
 	tmp1 = vec_and(tmp1, vec_splats((signed int)0x7fffff));
 	tmp2 = vec_and(tmp2, vec_splats((signed int)0x7fffff));
@@ -1479,7 +1479,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_ge<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	vector signed int tmp = (vector int)xmm0;
+	vector signed int tmp = (vector signed int)xmm0;
 	tmp = vec_sr(tmp,vec_splats((unsigned int)52));
 	tmp = vec_sub(tmp,vec_splats(1023));
 	return (vector double)tmp;
@@ -1493,8 +1493,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_ge<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	vector signed int tmp0 = (vector int)xmm0.r0;
-	vector signed int tmp1 = (vector int)xmm0.r1;
+	vector signed int tmp0 = (vector signed int)xmm0.r0;
+	vector signed int tmp1 = (vector signed int)xmm0.r1;
 	tmp0 = vec_sr(tmp0,vec_splats((unsigned int)52));
 	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)52));
 	tmp0 = vec_sub(tmp0,vec_splats(1023));
@@ -1511,10 +1511,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_ge<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-	vector signed int tmp0 = (vector int)xmm0.r0;
-	vector signed int tmp1 = (vector int)xmm0.r1;
-	vector signed int tmp2 = (vector int)xmm0.r2;
-	vector signed int tmp3 = (vector int)xmm0.r3;
+	vector signed int tmp0 = (vector signed int)xmm0.r0;
+	vector signed int tmp1 = (vector signed int)xmm0.r1;
+	vector signed int tmp2 = (vector signed int)xmm0.r2;
+	vector signed int tmp3 = (vector signed int)xmm0.r3;
 	tmp0 = vec_sr(tmp0,vec_splats((unsigned int)52));
 	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)52));
 	tmp2 = vec_sr(tmp2,vec_splats((unsigned int)52));
@@ -1536,7 +1536,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_gf<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	vector signed int tmp = (vector int)xmm0;
+	vector signed int tmp = (vector signed int)xmm0;
         tmp = vec_and(tmp,vec_splats((signed int)0xfffffffffffff));
         tmp = vec_add(tmp,vec_splats((signed int)0x3ff0000000000000));
 	return (vector double)tmp;
@@ -1549,8 +1549,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_gf<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	vector signed int tmp0 = (vector int)xmm0.r0;
-	vector signed int tmp1 = (vector int)xmm0.r1;
+	vector signed int tmp0 = (vector signed int)xmm0.r0;
+	vector signed int tmp1 = (vector signed int)xmm0.r1;
         tmp0 = vec_and(tmp0,vec_splats((signed int)0xfffffffffffff));
         tmp1 = vec_and(tmp1,vec_splats((signed int)0xfffffffffffff));
         tmp0 = vec_add(tmp0,vec_splats((signed int)0x3ff0000000000000));
@@ -1566,10 +1566,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_gf<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-	vector signed int tmp0 = (vector int)xmm0.r0;
-	vector signed int tmp1 = (vector int)xmm0.r1;
-	vector signed int tmp2 = (vector int)xmm0.r2;
-	vector signed int tmp3 = (vector int)xmm0.r3;
+	vector signed int tmp0 = (vector signed int)xmm0.r0;
+	vector signed int tmp1 = (vector signed int)xmm0.r1;
+	vector signed int tmp2 = (vector signed int)xmm0.r2;
+	vector signed int tmp3 = (vector signed int)xmm0.r3;
         tmp0 = vec_and(tmp0,vec_splats((signed int)0xfffffffffffff));
         tmp1 = vec_and(tmp1,vec_splats((signed int)0xfffffffffffff));
         tmp2 = vec_and(tmp2,vec_splats((signed int)0xfffffffffffff));
