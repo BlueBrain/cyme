@@ -1667,8 +1667,8 @@ namespace cyme{
                                  simd_trait<double,cyme::vmx,4>::register_type xmm2){
         return simd_trait<double,cyme::vmx,4>::register_type(vec_nmsub(xmm0.r0,xmm1.r0,xmm2.r0),
 							     vec_nmsub(xmm0.r1,xmm1.r1,xmm2.r1),
-							     vec_nmsub(xmm0.r2,xmm1.r1,xmm2.r2),
-							     vec_nmsub(xmm0.r3,xmm1.r1,xmm2.r3));
+							     vec_nmsub(xmm0.r2,xmm1.r2,xmm2.r2),
+							     vec_nmsub(xmm0.r3,xmm1.r3,xmm2.r3));
     }
 
     /**
