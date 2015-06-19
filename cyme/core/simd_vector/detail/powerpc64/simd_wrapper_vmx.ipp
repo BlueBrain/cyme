@@ -34,8 +34,10 @@
 #define vec_ctd __builtin_vsx_xvcvsxwdp
 #define vec_cdts __builtin_vsx_xvcvdpsxws
 
-extern "C" vector double expd2(vector double vx);// link to the fortran one
-extern "C" vector double logd2(vector double vx);// link to the fortran one
+extern "C" vector float expf4(vector float vx);// link to the fortran one
+extern "C" vector float logf4(vector float vx);// link to the fortran one
+extern "C" vector double expd4(vector double vx);// link to the fortran one
+extern "C" vector double logd4(vector double vx);// link to the fortran one
 
 namespace cyme{
     /**
@@ -317,8 +319,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_exp<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_exp<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
+	return expf4(xmm0);
     }
 
     /**
@@ -327,8 +329,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_exp<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_exp<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
+	return simd_trait<float,cyme::vmx,2>::register_type(expf4(xmm0.r0),expf4(xmm0.r1));
     }
 
     /**
@@ -337,8 +339,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_exp<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_exp<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
+	return simd_trait<float,cyme::vmx,4>::register_type(expf4(xmm0.r0),expf4(xmm0.r1),
+							    expf4(xmm0.r2),expf4(xmm0.r3));
     }
 
     /**
@@ -347,8 +350,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_log<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_log<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
+	return logf4(xmm0);
     }
 
     /**
@@ -357,8 +360,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_log<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_log<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
+	return simd_trait<float,cyme::vmx,2>::register_type(logf4(xmm0.r0),logf4(xmm0.r1));
     }
 
     /**
@@ -367,8 +370,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_log<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
-        assert(false);
+    _mm_log<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
+	return simd_trait<float,cyme::vmx,4>::register_type(logf4(xmm0.r0),logf4(xmm0.r1),
+							    logf4(xmm0.r2),logf4(xmm0.r3));
     }
 
     /**
@@ -1169,7 +1173,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_exp<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	return expd2(xmm0);
+	return expd4(xmm0);
     }
 
     /**
@@ -1179,7 +1183,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_exp<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,2>::register_type(expd2(xmm0.r0),expd2(xmm0.r1));
+	return simd_trait<double,cyme::vmx,2>::register_type(expd4(xmm0.r0),expd4(xmm0.r1));
     }
 
     /**
@@ -1189,8 +1193,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_exp<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,4>::register_type(expd2(xmm0.r0),expd2(xmm0.r1),
-							     expd2(xmm0.r2),expd2(xmm0.r3));
+	return simd_trait<double,cyme::vmx,4>::register_type(expd4(xmm0.r0),expd4(xmm0.r1),
+							     expd4(xmm0.r2),expd4(xmm0.r3));
     }
 
     /**
@@ -1200,7 +1204,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_log<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	return logd2(xmm0);
+	return logd4(xmm0);
     }
 
     /**
@@ -1210,7 +1214,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_log<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,2>::register_type(logd2(xmm0.r0),logd2(xmm0.r1));
+	return simd_trait<double,cyme::vmx,2>::register_type(logd4(xmm0.r0),logd4(xmm0.r1));
     }
 
     /**
@@ -1220,8 +1224,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_log<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,4>::register_type(logd2(xmm0.r0),logd2(xmm0.r1),
-							     logd2(xmm0.r2), logd2(xmm0.r3));
+	return simd_trait<double,cyme::vmx,4>::register_type(logd4(xmm0.r0),logd4(xmm0.r1),
+							     logd4(xmm0.r2), logd4(xmm0.r3));
     }
 
     /**
