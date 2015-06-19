@@ -30,6 +30,9 @@
 
 #include <boost/cstdint.hpp>
 #include <assert.h>
+
+#define vec_ctd __builtin_vsx_xvcvsxwdp
+#define vec_cdts __builtin_vsx_xvcvdpsxws
 /*
 extern "C" vector4double expd4(vector4double);// link to the fortran one
 extern "C" vector4double logd4(vector4double);// link to the fortran one
@@ -1352,7 +1355,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_cast<double,cyme::vmx,1>(simd_trait<int,cyme::vmx,1>::register_type xmm0){
-	return __builtin_vsx_xvcvsxwdp(xmm0);
+	return vec_ctd(xmm0);
     }
 
     /**
@@ -1363,8 +1366,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_cast<double,cyme::vmx,2>(simd_trait<int,cyme::vmx,2>::register_type xmm0){
-        return simd_trait<double,cyme::vmx,2>::register_type(__builtin_vsx_xvcvsxwdp(xmm0.r0),
-							     __builtin_vsx_xvcvsxwdp(xmm0.r1));
+        return simd_trait<double,cyme::vmx,2>::register_type(vec_ctd(xmm0.r0),
+							     vec_ctd(xmm0.r1));
     }
 
     /**
@@ -1375,12 +1378,11 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_cast<double,cyme::vmx,4>(simd_trait<int,cyme::vmx,4>::register_type xmm0){
-        return simd_trait<double,cyme::vmx,4>::register_type(__builtin_vsx_xvcvsxwdp(xmm0.r0),
-							     __builtin_vsx_xvcvsxwdp(xmm0.r1),
-							     __builtin_vsx_xvcvsxwdp(xmm0.r2),
-							     __builtin_vsx_xvcvsxwdp(xmm0.r3));
+        return simd_trait<double,cyme::vmx,4>::register_type(vec_ctd(xmm0.r0),
+							     vec_ctd(xmm0.r1),
+							     vec_ctd(xmm0.r2),
+							     vec_ctd(xmm0.r3));
     }
-
 
     /**
       Returns a vector containing the largest representable floating-point integral values less than or equal
@@ -1390,7 +1392,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::vmx,1>::register_type
     _mm_floor<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	return __builtin_vsx_xvcvdpsxws(vec_floor(xmm0));
+	return vec_cdts(vec_floor(xmm0));
     }
 
     /**
@@ -1401,8 +1403,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::vmx,2>::register_type
     _mm_floor<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-        return simd_trait<int,cyme::vmx,2>::register_type(__builtin_vsx_xvcvdpsxws(vec_floor(xmm0.r0)),
-							  __builtin_vsx_xvcvdpsxws(vec_floor(xmm0.r1)));
+        return simd_trait<int,cyme::vmx,2>::register_type(vec_cdts(vec_floor(xmm0.r0)),
+							  vec_cdts(vec_floor(xmm0.r1)));
     }
 
     /**
@@ -1413,10 +1415,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::vmx,4>::register_type
     _mm_floor<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-        return simd_trait<int,cyme::vmx,4>::register_type(__builtin_vsx_xvcvdpsxws(vec_floor(xmm0.r0)),
-							  __builtin_vsx_xvcvdpsxws(vec_floor(xmm0.r1)),
-							  __builtin_vsx_xvcvdpsxws(vec_floor(xmm0.r2)),
-							  __builtin_vsx_xvcvdpsxws(vec_floor(xmm0.r3)));
+        return simd_trait<int,cyme::vmx,4>::register_type(vec_cdts(vec_floor(xmm0.r0)),
+							  vec_cdts(vec_floor(xmm0.r1)),
+							  vec_cdts(vec_floor(xmm0.r2)),
+							  vec_cdts(vec_floor(xmm0.r3)));
     }
 
     /**
