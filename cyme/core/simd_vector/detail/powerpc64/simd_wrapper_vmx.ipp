@@ -1482,8 +1482,15 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_ge<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
 	vector signed int tmp = (vector signed int)xmm0;
-	tmp = vec_sr(tmp,vec_splats((unsigned int)52));
-	tmp = vec_sub(tmp,vec_splats(1023));
+	vector signed int mask = {(signed int)0xffffffff,(signed int)0x00000000,
+				  (signed int)0xffffffff,(signed int)0x00000000};
+	vector signed int tmp_sub = {1023,0,1023,0};
+	tmp = vec_and(tmp,mask);
+	tmp = vec_sr(tmp,vec_splats((unsigned int)20));
+	tmp = vec_sub(tmp,tmp_sub);
+	//Code to shuffle
+	////vector unsigned char perm_cntl = {0x04,0x05,0x06,0x07,0x00,0x01,0x02,0x03,0x0C,0x0D,0x0E,0x0F,0x08,0x09,0x0A,0x0B};
+	//tmp = vec_perm(tmp,tmp,perm_cntl);
 	return vec_ctd(tmp);
     }
 
@@ -1539,8 +1546,14 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_gf<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
 	vector signed int tmp = (vector signed int)xmm0;
-        tmp = vec_and(tmp,vec_splats((signed int)0xfffffffffffff));
-        tmp = vec_add(tmp,vec_splats((signed int)0x3ff0000000000000));
+        //tmp = vec_and(tmp,vec_splats((signed int)0x000f ffff ffff ffff));
+        //tmp = vec_add(tmp,vec_splats((signed int)0x3ff0 0000 0000 0000));
+        vector signed int mask = {(signed int)0x000fffff,(signed int)0xffffffff,
+				     (signed int)0x000fffff,(signed int)0xffffffff};
+        vector signed int tmp_add = {(signed int)0x3ff00000,(signed int)0x00000000,
+				     (signed int)0x3ff00000,(signed int)0x00000000};
+	tmp = vec_and(tmp,mask);
+	tmp = vec_add(tmp,tmp_add);
 	return (vector double)tmp;
     }
 

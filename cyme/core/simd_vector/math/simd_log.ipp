@@ -57,8 +57,8 @@ namespace cyme{
              class Solver = Remez_log<T,O,N,n> >
     struct cyme_log{
         static forceinline vec_simd<T,O,N> log(vec_simd<T,O,N> x){
-            vec_simd<T,O,N> ln2(0.6931471805599453); // get the const value ln(2)
             vec_simd<T,O,N> e = ge(x); // ge = get exponent
+            vec_simd<T,O,N> ln2(0.6931471805599453); // get the const value ln(2)
             vec_simd<T,O,N> f = gf(x); // gf = get fraction
 #ifdef __FMA__
             f-=vec_simd<T,O,N>(1.0); //translate for rounding see comment before
