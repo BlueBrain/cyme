@@ -1765,6 +1765,8 @@ namespace cyme{
 							     vec_nmadd(xmm0.r2,xmm1.r2,xmm2.r2),
 							     vec_nmadd(xmm0.r3,xmm1.r3,xmm2.r3));
     }
+#undef vec_ctd
+#undef vec_ctds
 #endif
 } //end namespace
 
