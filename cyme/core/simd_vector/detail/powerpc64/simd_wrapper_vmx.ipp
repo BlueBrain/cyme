@@ -619,7 +619,7 @@ namespace cyme{
 	vector signed int tmp = (vector signed int)xmm0;
 	tmp = vec_sr(tmp,vec_splats((unsigned int)23));
 	tmp = vec_sub(tmp, vec_splats(127));
-	return (vector float)tmp;
+	return vec_ctf(tmp,0);
     }
 
     /**
@@ -630,14 +630,14 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_ge<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
-	vector signed int tmp0 =(vector signed int)xmm0.r0;
-	vector signed int tmp1 =(vector signed int)xmm0.r1;
+	vector signed int tmp0 = (vector signed int)xmm0.r0;
+	vector signed int tmp1 = (vector signed int)xmm0.r1;
 	tmp0 = vec_sr(tmp0,vec_splats((unsigned int)23));
 	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)23));
 	tmp0 = vec_sub(tmp0, vec_splats(127));
 	tmp1 = vec_sub(tmp1, vec_splats(127));
-	return simd_trait<float,cyme::vmx,2>::register_type((vector float)tmp0,
-							    (vector float)tmp1);
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_ctf(tmp0,0),
+							    vec_ctf(tmp1,0));
     }
 
     /**
@@ -656,14 +656,14 @@ namespace cyme{
 	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)23));
 	tmp2 = vec_sr(tmp2,vec_splats((unsigned int)23));
 	tmp3 = vec_sr(tmp3,vec_splats((unsigned int)23));
-	tmp0 = vec_sub(tmp0, vec_splats(127));
-	tmp1 = vec_sub(tmp1, vec_splats(127));
-	tmp2 = vec_sub(tmp2, vec_splats(127));
-	tmp3 = vec_sub(tmp3, vec_splats(127));
-	return simd_trait<float,cyme::vmx,4>::register_type((vector float)tmp0,
-							    (vector float)tmp1,
-							    (vector float)tmp2,
-							    (vector float)tmp3);
+	tmp0 = vec_sub(tmp0,vec_splats(127));
+	tmp1 = vec_sub(tmp1,vec_splats(127));
+	tmp2 = vec_sub(tmp2,vec_splats(127));
+	tmp3 = vec_sub(tmp3,vec_splats(127));
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_ctf(tmp0,0),
+							    vec_ctf(tmp1,0),
+							    vec_ctf(tmp2,0),
+							    vec_ctf(tmp3,0));
     }
 
     /**
@@ -1484,7 +1484,7 @@ namespace cyme{
 	vector signed int tmp = (vector signed int)xmm0;
 	tmp = vec_sr(tmp,vec_splats((unsigned int)52));
 	tmp = vec_sub(tmp,vec_splats(1023));
-	return (vector double)tmp;
+	return vec_ctd(tmp);
     }
 
    /**
@@ -1501,8 +1501,8 @@ namespace cyme{
 	tmp1 = vec_sr(tmp1,vec_splats((unsigned int)52));
 	tmp0 = vec_sub(tmp0,vec_splats(1023));
 	tmp1 = vec_sub(tmp1,vec_splats(1023));
-        return simd_trait<double,cyme::vmx,2>::register_type((vector double)tmp0,
-        						     (vector double)tmp1);
+        return simd_trait<double,cyme::vmx,2>::register_type(vec_ctd(tmp0),
+        						     vec_ctd(tmp1));
     }
 
    /**
@@ -1525,10 +1525,10 @@ namespace cyme{
 	tmp1 = vec_sub(tmp1,vec_splats(1023));
 	tmp2 = vec_sub(tmp2,vec_splats(1023));
 	tmp3 = vec_sub(tmp3,vec_splats(1023));
-        return simd_trait<double,cyme::vmx,4>::register_type((vector double)tmp0,
-        						     (vector double)tmp1,
-        						     (vector double)tmp2,
-        						     (vector double)tmp3);
+        return simd_trait<double,cyme::vmx,4>::register_type(vec_ctd(tmp0),
+        						     vec_ctd(tmp1),
+        						     vec_ctd(tmp2),
+        						     vec_ctd(tmp3));
     }
 
     /**
