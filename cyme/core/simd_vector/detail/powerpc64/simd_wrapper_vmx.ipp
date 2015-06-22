@@ -28,9 +28,6 @@
 #ifndef CYME_SIMD_WRAPPER_VMX_IPP
 #define CYME_SIMD_WRAPPER_VMX_IPP
 
-#include <boost/cstdint.hpp>
-#include <assert.h>
-
 #define vec_ctd __builtin_vsx_xvcvsxwdp
 #define vec_cdts __builtin_vsx_xvcvdpsxws
 
