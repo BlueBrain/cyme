@@ -576,8 +576,7 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not
-     support vmx integer the computation is done serialy using C trick
+      Returns a vector containing 2^k where k is a vector of integer
        specialisation float,cyme::vmx,1 regs
      */
     template<>
@@ -587,8 +586,7 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not
-     support vmx integer the computation is done serialy using C trick
+      Returns a vector containing 2^k where k is a vector of integer
        specialisation float,cyme::vmx,2 regs
      */
     template<>
@@ -599,8 +597,7 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not
-     support vmx integer the computation is done serialy using C trick
+      Returns a vector containing 2^k where k is a vector of integer
        specialisation float,cyme::vmx,4 regs
      */
     template<>
@@ -614,7 +611,6 @@ namespace cyme{
 
     /**
       Extract the exponent of floating-point exponent (32-bit) elements and store the results in dst.
-      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
        specialisation float,cyme::vmx,1 regs
      */
     template<>
@@ -628,7 +624,6 @@ namespace cyme{
 
     /**
       Extract the exponent of floating-point exponent (32-bit) elements and store the results in dst.
-      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
        specialisation float,cyme::vmx,2 regs
      */
     template<>
@@ -646,7 +641,6 @@ namespace cyme{
 
     /**
       Extract the exponent of floating-point exponent (32-bit) elements and store the results in dst.
-      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
        specialisation float,cyme::vmx,4 regs
      */
     template<>
@@ -813,7 +807,7 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing the results of performing a multiply-substracti
+      Returns a vector containing the results of performing a multiply-substract
       operation using the given vectors.
        specialisation float,cyme::vmx,1 regs
      */
@@ -826,7 +820,7 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing the results of performing a multiply-substracti
+      Returns a vector containing the results of performing a multiply-substract
       operation using the given vectors.
        specialisation float,cyme::vmx,2 regs
      */
@@ -840,7 +834,7 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing the results of performing a multiply-substracti
+      Returns a vector containing the results of performing a multiply-substract
       operation using the given vectors.
        specialisation float,cyme::vmx,4 regs
      */
@@ -1428,8 +1422,8 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not support vmx integer
-     the computation is done serialy using C trick
+      Returns a vector containing 2^k where k is a vector of integer, because there is no builtin function
+      for 2^k in double, the computation is done using a C trick.
        specialisation double,cyme::vmx,1 regs
      */
     template<>
@@ -1440,8 +1434,8 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not support vmx integer
-     the computation is done serialy using C trick
+      Returns a vector containing 2^k where k is a vector of integer, because there is no builtin function
+      for 2^k in double, the computation is done using a C trick.
        specialisation double,cyme::vmx,2 regs
      */
     template<>
@@ -1457,8 +1451,8 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing 2^k where k is a vector of integer, as the BG/Q does not support vmx integer
-     the computation is done serialy using C trick
+      Returns a vector containing 2^k where k is a vector of integer, because there is no builtin function
+      for 2^k in double, the computation is done using a C trick.
        specialisation double,cyme::vmx,4 regs
      */
     template<>
@@ -1481,7 +1475,7 @@ namespace cyme{
 
    /**
       Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
-      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
+      Because we are casting from vector2double -> vector4int, must use specific mask and tmp_sub vectors.
        specialisation double,cyme::vmx,1 regs
      */
     template<>
@@ -1494,15 +1488,12 @@ namespace cyme{
 	tmp = vec_and(tmp,mask);
 	tmp = vec_sr(tmp,vec_splats((unsigned int)20));
 	tmp = vec_sub(tmp,tmp_sub);
-	//Code to shuffle
-	////vector unsigned char perm_cntl = {0x04,0x05,0x06,0x07,0x00,0x01,0x02,0x03,0x0C,0x0D,0x0E,0x0F,0x08,0x09,0x0A,0x0B};
-	//tmp = vec_perm(tmp,tmp,perm_cntl);
 	return vec_ctd(tmp);
     }
 
    /**
       Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
-      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
+      Because we are casting from vector2double -> vector4int, must use specific mask and tmp_sub vectors.
        specialisation double,cyme::vmx,2 regs
      */
     template<>
@@ -1525,7 +1516,7 @@ namespace cyme{
 
    /**
       Extract the exponent of floating-point exponent (64-bit) elements and store the results in dst.
-      arithmetic are very badly supported with AVX, I am presently glue I so do the compuation in SSE;
+      Because we are casting from vector2double -> vector4int, must use specific mask and tmp_sub vectors.
        specialisation double,cyme::vmx,4 regs
      */
     template<>
@@ -1558,6 +1549,7 @@ namespace cyme{
 
     /**
       Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
+      Because we are casting from vector2double -> vector4int, must use specific mask and tmp_add vectors.
        specialisation double,cyme::vmx,1 regs
      */
     template<>
@@ -1575,6 +1567,7 @@ namespace cyme{
 
     /**
       Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
+      Because we are casting from vector2double -> vector4int, must use specific mask and tmp_add vectors.
        specialisation double,cyme::vmx,2 regs
      */
     template<>
@@ -1596,6 +1589,7 @@ namespace cyme{
 
     /**
       Extract the fraction of floating-point exponent (64-bit) elements and store the results in dst.
+      Because we are casting from vector2double -> vector4int, must use specific mask and tmp_add vectors.
        specialisation double,cyme::vmx,4 regs
      */
     template<>
@@ -1789,9 +1783,10 @@ namespace cyme{
 							     vec_nmadd(xmm0.r2,xmm1.r2,xmm2.r2),
 							     vec_nmadd(xmm0.r3,xmm1.r3,xmm2.r3));
     }
-#undef vec_ctd
-#undef vec_ctds
 #endif
 } //end namespace
+
+#undef vec_ctd
+#undef vec_ctds
 
 #endif
