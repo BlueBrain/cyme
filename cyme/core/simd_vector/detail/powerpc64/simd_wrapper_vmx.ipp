@@ -1479,9 +1479,16 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_ge<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
 	vector signed int tmp = (vector signed int)xmm0;
+#ifdef __LITTLE_ENDIAN__ //Power7
 	vector signed int mask = {(signed int)0xffffffff,(signed int)0x00000000,
 				  (signed int)0xffffffff,(signed int)0x00000000};
 	vector signed int tmp_sub = {1023,0,1023,0};
+#endif
+#ifdef __BIG_ENDIAN__ //Power8
+	vector signed int mask = {(signed int)0x00000000,(signed int)0xffffffff,
+				  (signed int)0x00000000,(signed int)0xffffffff};
+	vector signed int tmp_sub = {0,1023,0,1023};
+#endif
 	tmp = vec_and(tmp,mask);
 	tmp = vec_sr(tmp,vec_splats((unsigned int)20));
 	tmp = vec_sub(tmp,tmp_sub);
@@ -1498,9 +1505,16 @@ namespace cyme{
     _mm_ge<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
 	vector signed int tmp0 = (vector signed int)xmm0.r0;
 	vector signed int tmp1 = (vector signed int)xmm0.r1;
+#ifdef __LITTLE_ENDIAN__ //Power7
 	vector signed int mask = {(signed int)0xffffffff,(signed int)0x00000000,
 				  (signed int)0xffffffff,(signed int)0x00000000};
 	vector signed int tmp_sub = {1023,0,1023,0};
+#endif
+#ifdef __BIG_ENDIAN__ //Power8
+	vector signed int mask = {(signed int)0x00000000,(signed int)0xffffffff,
+				  (signed int)0x00000000,(signed int)0xffffffff};
+	vector signed int tmp_sub = {0,1023,0,1023};
+#endif
 	tmp0 = vec_and(tmp0,mask);
 	tmp1 = vec_and(tmp1,mask);
 	tmp0 = vec_sr(tmp0,vec_splats((unsigned int)20));
@@ -1523,9 +1537,16 @@ namespace cyme{
 	vector signed int tmp1 = (vector signed int)xmm0.r1;
 	vector signed int tmp2 = (vector signed int)xmm0.r2;
 	vector signed int tmp3 = (vector signed int)xmm0.r3;
+#ifdef __LITTLE_ENDIAN__ //Power7
 	vector signed int mask = {(signed int)0xffffffff,(signed int)0x00000000,
 				  (signed int)0xffffffff,(signed int)0x00000000};
 	vector signed int tmp_sub = {1023,0,1023,0};
+#endif
+#ifdef __BIG_ENDIAN__ //Power8
+	vector signed int mask = {(signed int)0x00000000,(signed int)0xffffffff,
+				  (signed int)0x00000000,(signed int)0xffffffff};
+	vector signed int tmp_sub = {0,1023,0,1023};
+#endif
 	tmp0 = vec_and(tmp0,mask);
 	tmp1 = vec_and(tmp1,mask);
 	tmp2 = vec_and(tmp2,mask);
@@ -1553,10 +1574,18 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_gf<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
 	vector signed int tmp = (vector signed int)xmm0;
+#ifdef __LITTLE_ENDIAN__ //Power7
         vector signed int mask = {(signed int)0x000fffff,(signed int)0xffffffff,
 				  (signed int)0x000fffff,(signed int)0xffffffff};
         vector signed int tmp_add = {(signed int)0x3ff00000,(signed int)0x00000000,
 				     (signed int)0x3ff00000,(signed int)0x00000000};
+#endif
+#ifdef __BIG_ENDIAN__ //Power8
+        vector signed int mask = {(signed int)0xffffffff,(signed int)0x000fffff,
+				  (signed int)0xffffffff,(signed int)0x000fffff};
+        vector signed int tmp_add = {(signed int)0x00000000,(signed int)0x3ff00000,
+				     (signed int)0x00000000,(signed int)0x3ff00000};
+#endif
 	tmp = vec_and(tmp,mask);
 	tmp = vec_add(tmp,tmp_add);
 	return (vector double)tmp;
@@ -1572,10 +1601,18 @@ namespace cyme{
     _mm_gf<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
 	vector signed int tmp0 = (vector signed int)xmm0.r0;
 	vector signed int tmp1 = (vector signed int)xmm0.r1;
+#ifdef __LITTLE_ENDIAN__ //Power7
         vector signed int mask = {(signed int)0x000fffff,(signed int)0xffffffff,
 				  (signed int)0x000fffff,(signed int)0xffffffff};
         vector signed int tmp_add = {(signed int)0x3ff00000,(signed int)0x00000000,
 				     (signed int)0x3ff00000,(signed int)0x00000000};
+#endif
+#ifdef __BIG_ENDIAN__ //Power8
+        vector signed int mask = {(signed int)0xffffffff,(signed int)0x000fffff,
+				  (signed int)0xffffffff,(signed int)0x000fffff};
+        vector signed int tmp_add = {(signed int)0x00000000,(signed int)0x3ff00000,
+				     (signed int)0x00000000,(signed int)0x3ff00000};
+#endif
 	tmp0 = vec_and(tmp0,mask);
 	tmp1 = vec_and(tmp1,mask);
         tmp0 = vec_add(tmp0,tmp_add);
@@ -1596,10 +1633,18 @@ namespace cyme{
 	vector signed int tmp1 = (vector signed int)xmm0.r1;
 	vector signed int tmp2 = (vector signed int)xmm0.r2;
 	vector signed int tmp3 = (vector signed int)xmm0.r3;
+#ifdef __LITTLE_ENDIAN__ //Power7
         vector signed int mask = {(signed int)0x000fffff,(signed int)0xffffffff,
 				  (signed int)0x000fffff,(signed int)0xffffffff};
         vector signed int tmp_add = {(signed int)0x3ff00000,(signed int)0x00000000,
 				     (signed int)0x3ff00000,(signed int)0x00000000};
+#endif
+#ifdef __BIG_ENDIAN__ //Power8
+        vector signed int mask = {(signed int)0xffffffff,(signed int)0x000fffff,
+				  (signed int)0xffffffff,(signed int)0x000fffff};
+        vector signed int tmp_add = {(signed int)0x00000000,(signed int)0x3ff00000,
+				     (signed int)0x00000000,(signed int)0x3ff00000};
+#endif
         tmp0 = vec_and(tmp0,mask);
         tmp1 = vec_and(tmp1,mask);
         tmp2 = vec_and(tmp2,mask);
