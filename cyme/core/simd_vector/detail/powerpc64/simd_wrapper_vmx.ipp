@@ -1478,13 +1478,13 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_ge<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
+#ifdef __BIG_ENDIAN__ //Power8
 	vector signed int tmp = (vector signed int)xmm0;
-#ifdef __LITTLE_ENDIAN__ //Power7
 	vector signed int mask = {(signed int)0xffffffff,(signed int)0x00000000,
 				  (signed int)0xffffffff,(signed int)0x00000000};
 	vector signed int tmp_sub = {1023,0,1023,0};
 #endif
-#ifdef __BIG_ENDIAN__ //Power8
+#ifdef __LITTLE_ENDIAN__ //Power7
 	vector signed int mask = {(signed int)0x00000000,(signed int)0xffffffff,
 				  (signed int)0x00000000,(signed int)0xffffffff};
 	vector signed int tmp_sub = {0,1023,0,1023};
@@ -1505,12 +1505,12 @@ namespace cyme{
     _mm_ge<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
 	vector signed int tmp0 = (vector signed int)xmm0.r0;
 	vector signed int tmp1 = (vector signed int)xmm0.r1;
-#ifdef __LITTLE_ENDIAN__ //Power7
+#ifdef __BIG_ENDIAN__ //Power8
 	vector signed int mask = {(signed int)0xffffffff,(signed int)0x00000000,
 				  (signed int)0xffffffff,(signed int)0x00000000};
 	vector signed int tmp_sub = {1023,0,1023,0};
 #endif
-#ifdef __BIG_ENDIAN__ //Power8
+#ifdef __LITTLE_ENDIAN__ //Power7
 	vector signed int mask = {(signed int)0x00000000,(signed int)0xffffffff,
 				  (signed int)0x00000000,(signed int)0xffffffff};
 	vector signed int tmp_sub = {0,1023,0,1023};
@@ -1537,12 +1537,12 @@ namespace cyme{
 	vector signed int tmp1 = (vector signed int)xmm0.r1;
 	vector signed int tmp2 = (vector signed int)xmm0.r2;
 	vector signed int tmp3 = (vector signed int)xmm0.r3;
-#ifdef __LITTLE_ENDIAN__ //Power7
+#ifdef __BIG_ENDIAN__ //Power8
 	vector signed int mask = {(signed int)0xffffffff,(signed int)0x00000000,
 				  (signed int)0xffffffff,(signed int)0x00000000};
 	vector signed int tmp_sub = {1023,0,1023,0};
 #endif
-#ifdef __BIG_ENDIAN__ //Power8
+#ifdef __LITTLE_ENDIAN__ //Power7
 	vector signed int mask = {(signed int)0x00000000,(signed int)0xffffffff,
 				  (signed int)0x00000000,(signed int)0xffffffff};
 	vector signed int tmp_sub = {0,1023,0,1023};
@@ -1574,13 +1574,13 @@ namespace cyme{
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_gf<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
 	vector signed int tmp = (vector signed int)xmm0;
-#ifdef __LITTLE_ENDIAN__ //Power7
+#ifdef __BIG_ENDIAN__ //Power8
         vector signed int mask = {(signed int)0x000fffff,(signed int)0xffffffff,
 				  (signed int)0x000fffff,(signed int)0xffffffff};
         vector signed int tmp_add = {(signed int)0x3ff00000,(signed int)0x00000000,
 				     (signed int)0x3ff00000,(signed int)0x00000000};
 #endif
-#ifdef __BIG_ENDIAN__ //Power8
+#ifdef __LITTLE_ENDIAN__ //Power7
         vector signed int mask = {(signed int)0xffffffff,(signed int)0x000fffff,
 				  (signed int)0xffffffff,(signed int)0x000fffff};
         vector signed int tmp_add = {(signed int)0x00000000,(signed int)0x3ff00000,
@@ -1601,13 +1601,13 @@ namespace cyme{
     _mm_gf<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
 	vector signed int tmp0 = (vector signed int)xmm0.r0;
 	vector signed int tmp1 = (vector signed int)xmm0.r1;
-#ifdef __LITTLE_ENDIAN__ //Power7
+#ifdef __BIG_ENDIAN__ //Power8
         vector signed int mask = {(signed int)0x000fffff,(signed int)0xffffffff,
 				  (signed int)0x000fffff,(signed int)0xffffffff};
         vector signed int tmp_add = {(signed int)0x3ff00000,(signed int)0x00000000,
 				     (signed int)0x3ff00000,(signed int)0x00000000};
 #endif
-#ifdef __BIG_ENDIAN__ //Power8
+#ifdef __LITTLE_ENDIAN__ //Power7
         vector signed int mask = {(signed int)0xffffffff,(signed int)0x000fffff,
 				  (signed int)0xffffffff,(signed int)0x000fffff};
         vector signed int tmp_add = {(signed int)0x00000000,(signed int)0x3ff00000,
@@ -1633,13 +1633,13 @@ namespace cyme{
 	vector signed int tmp1 = (vector signed int)xmm0.r1;
 	vector signed int tmp2 = (vector signed int)xmm0.r2;
 	vector signed int tmp3 = (vector signed int)xmm0.r3;
-#ifdef __LITTLE_ENDIAN__ //Power7
+#ifdef __BIG_ENDIAN__ //Power8
         vector signed int mask = {(signed int)0x000fffff,(signed int)0xffffffff,
 				  (signed int)0x000fffff,(signed int)0xffffffff};
         vector signed int tmp_add = {(signed int)0x3ff00000,(signed int)0x00000000,
 				     (signed int)0x3ff00000,(signed int)0x00000000};
 #endif
-#ifdef __BIG_ENDIAN__ //Power8
+#ifdef __LITTLE_ENDIAN__ //Power7
         vector signed int mask = {(signed int)0xffffffff,(signed int)0x000fffff,
 				  (signed int)0xffffffff,(signed int)0x000fffff};
         vector signed int tmp_add = {(signed int)0x00000000,(signed int)0x3ff00000,
@@ -1688,8 +1688,6 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing the results of performing a fused multiply/add for each corresponding
-     set of elements of the given vectors.
        specialisation double,cyme::vmx,4 regs
      */
     template<>
