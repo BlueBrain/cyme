@@ -112,7 +112,7 @@ namespace cyme{
     }
 
     template<class T,cyme::simd O, int N>
-    vec_simd<int,O,N> floor(vec_simd<T,O,N> &rhs){
+    vec_simd<int,O,N> floor(const vec_simd<T,O,N> &rhs){
         vec_simd<int,O,N> nrv;
         nrv.xmm = _mm_floor<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
         return nrv;

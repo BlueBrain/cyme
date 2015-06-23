@@ -28,6 +28,10 @@
 #ifndef CYME_TRAIT_POWERPC64_IPP
 #define CYME_TRAIT_POWERPC64_IPP
 
+#ifdef __PPC64__
+#include <altivec.h>
+#endif
+
 namespace cyme{
 
     /** trait class that defined the hardware register
@@ -36,6 +40,7 @@ namespace cyme{
     template<class T, cyme::simd O>
     struct register_trait;
 
+#ifdef _ARCH_QP
     /** Specialisation of the trait class for int, cyme::qpx  */
     template <>
     struct register_trait<int, cyme::qpx>{
@@ -132,5 +137,107 @@ namespace cyme{
         static const std::size_t value = 4; // card([0-3])=4
     };
 
+#endif //_ARCH_QP
+
+#ifdef __PPC64__
+    /** Specialisation of the trait class for int, cyme::vmx  */
+    template <>
+    struct register_trait<int, cyme::vmx>{
+        typedef vector int trait_register_type;
+    };
+
+    /** Specialisation of the trait class for float, cyme::vmx  */
+    template <>
+    struct register_trait<float,cyme::vmx>{
+        typedef vector float trait_register_type;
+    };
+
+    /** Specialisation of the trait class for double, cyme::vmx  */
+    template <>
+    struct register_trait<double,cyme::vmx>{
+        typedef vector double trait_register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector int,cyme::vmx,4 regs*/
+    template <>
+    struct simd_trait<int, cyme::vmx, 4> : trait<int>{
+        typedef simd_unroll<int, cyme::vmx, 4> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector int,cyme::vmx,2 regs*/
+    template <>
+    struct simd_trait<int, cyme::vmx, 2> : trait<int>{
+        typedef simd_unroll<int, cyme::vmx, 2> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector int,cyme::vmx,1 reg*/
+    template <>
+    struct simd_trait<int, cyme::vmx, 1> : trait<int>{
+        typedef vector int register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector double,cyme::vmx,4 regs*/
+    template <>
+    struct simd_trait<double, cyme::vmx, 4> : trait<double>{
+        typedef simd_unroll<double, cyme::vmx, 4> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector double,cyme::vmx,2 regs*/
+    template <>
+    struct simd_trait<double, cyme::vmx, 2> : trait<double>{
+        typedef simd_unroll<double, cyme::vmx, 2> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector double,cyme::vmx,1 reg*/
+    template <>
+    struct simd_trait<double, cyme::vmx, 1> : trait<double>{
+        typedef vector double register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector float,cyme::vmx,4 regs*/
+    template <>
+    struct simd_trait<float, cyme::vmx, 4> : trait<float>{
+        typedef simd_unroll<float, cyme::vmx, 4> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector float,cyme::vmx,2 regs*/
+    template <>
+    struct simd_trait<float, cyme::vmx, 2> : trait<float>{
+        typedef simd_unroll<float, cyme::vmx, 2> register_type;
+    };
+
+    /** Specialisation of the trait class for the composite vector float,cyme::vmx,1 regs*/
+    template <>
+    struct simd_trait<float, cyme::vmx, 1> : trait<float>{
+        typedef vector float register_type;
+    };
+
+    /** Specialization trait for float  Newton-Raphson division: number of iteration */
+    template<>
+    struct div_recursion<float, cyme::vmx>{
+        static const std::size_t value = 3; // cardinal([0-2])=3
+    };
+
+    /** Specialization trait for float Newton-Raphson sqrt: number of iteration */
+    template<>
+    struct sqrt_recursion<float, cyme::vmx>{
+        static const std::size_t value = 3; // cardinal([0-2])=3
+    };
+
+    /** Specialization trait for float  Newton-Raphson division: number of iteration */
+    template<>
+    struct div_recursion<double, cyme::vmx>{
+        static const std::size_t value = 4; // card([0-3])=4
+    };
+
+    /** Specialization trait for float Newton-Raphson sqrt: number of iteration */
+    template<>
+    struct sqrt_recursion<double, cyme::vmx>{
+        static const std::size_t value = 4; // card([0-3])=4
+    };
+
+#endif // __PPC64__
+
+
 }
-#endif
+#endif //CYME_TRAIT_POWERPC64_IPP

@@ -37,7 +37,7 @@ extern "C" {
     float cyme_flog10(float a){return cyme::slog10(a);}
     float cyme_fsqrt(float a){return cyme::ssqrt(a);}
 
-    double cyme_exp(double a){return cyme::sexp(a);}    
+    double cyme_exp(double a){return cyme::sexp(a);}
     double cyme_exp2(double a){return cyme::sexp2(a);}
     double cyme_exp10(double a){return cyme::sexp10(a);}
     double cyme_log(double a){return cyme::slog(a);}
