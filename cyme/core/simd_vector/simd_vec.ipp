@@ -99,6 +99,12 @@ namespace cyme{
     }
 
     template<class T,cyme::simd O, int N>
+    void vec_simd<T,O,N>::print(std::ostream &out){
+        //T elems[N] __attribute__((aligned(static_cast<int>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
+//	out << "HELLO WORLD";
+    }
+
+    template<class T,cyme::simd O, int N>
     vec_simd<T,O,N>& vec_simd<T,O,N>::neg(){
        xmm = _mm_neg<typename simd_trait<T,O,N>::value_type,O,N>(xmm);
        return *this;
@@ -161,6 +167,13 @@ namespace cyme{
     }
 #endif
 } //end namespace
+
+template<class T,cyme::simd O, int N>
+std::ostream &operator<<(std::ostream &out, const cyme::vec_simd<T,O,N> &vec){
+    //vec.print(out);
+    (void)vec;
+    return out << "HELLO WORLD";
+}
 
 #endif
 /** \endcond */
