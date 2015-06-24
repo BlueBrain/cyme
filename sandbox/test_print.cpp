@@ -40,7 +40,7 @@
 
  #include <algorithm>
 int main(){
-	cyme::vec_simd <float, cyme::vmx,1> a;
-	std::cout<<"Printing vec_simd returns: "<<a<<std::endl;
+	cyme::vec_simd <float,cyme::vmx,4> log2e(1.4426950408889634073599);
+	std::cout<<"Printing vec_simd returns: "<<log2e<<std::endl;
 }
 
