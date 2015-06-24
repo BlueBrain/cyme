@@ -85,7 +85,7 @@ namespace cyme{
         forceinline value_type single(pointer b);
 
 	/** Print function */
-	forceinline void print(std::ostream &out);
+	forceinline void print(std::ostream &out) const;
 
 #ifdef __FMA__
         /** FMA operator */
