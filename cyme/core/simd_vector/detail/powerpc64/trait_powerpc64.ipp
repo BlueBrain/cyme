@@ -22,7 +22,7 @@
 /**
  * @file cyme/core/simd_vector/detail/powerpc64/trait_powerpc64.ipp
  * Specialisation of the register_trait, simd_trait, Newton-Raphson
- * classes for the powerA2 architecture
+ * classes for the powerA2, power7, and power7 architectures
  */
 
 #ifndef CYME_TRAIT_POWERPC64_IPP
