@@ -31,6 +31,14 @@
 #include "cyme/core/simd_vector/simd_wrapper.hpp"
 #include <iostream>
 namespace cyme{
+    /**
+    Helper for print function
+    */
+    template<class T>
+    struct elems_helper{
+	static const int size = (cyme::trait_register<T,cyme::__GETSIMD__()>::size)/sizeof(T);
+    };
+
     /** SIMD vector computation class.
 
       The vector is generic, it can be SSE, AVX or QPX. The type is given by the trait class cyme::simd_trait

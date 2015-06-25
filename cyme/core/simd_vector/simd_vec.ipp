@@ -100,14 +100,13 @@ namespace cyme{
 
     template<class T,cyme::simd O, int N>
     void vec_simd<T,O,N>::print(std::ostream &out) const{
-#define _ELEMS_SIZE (cyme::trait_register<T,cyme::__GETSIMD__()>::size)/sizeof(T)
-        T elems[_ELEMS_SIZE] __attribute__((aligned(static_cast<int>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
+	const int size = elems_helper<T>::size;
+        T elems[size] __attribute__((aligned(static_cast<int>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
 	vec_simd::store(elems);
 	//Print out each element
-	for(unsigned int i = 0; i < _ELEMS_SIZE; i++){
+	for(unsigned int i = 0; i < size; i++){
 	    out << " " << elems[i];
 	}
-#undef _ELEMS_SIZE
     }
 
     template<class T,cyme::simd O, int N>
