@@ -39,6 +39,8 @@
 #ifndef CYME_EXPR_VEC_HPP
 #define CYME_EXPR_VEC_HPP
 
+#include <iostream>
+
 namespace cyme{
     /** \cond */
     //forward declarations
@@ -149,7 +151,7 @@ namespace cyme{
             return log2(op1());
         }
     };
-    
+
     /** log10 vertex in the DAG from log10(a) */
     template<class T, cyme::simd O, int N, class OP1>
     class vec_log10{
@@ -163,7 +165,7 @@ namespace cyme{
             return log10(op1());
         }
     };
-    
+
     /** pow vertex in the DAG from pow(a,n), integer exponent only */
     template<class T, cyme::simd O, int N, class OP1, int M>
     class vec_pow{
@@ -486,6 +488,14 @@ namespace cyme{
         forceinline Rep& rep(){
             return expr_rep;
         }
+
+	/**
+  	Use print function from Rep
+ 	*/
+	forceinline void print(std::ostream &out) const{
+	    expr_rep.print(out);
+	}
+
     private:
         /** Composition with cyme::vec_simd */
         Rep expr_rep;
@@ -508,7 +518,7 @@ namespace cyme{
         typedef value_type* pointer;
         typedef Rep base_type;
 
-        /** Constructor lhs of the operator=, I save the data into the cyme after the computation */
+        /*** Constructor lhs of the operator=, I save the data into the cyme after the computation */
         forceinline explicit wvec(pointer rb):data_pointer(rb),expr_rep(rb){
         }
 
@@ -603,6 +613,13 @@ namespace cyme{
             return expr_rep;
         }
 
+	/**
+  	Use print function from Rep
+  	*/
+	forceinline void print(std::ostream &out) const{
+	    expr_rep.print(out);
+	}
+
     private:
         /** Pointer to save the data */
         pointer data_pointer;
@@ -616,4 +633,18 @@ namespace cyme{
 #include "cyme/core/expression/expr_vec_fma.ipp"
 #endif
 
+/** Ostream operators for rvec and wvec*/
+/**wvec*/
+template<class T, cyme::simd O, int N, class Rep>
+forceinline std::ostream &operator<<(std::ostream &out, const cyme::wvec<T,O,N,Rep> &vec){
+	vec.print(out);
+	return out;
+}
+
+/**rvec*/
+template<class T, cyme::simd O, int N, class Rep>
+forceinline std::ostream &operator<<(std::ostream &out, const cyme::rvec<T,O,N,Rep> &vec){
+	vec.print(out);
+	return out;
+}
 #endif
