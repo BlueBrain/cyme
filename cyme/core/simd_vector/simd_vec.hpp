@@ -27,16 +27,17 @@
 #ifndef CYME_SIMD_VEC_HPP
 #define CYME_SIMD_VEC_HPP
 
+#include <iostream>
+
 #include "cyme/core/simd_vector/trait.hpp"
 #include "cyme/core/simd_vector/simd_wrapper.hpp"
-#include <iostream>
 namespace cyme{
     /**
     Helper for print function
     */
-    template<class T>
+    template<class T, int N>
     struct elems_helper{
-	static const int size = (cyme::trait_register<T,cyme::__GETSIMD__()>::size)/sizeof(T);
+	static const int size = N*(cyme::trait_register<T,cyme::__GETSIMD__()>::size)/sizeof(T);
     };
 
     /** SIMD vector computation class.
