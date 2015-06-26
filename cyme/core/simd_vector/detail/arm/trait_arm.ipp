@@ -28,6 +28,8 @@
 #ifndef CYME_TRAIT_ARM_IPP
 #define CYME_TRAIT_ARM_IPP
 
+#include <arm_neon.h>
+
 namespace cyme{
 
     /** trait class that defined the hardware register
