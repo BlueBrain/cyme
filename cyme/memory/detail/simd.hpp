@@ -53,7 +53,7 @@ namespace cyme{
 *  cyme::simd defines the simd technology for which the cyme code will be
 *  compiled. This is automatically detected by CMake at compile time.
 */
-    enum simd{sse, avx, arm, vmx, qpx, mic};
+    enum simd{sse, avx, neon, vmx, qpx, mic};
 
 /**   Memory layout of composite vector.
 *
@@ -91,7 +91,7 @@ namespace cyme{
 
 /** Partial specialisation for arm technology. */
     template<class T>
-    struct trait_register<T,cyme::arm>{
+    struct trait_register<T,cyme::neon>{
 	/*Filler for now. Will replace with actual ARM values*/
         const static size_t size=16;
         const static size_t a=16;

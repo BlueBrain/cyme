@@ -35,84 +35,84 @@ namespace cyme{
     template<class T, cyme::simd O>
     struct register_trait;
 
-    /** Specialisation of the trait class for int, cyme::arm  */
+    /** Specialisation of the trait class for int, cyme::neon  */
     template <>
-    struct register_trait<int, cyme::arm>{
+    struct register_trait<int, cyme::neon>{
     };
 
-    /** Specialisation of the trait class for float, cyme::arm  */
+    /** Specialisation of the trait class for float, cyme::neon  */
     template <>
-    struct register_trait<float,cyme::arm>{
+    struct register_trait<float,cyme::neon>{
     };
 
-    /** Specialisation of the trait class for double, cyme::arm  */
+    /** Specialisation of the trait class for double, cyme::neon  */
     template <>
-    struct register_trait<double,cyme::arm>{
+    struct register_trait<double,cyme::neon>{
     };
 
-    /** Specialisation of the trait class for the composite vector int,cyme::arm,4 regs*/
+    /** Specialisation of the trait class for the composite vector int,cyme::neon,4 regs*/
     template <>
-    struct simd_trait<int, cyme::arm, 4> : trait<int>{
+    struct simd_trait<int, cyme::neon, 4> : trait<int>{
     };
 
-    /** Specialisation of the trait class for the composite vector int,cyme::arm,2 regs*/
+    /** Specialisation of the trait class for the composite vector int,cyme::neon,2 regs*/
     template <>
-    struct simd_trait<int, cyme::arm, 2> : trait<int>{
+    struct simd_trait<int, cyme::neon, 2> : trait<int>{
     };
 
-    /** Specialisation of the trait class for the composite vector int,cyme::arm,1 reg*/
+    /** Specialisation of the trait class for the composite vector int,cyme::neon,1 reg*/
     template <>
-    struct simd_trait<int, cyme::arm, 1> : trait<int>{
+    struct simd_trait<int, cyme::neon, 1> : trait<int>{
     };
 
-    /** Specialisation of the trait class for the composite vector double,cyme::arm,4 regs*/
+    /** Specialisation of the trait class for the composite vector double,cyme::neon,4 regs*/
     template <>
-    struct simd_trait<double, cyme::arm, 4> : trait<double>{
+    struct simd_trait<double, cyme::neon, 4> : trait<double>{
     };
 
-    /** Specialisation of the trait class for the composite vector double,cyme::arm,2 regs*/
+    /** Specialisation of the trait class for the composite vector double,cyme::neon,2 regs*/
     template <>
-    struct simd_trait<double, cyme::arm, 2> : trait<double>{
+    struct simd_trait<double, cyme::neon, 2> : trait<double>{
     };
 
-    /** Specialisation of the trait class for the composite vector double,cyme::arm,1 reg*/
+    /** Specialisation of the trait class for the composite vector double,cyme::neon,1 reg*/
     template <>
-    struct simd_trait<double, cyme::arm, 1> : trait<double>{
+    struct simd_trait<double, cyme::neon, 1> : trait<double>{
     };
 
-    /** Specialisation of the trait class for the composite vector float,cyme::arm,4 regs*/
+    /** Specialisation of the trait class for the composite vector float,cyme::neon,4 regs*/
     template <>
-    struct simd_trait<float, cyme::arm, 4> : trait<float>{
+    struct simd_trait<float, cyme::neon, 4> : trait<float>{
     };
 
-    /** Specialisation of the trait class for the composite vector float,cyme::arm,2 regs*/
+    /** Specialisation of the trait class for the composite vector float,cyme::neon,2 regs*/
     template <>
-    struct simd_trait<float, cyme::arm, 2> : trait<float>{
+    struct simd_trait<float, cyme::neon, 2> : trait<float>{
     };
 
-    /** Specialisation of the trait class for the composite vector float,cyme::arm,1 regs*/
+    /** Specialisation of the trait class for the composite vector float,cyme::neon,1 regs*/
     template <>
-    struct simd_trait<float, cyme::arm, 1> : trait<float>{
+    struct simd_trait<float, cyme::neon, 1> : trait<float>{
     };
 
     /** Specialization trait for float  Newton-Raphson division: number of iteration */
     template<>
-    struct div_recursion<float, cyme::arm>{
+    struct div_recursion<float, cyme::neon>{
     };
 
     /** Specialization trait for float Newton-Raphson sqrt: number of iteration */
     template<>
-    struct sqrt_recursion<float, cyme::arm>{
+    struct sqrt_recursion<float, cyme::neon>{
     };
 
     /** Specialization trait for float  Newton-Raphson division: number of iteration */
     template<>
-    struct div_recursion<double, cyme::arm>{
+    struct div_recursion<double, cyme::neon>{
     };
 
     /** Specialization trait for float Newton-Raphson sqrt: number of iteration */
     template<>
-    struct sqrt_recursion<double, cyme::arm>{
+    struct sqrt_recursion<double, cyme::neon>{
     };
 }
 #endif //CYME_TRAIT_ARM_IPP
