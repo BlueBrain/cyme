@@ -654,7 +654,7 @@ namespace cyme{
     _mm_fma<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type __attribute__((unused))xmm0,
                                simd_trait<float,cyme::neon,1>::register_type __attribute__((unused))xmm1,
                                simd_trait<float,cyme::neon,1>::register_type __attribute__((unused))xmm2){
-	assert(false);
+	return vfmaq_f32(xmm0,xmm1,xmm2);
     }
 
     /**
