@@ -60,7 +60,7 @@
  using namespace boost::accumulators;
 
 
- typedef boost::mpl::vector< block_f_aos, block_f_aosoa, block_d_aos, block_d_aosoa > array_list;
+ typedef boost::mpl::vector< block_f_aos, block_f_aosoa, block_d_aos, block_d_aosoa> array_list;
  //typedef boost::mpl::vector< vector_f_aos, vector_f_aosoa, vector_d_aos, vector_d_aosoa > vector_list;
  typedef boost::mpl::vector<vector_d_aosoa> vector_list;
 
@@ -106,24 +106,18 @@
  struct Na{
      typedef double value_type;
 
+    template<class T>
+    static inline void print_function(T& W){
+        T const & R = W;
+	std::cout << "Wvec prints:" << W[1] << " " << W[2] << std::endl;
+	std::cout << "Rvec prints:" << R[1] << " " << R[2] << std::endl;
+    };
 
      template<class T, cyme::order O>
      static inline void cnrn_functions(T& W){
          //cnrn_states(W);
-       log_functions(W);
+       print_function(W);
      }
-
-     template<class T>
-     static inline void log_functions(T& W){
-       T const & R = W;
-       W[1] = log(R[1]);
-       W[2] = log(R[2]);
-       W[3] = log2(R[3]);
-       W[4] = log2(R[4]);
-       W[5] = log10(R[5]);
-       W[6] = log10(R[6]);
-     };
-
 
      template<class T>
      static inline void cnrn_rates(T& W){
@@ -252,6 +246,6 @@
      boost::chrono::duration<double>  sec = boost::chrono::system_clock::now() - start;
      std::cout << " sec " << sec.count() << std::endl;
 
-     check(a,b);
+     //check(a,b);
  }
 
