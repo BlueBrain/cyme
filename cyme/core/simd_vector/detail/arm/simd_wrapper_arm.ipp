@@ -30,7 +30,7 @@
 
 #include <boost/cstdint.hpp>
 #include <assert.h>
-
+#include <iostream>
 //extern "C" vector float expf4(vector float vx);// link to the fortran one
 //extern "C" vector float logf4(vector float vx);// link to the fortran one
 //extern "C" vector double expd4(vector double vx);// link to the fortran one
@@ -105,7 +105,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::neon,2>::register_type
     _mm_load<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::const_pointer a){
-	return simd_trait<float,cyme::neon,2>::register_type(vld1q_f32(a),vld1q_f32(a+4));
+	return simd_trait<float,cyme::neon,2>::register_type(vld1q_f32(a),
+							     vld1q_f32(a+4));
     }
 
     /**
@@ -115,8 +116,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::neon,4>::register_type
     _mm_load<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::const_pointer a){
-	return simd_trait<float,cyme::neon,4>::register_type(vld1q_f32(a),vld1q_f32(a+4),
-							     vld1q_f32(a+8),vld1q_f32(a+12));
+	return simd_trait<float,cyme::neon,4>::register_type(vld1q_f32(a),
+							     vld1q_f32(a+4),
+							     vld1q_f32(a+8),
+							     vld1q_f32(a+12));
     }
 
     /**
@@ -701,8 +704,7 @@ namespace cyme{
     _mm_nfma<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0,
                                  simd_trait<float,cyme::neon,1>::register_type xmm1,
                                  simd_trait<float,cyme::neon,1>::register_type xmm2){
-	float32x4_t temp = vfmaq_f32(xmm0,xmm1,xmm2);
-	return vnegq_f32(temp);
+	return vfmsq_f32(xmm2,xmm0,xmm1);
     }
 
     /**
@@ -715,10 +717,8 @@ namespace cyme{
     _mm_nfma<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0,
                                  simd_trait<float,cyme::neon,2>::register_type xmm1,
                                  simd_trait<float,cyme::neon,2>::register_type xmm2){
-	float32x4_t temp1 = vfmaq_f32(xmm0.r0,xmm1.r0,xmm2.r0);
-	float32x4_t temp2 = vfmaq_f32(xmm0.r1,xmm1.r1,xmm2.r1);
-	return simd_trait<float,cyme::neon,2>::register_type(vnegq_f32(temp1),
-							     vnegq_f32(temp2));
+	return simd_trait<float,cyme::neon,2>::register_type(vfmsq_f32(xmm2.r0,xmm0.r0,xmm1.r0),
+							     vfmsq_f32(xmm2.r1,xmm0.r1,xmm1.r1));
     }
 
     /**
@@ -731,14 +731,10 @@ namespace cyme{
     _mm_nfma<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0,
                                  simd_trait<float,cyme::neon,4>::register_type xmm1,
                                  simd_trait<float,cyme::neon,4>::register_type xmm2){
-	float32x4_t temp1 = vfmaq_f32(xmm0.r0,xmm1.r0,xmm2.r0);
-	float32x4_t temp2 = vfmaq_f32(xmm0.r1,xmm1.r1,xmm2.r1);
-	float32x4_t temp3 = vfmaq_f32(xmm0.r2,xmm1.r2,xmm2.r2);
-	float32x4_t temp4 = vfmaq_f32(xmm0.r3,xmm1.r3,xmm2.r3);
-	return simd_trait<float,cyme::neon,4>::register_type(vnegq_f32(temp1),
-							     vnegq_f32(temp2),
-							     vnegq_f32(temp3),
-							     vnegq_f32(temp4));
+	return simd_trait<float,cyme::neon,4>::register_type(vfmsq_f32(xmm2.r0,xmm0.r0,xmm1.r0),
+							     vfmsq_f32(xmm2.r1,xmm0.r1,xmm1.r1),
+							     vfmsq_f32(xmm2.r2,xmm0.r2,xmm1.r2),
+							     vfmsq_f32(xmm2.r3,xmm0.r3,xmm1.r3));
     }
 
     /**
@@ -749,9 +745,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::neon,1>::register_type
     _mm_fms<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0,
-                                simd_trait<float,cyme::neon,1>::register_type  xmm1,
+                                simd_trait<float,cyme::neon,1>::register_type xmm1,
                                 simd_trait<float,cyme::neon,1>::register_type xmm2){
-	return vfmsq_f32(xmm0,xmm1,xmm2);
+	float32x4_t temp = vfmsq_f32(xmm2,xmm0,xmm1);
+	return vnegq_f32(temp);
     }
 
     /**
@@ -764,8 +761,10 @@ namespace cyme{
     _mm_fms<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0,
                                 simd_trait<float,cyme::neon,2>::register_type xmm1,
                                 simd_trait<float,cyme::neon,2>::register_type xmm2){
-	return simd_trait<float,cyme::neon,2>::register_type(vfmsq_f32(xmm0.r0,xmm1.r0,xmm2.r0),
-							     vfmsq_f32(xmm0.r1,xmm1.r1,xmm2.r1));
+	float32x4_t temp1 = vfmsq_f32(xmm2.r0,xmm0.r0,xmm1.r0);
+	float32x4_t temp2 = vfmsq_f32(xmm2.r1,xmm0.r1,xmm1.r1);
+	return simd_trait<float,cyme::neon,2>::register_type(vnegq_f32(temp1),
+							     vnegq_f32(temp2));
     }
 
     /**
@@ -778,10 +777,14 @@ namespace cyme{
     _mm_fms<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0,
                                 simd_trait<float,cyme::neon,4>::register_type xmm1,
                                 simd_trait<float,cyme::neon,4>::register_type xmm2){
-	return simd_trait<float,cyme::neon,4>::register_type(vfmsq_f32(xmm0.r0,xmm1.r0,xmm2.r0),
-							     vfmsq_f32(xmm0.r1,xmm1.r1,xmm2.r1),
-							     vfmsq_f32(xmm0.r2,xmm1.r2,xmm2.r2),
-							     vfmsq_f32(xmm0.r3,xmm1.r3,xmm2.r3));
+	float32x4_t temp1 = vfmsq_f32(xmm2.r0,xmm0.r0,xmm1.r0);
+	float32x4_t temp2 = vfmsq_f32(xmm2.r1,xmm0.r1,xmm1.r1);
+	float32x4_t temp3 = vfmsq_f32(xmm2.r2,xmm0.r2,xmm1.r2);
+	float32x4_t temp4 = vfmsq_f32(xmm2.r3,xmm0.r3,xmm1.r3);
+	return simd_trait<float,cyme::neon,4>::register_type(vnegq_f32(temp1),
+							     vnegq_f32(temp2),
+							     vnegq_f32(temp3),
+							     vnegq_f32(temp4));
     }
 
     /**
@@ -793,7 +796,7 @@ namespace cyme{
     _mm_nfms<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0,
                                  simd_trait<float,cyme::neon,1>::register_type xmm1,
                                  simd_trait<float,cyme::neon,1>::register_type xmm2){
-	float32x4_t temp = vfmsq_f32(xmm0,xmm1,xmm2);
+	float32x4_t temp = vfmaq_f32(xmm0,xmm1,xmm2);
 	return vnegq_f32(temp);
     }
 
@@ -806,8 +809,8 @@ namespace cyme{
     _mm_nfms<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0,
                                  simd_trait<float,cyme::neon,2>::register_type xmm1,
                                  simd_trait<float,cyme::neon,2>::register_type xmm2){
-	float32x4_t temp1 = vfmsq_f32(xmm0.r0,xmm1.r0,xmm2.r0);
-	float32x4_t temp2 = vfmsq_f32(xmm0.r1,xmm1.r1,xmm2.r1);
+	float32x4_t temp1 = vfmaq_f32(xmm0.r0,xmm1.r0,xmm2.r0);
+	float32x4_t temp2 = vfmaq_f32(xmm0.r1,xmm1.r1,xmm2.r1);
 	return simd_trait<float,cyme::neon,2>::register_type(vnegq_f32(temp1),
 							     vnegq_f32(temp2));
     }
@@ -821,10 +824,10 @@ namespace cyme{
     _mm_nfms<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0,
                                  simd_trait<float,cyme::neon,4>::register_type xmm1,
                                  simd_trait<float,cyme::neon,4>::register_type xmm2){
-	float32x4_t temp1 = vfmsq_f32(xmm0.r0,xmm1.r0,xmm2.r0);
-	float32x4_t temp2 = vfmsq_f32(xmm0.r1,xmm1.r1,xmm2.r1);
-	float32x4_t temp3 = vfmsq_f32(xmm0.r2,xmm1.r2,xmm2.r2);
-	float32x4_t temp4 = vfmsq_f32(xmm0.r3,xmm1.r3,xmm2.r3);
+	float32x4_t temp1 = vfmaq_f32(xmm0.r0,xmm1.r0,xmm2.r0);
+	float32x4_t temp2 = vfmaq_f32(xmm0.r1,xmm1.r1,xmm2.r1);
+	float32x4_t temp3 = vfmaq_f32(xmm0.r2,xmm1.r2,xmm2.r2);
+	float32x4_t temp4 = vfmaq_f32(xmm0.r3,xmm1.r3,xmm2.r3);
 	return simd_trait<float,cyme::neon,4>::register_type(vnegq_f32(temp1),
 							     vnegq_f32(temp2),
 							     vnegq_f32(temp3),
@@ -900,7 +903,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::neon,2>::register_type
     _mm_load<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::const_pointer a){
-	return simd_trait<double,cyme::neon,2>::register_type(vld1q_f64(a),vld1q_f64(a+2));
+	return simd_trait<double,cyme::neon,2>::register_type(vld1q_f64(a),
+							      vld1q_f64(a+2));
     }
 
     /**
@@ -910,8 +914,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::neon,4>::register_type
     _mm_load<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::const_pointer a){
-	return simd_trait<double,cyme::neon,4>::register_type(vld1q_f64(a),vld1q_f64(a+2),
-							      vld1q_f64(a+4),vld1q_f64(a+6));
+	return simd_trait<double,cyme::neon,4>::register_type(vld1q_f64(a),
+							      vld1q_f64(a+2),
+							      vld1q_f64(a+4),
+							      vld1q_f64(a+6));
     }
 
     /**
@@ -1473,7 +1479,7 @@ namespace cyme{
                                  simd_trait<double,cyme::neon,2>::register_type xmm1,
                                  simd_trait<double,cyme::neon,2>::register_type xmm2){
 	return simd_trait<double,cyme::neon,2>::register_type(vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0),
-							     vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1));
+							      vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1));
     }
 
     /**
@@ -1487,9 +1493,9 @@ namespace cyme{
                                  simd_trait<double,cyme::neon,4>::register_type xmm1,
                                  simd_trait<double,cyme::neon,4>::register_type xmm2){
 	return simd_trait<double,cyme::neon,4>::register_type(vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0),
-							     vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1),
-							     vfmaq_f64(xmm0.r2,xmm1.r2,xmm2.r2),
-							     vfmaq_f64(xmm0.r3,xmm1.r3,xmm2.r3));
+							      vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1),
+							      vfmaq_f64(xmm0.r2,xmm1.r2,xmm2.r2),
+							      vfmaq_f64(xmm0.r3,xmm1.r3,xmm2.r3));
     }
 
     /**
@@ -1502,8 +1508,7 @@ namespace cyme{
     _mm_nfma<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0,
                                   simd_trait<double,cyme::neon,1>::register_type xmm1,
                                   simd_trait<double,cyme::neon,1>::register_type xmm2){
-	float64x2_t temp = vfmaq_f64(xmm0,xmm1,xmm2);
-	return vnegq_f64(temp);
+	return vfmsq_f64(xmm2,xmm0,xmm1);
     }
 
     /**
@@ -1516,10 +1521,8 @@ namespace cyme{
     _mm_nfma<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0,
                                   simd_trait<double,cyme::neon,2>::register_type xmm1,
                                   simd_trait<double,cyme::neon,2>::register_type xmm2){
-	float64x2_t temp1 = vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0);
-	float64x2_t temp2 = vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1);
-	return simd_trait<double,cyme::neon,2>::register_type(vnegq_f64(temp1),
-							     vnegq_f64(temp2));
+	return simd_trait<double,cyme::neon,2>::register_type(vfmsq_f64(xmm2.r0,xmm0.r0,xmm1.r0),
+							      vfmsq_f64(xmm2.r1,xmm0.r1,xmm1.r1));
     }
 
     /**
@@ -1532,14 +1535,10 @@ namespace cyme{
     _mm_nfma<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0,
                                   simd_trait<double,cyme::neon,4>::register_type xmm1,
                                   simd_trait<double,cyme::neon,4>::register_type xmm2){
-	float64x2_t temp1 = vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0);
-	float64x2_t temp2 = vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1);
-	float64x2_t temp3 = vfmaq_f64(xmm0.r2,xmm1.r2,xmm2.r2);
-	float64x2_t temp4 = vfmaq_f64(xmm0.r3,xmm1.r3,xmm2.r3);
-	return simd_trait<double,cyme::neon,4>::register_type(vnegq_f64(temp1),
-							     vnegq_f64(temp2),
-							     vnegq_f64(temp3),
-							     vnegq_f64(temp4));
+	return simd_trait<double,cyme::neon,4>::register_type(vfmsq_f64(xmm2.r0,xmm0.r0,xmm1.r0),
+							      vfmsq_f64(xmm2.r1,xmm0.r1,xmm1.r1),
+							      vfmsq_f64(xmm2.r2,xmm0.r2,xmm1.r2),
+							      vfmsq_f64(xmm2.r3,xmm0.r3,xmm1.r3));
     }
 
     /**
@@ -1551,7 +1550,8 @@ namespace cyme{
     _mm_fms<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0,
                                  simd_trait<double,cyme::neon,1>::register_type xmm1,
                                  simd_trait<double,cyme::neon,1>::register_type xmm2){
-	return vfmsq_f64(xmm0,xmm1,xmm2);
+	float64x2_t temp = vfmsq_f64(xmm2,xmm0,xmm1);
+	return vnegq_f64(temp);
     }
 
     /**
@@ -1563,8 +1563,10 @@ namespace cyme{
     _mm_fms<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0,
                                  simd_trait<double,cyme::neon,2>::register_type xmm1,
                                  simd_trait<double,cyme::neon,2>::register_type xmm2){
-	return simd_trait<double,cyme::neon,2>::register_type(vfmsq_f64(xmm0.r0,xmm1.r0,xmm2.r0),
-							     vfmsq_f64(xmm0.r1,xmm1.r1,xmm2.r1));
+	float64x2_t temp1 = vfmsq_f64(xmm2.r0,xmm0.r0,xmm1.r0);
+	float64x2_t temp2 = vfmsq_f64(xmm2.r1,xmm0.r1,xmm1.r1);
+	return simd_trait<double,cyme::neon,2>::register_type(vnegq_f64(temp1),
+							      vnegq_f64(temp2));
     }
 
     /**
@@ -1576,10 +1578,14 @@ namespace cyme{
     _mm_fms<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0,
                                  simd_trait<double,cyme::neon,4>::register_type xmm1,
                                  simd_trait<double,cyme::neon,4>::register_type xmm2){
-	return simd_trait<double,cyme::neon,4>::register_type(vfmsq_f64(xmm0.r0,xmm1.r0,xmm2.r0),
-							     vfmsq_f64(xmm0.r1,xmm1.r1,xmm2.r1),
-							     vfmsq_f64(xmm0.r2,xmm1.r2,xmm2.r2),
-							     vfmsq_f64(xmm0.r3,xmm1.r3,xmm2.r3));
+	float64x2_t temp1 = vfmsq_f64(xmm2.r0,xmm0.r0,xmm1.r0);
+	float64x2_t temp2 = vfmsq_f64(xmm2.r1,xmm0.r1,xmm1.r1);
+	float64x2_t temp3 = vfmsq_f64(xmm2.r2,xmm0.r2,xmm1.r2);
+	float64x2_t temp4 = vfmsq_f64(xmm2.r3,xmm0.r3,xmm1.r3);
+	return simd_trait<double,cyme::neon,4>::register_type(vnegq_f64(temp1),
+							      vnegq_f64(temp2),
+							      vnegq_f64(temp3),
+							      vnegq_f64(temp4));
     }
 
     /**
@@ -1607,7 +1613,7 @@ namespace cyme{
 	float64x2_t temp1 = vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0);
 	float64x2_t temp2 = vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0);
 	return simd_trait<double,cyme::neon,2>::register_type(vnegq_f64(temp1),
-							     vnegq_f64(temp2));
+							      vnegq_f64(temp2));
     }
 
     /**
@@ -1624,9 +1630,9 @@ namespace cyme{
 	float64x2_t temp3 = vfmaq_f64(xmm0.r2,xmm1.r2,xmm2.r2);
 	float64x2_t temp4 = vfmaq_f64(xmm0.r3,xmm1.r3,xmm2.r3);
 	return simd_trait<double,cyme::neon,4>::register_type(vnegq_f64(temp1),
-							     vnegq_f64(temp2),
-							     vnegq_f64(temp3),
-							     vnegq_f64(temp4));
+							      vnegq_f64(temp2),
+							      vnegq_f64(temp3),
+							      vnegq_f64(temp4));
     }
 #endif
 } //end namespace
