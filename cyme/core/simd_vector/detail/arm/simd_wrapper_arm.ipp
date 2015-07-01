@@ -654,6 +654,8 @@ namespace cyme{
     /**
       Returns a vector containing the results of performing a fused multiply/add
      for each corresponding of a set of elements of the given vectors.
+     Given arguments a,b, and c,
+     result = a*b+c
        specialisation float,cyme::neon,1 regs
      */
     template<>
@@ -661,12 +663,14 @@ namespace cyme{
     _mm_fma<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0,
                                 simd_trait<float,cyme::neon,1>::register_type xmm1,
                                 simd_trait<float,cyme::neon,1>::register_type xmm2){
-	return vfmaq_f32(xmm0,xmm1,xmm2);
+	return vfmaq_f32(xmm2,xmm0,xmm1);
     }
 
     /**
       Returns a vector containing the results of performing a fused multiply/add
      for each corresponding of a set of elements of the given vectors.
+     Given arguments a,b, and c,
+     result = a*b+c
        specialisation float,cyme::neon,2 regs
      */
     template<>
@@ -674,13 +678,15 @@ namespace cyme{
     _mm_fma<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0,
                                 simd_trait<float,cyme::neon,2>::register_type xmm1,
                                 simd_trait<float,cyme::neon,2>::register_type xmm2){
-	return simd_trait<float,cyme::neon,2>::register_type(vfmaq_f32(xmm0.r0,xmm1.r0,xmm2.r0),
-							     vfmaq_f32(xmm0.r1,xmm1.r1,xmm2.r1));
+	return simd_trait<float,cyme::neon,2>::register_type(vfmaq_f32(xmm2.r0,xmm0.r0,xmm1.r0),
+							     vfmaq_f32(xmm2.r1,xmm0.r1,xmm1.r1));
     }
 
     /**
       Returns a vector containing the results of performing a fused multiply/add
      for each corresponding of a set of elements of the given vectors.
+     Given arguments a,b, and c,
+     result = a*b+c
        specialisation float,cyme::neon,4 regs
      */
     template<>
@@ -688,15 +694,17 @@ namespace cyme{
     _mm_fma<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0,
                                 simd_trait<float,cyme::neon,4>::register_type xmm1,
                                 simd_trait<float,cyme::neon,4>::register_type xmm2){
-	return simd_trait<float,cyme::neon,4>::register_type(vfmaq_f32(xmm0.r0,xmm1.r0,xmm2.r0),
-							     vfmaq_f32(xmm0.r1,xmm1.r1,xmm2.r1),
-							     vfmaq_f32(xmm0.r2,xmm1.r2,xmm2.r2),
-							     vfmaq_f32(xmm0.r3,xmm1.r3,xmm2.r3));
+	return simd_trait<float,cyme::neon,4>::register_type(vfmaq_f32(xmm2.r0,xmm0.r0,xmm1.r0),
+							     vfmaq_f32(xmm2.r1,xmm0.r1,xmm1.r1),
+							     vfmaq_f32(xmm2.r2,xmm0.r2,xmm1.r2),
+							     vfmaq_f32(xmm2.r3,xmm0.r3,xmm1.r3));
     }
 
     /**
       Returns a vector containing the results of performing a negative
-      multiply-subtract operation on the given vectors.
+      multiply-subtract operation on the given vectors. Given arguments a, b, and c,
+      result = -(a*b-c)
+      result = c - a*b.
        specialisation float,cyme::neon,1 regs
      */
     template<>
@@ -709,7 +717,9 @@ namespace cyme{
 
     /**
       Returns a vector containing the results of performing a negative
-      multiply-subtract operation on the given vectors.
+      multiply-subtract operation on the given vectors. Given arguments a, b, and c,
+      result = -(a*b-c)
+      result = c - a*b.
        specialisation float,cyme::neon,2 regs
      */
     template<>
@@ -723,7 +733,9 @@ namespace cyme{
 
     /**
       Returns a vector containing the results of performing a negative
-      multiply-subtract operation on the given vectors.
+      multiply-subtract operation on the given vectors. Given arguments a, b, and c,
+      result = -(a*b-c)
+      result = c - a*b.
        specialisation float,cyme::neon,4 regs
      */
     template<>
@@ -739,7 +751,8 @@ namespace cyme{
 
     /**
       Returns a vector containing the results of performing a multiply-substract
-      operation using the given vectors.
+      operation on the given vectors. Given arguments a, b, and c,
+      result = a*b-c.
        specialisation float,cyme::neon,1 regs
      */
     template<>
@@ -753,7 +766,8 @@ namespace cyme{
 
     /**
       Returns a vector containing the results of performing a multiply-substract
-      operation using the given vectors.
+      operation on the given vectors. Given arguments a, b, and c,
+      result = a*b-c.
        specialisation float,cyme::neon,2 regs
      */
     template<>
@@ -769,7 +783,8 @@ namespace cyme{
 
     /**
       Returns a vector containing the results of performing a multiply-substract
-      operation using the given vectors.
+      operation on the given vectors. Given arguments a, b, and c,
+      result = a*b-c.
        specialisation float,cyme::neon,4 regs
      */
     template<>
@@ -789,6 +804,8 @@ namespace cyme{
 
     /**
      Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
+     Given arguments a,b, and c,
+     result = -(a*b+c)
        specialisation float,cyme::neon,1 regs
     */
     template<>
@@ -796,12 +813,14 @@ namespace cyme{
     _mm_nfms<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0,
                                  simd_trait<float,cyme::neon,1>::register_type xmm1,
                                  simd_trait<float,cyme::neon,1>::register_type xmm2){
-	float32x4_t temp = vfmaq_f32(xmm0,xmm1,xmm2);
+	float32x4_t temp = vfmaq_f32(xmm2,xmm0,xmm1);
 	return vnegq_f32(temp);
     }
 
     /**
      Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
+     Given arguments a,b, and c,
+     result = -(a*b+c)
        specialisation float,cyme::neon,2 regs
     */
     template<>
@@ -809,14 +828,16 @@ namespace cyme{
     _mm_nfms<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0,
                                  simd_trait<float,cyme::neon,2>::register_type xmm1,
                                  simd_trait<float,cyme::neon,2>::register_type xmm2){
-	float32x4_t temp1 = vfmaq_f32(xmm0.r0,xmm1.r0,xmm2.r0);
-	float32x4_t temp2 = vfmaq_f32(xmm0.r1,xmm1.r1,xmm2.r1);
+	float32x4_t temp1 = vfmaq_f32(xmm2.r0,xmm0.r0,xmm1.r0);
+	float32x4_t temp2 = vfmaq_f32(xmm2.r1,xmm0.r1,xmm1.r1);
 	return simd_trait<float,cyme::neon,2>::register_type(vnegq_f32(temp1),
 							     vnegq_f32(temp2));
     }
 
     /**
      Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
+     Given arguments a,b, and c,
+     result = -(a*b+c)
        specialisation float,cyme::neon,4 regs
     */
     template<>
@@ -824,10 +845,10 @@ namespace cyme{
     _mm_nfms<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0,
                                  simd_trait<float,cyme::neon,4>::register_type xmm1,
                                  simd_trait<float,cyme::neon,4>::register_type xmm2){
-	float32x4_t temp1 = vfmaq_f32(xmm0.r0,xmm1.r0,xmm2.r0);
-	float32x4_t temp2 = vfmaq_f32(xmm0.r1,xmm1.r1,xmm2.r1);
-	float32x4_t temp3 = vfmaq_f32(xmm0.r2,xmm1.r2,xmm2.r2);
-	float32x4_t temp4 = vfmaq_f32(xmm0.r3,xmm1.r3,xmm2.r3);
+	float32x4_t temp1 = vfmaq_f32(xmm2.r0,xmm0.r0,xmm1.r0);
+	float32x4_t temp2 = vfmaq_f32(xmm2.r1,xmm0.r1,xmm1.r1);
+	float32x4_t temp3 = vfmaq_f32(xmm2.r2,xmm0.r2,xmm1.r2);
+	float32x4_t temp4 = vfmaq_f32(xmm2.r3,xmm0.r3,xmm1.r3);
 	return simd_trait<float,cyme::neon,4>::register_type(vnegq_f32(temp1),
 							     vnegq_f32(temp2),
 							     vnegq_f32(temp3),
@@ -1458,6 +1479,8 @@ namespace cyme{
     /**
       Returns a vector containing the results of performing a fused multiply/add for each corresponding
      set of elements of the given vectors.
+     Given arguments a,b, and c,
+     result = a*b+c
        specialisation double,cyme::neon,1 regs
      */
     template<>
@@ -1465,12 +1488,14 @@ namespace cyme{
     _mm_fma<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0,
                                  simd_trait<double,cyme::neon,1>::register_type xmm1,
                                  simd_trait<double,cyme::neon,1>::register_type xmm2){
-	return vfmaq_f64(xmm0,xmm1,xmm2);
+	return vfmaq_f64(xmm2,xmm0,xmm1);
     }
 
     /**
       Returns a vector containing the results of performing a fused multiply/add for each corresponding
      set of elements of the given vectors.
+     Given arguments a,b, and c,
+     result = a*b+c
        specialisation double,cyme::neon,2 regs
      */
     template<>
@@ -1478,13 +1503,15 @@ namespace cyme{
     _mm_fma<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0,
                                  simd_trait<double,cyme::neon,2>::register_type xmm1,
                                  simd_trait<double,cyme::neon,2>::register_type xmm2){
-	return simd_trait<double,cyme::neon,2>::register_type(vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0),
-							      vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1));
+	return simd_trait<double,cyme::neon,2>::register_type(vfmaq_f64(xmm2.r0,xmm0.r0,xmm1.r0),
+							      vfmaq_f64(xmm2.r1,xmm0.r1,xmm1.r1));
     }
 
     /**
       Returns a vector containing the results of performing a fused multiply/add for each corresponding
      set of elements of the given vectors.
+     Given arguments a,b, and c,
+     result = a*b+c
        specialisation double,cyme::neon,4 regs
      */
     template<>
@@ -1492,15 +1519,17 @@ namespace cyme{
     _mm_fma<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0,
                                  simd_trait<double,cyme::neon,4>::register_type xmm1,
                                  simd_trait<double,cyme::neon,4>::register_type xmm2){
-	return simd_trait<double,cyme::neon,4>::register_type(vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0),
-							      vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1),
-							      vfmaq_f64(xmm0.r2,xmm1.r2,xmm2.r2),
-							      vfmaq_f64(xmm0.r3,xmm1.r3,xmm2.r3));
+	return simd_trait<double,cyme::neon,4>::register_type(vfmaq_f64(xmm2.r0,xmm0.r0,xmm1.r0),
+							      vfmaq_f64(xmm2.r1,xmm0.r1,xmm1.r1),
+							      vfmaq_f64(xmm2.r2,xmm0.r2,xmm1.r2),
+							      vfmaq_f64(xmm2.r3,xmm0.r3,xmm1.r3));
     }
 
     /**
       Returns a vector containing the results of performing a negative multiply-subtract
-     operation on the given vectors.
+      operation on the given vectors. Given arguments a, b, and c,
+      result = -(a*b-c),
+      result = c-a*b.
        specialisation double,cyme::neon,1 regs
      */
     template<>
@@ -1513,7 +1542,9 @@ namespace cyme{
 
     /**
       Returns a vector containing the results of performing a negative multiply-subtract
-     operation on the given vectors.
+      operation on the given vectors. Given arguments a, b, and c,
+      result = -(a*b-c),
+      result = c-a*b.
        specialisation double,cyme::neon,2 regs
      */
     template<>
@@ -1527,7 +1558,9 @@ namespace cyme{
 
     /**
       Returns a vector containing the results of performing a negative multiply-subtract
-     operation on the given vectors.
+      operation on the given vectors. Given arguments a, b, and c,
+      result = -(a*b-c),
+      result = c-a*b.
        specialisation double,cyme::neon,4 regs
      */
     template<>
@@ -1542,7 +1575,9 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing the results of performing a multiply-substract operation using the given vectors.
+      Returns a vector containing the results of performing a multiply-substract
+      operation on the given vectors. Given arguments a, b, and c,
+      result = a*b-c.
        specialisation double,cyme::neon,1 regs
      */
     template<>
@@ -1555,7 +1590,9 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing the results of performing a multiply-substract operation using the given vectors.
+      Returns a vector containing the results of performing a multiply-substract 
+      operation on the given vectors. Given arguments a, b, and c,
+      result = a*b-c.
        specialisation double,cyme::neon,2 regs
      */
     template<>
@@ -1570,7 +1607,9 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing the results of performing a multiply-substract operation using the given vectors.
+      Returns a vector containing the results of performing a multiply-substract
+      operation on the given vectors. Given arguments a, b, and c,
+      result = a*b-c.
        specialisation double,cyme::neon,4 regs
      */
     template<>
@@ -1590,6 +1629,8 @@ namespace cyme{
 
     /**
      Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
+     Given arguments a,b, and c,
+     result = -(a*b+c
        specialisation double,cyme::neon,1 regs
     */
     template<>
@@ -1597,12 +1638,14 @@ namespace cyme{
     _mm_nfms<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0,
                                   simd_trait<double,cyme::neon,1>::register_type xmm1,
                                   simd_trait<double,cyme::neon,1>::register_type xmm2){
-	float64x2_t temp = vfmaq_f64(xmm0,xmm1,xmm2);
+	float64x2_t temp = vfmaq_f64(xmm2,xmm0,xmm1);
 	return vnegq_f64(temp);
     }
 
     /**
      Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
+     Given arguments a,b, and c,
+     result = -(a*b+c
        specialisation double,cyme::neon,2 regs
     */
     template<>
@@ -1610,14 +1653,16 @@ namespace cyme{
     _mm_nfms<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0,
                                   simd_trait<double,cyme::neon,2>::register_type xmm1,
                                   simd_trait<double,cyme::neon,2>::register_type xmm2){
-	float64x2_t temp1 = vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0);
-	float64x2_t temp2 = vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0);
+	float64x2_t temp1 = vfmaq_f64(xmm2.r0,xmm0.r0,xmm1.r0);
+	float64x2_t temp2 = vfmaq_f64(xmm2.r0,xmm0.r0,xmm1.r0);
 	return simd_trait<double,cyme::neon,2>::register_type(vnegq_f64(temp1),
 							      vnegq_f64(temp2));
     }
 
     /**
      Returns a vector containing the results of performing a negative multiply-sum operation on the given vectors.
+     Given arguments a,b, and c,
+     result = -(a*b+c
        specialisation double,cyme::neon,4 regs
     */
     template<>
@@ -1625,10 +1670,10 @@ namespace cyme{
     _mm_nfms<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0,
                                   simd_trait<double,cyme::neon,4>::register_type xmm1,
                                   simd_trait<double,cyme::neon,4>::register_type xmm2){
-	float64x2_t temp1 = vfmaq_f64(xmm0.r0,xmm1.r0,xmm2.r0);
-	float64x2_t temp2 = vfmaq_f64(xmm0.r1,xmm1.r1,xmm2.r1);
-	float64x2_t temp3 = vfmaq_f64(xmm0.r2,xmm1.r2,xmm2.r2);
-	float64x2_t temp4 = vfmaq_f64(xmm0.r3,xmm1.r3,xmm2.r3);
+	float64x2_t temp1 = vfmaq_f64(xmm2.r0,xmm0.r0,xmm1.r0);
+	float64x2_t temp2 = vfmaq_f64(xmm2.r1,xmm0.r1,xmm1.r1);
+	float64x2_t temp3 = vfmaq_f64(xmm2.r2,xmm0.r2,xmm1.r2);
+	float64x2_t temp4 = vfmaq_f64(xmm2.r3,xmm0.r3,xmm1.r3);
 	return simd_trait<double,cyme::neon,4>::register_type(vnegq_f64(temp1),
 							      vnegq_f64(temp2),
 							      vnegq_f64(temp3),
