@@ -500,8 +500,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,1>::register_type
-    _mm_cast<float,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_cast<float,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type xmm0){
+	return (float32x4_t)xmm0;
     }
 
     /**
@@ -511,8 +511,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,2>::register_type
-    _mm_cast<float,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_cast<float,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type xmm0){
+	return simd_trait<float,cyme::neon,2>::register_type((float32x4_t)xmm0.r0,
+							     (float32x4_t)xmm0.r1);
     }
 
     /**
@@ -522,8 +523,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,4>::register_type
-    _mm_cast<float,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_cast<float,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type xmm0){
+	return simd_trait<float,cyme::neon,4>::register_type((float32x4_t)xmm0.r0,
+							     (float32x4_t)xmm0.r1,
+							     (float32x4_t)xmm0.r2,
+							     (float32x4_t)xmm0.r3);
     }
 
     /**
@@ -1317,8 +1321,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,1>::register_type
-    _mm_cast<double,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_cast<double,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type xmm0){
+	return (float64x2_t)xmm0;
     }
 
     /**
@@ -1328,8 +1332,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,2>::register_type
-    _mm_cast<double,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_cast<double,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type xmm0){
+	return simd_trait<double,cyme::neon,2>::register_type((float64x2_t)xmm0.r0,
+							      (float64x2_t)xmm0.r1);
     }
 
     /**
@@ -1339,8 +1344,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,4>::register_type
-    _mm_cast<double,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_cast<double,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type xmm0){
+	return simd_trait<double,cyme::neon,4>::register_type((float64x2_t)xmm0.r0,
+							      (float64x2_t)xmm0.r1,
+							      (float64x2_t)xmm0.r2,
+							      (float64x2_t)xmm0.r3);
     }
 
     /**
