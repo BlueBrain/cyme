@@ -551,7 +551,7 @@ namespace cyme{
     forceinline simd_trait<int,cyme::neon,2>::register_type
     _mm_floor<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0){
 	return simd_trait<int,cyme::neon,2>::register_type(vcvtq_s32_f32(xmm0.r0),
-							     vcvtq_s32_f32(xmm0.r1));
+							   vcvtq_s32_f32(xmm0.r1));
     }
 
     /**
@@ -564,9 +564,9 @@ namespace cyme{
     forceinline simd_trait<int,cyme::neon,4>::register_type
     _mm_floor<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0){
 	return simd_trait<int,cyme::neon,4>::register_type(vcvtq_s32_f32(xmm0.r0),
-							     vcvtq_s32_f32(xmm0.r1),
-							     vcvtq_s32_f32(xmm0.r2),
-							     vcvtq_s32_f32(xmm0.r3));
+							   vcvtq_s32_f32(xmm0.r1),
+							   vcvtq_s32_f32(xmm0.r2),
+							   vcvtq_s32_f32(xmm0.r3));
     }
 
     /**
@@ -575,8 +575,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,1>::register_type
-    _mm_twok<float,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_twok<float,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type xmm0){
+	xmm0 = vaddq_s32(xmm0,vmovq_n_s32(127));
+	xmm0 = vshlq_s32(xmm0,vmovq_n_s32(23));
+	return (float32x4_t)xmm0; 
     }
 
     /**
@@ -585,8 +587,13 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,2>::register_type
-    _mm_twok<float,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_twok<float,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type xmm0){
+	xmm0.r0 = vaddq_s32(xmm0.r0,vmovq_n_s32(127));
+	xmm0.r1 = vaddq_s32(xmm0.r1,vmovq_n_s32(127));
+	xmm0.r0 = vshlq_s32(xmm0.r0,vmovq_n_s32(23));
+	xmm0.r1 = vshlq_s32(xmm0.r1,vmovq_n_s32(23));
+	return simd_trait<float,cyme::neon,2>::register_type((float32x4_t)xmm0.r0,
+							     (float32x4_t)xmm0.r1);
     }
 
     /**
@@ -595,8 +602,19 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,4>::register_type
-    _mm_twok<float,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_twok<float,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type xmm0){
+	xmm0.r0 = vaddq_s32(xmm0.r0,vmovq_n_s32(127));
+	xmm0.r1 = vaddq_s32(xmm0.r1,vmovq_n_s32(127));
+	xmm0.r2 = vaddq_s32(xmm0.r3,vmovq_n_s32(127));
+	xmm0.r3 = vaddq_s32(xmm0.r2,vmovq_n_s32(127));
+	xmm0.r0 = vshlq_s32(xmm0.r0,vmovq_n_s32(23));
+	xmm0.r1 = vshlq_s32(xmm0.r1,vmovq_n_s32(23));
+	xmm0.r2 = vshlq_s32(xmm0.r2,vmovq_n_s32(23));
+	xmm0.r3 = vshlq_s32(xmm0.r3,vmovq_n_s32(23));
+	return simd_trait<float,cyme::neon,4>::register_type((float32x4_t)xmm0.r0,
+							     (float32x4_t)xmm0.r1,
+							     (float32x4_t)xmm0.r2,
+							     (float32x4_t)xmm0.r3);
     }
 
     /**
