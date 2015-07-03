@@ -623,8 +623,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,1>::register_type
-    _mm_ge<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_ge<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0){
+	int32x4_t tmp = (int32x4_t)xmm0;
+	tmp = vshrq_n_s32(tmp,23);
+	tmp = vsubq_s32(tmp,vmovq_n_s32(127));
+	return vcvtq_f32_s32(tmp);
     }
 
     /**
@@ -633,8 +636,15 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,2>::register_type
-    _mm_ge<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_ge<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0){
+	int32x4_t tmp1 = (int32x4_t)xmm0.r0;
+	int32x4_t tmp2 = (int32x4_t)xmm0.r1;
+	tmp1 = vshrq_n_s32(tmp1,23);
+	tmp2 = vshrq_n_s32(tmp2,23);
+	tmp1 = vsubq_s32(tmp1,vmovq_n_s32(127));
+	tmp2 = vsubq_s32(tmp2,vmovq_n_s32(127));
+	return simd_trait<float,cyme::neon,2>::register_type(vcvtq_f32_s32(tmp1),
+							     vcvtq_f32_s32(tmp2));
     }
 
     /**
@@ -643,8 +653,23 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,4>::register_type
-    _mm_ge<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_ge<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0){
+	int32x4_t tmp1 = (int32x4_t)xmm0.r0;
+	int32x4_t tmp2 = (int32x4_t)xmm0.r1;
+	int32x4_t tmp3 = (int32x4_t)xmm0.r2;
+	int32x4_t tmp4 = (int32x4_t)xmm0.r3;
+	tmp1 = vshrq_n_s32(tmp1,23);
+	tmp2 = vshrq_n_s32(tmp2,23);
+	tmp3 = vshrq_n_s32(tmp3,23);
+	tmp4 = vshrq_n_s32(tmp4,23);
+	tmp1 = vsubq_s32(tmp1,vmovq_n_s32(127));
+	tmp2 = vsubq_s32(tmp2,vmovq_n_s32(127));
+	tmp3 = vsubq_s32(tmp3,vmovq_n_s32(127));
+	tmp4 = vsubq_s32(tmp4,vmovq_n_s32(127));
+	return simd_trait<float,cyme::neon,4>::register_type(vcvtq_f32_s32(tmp1),
+							     vcvtq_f32_s32(tmp2),
+							     vcvtq_f32_s32(tmp3),
+							     vcvtq_f32_s32(tmp4));
     }
 
     /**
@@ -653,8 +678,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,1>::register_type
-    _mm_gf<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_gf<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0){
+	int32x4_t tmp = (int32x4_t)xmm0;
+	tmp = vandq_s32(tmp,vmovq_n_s32((signed int)0x7fffff));
+	tmp = vaddq_s32(tmp,vmovq_n_s32((signed int)0x3f800000));
+	return (float32x4_t)tmp;
     }
 
     /**
@@ -663,8 +691,15 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,2>::register_type
-    _mm_gf<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_gf<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0){
+	int32x4_t tmp1 = (int32x4_t)xmm0.r0;
+	int32x4_t tmp2 = (int32x4_t)xmm0.r1;
+	tmp1 = vandq_s32(tmp1,vmovq_n_s32((signed int)0x7fffff));
+	tmp2 = vandq_s32(tmp2,vmovq_n_s32((signed int)0x7fffff));
+	tmp1 = vaddq_s32(tmp1,vmovq_n_s32((signed int)0x3f800000));
+	tmp2 = vaddq_s32(tmp2,vmovq_n_s32((signed int)0x3f800000));
+	return simd_trait<float,cyme::neon,2>::register_type((float32x4_t)tmp1,
+							     (float32x4_t)tmp2);
     }
 
     /**
@@ -673,8 +708,23 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,4>::register_type
-    _mm_gf<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_gf<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0){
+	int32x4_t tmp1 = (int32x4_t)xmm0.r0;
+	int32x4_t tmp2 = (int32x4_t)xmm0.r1;
+	int32x4_t tmp3 = (int32x4_t)xmm0.r2;
+	int32x4_t tmp4 = (int32x4_t)xmm0.r3;
+	tmp1 = vandq_s32(tmp1,vmovq_n_s32((signed int)0x7fffff));
+	tmp2 = vandq_s32(tmp2,vmovq_n_s32((signed int)0x7fffff));
+	tmp3 = vandq_s32(tmp3,vmovq_n_s32((signed int)0x7fffff));
+	tmp4 = vandq_s32(tmp4,vmovq_n_s32((signed int)0x7fffff));
+	tmp1 = vaddq_s32(tmp1,vmovq_n_s32((signed int)0x3f800000));
+	tmp2 = vaddq_s32(tmp2,vmovq_n_s32((signed int)0x3f800000));
+	tmp3 = vaddq_s32(tmp3,vmovq_n_s32((signed int)0x3f800000));
+	tmp4 = vaddq_s32(tmp4,vmovq_n_s32((signed int)0x3f800000));
+	return simd_trait<float,cyme::neon,4>::register_type((float32x4_t)tmp1,
+							     (float32x4_t)tmp2,
+							     (float32x4_t)tmp3,
+							     (float32x4_t)tmp4);
     }
 
 #ifdef __FMA__
@@ -1478,8 +1528,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,1>::register_type
-    _mm_ge<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_ge<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0){
+	int64x2_t tmp = (int64x2_t)xmm0;
+	tmp = vshrq_n_s64(tmp,52);
+	tmp = vsubq_s64(tmp,vmovq_n_s64(1023));
+	return vcvtq_f64_s64(tmp);
     }
 
    /**
@@ -1489,8 +1542,15 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,2>::register_type
-    _mm_ge<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_ge<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0){
+	int64x2_t tmp1 = (int64x2_t)xmm0.r0;
+	int64x2_t tmp2 = (int64x2_t)xmm0.r1;
+	tmp1 = vshrq_n_s64(tmp1,52);
+	tmp2 = vshrq_n_s64(tmp2,52);
+	tmp1 = vsubq_s64(tmp1,vmovq_n_s64(1023));
+	tmp2 = vsubq_s64(tmp2,vmovq_n_s64(1023));
+	return simd_trait<double,cyme::neon,2>::register_type(vcvtq_f64_s64(tmp1),
+							      vcvtq_f64_s64(tmp2));
     }
 
    /**
@@ -1500,8 +1560,23 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,4>::register_type
-    _mm_ge<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_ge<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0){
+	int64x2_t tmp1 = (int64x2_t)xmm0.r0;
+	int64x2_t tmp2 = (int64x2_t)xmm0.r1;
+	int64x2_t tmp3 = (int64x2_t)xmm0.r2;
+	int64x2_t tmp4 = (int64x2_t)xmm0.r3;
+	tmp1 = vshrq_n_s64(tmp1,52);
+	tmp2 = vshrq_n_s64(tmp2,52);
+	tmp3 = vshrq_n_s64(tmp3,52);
+	tmp4 = vshrq_n_s64(tmp4,52);
+	tmp1 = vsubq_s64(tmp1,vmovq_n_s64(1023));
+	tmp2 = vsubq_s64(tmp2,vmovq_n_s64(1023));
+	tmp3 = vsubq_s64(tmp3,vmovq_n_s64(1023));
+	tmp4 = vsubq_s64(tmp4,vmovq_n_s64(1023));
+	return simd_trait<double,cyme::neon,4>::register_type(vcvtq_f64_s64(tmp1),
+							      vcvtq_f64_s64(tmp2),
+							      vcvtq_f64_s64(tmp3),
+							      vcvtq_f64_s64(tmp4));
     }
 
     /**
@@ -1511,8 +1586,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,1>::register_type
-    _mm_gf<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_gf<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0){
+	int64x2_t tmp = (int64x2_t)xmm0;
+	tmp = vandq_s64(tmp,vmovq_n_s64((signed long)0xfffffffffffff));
+	tmp = vaddq_s64(tmp,vmovq_n_s64((signed long)0x3ff0000000000000));
+	return (float64x2_t)tmp;
     }
 
     /**
@@ -1522,8 +1600,15 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,2>::register_type
-    _mm_gf<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_gf<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0){
+	int64x2_t tmp1 = (int64x2_t)xmm0.r0;
+	int64x2_t tmp2 = (int64x2_t)xmm0.r1;
+	tmp1 = vandq_s64(tmp1,vmovq_n_s64((signed long)0xfffffffffffff));
+	tmp2 = vandq_s64(tmp2,vmovq_n_s64((signed long)0xfffffffffffff));
+	tmp1 = vaddq_s64(tmp1,vmovq_n_s64((signed long)0x3ff0000000000000));
+	tmp2 = vaddq_s64(tmp2,vmovq_n_s64((signed long)0x3ff0000000000000));
+	return simd_trait<double,cyme::neon,2>::register_type((float64x2_t)tmp1,
+							      (float64x2_t)tmp2);
     }
 
     /**
@@ -1533,8 +1618,23 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,4>::register_type
-    _mm_gf<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type __attribute__((unused))xmm0){
-	assert(false);
+    _mm_gf<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0){
+	int64x2_t tmp1 = (int64x2_t)xmm0.r0;
+	int64x2_t tmp2 = (int64x2_t)xmm0.r1;
+	int64x2_t tmp3 = (int64x2_t)xmm0.r2;
+	int64x2_t tmp4 = (int64x2_t)xmm0.r3;
+	tmp1 = vandq_s64(tmp1,vmovq_n_s64((signed long)0xfffffffffffff));
+	tmp2 = vandq_s64(tmp2,vmovq_n_s64((signed long)0xfffffffffffff));
+	tmp3 = vandq_s64(tmp3,vmovq_n_s64((signed long)0xfffffffffffff));
+	tmp4 = vandq_s64(tmp4,vmovq_n_s64((signed long)0xfffffffffffff));
+	tmp1 = vaddq_s64(tmp1,vmovq_n_s64((signed long)0x3ff0000000000000));
+	tmp2 = vaddq_s64(tmp2,vmovq_n_s64((signed long)0x3ff0000000000000));
+	tmp3 = vaddq_s64(tmp3,vmovq_n_s64((signed long)0x3ff0000000000000));
+	tmp4 = vaddq_s64(tmp4,vmovq_n_s64((signed long)0x3ff0000000000000));
+	return simd_trait<double,cyme::neon,4>::register_type((float64x2_t)tmp1,
+							      (float64x2_t)tmp2,
+							      (float64x2_t)tmp3,
+							      (float64x2_t)tmp4);
     }
 
 #ifdef __FMA__
