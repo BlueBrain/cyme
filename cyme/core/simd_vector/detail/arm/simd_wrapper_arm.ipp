@@ -1431,10 +1431,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<int,cyme::neon,1>::register_type
-    _mm_floor<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0){
+    _mm_floor<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type __attribute__((unused))xmm0){
 	float32x2_t temp = vcvt_f32_f64(xmm0);
-	return vcvtq_s32_f32(vcombine_f32(temp,temp));
-    }
+	temp = vext_f32(temp,vrev64_f32(temp),1);
+	return vcombine_s32(vcvt_s32_f32(temp),vcvt_s32_f32(temp));
+   }
 
     /**
       Returns a vector containing the largest representable floating-point integral values less than or equal
@@ -1446,6 +1447,8 @@ namespace cyme{
     _mm_floor<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0){
 	float32x2_t temp1 = vcvt_f32_f64(xmm0.r0);
 	float32x2_t temp2 = vcvt_f32_f64(xmm0.r1);
+	temp1 = vext_f32(temp1,vrev64_f32(temp1),1);
+	temp2 = vext_f32(temp2,vrev64_f32(temp2),1);
 	return simd_trait<int,cyme::neon,2>::register_type(vcvtq_s32_f32(vcombine_f32(temp1,temp1)),
 							   vcvtq_s32_f32(vcombine_f32(temp2,temp2)));
     }
@@ -1463,6 +1466,10 @@ namespace cyme{
 	float32x2_t temp2 = vcvt_f32_f64(xmm0.r1);
 	float32x2_t temp3 = vcvt_f32_f64(xmm0.r2);
 	float32x2_t temp4 = vcvt_f32_f64(xmm0.r3);
+	temp1 = vext_f32(temp1,vrev64_f32(temp1),1);
+	temp2 = vext_f32(temp2,vrev64_f32(temp2),1);
+	temp3 = vext_f32(temp3,vrev64_f32(temp3),1);
+	temp4 = vext_f32(temp4,vrev64_f32(temp4),1);
 	//convert 2x(float32x2_t) -> int32x4_t 
 	return simd_trait<int,cyme::neon,4>::register_type(vcvtq_s32_f32(vcombine_f32(temp1,temp1)),
 							   vcvtq_s32_f32(vcombine_f32(temp2,temp2)),
@@ -1480,7 +1487,7 @@ namespace cyme{
     _mm_twok<double,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type xmm0){
 	xmm0 = vaddq_s32(xmm0,vmovq_n_s32(1023));
 	xmm0 = vshlq_s32(xmm0,vmovq_n_s32(20));
-	return (float64x2_t)xmm0; 
+	return (float64x2_t)xmm0;
     }
 
     /**
