@@ -1395,7 +1395,12 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::neon,1>::register_type
     _mm_cast<double,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type xmm0){
-	return vcvt_high_f64_f32(vcvtq_f32_s32(xmm0));
+	//mask so that int32x4 {a, a, b, b} -> {0, a, 0, b}
+	int32x4_t tmp = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
+	tmp = vandq_s32(xmm0,tmp);
+	//cast int32x4 -> int64x2
+	//value cast int64x2 ->float64x2
+	return vcvtq_f64_s64((int64x2_t)tmp);
     }
 
     /**
@@ -1406,8 +1411,13 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::neon,2>::register_type
     _mm_cast<double,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type xmm0){
-	return simd_trait<double,cyme::neon,2>::register_type(vcvt_high_f64_f32(vcvtq_f32_s32(xmm0.r0)),
-							      vcvt_high_f64_f32(vcvtq_f32_s32(xmm0.r1)));
+	//mask so that int32x4 {a, a, b, b} -> {0, a, 0, b}
+	int32x4_t tmp1 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
+	int32x4_t tmp2 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
+	tmp1 = vandq_s32(xmm0.r0,tmp1);
+	tmp2 = vandq_s32(xmm0.r1,tmp2);
+	return simd_trait<double,cyme::neon,2>::register_type(vcvtq_f64_s64((int64x2_t)tmp1),
+							      vcvtq_f64_s64((int64x2_t)tmp2));
     }
 
     /**
@@ -1418,10 +1428,18 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::neon,4>::register_type
     _mm_cast<double,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type xmm0){
-	return simd_trait<double,cyme::neon,4>::register_type(vcvt_high_f64_f32(vcvtq_f32_s32(xmm0.r0)),
-							      vcvt_high_f64_f32(vcvtq_f32_s32(xmm0.r1)),
-							      vcvt_high_f64_f32(vcvtq_f32_s32(xmm0.r2)),
-							      vcvt_high_f64_f32(vcvtq_f32_s32(xmm0.r3)));
+	int32x4_t tmp1 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
+	int32x4_t tmp2 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
+	int32x4_t tmp3 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
+	int32x4_t tmp4 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
+	tmp1 = vandq_s32(xmm0.r0,tmp1);
+	tmp2 = vandq_s32(xmm0.r1,tmp2);
+	tmp3 = vandq_s32(xmm0.r2,tmp3);
+	tmp4 = vandq_s32(xmm0.r3,tmp4);
+	return simd_trait<double,cyme::neon,4>::register_type(vcvtq_f64_s64((int64x2_t)tmp1),
+							      vcvtq_f64_s64((int64x2_t)tmp2),
+							      vcvtq_f64_s64((int64x2_t)tmp3),
+							      vcvtq_f64_s64((int64x2_t)tmp4));
     }
 
     /**
@@ -1431,10 +1449,13 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<int,cyme::neon,1>::register_type
-    _mm_floor<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type __attribute__((unused))xmm0){
-	float32x2_t temp = vcvt_f32_f64(xmm0);
-	temp = vext_f32(temp,vrev64_f32(temp),1);
-	return vcombine_s32(vcvt_s32_f32(temp),vcvt_s32_f32(temp));
+    _mm_floor<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0){
+	//convert float64x2 to int64x2
+	//cast int64x2 to int32x4: {a,b} -> {0, a, 0, b}
+	int32x4_t temp = (int32x4_t)vcvtq_s64_f64(xmm0);
+	//orr with reverse to fill the vector:
+	// {0, a, 0, b} -> {a, a, b, b}
+	return vorrq_s32(temp,vrev64q_s32(temp)); 
    }
 
     /**
@@ -1445,12 +1466,14 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::neon,2>::register_type
     _mm_floor<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0){
-	float32x2_t temp1 = vcvt_f32_f64(xmm0.r0);
-	float32x2_t temp2 = vcvt_f32_f64(xmm0.r1);
-	temp1 = vext_f32(temp1,vrev64_f32(temp1),1);
-	temp2 = vext_f32(temp2,vrev64_f32(temp2),1);
-	return simd_trait<int,cyme::neon,2>::register_type(vcvtq_s32_f32(vcombine_f32(temp1,temp1)),
-							   vcvtq_s32_f32(vcombine_f32(temp2,temp2)));
+	//convert float64x2 to int64x2
+	//cast int64x2 to int32x4: {a,b} -> {0, a, 0, b}
+	int32x4_t temp1 = (int32x4_t)vcvtq_s64_f64(xmm0.r0);
+	int32x4_t temp2 = (int32x4_t)vcvtq_s64_f64(xmm0.r1);	
+	//orr with reverse to fill the vector:
+	// {0, a, 0, b} -> {a, a, b, b}
+	return simd_trait<int,cyme::neon,2>::register_type(vorrq_s32(temp1,vrev64q_s32(temp1)),
+							   vorrq_s32(temp2,vrev64q_s32(temp2)));
     }
 
     /**
@@ -1461,20 +1484,18 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::neon,4>::register_type
     _mm_floor<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0){
-	//convert 64-bit to 32-bit registers
-	float32x2_t temp1 = vcvt_f32_f64(xmm0.r0);
-	float32x2_t temp2 = vcvt_f32_f64(xmm0.r1);
-	float32x2_t temp3 = vcvt_f32_f64(xmm0.r2);
-	float32x2_t temp4 = vcvt_f32_f64(xmm0.r3);
-	temp1 = vext_f32(temp1,vrev64_f32(temp1),1);
-	temp2 = vext_f32(temp2,vrev64_f32(temp2),1);
-	temp3 = vext_f32(temp3,vrev64_f32(temp3),1);
-	temp4 = vext_f32(temp4,vrev64_f32(temp4),1);
-	//convert 2x(float32x2_t) -> int32x4_t 
-	return simd_trait<int,cyme::neon,4>::register_type(vcvtq_s32_f32(vcombine_f32(temp1,temp1)),
-							   vcvtq_s32_f32(vcombine_f32(temp2,temp2)),
-							   vcvtq_s32_f32(vcombine_f32(temp3,temp3)),
-							   vcvtq_s32_f32(vcombine_f32(temp4,temp4)));
+	//convert float64x2 to int64x2
+	//cast int64x2 to int32x4: {a,b} -> {0, a, 0, b}
+	int32x4_t temp1 = (int32x4_t)vcvtq_s64_f64(xmm0.r0);
+	int32x4_t temp2 = (int32x4_t)vcvtq_s64_f64(xmm0.r1);	
+	int32x4_t temp3 = (int32x4_t)vcvtq_s64_f64(xmm0.r2);
+	int32x4_t temp4 = (int32x4_t)vcvtq_s64_f64(xmm0.r3);
+	//orr with reverse to fill the vector:
+	// {0, a, 0, b} -> {a, a, b, b}
+	return simd_trait<int,cyme::neon,4>::register_type(vorrq_s32(temp1,vrev64q_s32(temp1)),
+							   vorrq_s32(temp2,vrev64q_s32(temp2)),
+							   vorrq_s32(temp3,vrev64q_s32(temp3)),
+							   vorrq_s32(temp4,vrev64q_s32(temp4)));
     }
 
     /**
@@ -1823,7 +1844,7 @@ namespace cyme{
                                   simd_trait<double,cyme::neon,2>::register_type xmm1,
                                   simd_trait<double,cyme::neon,2>::register_type xmm2){
 	float64x2_t temp1 = vfmaq_f64(xmm2.r0,xmm0.r0,xmm1.r0);
-	float64x2_t temp2 = vfmaq_f64(xmm2.r0,xmm0.r0,xmm1.r0);
+	float64x2_t temp2 = vfmaq_f64(xmm2.r1,xmm0.r1,xmm1.r1);
 	return simd_trait<double,cyme::neon,2>::register_type(vnegq_f64(temp1),
 							      vnegq_f64(temp2));
     }
