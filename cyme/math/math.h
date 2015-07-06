@@ -34,6 +34,10 @@
 
 #ifdef __cplusplus
 
+#ifdef __aarch64__
+#  define  __SIMD_VALUE__ neon
+#endif
+
 #if defined (__SSE__) || (__AVX__)
 #  define  __SIMD_VALUE__ sse
 #endif

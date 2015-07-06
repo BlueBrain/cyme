@@ -101,6 +101,9 @@ namespace cyme{
     #include "cyme/core/simd_vector/detail/x86/trait_x86.ipp"
 #endif
 
+#ifdef __aarch64__
+    #include "cyme/core/simd_vector/detail/arm/trait_arm.ipp"
+#endif
 
 #if defined (_ARCH_QP) || defined(__PPC64__)
     #include "cyme/core/simd_vector/detail/powerpc64/trait_powerpc64.ipp"

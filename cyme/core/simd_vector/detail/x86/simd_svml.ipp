@@ -29,6 +29,7 @@
 
 #ifndef __PPC64__
 #ifndef _ARCH_QP
+#ifndef __aarch64__
 #ifdef __AVX__
 extern "C"{
     __m128 __svml_expf4(__m128);
@@ -54,5 +55,5 @@ extern "C"{
 #endif
 #endif
 #endif
-
+#endif
 #endif
