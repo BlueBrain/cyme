@@ -1395,12 +1395,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::neon,1>::register_type
     _mm_cast<double,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type xmm0){
-	//mask so that int32x4 {a, a, b, b} -> {0, a, 0, b}
-	int32x4_t tmp = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
-	tmp = vandq_s32(xmm0,tmp);
-	//cast int32x4 -> int64x2
-	//value cast int64x2 ->float64x2
-	return vcvtq_f64_s64((int64x2_t)tmp);
+	return vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0,32));
     }
 
     /**
@@ -1411,13 +1406,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::neon,2>::register_type
     _mm_cast<double,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type xmm0){
-	//mask so that int32x4 {a, a, b, b} -> {0, a, 0, b}
-	int32x4_t tmp1 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
-	int32x4_t tmp2 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
-	tmp1 = vandq_s32(xmm0.r0,tmp1);
-	tmp2 = vandq_s32(xmm0.r1,tmp2);
-	return simd_trait<double,cyme::neon,2>::register_type(vcvtq_f64_s64((int64x2_t)tmp1),
-							      vcvtq_f64_s64((int64x2_t)tmp2));
+	return simd_trait<double,cyme::neon,2>::register_type(vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0.r0,32)),
+							      vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0.r1,32)));
+							      
     }
 
     /**
@@ -1428,18 +1419,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::neon,4>::register_type
     _mm_cast<double,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type xmm0){
-	int32x4_t tmp1 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
-	int32x4_t tmp2 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
-	int32x4_t tmp3 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
-	int32x4_t tmp4 = {(signed int)0xffffffff,(signed int)0x0,(signed int)0xffffffff,(signed int)0x0};
-	tmp1 = vandq_s32(xmm0.r0,tmp1);
-	tmp2 = vandq_s32(xmm0.r1,tmp2);
-	tmp3 = vandq_s32(xmm0.r2,tmp3);
-	tmp4 = vandq_s32(xmm0.r3,tmp4);
-	return simd_trait<double,cyme::neon,4>::register_type(vcvtq_f64_s64((int64x2_t)tmp1),
-							      vcvtq_f64_s64((int64x2_t)tmp2),
-							      vcvtq_f64_s64((int64x2_t)tmp3),
-							      vcvtq_f64_s64((int64x2_t)tmp4));
+	return simd_trait<double,cyme::neon,4>::register_type(vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0.r0,32)),
+							      vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0.r1,32)),
+							      vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0.r2,32)),
+							      vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0.r3,32)));
     }
 
     /**
@@ -1450,12 +1433,22 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::neon,1>::register_type
     _mm_floor<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0){
-	//convert float64x2 to int64x2
-	//cast int64x2 to int32x4: {a,b} -> {0, a, 0, b}
-	int32x4_t temp = (int32x4_t)vcvtq_s64_f64(xmm0);
-	//orr with reverse to fill the vector:
-	// {0, a, 0, b} -> {a, a, b, b}
-	return vorrq_s32(temp,vrev64q_s32(temp)); 
+	//value cast to int64
+	int64x2_t temp = vcvtq_s64_f64(xmm0);
+
+	//create int pointer and use to create two seperate intx2 vectors
+	int32_t *scalar32 = (int32_t *)malloc(sizeof(int32_t)*4);
+	vst1q_s32(scalar32, (int32x4_t)temp);
+	int32x2_t result1 = vmov_n_s32(*(scalar32));
+	int32x2_t result2 = vmov_n_s32(*(scalar32+2));
+	//combine two intx2 vectors into one intx4
+	int32x4_t result = vcombine_s32(result1,result2);
+	//if xmm0 < 0, corr = -1 else corr = 0	
+	//If +ve, value stays the same,
+	//if -ve, subtract 1
+	int32x4_t corr = (int32x4_t)vcltq_s32(result,vmovq_n_s32(0));
+	free(scalar32);
+	return vaddq_s32(result,corr);
    }
 
     /**
@@ -1466,14 +1459,25 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::neon,2>::register_type
     _mm_floor<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0){
-	//convert float64x2 to int64x2
-	//cast int64x2 to int32x4: {a,b} -> {0, a, 0, b}
-	int32x4_t temp1 = (int32x4_t)vcvtq_s64_f64(xmm0.r0);
-	int32x4_t temp2 = (int32x4_t)vcvtq_s64_f64(xmm0.r1);	
-	//orr with reverse to fill the vector:
-	// {0, a, 0, b} -> {a, a, b, b}
-	return simd_trait<int,cyme::neon,2>::register_type(vorrq_s32(temp1,vrev64q_s32(temp1)),
-							   vorrq_s32(temp2,vrev64q_s32(temp2)));
+	int32_t *scalar32 = (int32_t *)malloc(sizeof(int32_t)*4);
+	//vec[0]
+	vst1q_s32(scalar32, (int32x4_t)vcvtq_s64_f64(xmm0.r0));
+	int32x2_t resultn_1 = vmov_n_s32(*(scalar32));
+	int32x2_t resultn_2 = vmov_n_s32(*(scalar32+2));
+	int32x4_t result1 = vcombine_s32(resultn_1,resultn_2);
+	//vec[1]
+	vst1q_s32(scalar32, (int32x4_t)vcvtq_s64_f64(xmm0.r1));
+	resultn_1 = vmov_n_s32(*(scalar32));
+	resultn_2 = vmov_n_s32(*(scalar32+2));
+	int32x4_t result2 = vcombine_s32(resultn_1,resultn_2);
+	//if xmm0 < 0, corr = -1 else corr = 0	
+	//If +ve, value stays the same,
+	//if -ve, subtract 1
+	int32x4_t corr1 = (int32x4_t)vcltq_s32(result1,vmovq_n_s32(0));
+	int32x4_t corr2 = (int32x4_t)vcltq_s32(result2,vmovq_n_s32(0));
+	free(scalar32);
+	return simd_trait<int,cyme::neon,2>::register_type(vaddq_s32(result1,corr1),
+							   vaddq_s32(result2,corr2));
     }
 
     /**
@@ -1484,18 +1488,39 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::neon,4>::register_type
     _mm_floor<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0){
-	//convert float64x2 to int64x2
-	//cast int64x2 to int32x4: {a,b} -> {0, a, 0, b}
-	int32x4_t temp1 = (int32x4_t)vcvtq_s64_f64(xmm0.r0);
-	int32x4_t temp2 = (int32x4_t)vcvtq_s64_f64(xmm0.r1);	
-	int32x4_t temp3 = (int32x4_t)vcvtq_s64_f64(xmm0.r2);
-	int32x4_t temp4 = (int32x4_t)vcvtq_s64_f64(xmm0.r3);
-	//orr with reverse to fill the vector:
-	// {0, a, 0, b} -> {a, a, b, b}
-	return simd_trait<int,cyme::neon,4>::register_type(vorrq_s32(temp1,vrev64q_s32(temp1)),
-							   vorrq_s32(temp2,vrev64q_s32(temp2)),
-							   vorrq_s32(temp3,vrev64q_s32(temp3)),
-							   vorrq_s32(temp4,vrev64q_s32(temp4)));
+	int32_t *scalar32 = (int32_t *)malloc(sizeof(int32_t)*4);
+	//vec[0]
+	vst1q_s32(scalar32, (int32x4_t)vcvtq_s64_f64(xmm0.r0));
+	int32x2_t resultn_1 = vmov_n_s32(*(scalar32));
+	int32x2_t resultn_2 = vmov_n_s32(*(scalar32+2));
+	int32x4_t result1 = vcombine_s32(resultn_1,resultn_2);
+	//vec[1]
+	vst1q_s32(scalar32, (int32x4_t)vcvtq_s64_f64(xmm0.r1));
+	resultn_1 = vmov_n_s32(*(scalar32));
+	resultn_2 = vmov_n_s32(*(scalar32+2));
+	int32x4_t result2 = vcombine_s32(resultn_1,resultn_2);
+	//vec[2]
+	vst1q_s32(scalar32, (int32x4_t)vcvtq_s64_f64(xmm0.r2));
+	resultn_1 = vmov_n_s32(*(scalar32));
+	resultn_2 = vmov_n_s32(*(scalar32+2));
+	int32x4_t result3 = vcombine_s32(resultn_1,resultn_2);
+	//vec[3]
+	vst1q_s32(scalar32, (int32x4_t)vcvtq_s64_f64(xmm0.r3));
+	resultn_1 = vmov_n_s32(*(scalar32));
+	resultn_2 = vmov_n_s32(*(scalar32+2));
+	int32x4_t result4 = vcombine_s32(resultn_1,resultn_2);
+	//if xmm0 < 0, corr = -1 else corr = 0	
+	//If +ve, value stays the same,
+	//if -ve, subtract 1
+	int32x4_t corr1 = (int32x4_t)vcltq_s32(result1,vmovq_n_s32(0));
+	int32x4_t corr2 = (int32x4_t)vcltq_s32(result2,vmovq_n_s32(0));
+	int32x4_t corr3 = (int32x4_t)vcltq_s32(result3,vmovq_n_s32(0));
+	int32x4_t corr4 = (int32x4_t)vcltq_s32(result4,vmovq_n_s32(0));
+	free(scalar32);
+	return simd_trait<int,cyme::neon,4>::register_type(vaddq_s32(result1,corr1),
+							   vaddq_s32(result2,corr2),
+							   vaddq_s32(result3,corr3),
+							   vaddq_s32(result4,corr4));
     }
 
     /**
