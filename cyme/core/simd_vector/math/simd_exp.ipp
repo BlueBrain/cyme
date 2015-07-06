@@ -82,7 +82,7 @@ namespace cyme{
             return x;
         }
     };
-    
+
     /** Free function for call the vendor exp */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> exp_v(const vec_simd<T,O,N>& rhs){

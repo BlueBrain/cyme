@@ -94,7 +94,7 @@ namespace cyme{
     /** Specialisation of the trait class for the composite vector float,cyme::neon,4 regs*/
     template <>
     struct simd_trait<float, cyme::neon, 4> : trait<float>{
-	typedef simd_unroll<float, cyme::neon, 4> register_type;	
+	typedef simd_unroll<float, cyme::neon, 4> register_type;
     };
 
     /** Specialisation of the trait class for the composite vector float,cyme::neon,2 regs*/

@@ -316,8 +316,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,1>::register_type
-    _mm_exp<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type __attribute__((unused))xmm0){
+    _mm_exp<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0){
+	std::cout << "Vendor EXP not yet implemented for float." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -326,8 +328,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,2>::register_type
-    _mm_exp<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type __attribute__((unused))xmm0){
+    _mm_exp<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0){
+	std::cout << "Vendor EXP not yet implemented for float." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -336,8 +340,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,4>::register_type
-    _mm_exp<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type __attribute__((unused))xmm0){
+    _mm_exp<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0){
+	std::cout << "Vendor EXP not yet implemented for float." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -346,8 +352,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,1>::register_type
-    _mm_log<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type __attribute__((unused))xmm0){
+    _mm_log<float,cyme::neon,1>(simd_trait<float,cyme::neon,1>::register_type xmm0){
+	std::cout << "Vendor LOG not yet implemented for float." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -356,8 +364,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,2>::register_type
-    _mm_log<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type __attribute__((unused))xmm0){
+    _mm_log<float,cyme::neon,2>(simd_trait<float,cyme::neon,2>::register_type xmm0){
+	std::cout << "Vendor LOG not yet implemented for float." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -366,8 +376,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::neon,4>::register_type
-    _mm_log<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type __attribute__((unused))xmm0){
+    _mm_log<float,cyme::neon,4>(simd_trait<float,cyme::neon,4>::register_type xmm0){
+	std::cout << "Vendor LOG not yet implemented for float." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -578,7 +590,7 @@ namespace cyme{
     _mm_twok<float,cyme::neon,1>(simd_trait<int,cyme::neon,1>::register_type xmm0){
 	xmm0 = vaddq_s32(xmm0,vmovq_n_s32(127));
 	xmm0 = vshlq_s32(xmm0,vmovq_n_s32(23));
-	return (float32x4_t)xmm0; 
+	return (float32x4_t)xmm0;
     }
 
     /**
@@ -1209,8 +1221,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,1>::register_type
-    _mm_exp<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type __attribute__((unused))xmm0){
+    _mm_exp<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0){
+	std::cout << "Vendor EXP not yet implemented for double." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -1219,8 +1233,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,2>::register_type
-    _mm_exp<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type __attribute__((unused))xmm0){
+    _mm_exp<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0){
+	std::cout << "Vendor EXP not yet implemented for double." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -1229,8 +1245,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,4>::register_type
-    _mm_exp<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type __attribute__((unused))xmm0){
+    _mm_exp<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0){
+	std::cout << "Vendor EXP not yet implemented for double." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -1239,8 +1257,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,1>::register_type
-    _mm_log<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type __attribute__((unused))xmm0){
+    _mm_log<double,cyme::neon,1>(simd_trait<double,cyme::neon,1>::register_type xmm0){
+	std::cout << "Vendor LOG not yet implemented for double." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -1249,8 +1269,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,2>::register_type
-    _mm_log<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type __attribute__((unused))xmm0){
+    _mm_log<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0){
+	std::cout << "Vendor LOG not yet implemented for double." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -1259,8 +1281,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::neon,4>::register_type
-    _mm_log<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type __attribute__((unused))xmm0){
+    _mm_log<double,cyme::neon,4>(simd_trait<double,cyme::neon,4>::register_type xmm0){
+	std::cout << "Vendor LOG not yet implemented for double." << std::endl;
 	assert(false);
+	return xmm0;
     }
 
     /**
@@ -1408,7 +1432,6 @@ namespace cyme{
     _mm_cast<double,cyme::neon,2>(simd_trait<int,cyme::neon,2>::register_type xmm0){
 	return simd_trait<double,cyme::neon,2>::register_type(vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0.r0,32)),
 							      vcvtq_f64_s64(vshrq_n_s64((int64x2_t)xmm0.r1,32)));
-							      
     }
 
     /**
@@ -1437,7 +1460,7 @@ namespace cyme{
 	int64x2_t temp = vcvtq_s64_f64(xmm0);
 
 	//create int pointer and use to create two seperate intx2 vectors
-	int32_t scalar32[4]; 
+	int32_t scalar32[4];
 	vst1q_s32(scalar32, (int32x4_t)temp);
 	int32x2_t result1 = vmov_n_s32(scalar32[0]);
 	int32x2_t result2 = vmov_n_s32(scalar32[2]);
@@ -1458,7 +1481,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<int,cyme::neon,2>::register_type
     _mm_floor<double,cyme::neon,2>(simd_trait<double,cyme::neon,2>::register_type xmm0){
-	int32_t scalar32[4]; 
+	int32_t scalar32[4];
 	int64x2_t temp1 = vcvtq_s64_f64(xmm0.r0);
 	int64x2_t temp2 = vcvtq_s64_f64(xmm0.r1);
 	//vec[0]
@@ -1808,7 +1831,7 @@ namespace cyme{
     }
 
     /**
-      Returns a vector containing the results of performing a multiply-substract 
+      Returns a vector containing the results of performing a multiply-substract
       operation on the given vectors. Given arguments a, b, and c,
       result = a*b-c.
        specialisation double,cyme::neon,2 regs
