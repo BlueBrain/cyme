@@ -605,8 +605,8 @@ namespace cyme{
     _mm_twok<float,cyme::neon,4>(simd_trait<int,cyme::neon,4>::register_type xmm0){
 	xmm0.r0 = vaddq_s32(xmm0.r0,vmovq_n_s32(127));
 	xmm0.r1 = vaddq_s32(xmm0.r1,vmovq_n_s32(127));
-	xmm0.r2 = vaddq_s32(xmm0.r3,vmovq_n_s32(127));
-	xmm0.r3 = vaddq_s32(xmm0.r2,vmovq_n_s32(127));
+	xmm0.r2 = vaddq_s32(xmm0.r2,vmovq_n_s32(127));
+	xmm0.r3 = vaddq_s32(xmm0.r3,vmovq_n_s32(127));
 	xmm0.r0 = vshlq_s32(xmm0.r0,vmovq_n_s32(23));
 	xmm0.r1 = vshlq_s32(xmm0.r1,vmovq_n_s32(23));
 	xmm0.r2 = vshlq_s32(xmm0.r2,vmovq_n_s32(23));
