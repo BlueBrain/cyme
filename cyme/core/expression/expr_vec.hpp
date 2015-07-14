@@ -68,6 +68,21 @@ namespace cyme{
         typedef vec_scalar<T,O,N> value_type;
     };
 
+    /** sin vertex in the DAG from sin(a) */
+    template<class T, cyme::simd O, int N, class OP1>
+    class vec_sin{
+        typename vec_traits<OP1,O,N>::value_type op1;
+
+    public:
+        forceinline vec_sin(OP1 const& a):op1(a){
+        }
+
+        forceinline vec_simd<T,O,N> operator()() const{
+            return sin(op1());
+        }
+    };
+
+
     /** sqrt vertex in the DAG from sqrt(a) */
     template<class T, cyme::simd O, int N, class OP1>
     class vec_sqrt{
