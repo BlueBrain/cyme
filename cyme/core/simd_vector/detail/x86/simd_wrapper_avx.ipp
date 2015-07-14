@@ -26,7 +26,6 @@
 
 #ifndef CYME_SIMD_WRAPPER_AVX_IPP
 #define CYME_SIMD_WRAPPER_AVX_IPP
-
 namespace cyme{
     /**
       Broadcast a double-precision (64-bit) floating-point element from cyme to all elements of dst.
@@ -823,6 +822,46 @@ namespace cyme{
                                                              _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r1))),
                                                              _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r2))),
                                                              _mm256_cvtps_pd(_mm_rsqrt_ps(_mm256_cvtpd_ps(xmm0.r3))));
+    }
+
+    /**
+      Computes the absolute value for double-precision (64-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::avx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,1>::register_type
+    _mm_abs<double,cyme::avx,1>( simd_trait<double,cyme::avx,1>::register_type xmm0){
+        simd_trait<double,cyme::avx,1>::register_type mask(_mm256_castsi256_pd(_mm256_set1_epi64x(0x7fffffffffffffff)));
+	return _mm256_and_pd(xmm0, mask);
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::avx, 2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,2>::register_type
+    _mm_abs<double,cyme::avx,2>( simd_trait<double,cyme::avx,2>::register_type xmm0){
+        simd_trait<double,cyme::avx,1>::register_type mask(_mm256_castsi256_pd(_mm256_set1_epi64x(0x7fffffffffffffff)));
+	return simd_trait<double,cyme::avx,2>::register_type(_mm256_and_pd(xmm0.r0, mask),
+							     _mm256_and_pd(xmm0.r1, mask));
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::avx, 4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,4>::register_type
+    _mm_abs<double,cyme::avx,4>( simd_trait<double,cyme::avx,4>::register_type xmm0){
+        simd_trait<double,cyme::avx,1>::register_type mask(_mm256_castsi256_pd(_mm256_set1_epi64x(0x7fffffffffffffff)));
+	return simd_trait<double,cyme::avx,4>::register_type(_mm256_and_pd(xmm0.r0, mask),
+							     _mm256_and_pd(xmm0.r1, mask),
+							     _mm256_and_pd(xmm0.r2, mask),
+							     _mm256_and_pd(xmm0.r3, mask));
     }
 
 #ifdef __INTEL_COMPILER
@@ -1911,6 +1950,46 @@ namespace cyme{
                                                             _mm256_rsqrt_ps(xmm0.r1),
                                                             _mm256_rsqrt_ps(xmm0.r2),
                                                             _mm256_rsqrt_ps(xmm0.r3));
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::avx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,1>::register_type
+    _mm_abs<float,cyme::avx,1>( simd_trait<float,cyme::avx,1>::register_type xmm0){
+        simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x7fffffff));
+	return _mm256_and_ps(xmm0, mask);
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::avx, 2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,2>::register_type
+    _mm_abs<float,cyme::avx,2>( simd_trait<float,cyme::avx,2>::register_type xmm0){
+        simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x7fffffff));
+	return simd_trait<float,cyme::avx,2>::register_type(_mm256_and_ps(xmm0.r0, mask),
+							    _mm256_and_ps(xmm0.r1, mask));
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::avx, 4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,4>::register_type
+    _mm_abs<float,cyme::avx,4>( simd_trait<float,cyme::avx,4>::register_type xmm0){
+        simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x7fffffff));
+	return simd_trait<float,cyme::avx,4>::register_type(_mm256_and_ps(xmm0.r0, mask),
+							    _mm256_and_ps(xmm0.r1, mask),
+							    _mm256_and_ps(xmm0.r2, mask),
+							    _mm256_and_ps(xmm0.r3, mask));
     }
 
 #ifdef  __INTEL_COMPILER

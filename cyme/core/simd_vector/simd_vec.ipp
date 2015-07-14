@@ -150,6 +150,13 @@ namespace cyme{
         return nrv;
     }
 
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N> abs(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_abs<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
+        return nrv;
+    }
+
 #ifdef __FMA__
     template<class T,cyme::simd O, int N>
     void vec_simd<T,O,N>::ma(const vec_simd& lhs, const vec_simd& rhs){
