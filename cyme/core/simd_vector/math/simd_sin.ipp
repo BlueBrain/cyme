@@ -28,7 +28,7 @@
 #ifndef CYME_SIMD_SIN_IPP
 #define CYME_SIMD_SIN_IPP
 
-//#include "cyme/core/simd_vector/math/detail/sin_helper.ipp"
+#include "cyme/core/simd_vector/math/detail/sin_helper.ipp"
 #include <assert.h>
 namespace cyme{
 
@@ -50,8 +50,12 @@ namespace cyme{
     template<class T, cyme::simd O, int N, std::size_t n>
     struct Poly_helper<T,O,N,0,n>{
 	static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
-	    vec_simd<T,O,N> neg(-1);
-	    return x*neg;
+	    vec_simd<T,O,N> z(x*x);
+	    vec_simd<T,O,N> y = helper_sin<T,O,N,coeff_cephes_cos,n>::poly_sin(z);
+	    //y *= z;
+	    //y -= (z*vec_simd<T,O,N>(5));
+	    //y += vec_simd<T,O,N>(1);
+	    return y;
 	}
     };
  
@@ -59,13 +63,16 @@ namespace cyme{
     template<class T, cyme::simd O, int N, std::size_t n>
     struct Poly_helper<T,O,N,1,n>{
 	static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
-	    vec_simd<T,O,N> pos(1);
-	    return x*pos;
+	    vec_simd<T,O,N> z(x*x);
+	    vec_simd<T,O,N> y = helper_sin<T,O,N,coeff_cephes_sin,n>::poly_sin(z);
+	    y *= x;
+	    y += x;
+	    return y;
 	}
     };
 
     /** Selector for the polynomial algorithm (sin_hi or sin_lo) */
-    template<class T, cyme::simd O, int N, int p, std::size_t n = poly_order<T,coeff_remez_exp>::value,//coeff_sin_cos
+    template<class T, cyme::simd O, int N, int p, std::size_t n = poly_order<T,coeff_cephes_sin>::value,//coeff_sin_cos
 	    class Solver = Poly_helper<T,O,N,p,n> > //sin_hi or sin_lo
     struct Selector_poly{
         static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
