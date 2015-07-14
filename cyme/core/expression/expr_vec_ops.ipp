@@ -50,6 +50,15 @@ namespace cyme{
     };
 
     /**
+    * sin(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_sin<T,O,N,R1> >
+    forceinline sin(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_sin<T,O,N,R1> >(vec_sin<T,O,N,R1>(a.rep()));
+    }
+
+    /**
     * sqrt(a) function
     */
     template<class T, cyme::simd O, int N, class R1>
