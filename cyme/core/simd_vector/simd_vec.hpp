@@ -197,6 +197,10 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> sqrt(const vec_simd<T,O,N>& rhs);
 
+    /** Free function for the sin */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> sin(const vec_simd<T,O,N>& rhs);
+
 #ifdef __FMA__
     /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */
     template<class T,cyme::simd O, int N>
