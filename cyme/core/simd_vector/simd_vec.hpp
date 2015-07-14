@@ -121,6 +121,10 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> twok(const vec_simd<int,O,N>& rhs);
 
+    /** Return the absolute value of the floating point number */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> abs(const vec_simd<T,O,N>& rhs);
+
     /** Return the exponent of the floating point representation */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> ge(const vec_simd<T,O,N>& rhs);

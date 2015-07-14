@@ -84,15 +84,16 @@ namespace cyme{
     /** free function for sin */ 
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> sin(const vec_simd<T,O,N>& rhs){
-#define POLY 0
+//#define POLY 0
 	//get sign
 	//take abs value
+	vec_simd<T,O,N> x = abs(rhs);
 	//magic pass (call sin_helper)
-	//Call Selector_Poly::poly(x) 
 	//assert(false);
-	vec_simd<T,O,N> result = Selector_poly<T,O,N,POLY>::poly(rhs);
-#undef POLY
-	return result;
+	//Call Selector_Poly::poly(x) 
+	//vec_simd<T,O,N> result = Selector_poly<T,O,N,POLY>::poly(rhs);
+//#undef POLY
+	return x;
     }
 }
 #endif
