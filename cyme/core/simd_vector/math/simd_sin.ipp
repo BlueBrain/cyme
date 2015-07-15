@@ -84,15 +84,39 @@ namespace cyme{
     /** free function for sin */ 
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> sin(const vec_simd<T,O,N>& rhs){
-//#define POLY 0
+	//constants
+	const vec_simd<T,O,N> cephes_FOPI(1.27323954473516); // 4/PI
+
 	//get sign
+	//create function
+
 	//take abs value
 	vec_simd<T,O,N> x = abs(rhs);
-	//magic pass (call sin_helper)
-	//assert(false);
+
+	//modify y
+	vec_simd<T,O,N> y = x*cephes_FOPI;
+	vec_simd<int,O,N> j = floor(y);
+	vec_simd<T,O,N>   p(cast<T,O>(j)); // j float
+	//j += vec_simd<int,O,N>(1);
+	//j &= (~1)
+
+	//get swap sign flag
+	//create function
+
+	//magic pass
+	/*x = ((x - y * DP1) - y * DP2) - y * DP3; */
+ 	vec_simd<T,O,N> neg_DP1(-0.78515625);
+ 	vec_simd<T,O,N> neg_DP2(-2.4187564849853515625e-4);
+ 	vec_simd<T,O,N> neg_DP3(-3.77489497744594108e-8);
+ 	neg_DP1 *= p;
+ 	neg_DP2 *= p;
+ 	neg_DP3 *= p;
+ 	x += neg_DP1;
+ 	x += neg_DP2;
+ 	x += neg_DP3;
+
 	//Call Selector_Poly::poly(x) 
-	//vec_simd<T,O,N> result = Selector_poly<T,O,N,POLY>::poly(rhs);
-//#undef POLY
+// 	vec_simd<T,O,N> result = Selector_poly<T,O,N,POLY>::poly(x);
 	return x;
     }
 }
