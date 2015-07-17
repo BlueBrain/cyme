@@ -43,19 +43,19 @@ namespace cyme{
     /** coeff order 0 sin(x) */
     template<class T>
     struct coeff_cephes_sin<T,0>{
-        const static inline T coeff() {return 1;}//return -1.9515295891E-4;}
+        const static inline T coeff() {return -1.9515295891e-4;}
     };
 
     /** coeff order 1 sin(x) */
     template<class T>
     struct coeff_cephes_sin<T,1>{
-        const static inline T coeff() {return 1;}//return 8.3321608736E-3;}
+        const static inline T coeff() {return 8.3321608736e-3;}
     };
 
     /** coeff order 2 sin(x) */
     template<class T>
     struct coeff_cephes_sin<T,2>{
-        const static inline T coeff() {return 1;}//return -1.6666654611E-1;}
+        const static inline T coeff() {return -1.6666654611e-1;}
     };
     /** Poly_order class encapsulates the number of Remez coefficient */
     template<class T, template<class,std::size_t> class C >
@@ -79,19 +79,19 @@ namespace cyme{
     /** coeff order 0 cos(x) */
     template<class T>
     struct coeff_cephes_cos<T,0>{
-        const static inline T coeff() {return 1;}//return 2.443315711809948E-005;}
+        const static inline T coeff() {return 2.443315711809948E-005;}
     };
 
     /** coeff order 1 cos(x) */
     template<class T>
     struct coeff_cephes_cos<T,1>{
-        const static inline T coeff() {return 1;}//return -1.388731625493765E-003;}
+        const static inline T coeff() {return -1.388731625493765E-003;}
     };
 
     /** coeff order 2 cos(x) */
     template<class T>
     struct coeff_cephes_cos<T,2>{
-        const static inline T coeff() {return 1;}//return 4.166664568298827E-002;}
+        const static inline T coeff() {return 4.166664568298827E-002;}
     };
 
     /** Poly_order partial specialisation for the cos*/
