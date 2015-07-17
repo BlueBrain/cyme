@@ -31,30 +31,19 @@
 #include "cyme/core/simd_vector/math/detail/sin_helper.ipp"
 #include <assert.h>
 namespace cyme{
-
-    /** Sin helper to compute magic pass*/
-    template<class T, cyme::simd O, int N,std::size_t n>
-    struct Sin_helper{
-        static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> const& a){
-            //return helper_horner<T,O,N,coeff_remez_exp,n>::horner(a);
-	    assert(false);
-        }
-    };
-
     /** Base struct*/
     template<class T, cyme::simd O, int N, int p, std::size_t n>
     struct Poly_helper;
 
-   
     /** Helper for polynom where 0 <= x <= Pi/4 (sin_lo)*/
     template<class T, cyme::simd O, int N, std::size_t n>
     struct Poly_helper<T,O,N,0,n>{
 	static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
 	    vec_simd<T,O,N> z(x*x);
 	    vec_simd<T,O,N> y = helper_sin<T,O,N,coeff_cephes_cos,n>::poly_sin(z);
-	    //y *= z;
-	    //y -= (z*vec_simd<T,O,N>(5));
-	    //y += vec_simd<T,O,N>(1);
+	    y *= z;
+	    y -= (z*vec_simd<T,O,N>(0.5));
+	    y += vec_simd<T,O,N>(1);
 	    return y;
 	}
     };
@@ -95,14 +84,13 @@ namespace cyme{
 
 	//modify y
 	vec_simd<T,O,N> y = x*cephes_FOPI;
-	vec_simd<int,O,N> j = floor(y);
-	vec_simd<T,O,N>   p(cast<T,O>(j)); // j float
+	const vec_simd<int,O,N> j = floor(y);//+vec_simd<T,O,N>(1.0));
 	//j += vec_simd<int,O,N>(1);
+	vec_simd<T,O,N>   p(cast<T,O>(j)); // j float
 	//j &= (~1)
 
 	//get swap sign flag
-	//create function
-
+	//create function	
 	//magic pass
 	/*x = ((x - y * DP1) - y * DP2) - y * DP3; */
  	vec_simd<T,O,N> neg_DP1(-0.78515625);
@@ -116,8 +104,8 @@ namespace cyme{
  	x += neg_DP3;
 
 	//Call Selector_Poly::poly(x) 
-// 	vec_simd<T,O,N> result = Selector_poly<T,O,N,POLY>::poly(x);
-	return x;
+ 	vec_simd<T,O,N> result = Selector_poly<T,O,N,0>::poly(x);
+	return result;
     }
 }
 #endif
