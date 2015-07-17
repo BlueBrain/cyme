@@ -864,6 +864,31 @@ namespace cyme{
 							     _mm256_and_pd(xmm0.r3, mask));
     }
 
+    /**
+      Selects the polynomial for sin function.
+      specialisation double,cyme::avx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,1>::register_type
+    _mm_select_poly<double,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type sel,
+                                         simd_trait<double,cyme::avx,1>::register_type xmm0,
+                                         simd_trait<double,cyme::avx,1>::register_type xmm1){
+	__m128i mask = _mm_set1_epi64x(2);
+	__m128i zero = _mm_set1_epi64x(0);
+        __m128i tmp0 = _mm256_extractf128_si256(sel,0);
+        tmp0 = _mm_and_si128(tmp0,mask);
+	tmp0 = _mm_cmpeq_epi64(tmp0, zero);
+        __m128i tmp1 = _mm256_extractf128_si256(sel,1);
+        tmp1 = _mm_and_si128(tmp1,mask);
+	tmp1 = _mm_cmpeq_epi64(tmp1, zero);
+        sel = _mm256_insertf128_si256(sel, tmp0,0);
+        sel = _mm256_insertf128_si256(sel, tmp1,1);
+
+	xmm0 = _mm256_andnot_pd(_mm256_castsi256_pd(sel), xmm0);
+	xmm1 = _mm256_and_pd(_mm256_castsi256_pd(sel), xmm1);
+	return _mm256_add_pd(xmm0,xmm1);
+    }
+
 #ifdef __INTEL_COMPILER
     /**
       Compute the exponential value of e raised to the power of packed double-precision (64-bit)
@@ -1990,6 +2015,30 @@ namespace cyme{
 							    _mm256_and_ps(xmm0.r1, mask),
 							    _mm256_and_ps(xmm0.r2, mask),
 							    _mm256_and_ps(xmm0.r3, mask));
+    }
+
+    /**
+      Selects the polynomial for sin function.
+      specialisation float,cyme::avx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,1>::register_type
+    _mm_select_poly<float,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type sel,
+                                        simd_trait<float,cyme::avx,1>::register_type xmm0,
+                                        simd_trait<float,cyme::avx,1>::register_type xmm1){
+	__m128i mask = _mm_set1_epi32(2);
+        __m128i tmp0 = _mm256_extractf128_si256(sel,0);
+        tmp0 = _mm_and_si128(tmp0,mask);
+	tmp0 = _mm_cmpeq_epi32(tmp0, _mm_set1_epi32(0));
+        __m128i tmp1 = _mm256_extractf128_si256(sel,1);
+        tmp1 = _mm_and_si128(tmp1,mask);
+	tmp1 = _mm_cmpeq_epi32(tmp1, _mm_set1_epi32(0));
+        sel = _mm256_insertf128_si256(sel, tmp0,0);
+        sel = _mm256_insertf128_si256(sel, tmp1,1);
+
+	xmm0 = _mm256_andnot_ps(_mm256_castsi256_ps(sel), xmm0);
+	xmm1 = _mm256_and_ps(_mm256_castsi256_ps(sel), xmm1);
+	return _mm256_add_ps(xmm0,xmm1);
     }
 
 #ifdef  __INTEL_COMPILER

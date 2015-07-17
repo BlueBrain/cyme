@@ -90,7 +90,6 @@ namespace cyme{
 	//j &= (~1)
 
 	//get swap sign flag
-	//create function	
 	//magic pass
 	/*x = ((x - y * DP1) - y * DP2) - y * DP3; */
  	vec_simd<T,O,N> neg_DP1(-0.78515625);
@@ -104,8 +103,9 @@ namespace cyme{
  	x += neg_DP3;
 
 	//Call Selector_Poly::poly(x) 
- 	vec_simd<T,O,N> result = Selector_poly<T,O,N,0>::poly(x);
-	return result;
+ 	vec_simd<T,O,N> poly1 = Selector_poly<T,O,N,0>::poly(x);
+ 	vec_simd<T,O,N> poly2 = Selector_poly<T,O,N,1>::poly(x);
+	return select_poly(j,poly1,poly2);
     }
 }
 #endif

@@ -756,7 +756,24 @@ namespace cyme{
 							     _mm_and_pd(xmm0.r3, mask));
     }
 
+    /**
+      Selects the polynomial for sin function.
+      specialisation double,cyme::sse, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_select_poly<double,cyme::sse,1>( simd_trait<int,cyme::sse,1>::register_type sel,
+                                         simd_trait<double,cyme::sse,1>::register_type xmm0,
+                                         simd_trait<double,cyme::sse,1>::register_type xmm1){
+	__m128i mask = _mm_set1_epi64x(2);
+	__m128i zero = _mm_set1_epi64x(0);
+        sel = _mm_and_si128(sel,mask);
+	sel = _mm_cmpeq_epi64(sel, zero);
 
+	xmm0 = _mm_andnot_pd(_mm_castsi128_pd(sel), xmm0);
+	xmm1 = _mm_and_pd(_mm_castsi128_pd(sel), xmm1);
+	return _mm_add_pd(xmm0,xmm1);
+    }
 
 #ifdef __INTEL_COMPILER
     /**
@@ -1806,6 +1823,25 @@ namespace cyme{
 							    _mm_and_ps(xmm0.r1, mask),
 							    _mm_and_ps(xmm0.r2, mask),
 							    _mm_and_ps(xmm0.r3, mask));
+    }
+
+    /**
+      Selects the polynomial for sin function.
+      specialisation float,cyme::sse, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_select_poly<float,cyme::sse,1>( simd_trait<int,cyme::sse,1>::register_type sel,
+                                         simd_trait<float,cyme::sse,1>::register_type xmm0,
+                                         simd_trait<float,cyme::sse,1>::register_type xmm1){
+	__m128i mask = _mm_set1_epi32(2);
+	__m128i zero = _mm_set1_epi32(0);
+        sel = _mm_and_si128(sel, mask);
+	sel = _mm_cmpeq_epi32(sel, zero);
+
+	xmm0 = _mm_andnot_ps(_mm_castsi128_ps(sel), xmm0);
+	xmm1 = _mm_and_ps(_mm_castsi128_ps(sel), xmm1);
+	return _mm_add_ps(xmm0,xmm1);
     }
 
 #ifdef __INTEL_COMPILER
