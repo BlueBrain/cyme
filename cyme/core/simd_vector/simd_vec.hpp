@@ -129,6 +129,10 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> select_poly(const vec_simd<int,O,N>& sel, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
 
+    /** Returns rhs with its sign modified depending on swap and lhs */ 
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> select_sign(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
+
     /** Return the exponent of the floating point representation */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> ge(const vec_simd<T,O,N>& rhs);

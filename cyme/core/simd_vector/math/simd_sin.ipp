@@ -30,6 +30,7 @@
 
 #include "cyme/core/simd_vector/math/detail/sin_helper.ipp"
 #include <assert.h>
+#include <iostream>
 namespace cyme{
     /** Base struct*/
     template<class T, cyme::simd O, int N, int p, std::size_t n>
@@ -76,20 +77,14 @@ namespace cyme{
 	//constants
 	const vec_simd<T,O,N> cephes_FOPI(1.27323954473516); // 4/PI
 
-	//get sign
-	//create function
-
 	//take abs value
 	vec_simd<T,O,N> x = abs(rhs);
 
 	//modify y
 	vec_simd<T,O,N> y = x*cephes_FOPI;
-	const vec_simd<int,O,N> j = floor(y);//+vec_simd<T,O,N>(1.0));
-	//j += vec_simd<int,O,N>(1);
+	const vec_simd<int,O,N> j = floor(y);// + vec_simd<T,O,N>(1.0));
 	vec_simd<T,O,N>   p(cast<T,O>(j)); // j float
-	//j &= (~1)
 
-	//get swap sign flag
 	//magic pass
 	/*x = ((x - y * DP1) - y * DP2) - y * DP3; */
  	vec_simd<T,O,N> neg_DP1(-0.78515625);
@@ -102,10 +97,16 @@ namespace cyme{
  	x += neg_DP2;
  	x += neg_DP3;
 
-	//Call Selector_Poly::poly(x) 
+	//Select Polynomial
  	vec_simd<T,O,N> poly1 = Selector_poly<T,O,N,0>::poly(x);
  	vec_simd<T,O,N> poly2 = Selector_poly<T,O,N,1>::poly(x);
-	return select_poly(j,poly1,poly2);
+	//std::cout << "Poly1 is: " << poly1 << std::endl;
+	//std::cout << "Poly2 is: " << poly2 << std::endl;
+	x = select_poly(j,poly1,poly2);
+	//Select Sign
+	//std::cout << "rhs is: " << rhs << std::endl;
+	//std::cout << "x is: " << x << std::endl;
+	return select_sign(j,rhs,x);
     }
 }
 #endif

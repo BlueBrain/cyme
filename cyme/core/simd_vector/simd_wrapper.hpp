@@ -124,6 +124,12 @@ namespace cyme{
                                                                           typename simd_trait<T,O,N>::register_type xmm0,
                                                                           typename simd_trait<T,O,N>::register_type xmm1);
 
+    /** Free function to select the sign (+/-) for sin function */
+    template<class T, cyme::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_select_sign(typename simd_trait<int,O,N>::register_type swap,
+                                                                          typename simd_trait<T,O,N>::register_type xmm0,
+                                                                          typename simd_trait<T,O,N>::register_type xmm1);
+
     /** Free function to load a SIMD vector with a single value */
     template<class T, cyme::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_single_load(const typename simd_trait<T,O,N>::value_type);

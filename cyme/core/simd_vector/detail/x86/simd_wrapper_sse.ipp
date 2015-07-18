@@ -757,7 +757,10 @@ namespace cyme{
     }
 
     /**
-      Selects the polynomial for sin function.
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
       specialisation double,cyme::sse, 1 reg
      */
     template<>
@@ -773,6 +776,175 @@ namespace cyme{
 	xmm0 = _mm_andnot_pd(_mm_castsi128_pd(sel), xmm0);
 	xmm1 = _mm_and_pd(_mm_castsi128_pd(sel), xmm1);
 	return _mm_add_pd(xmm0,xmm1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::sse, 2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_select_poly<double,cyme::sse,2>( simd_trait<int,cyme::sse,2>::register_type sel,
+                                         simd_trait<double,cyme::sse,2>::register_type xmm0,
+                                         simd_trait<double,cyme::sse,2>::register_type xmm1){
+	__m128i mask = _mm_set1_epi64x(2);
+	__m128i zero = _mm_set1_epi64x(0);
+        sel.r0 = _mm_and_si128(sel.r0,mask);
+        sel.r1 = _mm_and_si128(sel.r1,mask);
+	sel.r0 = _mm_cmpeq_epi64(sel.r0,zero);
+	sel.r1 = _mm_cmpeq_epi64(sel.r1,zero);
+
+	xmm0.r0 = _mm_andnot_pd(_mm_castsi128_pd(sel.r0), xmm0.r0);
+	xmm0.r1 = _mm_andnot_pd(_mm_castsi128_pd(sel.r1), xmm0.r1);
+	xmm1.r0 = _mm_and_pd(_mm_castsi128_pd(sel.r0), xmm1.r0);
+	xmm1.r1 = _mm_and_pd(_mm_castsi128_pd(sel.r1), xmm1.r1);
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_add_pd(xmm0.r0,xmm1.r0),
+							     _mm_add_pd(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::sse, 4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_select_poly<double,cyme::sse,4>( simd_trait<int,cyme::sse,4>::register_type sel,
+                                         simd_trait<double,cyme::sse,4>::register_type xmm0,
+                                         simd_trait<double,cyme::sse,4>::register_type xmm1){
+	__m128i mask = _mm_set1_epi64x(2);
+	__m128i zero = _mm_set1_epi64x(0);
+        sel.r0 = _mm_and_si128(sel.r0,mask);
+        sel.r1 = _mm_and_si128(sel.r1,mask);
+        sel.r2 = _mm_and_si128(sel.r2,mask);
+        sel.r3 = _mm_and_si128(sel.r3,mask);
+	sel.r0 = _mm_cmpeq_epi64(sel.r0,zero);
+	sel.r1 = _mm_cmpeq_epi64(sel.r1,zero);
+	sel.r2 = _mm_cmpeq_epi64(sel.r2,zero);
+	sel.r3 = _mm_cmpeq_epi64(sel.r3,zero);
+
+	xmm0.r0 = _mm_andnot_pd(_mm_castsi128_pd(sel.r0), xmm0.r0);
+	xmm0.r1 = _mm_andnot_pd(_mm_castsi128_pd(sel.r1), xmm0.r1);
+	xmm0.r2 = _mm_andnot_pd(_mm_castsi128_pd(sel.r2), xmm0.r2);
+	xmm0.r3 = _mm_andnot_pd(_mm_castsi128_pd(sel.r3), xmm0.r3);
+	xmm1.r0 = _mm_and_pd(_mm_castsi128_pd(sel.r0), xmm1.r0);
+	xmm1.r1 = _mm_and_pd(_mm_castsi128_pd(sel.r1), xmm1.r1);
+	xmm1.r2 = _mm_and_pd(_mm_castsi128_pd(sel.r2), xmm1.r2);
+	xmm1.r3 = _mm_and_pd(_mm_castsi128_pd(sel.r3), xmm1.r3);
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_add_pd(xmm0.r0,xmm1.r0),
+							     _mm_add_pd(xmm0.r1,xmm1.r1),
+							     _mm_add_pd(xmm0.r2,xmm1.r2),
+							     _mm_add_pd(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::sse, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_select_sign<double,cyme::sse,1>( simd_trait<int,cyme::sse,1>::register_type swap,
+                                         simd_trait<double,cyme::sse,1>::register_type xmm0,
+                                         simd_trait<double,cyme::sse,1>::register_type xmm1){
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi64x(0x8000000000000000));
+        __m128i four = _mm_set1_epi64x(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0 = _mm_and_pd(xmm0, mask);
+
+	/* get the swap sign flag */
+	swap = _mm_and_si128(swap, four);
+	swap = _mm_slli_epi64(swap, 61);
+
+	/* update the sign of the final value*/
+	xmm1 = _mm_xor_pd(xmm1, _mm_castsi128_pd(swap));
+	xmm1 = _mm_xor_pd(xmm1, xmm0);
+	return xmm1;
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::sse, 2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_select_sign<double,cyme::sse,2>( simd_trait<int,cyme::sse,2>::register_type swap,
+                                         simd_trait<double,cyme::sse,2>::register_type xmm0,
+                                         simd_trait<double,cyme::sse,2>::register_type xmm1){
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi64x(0x8000000000000000));
+        __m128i four = _mm_set1_epi64x(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = _mm_and_pd(xmm0.r0, mask);
+	xmm0.r1 = _mm_and_pd(xmm0.r1, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = _mm_and_si128(swap.r0, four);
+	swap.r1 = _mm_and_si128(swap.r1, four);
+	swap.r0 = _mm_slli_epi64(swap.r0, 61);
+	swap.r1 = _mm_slli_epi64(swap.r1, 61);
+
+	/* update the sign of the final value*/
+	xmm1.r0 = _mm_xor_pd(xmm1.r0, _mm_castsi128_pd(swap.r0));
+	xmm1.r1 = _mm_xor_pd(xmm1.r1, _mm_castsi128_pd(swap.r1));
+	xmm1.r0 = _mm_xor_pd(xmm1.r0, xmm0.r0);
+	xmm1.r1 = _mm_xor_pd(xmm1.r1, xmm0.r1);
+	return simd_trait<double,cyme::sse,2>::register_type(xmm1.r0,
+							     xmm1.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::sse, 4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_select_sign<double,cyme::sse,4>( simd_trait<int,cyme::sse,4>::register_type swap,
+                                         simd_trait<double,cyme::sse,4>::register_type xmm0,
+                                         simd_trait<double,cyme::sse,4>::register_type xmm1){
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi64x(0x8000000000000000));
+        __m128i four = _mm_set1_epi64x(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = _mm_and_pd(xmm0.r0, mask);
+	xmm0.r1 = _mm_and_pd(xmm0.r1, mask);
+	xmm0.r2 = _mm_and_pd(xmm0.r2, mask);
+	xmm0.r3 = _mm_and_pd(xmm0.r3, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = _mm_and_si128(swap.r0, four);
+	swap.r1 = _mm_and_si128(swap.r1, four);
+	swap.r2 = _mm_and_si128(swap.r2, four);
+	swap.r3 = _mm_and_si128(swap.r3, four);
+	swap.r0 = _mm_slli_epi64(swap.r0, 61);
+	swap.r1 = _mm_slli_epi64(swap.r1, 61);
+	swap.r2 = _mm_slli_epi64(swap.r2, 61);
+	swap.r3 = _mm_slli_epi64(swap.r3, 61);
+
+	/* update the sign of the final value*/
+	xmm1.r0 = _mm_xor_pd(xmm1.r0, _mm_castsi128_pd(swap.r0));
+	xmm1.r1 = _mm_xor_pd(xmm1.r1, _mm_castsi128_pd(swap.r1));
+	xmm1.r2 = _mm_xor_pd(xmm1.r2, _mm_castsi128_pd(swap.r2));
+	xmm1.r3 = _mm_xor_pd(xmm1.r3, _mm_castsi128_pd(swap.r3));
+	xmm1.r0 = _mm_xor_pd(xmm1.r0, xmm0.r0);
+	xmm1.r1 = _mm_xor_pd(xmm1.r1, xmm0.r1);
+	xmm1.r2 = _mm_xor_pd(xmm1.r2, xmm0.r2);
+	xmm1.r3 = _mm_xor_pd(xmm1.r3, xmm0.r3);
+	return simd_trait<double,cyme::sse,4>::register_type(xmm1.r0,
+							     xmm1.r1,
+							     xmm1.r2,
+							     xmm1.r3);
     }
 
 #ifdef __INTEL_COMPILER
@@ -1826,7 +1998,10 @@ namespace cyme{
     }
 
     /**
-      Selects the polynomial for sin function.
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
       specialisation float,cyme::sse, 1 reg
      */
     template<>
@@ -1842,6 +2017,175 @@ namespace cyme{
 	xmm0 = _mm_andnot_ps(_mm_castsi128_ps(sel), xmm0);
 	xmm1 = _mm_and_ps(_mm_castsi128_ps(sel), xmm1);
 	return _mm_add_ps(xmm0,xmm1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::sse, 2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_select_poly<float,cyme::sse,2>( simd_trait<int,cyme::sse,2>::register_type sel,
+                                         simd_trait<float,cyme::sse,2>::register_type xmm0,
+                                         simd_trait<float,cyme::sse,2>::register_type xmm1){
+	__m128i mask = _mm_set1_epi32(2);
+	__m128i zero = _mm_set1_epi32(0);
+        sel.r0 = _mm_and_si128(sel.r0, mask);
+        sel.r1 = _mm_and_si128(sel.r1, mask);
+	sel.r0 = _mm_cmpeq_epi32(sel.r0, zero);
+	sel.r1 = _mm_cmpeq_epi32(sel.r1, zero);
+
+	xmm0.r0 = _mm_andnot_ps(_mm_castsi128_ps(sel.r0), xmm0.r0);
+	xmm0.r1 = _mm_andnot_ps(_mm_castsi128_ps(sel.r1), xmm0.r1);
+	xmm1.r0 = _mm_and_ps(_mm_castsi128_ps(sel.r0), xmm1.r0);
+	xmm1.r1 = _mm_and_ps(_mm_castsi128_ps(sel.r1), xmm1.r1);
+	return simd_trait<float,cyme::sse,2>::register_type(_mm_add_ps(xmm0.r0,xmm1.r0),
+							    _mm_add_ps(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::sse, 4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_select_poly<float,cyme::sse,4>( simd_trait<int,cyme::sse,4>::register_type sel,
+                                         simd_trait<float,cyme::sse,4>::register_type xmm0,
+                                         simd_trait<float,cyme::sse,4>::register_type xmm1){
+	__m128i mask = _mm_set1_epi32(2);
+	__m128i zero = _mm_set1_epi32(0);
+        sel.r0 = _mm_and_si128(sel.r0, mask);
+        sel.r1 = _mm_and_si128(sel.r1, mask);
+        sel.r2 = _mm_and_si128(sel.r2, mask);
+        sel.r3 = _mm_and_si128(sel.r3, mask);
+	sel.r0 = _mm_cmpeq_epi32(sel.r0, zero);
+	sel.r1 = _mm_cmpeq_epi32(sel.r1, zero);
+	sel.r2 = _mm_cmpeq_epi32(sel.r2, zero);
+	sel.r3 = _mm_cmpeq_epi32(sel.r3, zero);
+
+	xmm0.r0 = _mm_andnot_ps(_mm_castsi128_ps(sel.r0), xmm0.r0);
+	xmm0.r1 = _mm_andnot_ps(_mm_castsi128_ps(sel.r1), xmm0.r1);
+	xmm0.r2 = _mm_andnot_ps(_mm_castsi128_ps(sel.r2), xmm0.r2);
+	xmm0.r3 = _mm_andnot_ps(_mm_castsi128_ps(sel.r3), xmm0.r3);
+	xmm1.r0 = _mm_and_ps(_mm_castsi128_ps(sel.r0), xmm1.r0);
+	xmm1.r1 = _mm_and_ps(_mm_castsi128_ps(sel.r1), xmm1.r1);
+	xmm1.r2 = _mm_and_ps(_mm_castsi128_ps(sel.r2), xmm1.r2);
+	xmm1.r3 = _mm_and_ps(_mm_castsi128_ps(sel.r3), xmm1.r3);
+	return simd_trait<float,cyme::sse,4>::register_type(_mm_add_ps(xmm0.r0,xmm1.r0),
+							    _mm_add_ps(xmm0.r1,xmm1.r1),
+							    _mm_add_ps(xmm0.r2,xmm1.r2),
+							    _mm_add_ps(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float ,cyme::sse, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_select_sign<float,cyme::sse,1>( simd_trait<int,cyme::sse,1>::register_type swap,
+                                         simd_trait<float,cyme::sse,1>::register_type xmm0,
+                                         simd_trait<float,cyme::sse,1>::register_type xmm1){
+        __m128 mask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0 = _mm_and_ps(xmm0, mask);
+
+	/* get the swap sign flag */
+	swap = _mm_and_si128(swap, four);
+	swap = _mm_slli_epi32(swap, 29);
+
+	/* update the sign of the final value*/
+	xmm1 = _mm_xor_ps(xmm1, _mm_castsi128_ps(swap));
+	xmm1 = _mm_xor_ps(xmm1, xmm0);
+	return xmm1;
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float ,cyme::sse, 2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_select_sign<float,cyme::sse,2>( simd_trait<int,cyme::sse,2>::register_type swap,
+                                         simd_trait<float,cyme::sse,2>::register_type xmm0,
+                                         simd_trait<float,cyme::sse,2>::register_type xmm1){
+        __m128 mask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = _mm_and_ps(xmm0.r0, mask);
+	xmm0.r1 = _mm_and_ps(xmm0.r1, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = _mm_and_si128(swap.r0, four);
+	swap.r1 = _mm_and_si128(swap.r1, four);
+	swap.r0 = _mm_slli_epi32(swap.r0, 29);
+	swap.r1 = _mm_slli_epi32(swap.r1, 29);
+
+	/* update the sign of the final value*/
+	xmm1.r0 = _mm_xor_ps(xmm1.r0, _mm_castsi128_ps(swap.r0));
+	xmm1.r1 = _mm_xor_ps(xmm1.r1, _mm_castsi128_ps(swap.r1));
+	xmm1.r0 = _mm_xor_ps(xmm1.r0, xmm0.r0);
+	xmm1.r1 = _mm_xor_ps(xmm1.r1, xmm0.r1);
+	return simd_trait<float,cyme::sse,2>::register_type(xmm1.r0,
+							    xmm1.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float ,cyme::sse, 4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_select_sign<float,cyme::sse,4>( simd_trait<int,cyme::sse,4>::register_type swap,
+                                         simd_trait<float,cyme::sse,4>::register_type xmm0,
+                                         simd_trait<float,cyme::sse,4>::register_type xmm1){
+        __m128 mask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = _mm_and_ps(xmm0.r0, mask);
+	xmm0.r1 = _mm_and_ps(xmm0.r1, mask);
+	xmm0.r2 = _mm_and_ps(xmm0.r2, mask);
+	xmm0.r3 = _mm_and_ps(xmm0.r3, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = _mm_and_si128(swap.r0, four);
+	swap.r1 = _mm_and_si128(swap.r1, four);
+	swap.r2 = _mm_and_si128(swap.r2, four);
+	swap.r3 = _mm_and_si128(swap.r3, four);
+	swap.r0 = _mm_slli_epi32(swap.r0, 29);
+	swap.r1 = _mm_slli_epi32(swap.r1, 29);
+	swap.r2 = _mm_slli_epi32(swap.r2, 29);
+	swap.r3 = _mm_slli_epi32(swap.r3, 29);
+
+	/* update the sign of the final value*/
+	xmm1.r0 = _mm_xor_ps(xmm1.r0, _mm_castsi128_ps(swap.r0));
+	xmm1.r1 = _mm_xor_ps(xmm1.r1, _mm_castsi128_ps(swap.r1));
+	xmm1.r2 = _mm_xor_ps(xmm1.r2, _mm_castsi128_ps(swap.r2));
+	xmm1.r3 = _mm_xor_ps(xmm1.r3, _mm_castsi128_ps(swap.r3));
+	xmm1.r0 = _mm_xor_ps(xmm1.r0, xmm0.r0);
+	xmm1.r1 = _mm_xor_ps(xmm1.r1, xmm0.r1);
+	xmm1.r2 = _mm_xor_ps(xmm1.r2, xmm0.r2);
+	xmm1.r3 = _mm_xor_ps(xmm1.r3, xmm0.r3);
+	return simd_trait<float,cyme::sse,4>::register_type(xmm1.r0,
+							    xmm1.r1,
+							    xmm1.r2,
+							    xmm1.r3);
     }
 
 #ifdef __INTEL_COMPILER
