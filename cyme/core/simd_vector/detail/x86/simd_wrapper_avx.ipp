@@ -865,7 +865,10 @@ namespace cyme{
     }
 
     /**
-      Selects the polynomial for sin function.
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
       specialisation double,cyme::avx, 1 reg
      */
     template<>
@@ -883,10 +886,114 @@ namespace cyme{
 	tmp1 = _mm_cmpeq_epi64(tmp1, zero);
         sel = _mm256_insertf128_si256(sel, tmp0,0);
         sel = _mm256_insertf128_si256(sel, tmp1,1);
-
 	xmm0 = _mm256_andnot_pd(_mm256_castsi256_pd(sel), xmm0);
 	xmm1 = _mm256_and_pd(_mm256_castsi256_pd(sel), xmm1);
 	return _mm256_add_pd(xmm0,xmm1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::avx, 2 reg
+     */
+   template<>
+    forceinline simd_trait<double,cyme::avx,2>::register_type
+    _mm_select_poly<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type sel,
+                                         simd_trait<double,cyme::avx,2>::register_type  xmm0,
+                                         simd_trait<double,cyme::avx,2>::register_type xmm1){
+	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_poly<double,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
+	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_poly<double,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
+	return simd_trait<double,cyme::avx,2>::register_type(r0,r1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::avx, 4 reg
+     */
+   template<>
+    forceinline simd_trait<double,cyme::avx,4>::register_type
+    _mm_select_poly<double,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type sel,
+                                         simd_trait<double,cyme::avx,4>::register_type  xmm0,
+                                         simd_trait<double,cyme::avx,4>::register_type xmm1){
+	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_poly<double,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
+	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_poly<double,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
+	simd_trait<double,cyme::avx,1>::register_type r2 = _mm_select_poly<double,cyme::avx,1>(sel.r2,xmm0.r2,xmm1.r2);
+	simd_trait<double,cyme::avx,1>::register_type r3 = _mm_select_poly<double,cyme::avx,1>(sel.r3,xmm0.r3,xmm1.r3);
+	return simd_trait<double,cyme::avx,4>::register_type(r0,r1,r2,r3);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::avx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,1>::register_type
+    _mm_select_sign<double,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
+                                         simd_trait<double,cyme::avx,1>::register_type  xmm0,
+                                         simd_trait<double,cyme::avx,1>::register_type xmm1){
+        simd_trait<double,cyme::avx,1>::register_type mask = _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
+        __m128i four = _mm_set1_epi64x(4);
+	/* extract the sign bit (upper one) from original val */
+	__m256d sign_bit = _mm256_and_pd(xmm0, mask);
+
+	/* get the swap sign flag */
+        __m128i tmp0 = _mm256_extractf128_si256(swap,0);
+	tmp0 = _mm_and_si128(tmp0, four);
+	tmp0 = _mm_slli_epi64(tmp0, 61);
+        __m128i tmp1 = _mm256_extractf128_si256(swap,1);
+	tmp1 = _mm_and_si128(tmp1, four);
+	tmp1 = _mm_slli_epi64(tmp1, 61);
+        swap = _mm256_insertf128_si256(swap, tmp0, 0);
+        swap = _mm256_insertf128_si256(swap, tmp1, 1);
+
+	/* update the sign of the final value*/
+	xmm1 = _mm256_xor_pd(xmm1, _mm256_castsi256_pd(swap));
+	xmm1 = _mm256_xor_pd(xmm1, sign_bit);
+	return xmm1;
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double ,cyme::avx, 2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,2>::register_type
+    _mm_select_sign<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
+                                         simd_trait<double,cyme::avx,2>::register_type  xmm0,
+                                         simd_trait<double,cyme::avx,2>::register_type xmm1){
+	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign<double,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
+	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign<double,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
+	return simd_trait<double,cyme::avx,2>::register_type(r0,r1);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double ,cyme::avx, 4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,4>::register_type
+    _mm_select_sign<double,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
+                                         simd_trait<double,cyme::avx,4>::register_type  xmm0,
+                                         simd_trait<double,cyme::avx,4>::register_type xmm1){
+	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign<double,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
+	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign<double,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
+	simd_trait<double,cyme::avx,1>::register_type r2 = _mm_select_sign<double,cyme::avx,1>(swap.r2,xmm0.r2,xmm1.r2);
+	simd_trait<double,cyme::avx,1>::register_type r3 = _mm_select_sign<double,cyme::avx,1>(swap.r3,xmm0.r3,xmm1.r3);
+	return simd_trait<double,cyme::avx,4>::register_type(r0,r1,r2,r3);
     }
 
 #ifdef __INTEL_COMPILER
@@ -2018,7 +2125,10 @@ namespace cyme{
     }
 
     /**
-      Selects the polynomial for sin function.
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two 
       specialisation float,cyme::avx, 1 reg
      */
     template<>
@@ -2039,6 +2149,112 @@ namespace cyme{
 	xmm0 = _mm256_andnot_ps(_mm256_castsi256_ps(sel), xmm0);
 	xmm1 = _mm256_and_ps(_mm256_castsi256_ps(sel), xmm1);
 	return _mm256_add_ps(xmm0,xmm1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two 
+      specialisation float,cyme::avx, 2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,2>::register_type
+    _mm_select_poly<float,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type sel,
+                                        simd_trait<float,cyme::avx,2>::register_type xmm0,
+                                        simd_trait<float,cyme::avx,2>::register_type xmm1){
+	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_poly<float,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
+	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_poly<float,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
+	return simd_trait<float,cyme::avx,2>::register_type(r0,r1);
+    }
+
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two 
+      specialisation float,cyme::avx, 4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,4>::register_type
+    _mm_select_poly<float,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type sel,
+                                        simd_trait<float,cyme::avx,4>::register_type xmm0,
+                                        simd_trait<float,cyme::avx,4>::register_type xmm1){
+	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_poly<float,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
+	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_poly<float,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
+	simd_trait<float,cyme::avx,1>::register_type r2 = _mm_select_poly<float,cyme::avx,1>(sel.r2,xmm0.r2,xmm1.r2);
+	simd_trait<float,cyme::avx,1>::register_type r3 = _mm_select_poly<float,cyme::avx,1>(sel.r3,xmm0.r3,xmm1.r3);
+	return simd_trait<float,cyme::avx,4>::register_type(r0,r1,r2,r3);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float ,cyme::avx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,1>::register_type
+    _mm_select_sign<float,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
+                                         simd_trait<float,cyme::avx,1>::register_type  xmm0,
+                                         simd_trait<float,cyme::avx,1>::register_type xmm1){
+        simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
+	/* extract the sign bit (upper one) from original val */
+	__m256 sign_bit = _mm256_and_ps(xmm0, mask);
+
+	/* get the swap sign flag */
+        __m128i tmp0 = _mm256_extractf128_si256(swap,0);
+	tmp0 = _mm_and_si128(tmp0, four);
+	tmp0 = _mm_slli_epi32(tmp0, 29);
+        __m128i tmp1 = _mm256_extractf128_si256(swap,1);
+	tmp1 = _mm_and_si128(tmp1, four);
+	tmp1 = _mm_slli_epi32(tmp1, 29);
+        swap = _mm256_insertf128_si256(swap, tmp0, 0);
+        swap = _mm256_insertf128_si256(swap, tmp1, 1);
+
+	/* update the sign of the final value*/
+	xmm1 = _mm256_xor_ps(xmm1, _mm256_castsi256_ps(swap));
+	xmm1 = _mm256_xor_ps(xmm1, sign_bit);
+	return xmm1; 
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float ,cyme::avx, 2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,2>::register_type
+    _mm_select_sign<float,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
+                                         simd_trait<float,cyme::avx,2>::register_type xmm0,
+                                         simd_trait<float,cyme::avx,2>::register_type xmm1){
+	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign<float,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
+	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign<float,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
+	return simd_trait<float,cyme::avx,2>::register_type(r0,r1);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float ,cyme::avx, 4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,4>::register_type
+    _mm_select_sign<float,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
+                                         simd_trait<float,cyme::avx,4>::register_type  xmm0,
+                                         simd_trait<float,cyme::avx,4>::register_type xmm1){
+	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign<float,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
+	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign<float,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
+	simd_trait<float,cyme::avx,1>::register_type r2 = _mm_select_sign<float,cyme::avx,1>(swap.r2,xmm0.r2,xmm1.r2);
+	simd_trait<float,cyme::avx,1>::register_type r3 = _mm_select_sign<float,cyme::avx,1>(swap.r3,xmm0.r3,xmm1.r3);
+	return simd_trait<float,cyme::avx,4>::register_type(r0,r1,r2,r3);
     }
 
 #ifdef  __INTEL_COMPILER

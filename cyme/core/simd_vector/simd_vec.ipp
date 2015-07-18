@@ -164,6 +164,13 @@ namespace cyme{
         return nrv;
     }
 
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N> select_sign(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_select_sign<typename simd_trait<T,O,N>::value_type,O,N>(swap.xmm,lhs.xmm,rhs.xmm);
+        return nrv;
+    }
+
 #ifdef __FMA__
     template<class T,cyme::simd O, int N>
     void vec_simd<T,O,N>::ma(const vec_simd& lhs, const vec_simd& rhs){
