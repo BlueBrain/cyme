@@ -37,7 +37,8 @@ endif()
 set(BOOST_MIN_VERSION "1.49.0") # old is bad
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
 include(Common)
-include(FindPackages)
+common_package(Boost REQUIRED COMPONENTS unit_test_framework chrono system)
+common_package_post()
 
 ########################################################################
 #
