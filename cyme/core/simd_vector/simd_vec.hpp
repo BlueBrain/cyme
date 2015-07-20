@@ -27,10 +27,19 @@
 #ifndef CYME_SIMD_VEC_HPP
 #define CYME_SIMD_VEC_HPP
 
+#include <iostream>
+
 #include "cyme/core/simd_vector/trait.hpp"
 #include "cyme/core/simd_vector/simd_wrapper.hpp"
-
 namespace cyme{
+    /**
+    Helper for print function
+    */
+    template<class T, int N>
+    struct elems_helper{
+	static const int size = N*(cyme::trait_register<T,cyme::__GETSIMD__()>::size)/sizeof(T);
+    };
+
     /** SIMD vector computation class.
 
       The vector is generic, it can be SSE, AVX or QPX. The type is given by the trait class cyme::simd_trait
@@ -84,6 +93,9 @@ namespace cyme{
         /** Function for load only one value type, serial library */
         forceinline value_type single(pointer b);
 
+	/** Print function */
+	forceinline void print(std::ostream &out) const;
+
 #ifdef __FMA__
         /** FMA operator */
         forceinline void ma(const vec_simd& lhs, const vec_simd& rhs);
@@ -101,7 +113,7 @@ namespace cyme{
         register_type xmm;
     };
 
-    /** Sast int to float */
+    /** Cast int to float */
     template<class T, cyme::simd O, int N>
     forceinline vec_simd<T,O,N> cast(const vec_simd<int,O,N>& ths);
 
@@ -204,6 +216,10 @@ namespace cyme{
 #endif
 
 } //end namespace
+
+/** Ostream operator */
+template<class T, cyme::simd O, int N>
+forceinline std::ostream &operator<<(std::ostream &out, const cyme::vec_simd<T,O,N> &vec);
 
 #include "cyme/core/simd_vector/simd_vec.ipp"
 #include "cyme/core/simd_vector/simd_math.ipp" // contains all math operations include

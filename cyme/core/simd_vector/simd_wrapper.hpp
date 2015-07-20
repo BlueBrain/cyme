@@ -161,6 +161,10 @@ namespace cyme{
     #include "cyme/core/simd_vector/detail/x86/simd_wrapper_avx.ipp"
 #endif
 
+#ifdef __aarch64__
+    #include "cyme/core/simd_vector/detail/arm/simd_wrapper_arm.ipp"
+#endif
+
 #ifdef _ARCH_QP
     #include "cyme/core/simd_vector/detail/powerpc64/simd_wrapper_qpx.ipp"
 #endif
