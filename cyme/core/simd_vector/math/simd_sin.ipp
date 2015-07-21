@@ -29,8 +29,8 @@
 #define CYME_SIMD_SIN_IPP
 
 #include "cyme/core/simd_vector/math/detail/remez.ipp"
-#include <assert.h>
-#include <iostream>
+#include "cyme/core/simd_vector/math/detail/coeff_sin_cos.ipp"
+
 namespace cyme{
     /** Base struct*/
     template<class T, cyme::simd O, int N, template <typename,std::size_t> class C>

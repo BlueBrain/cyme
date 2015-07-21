@@ -1,9 +1,7 @@
 /*
- * Cyme - remez.ipp, Copyright (c), 2014,
+ * Cyme - coeff_sin_cos.ipp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
- * Kai Langen
- * kai.langen@usask.ca,
  * All rights reserved.
  * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
@@ -22,16 +20,15 @@
  */
 
 /**
- * @file cyme/core/simd_vector/math/detail/sin_helper.ipp
- * Implements sin helper functions for vec_simd class
+ * @file cyme/core/simd_vector/math/detail/coeff_sin_cos.ipp
+ * Implements coeff_cephes_sin and coeff_cephes_cos classes for horner's method
  */
 
-#ifndef CYME_SIN_HELPER_IPP
-#define CYME_SIN_HELPER_IPP
+#ifndef CYME_COEFF_SIN_COS_IPP
+#define CYME_COEFF_SIN_COS_IPP
 
 namespace cyme{
-
-
+  
     /** this class encapsulates the cephes approximation coefficients for sin
 
      no c++ 11, so no constexpr into structure for double/float, ^.^ just partial specialization
@@ -43,24 +40,31 @@ namespace cyme{
     /** coeff order 0 sin(x) */
     template<class T>
     struct coeff_cephes_sin<T,0>{
-        const static inline T coeff() {return -1.9515295891e-4;}
+	const static inline T coeff() {return 0;}
     };
 
     /** coeff order 1 sin(x) */
     template<class T>
     struct coeff_cephes_sin<T,1>{
-        const static inline T coeff() {return 8.3321608736e-3;}
+        const static inline T coeff() {return -1.6666654611e-1;}
     };
 
     /** coeff order 2 sin(x) */
     template<class T>
     struct coeff_cephes_sin<T,2>{
-        const static inline T coeff() {return -1.6666654611e-1;}
+        const static inline T coeff() {return 8.3321608736e-3;}
     };
+
+    /** coeff order 3 sin(x) */
+    template<class T>
+    struct coeff_cephes_sin<T,3>{
+        const static inline T coeff() {return -1.9515295891e-4;}
+    };
+
     /** Poly_order class encapsulates the number of Remez coefficient */
     template<class T, template<class,std::size_t> class C >
     struct poly_order;
-
+es for horner's method
     /** Poly_order partial specialisation for the sin */
     template<class T>
     struct poly_order<T,coeff_cephes_sin> {
@@ -79,19 +83,25 @@ namespace cyme{
     /** coeff order 0 cos(x) */
     template<class T>
     struct coeff_cephes_cos<T,0>{
-        const static inline T coeff() {return 2.443315711809948E-005;}
+        const static inline T coeff() {return 0;} 
     };
 
     /** coeff order 1 cos(x) */
     template<class T>
     struct coeff_cephes_cos<T,1>{
-        const static inline T coeff() {return -1.388731625493765E-003;}
+        const static inline T coeff() {return 4.166664568298827E-002;}
     };
 
     /** coeff order 2 cos(x) */
     template<class T>
     struct coeff_cephes_cos<T,2>{
-        const static inline T coeff() {return 4.166664568298827E-002;}
+        const static inline T coeff() {return -1.388731625493765E-003;}
+    };
+
+    /** coeff order 3 cos(x) */
+    template<class T>
+    struct coeff_cephes_cos<T,3>{
+        const static inline T coeff() {return 2.443315711809948E-005;}
     };
 
     /** Poly_order partial specialisation for the cos*/
@@ -99,27 +109,7 @@ namespace cyme{
     struct poly_order<T,coeff_cephes_cos> {
         static const std::size_t value=3;
     };
-
-    /** Implementation of polynomial computation for sin
-
-     The template parameter C represents the coefficients described (sin or cos coeff). This function is called
-     into simd_sin.log with the needed coefficient.
-     */
-    template<class T, cyme::simd O, int N, template <typename,std::size_t> class C, std::size_t n>
-    struct helper_sin{
-        static forceinline vec_simd<T,O,N> poly_sin(vec_simd<T,O,N> const& z){
-	    /* result = (((coeff0)*z+coeff1)*z+coeff2)*z */
-            return z*(vec_simd<T,O,N>(C<T,n-1>::coeff())+helper_sin<T,O,N,C,n-1>::poly_sin(z));
-        }
-    };
-
-    /** Implementation of the polynomial computation recursive template, final specialization */
-    template<class T, cyme::simd O, int N, template <typename,std::size_t> class C>
-    struct helper_sin<T,O,N,C,0>{
-        static forceinline vec_simd<T,O,N> poly_sin(vec_simd<T,O,N> const&){
-            return vec_simd<T,O,N>(0.0);
-        }
-    };
+    
 } //end namespace
 
 #endif
