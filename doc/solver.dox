@@ -139,11 +139,11 @@ The implementation of Sin(x) was derived from the Cephes implementation. It can 
 1. Take the absolute value of the x 
 2. Perform a calculation using coefficents DP such that
 \f[
-    z = (((z - j,.\,DP1) - j,.\,DP2) - j,.\,DP3)
+    z = (((z - j\,.\,DP1) - j\,.\,DP2) - j\,.\,DP3)
 \f]
 where j is
 \f[
-    j = (\lfloor x,.\,frac{4}{PI} \rfloor )
+    j = \lfloor x\,.\,\frac{4}{PI} \rfloor
 \f] 
 3. Calculate the polynomials for both sin and cos using Horner's method
 4. Select the correct polynomial depending on the value j & 2
@@ -152,7 +152,8 @@ and the value j & 4.
 
 The calculation for Cos is calculated using a trigonometric identity and the previous definition of Sin
 \f[
-    Cos(x) = Sin(x - frac{PI}{2}) .
+    Cos(x) = Sin(x - \frac{PI}{2}) .
+\f]
 
 \section serial Serial library
 
