@@ -876,19 +876,20 @@ namespace cyme{
     _mm_select_poly<double,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type sel,
                                          simd_trait<double,cyme::avx,1>::register_type xmm0,
                                          simd_trait<double,cyme::avx,1>::register_type xmm1){
-	__m128i mask = _mm_set1_epi64x(2);
-	__m128i zero = _mm_set1_epi64x(0);
-        __m128i tmp0 = _mm256_extractf128_si256(sel,0);
-        tmp0 = _mm_and_si128(tmp0,mask);
-	tmp0 = _mm_cmpeq_epi64(tmp0, zero);
-        __m128i tmp1 = _mm256_extractf128_si256(sel,1);
-        tmp1 = _mm_and_si128(tmp1,mask);
-	tmp1 = _mm_cmpeq_epi64(tmp1, zero);
-        sel = _mm256_insertf128_si256(sel, tmp0,0);
-        sel = _mm256_insertf128_si256(sel, tmp1,1);
-	xmm0 = _mm256_andnot_pd(_mm256_castsi256_pd(sel), xmm0);
-	xmm1 = _mm256_and_pd(_mm256_castsi256_pd(sel), xmm1);
-	return _mm256_add_pd(xmm0,xmm1);
+ 	__m128i mask = _mm_set1_epi32(2);
+ 	__m128i zero = _mm_set1_epi32(0);
+ 
+        __m128i imm0 = _mm_shuffle_epi32(_mm_cmpeq_epi32(_mm_and_si128(_mm256_castsi256_si128(sel),mask),zero),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm1 =  _mm_slli_epi64(imm0,32);
+        imm0 =  _mm_srli_epi64(imm0,32); //mask will be slower because mov + broadcast + and, I need to mask 6 instructions
+        imm0 =  _mm_slli_epi64(imm0,32);
+        sel = _mm256_insertf128_si256(sel, imm0, 0);
+        sel = _mm256_insertf128_si256(sel, imm1, 1);
+ 
+ 	xmm0 = _mm256_andnot_pd(_mm256_castsi256_pd(sel), xmm0);
+ 	xmm1 = _mm256_and_pd(_mm256_castsi256_pd(sel), xmm1);
+ 	return _mm256_add_pd(xmm0,xmm1);
     }
 
     /**
@@ -901,7 +902,7 @@ namespace cyme{
    template<>
     forceinline simd_trait<double,cyme::avx,2>::register_type
     _mm_select_poly<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type sel,
-                                         simd_trait<double,cyme::avx,2>::register_type  xmm0,
+                                         simd_trait<double,cyme::avx,2>::register_type xmm0,
                                          simd_trait<double,cyme::avx,2>::register_type xmm1){
 	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_poly<double,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
 	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_poly<double,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
@@ -937,28 +938,26 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::avx,1>::register_type
     _mm_select_sign<double,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
-                                         simd_trait<double,cyme::avx,1>::register_type  xmm0,
+                                         simd_trait<double,cyme::avx,1>::register_type xmm0,
                                          simd_trait<double,cyme::avx,1>::register_type xmm1){
-        __m256d mask = _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
-        __m128i four = _mm_set1_epi64x(4);
+        __m256d mask = _mm256_castsi256_pd(_mm256_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
 	/* extract the sign bit (upper one) from original val */
-	xmm0  = _mm256_and_pd(xmm0, mask);
+	xmm0 = _mm256_and_pd(xmm0, mask);
 
 	/* get the swap sign flag */
-        __m128i tmp0 = _mm256_extractf128_si256(swap,0);
-	tmp0 = _mm_and_si128(tmp0, four);
-	tmp0 = _mm_slli_epi64(tmp0, 61);
-        __m128i tmp1 = _mm256_extractf128_si256(swap,1);
-	tmp1 = _mm_and_si128(tmp1, four);
-	tmp1 = _mm_slli_epi64(tmp1, 61);
-        //swap = _mm256_insertf128_si256(swap, tmp0, 0);
-        //swap = _mm256_insertf128_si256(swap, tmp1, 1);
+        __m128i imm0 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_and_si128(_mm256_castsi256_si128(swap),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm1 =  _mm_slli_epi64(imm0,32);
+        imm0 =  _mm_srli_epi64(imm0,32); //mask will be slower because mov + broadcast + and, I need to mask 6 instructions
+        imm0 =  _mm_slli_epi64(imm0,32);
+        swap = _mm256_insertf128_si256(swap, imm0, 0);
+        swap = _mm256_insertf128_si256(swap, imm1, 1);
 
 	/* update the sign of the final value*/
 	xmm1 = _mm256_xor_pd(xmm1, _mm256_castsi256_pd(swap));
 	xmm1 = _mm256_xor_pd(xmm1, xmm0);
-	//return xmm1;
-	return _mm256_castsi256_pd(swap);
+	return xmm1; 
     }
 
     /**

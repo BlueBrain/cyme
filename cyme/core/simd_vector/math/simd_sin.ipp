@@ -103,10 +103,10 @@ namespace cyme{
  	vec_simd<T,O,N> poly1 = Poly_helper<T,O,N,coeff_cephes_cos>::poly(x);
  	vec_simd<T,O,N> poly2 = Poly_helper<T,O,N,coeff_cephes_sin>::poly(x);
 	x = select_poly(j,poly1,poly2);
-	return x;
+	//return x;
 	//std::cout << p << std::endl;
 	//Select Sign
-	//return select_sign(j,rhs,x);
+	return select_sign(j,rhs,x);
     }
 }
 #endif
