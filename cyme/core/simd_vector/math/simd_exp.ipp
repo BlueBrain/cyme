@@ -27,7 +27,8 @@
 #ifndef CYME_SIMD_EXP_IPP
 #define CYME_SIMD_EXP_IPP
 
-#include "cyme/core/simd_vector/math/detail/remez.ipp"
+#include "cyme/core/simd_vector/math/detail/horner.ipp"
+#include "cyme/core/simd_vector/math/detail/coeff_exp.ipp"
 
 namespace cyme{
 

@@ -27,6 +27,9 @@
 #ifndef CYME_SIMD_LOG_IPP
 #define CYME_SIMD_LOG_IPP
 
+#include "cyme/core/simd_vector/math/detail/horner.ipp"
+#include "cyme/core/simd_vector/math/detail/coeff_log.ipp"
+
 namespace cyme{
 
     /** Function object that compute the Remez approximation of ln(x) using Horner method */
