@@ -14,6 +14,10 @@ test: std_pow_comparison
     - Test the pow(x,n) where n is the exposen, type list floating_point_test_types
     remarks n is static and not dynamic
 
+sin.cpp
+test: std_sin_comparison
+    - Test sin(x), type list floating_point_test_types
+
 vec.cpp
 the vec class encapsulate the SIMD register
 test: vec_simd_init_default_constructor
