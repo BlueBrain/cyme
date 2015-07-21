@@ -768,10 +768,11 @@ namespace cyme{
     _mm_select_poly<double,cyme::sse,1>( simd_trait<int,cyme::sse,1>::register_type sel,
                                          simd_trait<double,cyme::sse,1>::register_type xmm0,
                                          simd_trait<double,cyme::sse,1>::register_type xmm1){
-	__m128i mask = _mm_set1_epi64x(2);
-	__m128i zero = _mm_set1_epi64x(0);
+	__m128i mask = _mm_set1_epi32(2);
+	__m128i zero = _mm_set1_epi32(0);
+        sel = _mm_shuffle_epi32(sel, _MM_SHUFFLE(1,3,0,2));
         sel = _mm_and_si128(sel,mask);
-	sel = _mm_cmpeq_epi64(sel, zero);
+	sel = _mm_cmpeq_epi32(sel, zero);
 
 	xmm0 = _mm_andnot_pd(_mm_castsi128_pd(sel), xmm0);
 	xmm1 = _mm_and_pd(_mm_castsi128_pd(sel), xmm1);
@@ -790,12 +791,14 @@ namespace cyme{
     _mm_select_poly<double,cyme::sse,2>( simd_trait<int,cyme::sse,2>::register_type sel,
                                          simd_trait<double,cyme::sse,2>::register_type xmm0,
                                          simd_trait<double,cyme::sse,2>::register_type xmm1){
-	__m128i mask = _mm_set1_epi64x(2);
-	__m128i zero = _mm_set1_epi64x(0);
+	__m128i mask = _mm_set1_epi32(2);
+	__m128i zero = _mm_set1_epi32(0);
+        sel.r0 = _mm_shuffle_epi32(sel.r0, _MM_SHUFFLE(1,3,0,2));
+        sel.r1 = _mm_shuffle_epi32(sel.r1, _MM_SHUFFLE(1,3,0,2));
         sel.r0 = _mm_and_si128(sel.r0,mask);
         sel.r1 = _mm_and_si128(sel.r1,mask);
-	sel.r0 = _mm_cmpeq_epi64(sel.r0,zero);
-	sel.r1 = _mm_cmpeq_epi64(sel.r1,zero);
+	sel.r0 = _mm_cmpeq_epi32(sel.r0,zero);
+	sel.r1 = _mm_cmpeq_epi32(sel.r1,zero);
 
 	xmm0.r0 = _mm_andnot_pd(_mm_castsi128_pd(sel.r0), xmm0.r0);
 	xmm0.r1 = _mm_andnot_pd(_mm_castsi128_pd(sel.r1), xmm0.r1);
@@ -817,16 +820,20 @@ namespace cyme{
     _mm_select_poly<double,cyme::sse,4>( simd_trait<int,cyme::sse,4>::register_type sel,
                                          simd_trait<double,cyme::sse,4>::register_type xmm0,
                                          simd_trait<double,cyme::sse,4>::register_type xmm1){
-	__m128i mask = _mm_set1_epi64x(2);
-	__m128i zero = _mm_set1_epi64x(0);
+	__m128i mask = _mm_set1_epi32(2);
+	__m128i zero = _mm_set1_epi32(0);
+        sel.r0 = _mm_shuffle_epi32(sel.r0, _MM_SHUFFLE(1,3,0,2));
+        sel.r1 = _mm_shuffle_epi32(sel.r1, _MM_SHUFFLE(1,3,0,2));
+        sel.r2 = _mm_shuffle_epi32(sel.r2, _MM_SHUFFLE(1,3,0,2));
+        sel.r3 = _mm_shuffle_epi32(sel.r3, _MM_SHUFFLE(1,3,0,2));
         sel.r0 = _mm_and_si128(sel.r0,mask);
         sel.r1 = _mm_and_si128(sel.r1,mask);
         sel.r2 = _mm_and_si128(sel.r2,mask);
         sel.r3 = _mm_and_si128(sel.r3,mask);
-	sel.r0 = _mm_cmpeq_epi64(sel.r0,zero);
-	sel.r1 = _mm_cmpeq_epi64(sel.r1,zero);
-	sel.r2 = _mm_cmpeq_epi64(sel.r2,zero);
-	sel.r3 = _mm_cmpeq_epi64(sel.r3,zero);
+	sel.r0 = _mm_cmpeq_epi32(sel.r0,zero);
+	sel.r1 = _mm_cmpeq_epi32(sel.r1,zero);
+	sel.r2 = _mm_cmpeq_epi32(sel.r2,zero);
+	sel.r3 = _mm_cmpeq_epi32(sel.r3,zero);
 
 	xmm0.r0 = _mm_andnot_pd(_mm_castsi128_pd(sel.r0), xmm0.r0);
 	xmm0.r1 = _mm_andnot_pd(_mm_castsi128_pd(sel.r1), xmm0.r1);
@@ -854,14 +861,15 @@ namespace cyme{
     _mm_select_sign<double,cyme::sse,1>( simd_trait<int,cyme::sse,1>::register_type swap,
                                          simd_trait<double,cyme::sse,1>::register_type xmm0,
                                          simd_trait<double,cyme::sse,1>::register_type xmm1){
-        __m128d mask = _mm_castsi128_pd(_mm_set1_epi64x(0x8000000000000000));
-        __m128i four = _mm_set1_epi64x(4);
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
 	/* extract the sign bit (upper one) from original val */
 	xmm0 = _mm_and_pd(xmm0, mask);
 
 	/* get the swap sign flag */
+        swap = _mm_shuffle_epi32(swap, _MM_SHUFFLE(1,3,0,2));
 	swap = _mm_and_si128(swap, four);
-	swap = _mm_slli_epi64(swap, 61);
+	swap = _mm_slli_epi32(swap, 29);
 
 	/* update the sign of the final value*/
 	xmm1 = _mm_xor_pd(xmm1, _mm_castsi128_pd(swap));
@@ -881,17 +889,19 @@ namespace cyme{
     _mm_select_sign<double,cyme::sse,2>( simd_trait<int,cyme::sse,2>::register_type swap,
                                          simd_trait<double,cyme::sse,2>::register_type xmm0,
                                          simd_trait<double,cyme::sse,2>::register_type xmm1){
-        __m128d mask = _mm_castsi128_pd(_mm_set1_epi64x(0x8000000000000000));
-        __m128i four = _mm_set1_epi64x(4);
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
 	/* extract the sign bit (upper one) from original val */
 	xmm0.r0 = _mm_and_pd(xmm0.r0, mask);
 	xmm0.r1 = _mm_and_pd(xmm0.r1, mask);
 
 	/* get the swap sign flag */
+        swap.r0 = _mm_shuffle_epi32(swap.r0, _MM_SHUFFLE(1,3,0,2));
+        swap.r1 = _mm_shuffle_epi32(swap.r1, _MM_SHUFFLE(1,3,0,2));
 	swap.r0 = _mm_and_si128(swap.r0, four);
 	swap.r1 = _mm_and_si128(swap.r1, four);
-	swap.r0 = _mm_slli_epi64(swap.r0, 61);
-	swap.r1 = _mm_slli_epi64(swap.r1, 61);
+	swap.r0 = _mm_slli_epi32(swap.r0, 29);
+	swap.r1 = _mm_slli_epi32(swap.r1, 29);
 
 	/* update the sign of the final value*/
 	xmm1.r0 = _mm_xor_pd(xmm1.r0, _mm_castsi128_pd(swap.r0));
@@ -914,8 +924,8 @@ namespace cyme{
     _mm_select_sign<double,cyme::sse,4>( simd_trait<int,cyme::sse,4>::register_type swap,
                                          simd_trait<double,cyme::sse,4>::register_type xmm0,
                                          simd_trait<double,cyme::sse,4>::register_type xmm1){
-        __m128d mask = _mm_castsi128_pd(_mm_set1_epi64x(0x8000000000000000));
-        __m128i four = _mm_set1_epi64x(4);
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
 	/* extract the sign bit (upper one) from original val */
 	xmm0.r0 = _mm_and_pd(xmm0.r0, mask);
 	xmm0.r1 = _mm_and_pd(xmm0.r1, mask);
@@ -923,14 +933,18 @@ namespace cyme{
 	xmm0.r3 = _mm_and_pd(xmm0.r3, mask);
 
 	/* get the swap sign flag */
+        swap.r0 = _mm_shuffle_epi32(swap.r0, _MM_SHUFFLE(1,3,0,2));
+        swap.r1 = _mm_shuffle_epi32(swap.r1, _MM_SHUFFLE(1,3,0,2));
+        swap.r2 = _mm_shuffle_epi32(swap.r2, _MM_SHUFFLE(1,3,0,2));
+        swap.r3 = _mm_shuffle_epi32(swap.r3, _MM_SHUFFLE(1,3,0,2));
 	swap.r0 = _mm_and_si128(swap.r0, four);
 	swap.r1 = _mm_and_si128(swap.r1, four);
 	swap.r2 = _mm_and_si128(swap.r2, four);
 	swap.r3 = _mm_and_si128(swap.r3, four);
-	swap.r0 = _mm_slli_epi64(swap.r0, 61);
-	swap.r1 = _mm_slli_epi64(swap.r1, 61);
-	swap.r2 = _mm_slli_epi64(swap.r2, 61);
-	swap.r3 = _mm_slli_epi64(swap.r3, 61);
+	swap.r0 = _mm_slli_epi32(swap.r0, 29);
+	swap.r1 = _mm_slli_epi32(swap.r1, 29);
+	swap.r2 = _mm_slli_epi32(swap.r2, 29);
+	swap.r3 = _mm_slli_epi32(swap.r3, 29);
 
 	/* update the sign of the final value*/
 	xmm1.r0 = _mm_xor_pd(xmm1.r0, _mm_castsi128_pd(swap.r0));
