@@ -27,6 +27,10 @@
 #ifndef CYME_HORNER_IPP
 #define CYME_HORNER_IPP
 
+#include "cyme/core/simd_vector/math/detail/coeff_exp.ipp"
+#include "cyme/core/simd_vector/math/detail/coeff_log.ipp"
+#include "cyme/core/simd_vector/math/detail/coeff_sin_cos.ipp"
+
 namespace cyme{
 
     /** Implementation of a polynomial computation using Horner's method

@@ -28,7 +28,7 @@
 #ifndef CYME_SIMD_SIN_IPP
 #define CYME_SIMD_SIN_IPP
 
-#include "cyme/core/simd_vector/math/detail/remez.ipp"
+#include "cyme/core/simd_vector/math/detail/horner.ipp"
 #include "cyme/core/simd_vector/math/detail/coeff_sin_cos.ipp"
 
 namespace cyme{
@@ -73,7 +73,11 @@ namespace cyme{
 	}
     };
 */
-    /** free function for sin */ 
+    /** free function for sin 
+    Used references:
+    (http://github.com/jeremybarnes/cephes)
+    (http://gruntthepeon.free.fr/ssemath/sse_mathfun.h)
+    */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> sin(const vec_simd<T,O,N>& rhs){
 	//constants
@@ -82,7 +86,7 @@ namespace cyme{
 	//take abs value
 	vec_simd<T,O,N> x = abs(rhs);
 
-	//modify y
+	//create values p and j
 	vec_simd<T,O,N> y = x*cephes_FOPI;
 	const vec_simd<int,O,N> j = floor(y);// + vec_simd<T,O,N>(1.0));
 	vec_simd<T,O,N> p(cast<T,O,N>(j)); // j float
@@ -103,8 +107,6 @@ namespace cyme{
  	vec_simd<T,O,N> poly1 = Poly_helper<T,O,N,coeff_cephes_cos>::poly(x);
  	vec_simd<T,O,N> poly2 = Poly_helper<T,O,N,coeff_cephes_sin>::poly(x);
 	x = select_poly(j,poly1,poly2);
-	//return x;
-	//std::cout << p << std::endl;
 	//Select Sign
 	return select_sign(j,rhs,x);
     }
