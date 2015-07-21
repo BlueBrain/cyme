@@ -50,6 +50,15 @@ namespace cyme{
     };
 
     /**
+    * abs(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_abs<T,O,N,R1> >
+    forceinline abs(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_abs<T,O,N,R1> >(vec_abs<T,O,N,R1>(a.rep()));
+    }
+
+    /**
     * sin(a) function
     */
     template<class T, cyme::simd O, int N, class R1>

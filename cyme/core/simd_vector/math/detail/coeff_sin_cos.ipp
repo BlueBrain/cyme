@@ -64,7 +64,7 @@ namespace cyme{
     /** Poly_order class encapsulates the number of Remez coefficient */
     template<class T, template<class,std::size_t> class C >
     struct poly_order;
-es for horner's method
+
     /** Poly_order partial specialisation for the sin */
     template<class T>
     struct poly_order<T,coeff_cephes_sin> {
