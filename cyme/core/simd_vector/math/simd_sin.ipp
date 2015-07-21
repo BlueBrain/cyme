@@ -28,20 +28,21 @@
 #ifndef CYME_SIMD_SIN_IPP
 #define CYME_SIMD_SIN_IPP
 
-#include "cyme/core/simd_vector/math/detail/sin_helper.ipp"
+#include "cyme/core/simd_vector/math/detail/remez.ipp"
 #include <assert.h>
 #include <iostream>
 namespace cyme{
     /** Base struct*/
-    template<class T, cyme::simd O, int N, int p, std::size_t n>
+    template<class T, cyme::simd O, int N, template <typename,std::size_t> class C>
     struct Poly_helper;
 
     /** Helper for polynom where 0 <= x <= Pi/4 (sin_lo)*/
-    template<class T, cyme::simd O, int N, std::size_t n>
-    struct Poly_helper<T,O,N,0,n>{
+    template<class T, cyme::simd O, int N>
+    struct Poly_helper<T,O,N,coeff_cephes_cos>{
 	static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
 	    vec_simd<T,O,N> z(x*x);
-	    vec_simd<T,O,N> y = helper_sin<T,O,N,coeff_cephes_cos,n>::poly_sin(z);
+	    vec_simd<T,O,N> y = helper_horner<T,O,N,coeff_cephes_cos,
+					      poly_order<T,coeff_cephes_cos>::value>::horner(z);
 	    y *= z;
 	    y -= (z*vec_simd<T,O,N>(0.5));
 	    y += vec_simd<T,O,N>(1);
@@ -50,11 +51,12 @@ namespace cyme{
     };
  
     /** Helper for polynom where Pi/4 <= x <= Pi/2 (sin_hi)*/ 
-    template<class T, cyme::simd O, int N, std::size_t n>
-    struct Poly_helper<T,O,N,1,n>{
+    template<class T, cyme::simd O, int N>
+    struct Poly_helper<T,O,N,coeff_cephes_sin>{
 	static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
 	    vec_simd<T,O,N> z(x*x);
-	    vec_simd<T,O,N> y = helper_sin<T,O,N,coeff_cephes_sin,n>::poly_sin(z);
+	    vec_simd<T,O,N> y = helper_horner<T,O,N,coeff_cephes_sin,
+					      poly_order<T,coeff_cephes_sin>::value>::horner(z);
 	    y *= x;
 	    y += x;
 	    return y;
@@ -62,7 +64,7 @@ namespace cyme{
     };
 
     /** Selector for the polynomial algorithm (sin_hi or sin_lo) */
-    template<class T, cyme::simd O, int N, int p, std::size_t n = poly_order<T,coeff_cephes_sin>::value,//coeff_sin_cos
+/*    template<class T, cyme::simd O, int N, int p, std::size_t n = poly_order<T,coeff_cephes_sin>::value,//coeff_sin_cos
 	    class Solver = Poly_helper<T,O,N,p,n> > //sin_hi or sin_lo
     struct Selector_poly{
         static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
@@ -70,7 +72,7 @@ namespace cyme{
 	    return x;
 	}
     };
-
+*/
     /** free function for sin */ 
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> sin(const vec_simd<T,O,N>& rhs){
@@ -83,7 +85,7 @@ namespace cyme{
 	//modify y
 	vec_simd<T,O,N> y = x*cephes_FOPI;
 	const vec_simd<int,O,N> j = floor(y);// + vec_simd<T,O,N>(1.0));
-	vec_simd<T,O,N>   p(cast<T,O>(j)); // j float
+	vec_simd<T,O,N> p(cast<T,O,N>(j)); // j float
 
 	//magic pass
 	/*x = ((x - y * DP1) - y * DP2) - y * DP3; */
@@ -98,15 +100,13 @@ namespace cyme{
  	x += neg_DP3;
 
 	//Select Polynomial
- 	vec_simd<T,O,N> poly1 = Selector_poly<T,O,N,0>::poly(x);
- 	vec_simd<T,O,N> poly2 = Selector_poly<T,O,N,1>::poly(x);
-	//std::cout << "Poly1 is: " << poly1 << std::endl;
-	//std::cout << "Poly2 is: " << poly2 << std::endl;
+ 	vec_simd<T,O,N> poly1 = Poly_helper<T,O,N,coeff_cephes_cos>::poly(x);
+ 	vec_simd<T,O,N> poly2 = Poly_helper<T,O,N,coeff_cephes_sin>::poly(x);
 	x = select_poly(j,poly1,poly2);
+	return x;
+	//std::cout << p << std::endl;
 	//Select Sign
-	//std::cout << "rhs is: " << rhs << std::endl;
-	//std::cout << "x is: " << x << std::endl;
-	return select_sign(j,rhs,x);
+	//return select_sign(j,rhs,x);
     }
 }
 #endif

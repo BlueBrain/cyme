@@ -939,10 +939,10 @@ namespace cyme{
     _mm_select_sign<double,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
                                          simd_trait<double,cyme::avx,1>::register_type  xmm0,
                                          simd_trait<double,cyme::avx,1>::register_type xmm1){
-        simd_trait<double,cyme::avx,1>::register_type mask = _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
+        __m256d mask = _mm256_castsi256_pd(_mm256_set1_epi64x(0x8000000000000000));
         __m128i four = _mm_set1_epi64x(4);
 	/* extract the sign bit (upper one) from original val */
-	__m256d sign_bit = _mm256_and_pd(xmm0, mask);
+	xmm0  = _mm256_and_pd(xmm0, mask);
 
 	/* get the swap sign flag */
         __m128i tmp0 = _mm256_extractf128_si256(swap,0);
@@ -951,13 +951,14 @@ namespace cyme{
         __m128i tmp1 = _mm256_extractf128_si256(swap,1);
 	tmp1 = _mm_and_si128(tmp1, four);
 	tmp1 = _mm_slli_epi64(tmp1, 61);
-        swap = _mm256_insertf128_si256(swap, tmp0, 0);
-        swap = _mm256_insertf128_si256(swap, tmp1, 1);
+        //swap = _mm256_insertf128_si256(swap, tmp0, 0);
+        //swap = _mm256_insertf128_si256(swap, tmp1, 1);
 
 	/* update the sign of the final value*/
 	xmm1 = _mm256_xor_pd(xmm1, _mm256_castsi256_pd(swap));
-	xmm1 = _mm256_xor_pd(xmm1, sign_bit);
-	return xmm1;
+	xmm1 = _mm256_xor_pd(xmm1, xmm0);
+	//return xmm1;
+	return _mm256_castsi256_pd(swap);
     }
 
     /**
@@ -2203,7 +2204,7 @@ namespace cyme{
         simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
         __m128i four = _mm_set1_epi32(4);
 	/* extract the sign bit (upper one) from original val */
-	__m256 sign_bit = _mm256_and_ps(xmm0, mask);
+	xmm0 = _mm256_and_ps(xmm0, mask);
 
 	/* get the swap sign flag */
         __m128i tmp0 = _mm256_extractf128_si256(swap,0);
@@ -2217,7 +2218,7 @@ namespace cyme{
 
 	/* update the sign of the final value*/
 	xmm1 = _mm256_xor_ps(xmm1, _mm256_castsi256_ps(swap));
-	xmm1 = _mm256_xor_ps(xmm1, sign_bit);
+	xmm1 = _mm256_xor_ps(xmm1, xmm0);
 	return xmm1; 
     }
 
