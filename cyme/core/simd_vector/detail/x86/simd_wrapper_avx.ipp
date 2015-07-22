@@ -27,7 +27,87 @@
 #ifndef CYME_SIMD_WRAPPER_AVX_IPP
 #define CYME_SIMD_WRAPPER_AVX_IPP
 namespace cyme{
+ 
     /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::avx, 1 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::avx,1>::register_type
+    _mm_round_up_even<cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type xmm0){
+        __m128i lo = _mm256_extractf128_si256(xmm0,0);
+        __m128i hi = _mm256_extractf128_si256(xmm0,1);
+	
+        hi = _mm_round_up_even<cyme::sse,1>(hi);
+        lo = _mm_round_up_even<cyme::sse,1>(lo);
+        xmm0 =  _mm256_insertf128_si256(xmm0, lo, 0);
+        xmm0 =  _mm256_insertf128_si256(xmm0, hi, 1);
+	return xmm0;
+    }
+   
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::avx, 2 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::avx,2>::register_type
+    _mm_round_up_even<cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type xmm0){
+        __m128i lo0 = _mm256_extractf128_si256(xmm0.r0,0);
+        __m128i hi0 = _mm256_extractf128_si256(xmm0.r0,1);
+        __m128i lo1 = _mm256_extractf128_si256(xmm0.r1,0);
+        __m128i hi1 = _mm256_extractf128_si256(xmm0.r1,1);
+
+        hi0 = _mm_round_up_even<cyme::sse,1>(hi0);
+        lo0 = _mm_round_up_even<cyme::sse,1>(lo0);
+        hi1 = _mm_round_up_even<cyme::sse,1>(hi1);
+        lo1 = _mm_round_up_even<cyme::sse,1>(lo1);
+
+        xmm0.r0 =  _mm256_insertf128_si256(xmm0.r0, lo0, 0);
+        xmm0.r0 =  _mm256_insertf128_si256(xmm0.r0, hi0, 1);
+        xmm0.r1 =  _mm256_insertf128_si256(xmm0.r1, lo1, 0);
+        xmm0.r1 =  _mm256_insertf128_si256(xmm0.r1, hi1, 1);
+        return simd_trait<int,cyme::avx,2>::register_type(xmm0.r0,xmm0.r1);
+    }
+ 
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::avx, 4 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::avx,4>::register_type
+    _mm_round_up_even<cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type xmm0){
+	/* elem 0 */
+        __m128i lo0 = _mm256_extractf128_si256(xmm0.r0,0);
+        __m128i hi0 = _mm256_extractf128_si256(xmm0.r0,1);
+        __m128i lo1 = _mm256_extractf128_si256(xmm0.r1,0);
+        __m128i hi1 = _mm256_extractf128_si256(xmm0.r1,1);
+        __m128i lo2 = _mm256_extractf128_si256(xmm0.r2,0);
+        __m128i hi2 = _mm256_extractf128_si256(xmm0.r2,1);
+        __m128i lo3 = _mm256_extractf128_si256(xmm0.r3,0);
+        __m128i hi3 = _mm256_extractf128_si256(xmm0.r3,1);
+
+        hi0 = _mm_round_up_even<cyme::sse,1>(hi0);
+        lo0 = _mm_round_up_even<cyme::sse,1>(lo0);
+        hi1 = _mm_round_up_even<cyme::sse,1>(hi1);
+        lo1 = _mm_round_up_even<cyme::sse,1>(lo1);
+        hi2 = _mm_round_up_even<cyme::sse,1>(hi2);
+        lo2 = _mm_round_up_even<cyme::sse,1>(lo2);
+        hi3 = _mm_round_up_even<cyme::sse,1>(hi3);
+        lo3 = _mm_round_up_even<cyme::sse,1>(lo3);
+
+        xmm0.r0 =  _mm256_insertf128_si256(xmm0.r0, lo0, 0);
+        xmm0.r0 =  _mm256_insertf128_si256(xmm0.r0, hi0, 1);
+        xmm0.r1 =  _mm256_insertf128_si256(xmm0.r1, lo1, 0);
+        xmm0.r1 =  _mm256_insertf128_si256(xmm0.r1, hi1, 1);
+        xmm0.r2 =  _mm256_insertf128_si256(xmm0.r2, lo2, 0);
+        xmm0.r2 =  _mm256_insertf128_si256(xmm0.r2, hi2, 1);
+        xmm0.r3 =  _mm256_insertf128_si256(xmm0.r3, lo3, 0);
+        xmm0.r3 =  _mm256_insertf128_si256(xmm0.r3, hi3, 1);
+        return simd_trait<int,cyme::avx,4>::register_type(xmm0.r0,xmm0.r1,
+							  xmm0.r2,xmm0.r3);
+    }
+ 
+   /**
       Broadcast a double-precision (64-bit) floating-point element from cyme to all elements of dst.
       specialisation double,cyme::avx, 1 regs
      */
@@ -890,6 +970,7 @@ namespace cyme{
  	xmm0 = _mm256_andnot_pd(_mm256_castsi256_pd(sel), xmm0);
  	xmm1 = _mm256_and_pd(_mm256_castsi256_pd(sel), xmm1);
  	return _mm256_add_pd(xmm0,xmm1);
+	//return _mm256_cvtepi32_pd(imm1);
     }
 
     /**
