@@ -136,14 +136,14 @@ while for \f$n>1\f$, \f$n\f$ odd:
 \section op5 Sin/Cos
 
 The implementation of Sin(x) was derived from the Cephes implementation. It can be broken up into 5 steps:
-1. Take the absolute value of the x 
+1. Take the absolute value of the x
 2. Perform a calculation using coefficents DP such that
 \f[
     z = (((z - j\,.\,DP1) - j\,.\,DP2) - j\,.\,DP3)
 \f]
 where j is
 \f[
-    j = \lfloor x\,.\,\frac{4}{PI} \rfloor
+    j = ( \lfloor x\,.\,\frac{4}{PI} \rfloor + 1 ) \& (\sim 1)
 \f] 
 3. Calculate the polynomials for both sin and cos using Horner's method
 4. Select the correct polynomial depending on the value j & 2
