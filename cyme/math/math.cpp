@@ -37,6 +37,8 @@ extern "C" {
     float cyme_flog10(float a){return cyme::slog10(a);}
     float cyme_fsqrt(float a){return cyme::ssqrt(a);}
     float cyme_fsin(float a){return cyme::ssin(a);}
+    float cyme_fcos(float a){return cyme::scos(a);}
+    float cyme_ftan(float a){return cyme::stan(a);}
 
     double cyme_exp(double a){return cyme::sexp(a);}
     double cyme_exp2(double a){return cyme::sexp2(a);}
@@ -46,4 +48,6 @@ extern "C" {
     double cyme_log10(double a){return cyme::slog10(a);}
     double cyme_sqrt(double a){return cyme::ssqrt(a);}
     double cyme_sin(double a){return cyme::ssin(a);}
+    double cyme_cos(double a){return cyme::scos(a);}
+    double cyme_tan(double a){return cyme::stan(a);}
 }

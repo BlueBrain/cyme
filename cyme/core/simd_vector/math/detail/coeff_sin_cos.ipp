@@ -2,6 +2,8 @@
  * Cyme - coeff_sin_cos.ipp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
+ * Kai Langen,
+ * kai.langen@usask.ca,
  * All rights reserved.
  * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *
@@ -70,8 +72,8 @@ namespace cyme{
     struct poly_order<T,coeff_cephes_sin> {
         static const std::size_t value=3;
     };
-
-    /** this class encapsulates the cephes approximation coefficients for cos
+ 
+    /** this class encapsulates the cephes approximation coefficients for cos 
 
      no c++ 11, so no constexpr into structure for double/float, ^.^ just partial specialization
      these coeffs are obtained with an external program
@@ -110,6 +112,63 @@ namespace cyme{
         static const std::size_t value=3;
     };
     
+    /** this class encapsulates the cephes approximation coefficients for tan 
+
+     no c++ 11, so no constexpr into structure for double/float, ^.^ just partial specialization
+     these coeffs are obtained with an external program
+    */
+    // tan coefficient
+    template<class T, std::size_t n>
+    struct coeff_cephes_tan;
+
+    /** coeff order 0 tan(x) */
+    template<class T>
+    struct coeff_cephes_tan<T,0>{
+        const static inline T coeff() {return 0;} 
+    };
+
+    /** coeff order 1 tan(x) */
+    template<class T>
+    struct coeff_cephes_tan<T,1>{
+        const static inline T coeff() {return 3.33331568548E-1;}
+    };
+
+    /** coeff order 2 tan(x) */
+    template<class T>
+    struct coeff_cephes_tan<T,2>{
+        const static inline T coeff() {return 1.33387994085E-1;}
+    };
+
+    /** coeff order 3 tan(x) */
+    template<class T>
+    struct coeff_cephes_tan<T,3>{
+        const static inline T coeff() {return 5.34112807005E-2;}
+    };
+
+    /** coeff order 4 tan(x) */
+    template<class T>
+    struct coeff_cephes_tan<T,4>{
+        const static inline T coeff() {return 2.44301354525E-2;}
+    };
+
+    /** coeff order 5 tan(x) */
+    template<class T>
+    struct coeff_cephes_tan<T,5>{
+        const static inline T coeff() {return 3.11992232697E-3;}
+    };
+
+    /** coeff order 6 tan(x) */
+    template<class T>
+    struct coeff_cephes_tan<T,6>{
+        const static inline T coeff() {return 9.38540185543E-3;}
+    };
+
+    /** Poly_order partial specialisation for the tan*/
+    template<class T>
+    struct poly_order<T,coeff_cephes_tan> {
+        static const std::size_t value=6;
+    };
+
 } //end namespace
 
 #endif

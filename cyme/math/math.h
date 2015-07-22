@@ -157,6 +157,32 @@ inline float ssin(float a){
     return res;
 }
 
+/** Construction of the serial cos function, 32-bit precision.
+
+  The single function load/unload a serial number only.
+*/
+inline float scos(float a){
+    float res __attribute__((aligned (32)));
+    cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = cos(v);
+    v.single(&res);
+    return res;
+}
+
+/** Construction of the serial tan function, 32-bit precision.
+
+  The single function load/unload a serial number only.
+*/
+inline float stan(float a){
+    float res __attribute__((aligned (32)));
+    cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = tan(v);
+    v.single(&res);
+    return res;
+}
+
 /** Construction of the serial exponential, 64-bit precision.
 
    The single function load/unload a serial number only.
@@ -261,6 +287,32 @@ inline double ssin(double a){
     return res;
 }
 
+/** Brief Constructon of the serial cos function, 64-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline double scos(double a){
+    double res __attribute__((aligned (32)));
+    cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = cos(v);
+    v.single(&res);
+    return res;
+}
+
+/** Brief Constructon of the serial tan function, 64-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline double stan(double a){
+    double res __attribute__((aligned (32)));
+    cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = tan(v);
+    v.single(&res);
+    return res;
+}
+
 } // end namespace
 
 #endif
@@ -291,6 +343,12 @@ float  cyme_fsqrt(float a);
 /** single-precision 32-bit serial sin function, C library only */
 float  cyme_fsin(float a);
 
+/** single-precision 32-bit serial cos function, C library only */
+float  cyme_fcos(float a);
+
+/** single-precision 32-bit serial tan function, C library only */
+float  cyme_ftan(float a);
+
 /** double-precision 64-bit serial exponential base e, C library only */
 double cyme_exp(double a);
 
@@ -314,6 +372,12 @@ double cyme_sqrt(double a);
 
 /** double-precision 64-bit serial sin function, C library only */
 double cyme_sin(double a);
+
+/** double-precision 64-bit serial cos function, C library only */
+double cyme_cos(double a);
+
+/** double-precision 64-bit serial tan function, C library only */
+double cyme_tan(double a);
 
 #endif
 
