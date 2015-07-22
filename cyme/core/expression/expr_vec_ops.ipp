@@ -68,6 +68,24 @@ namespace cyme{
     }
 
     /**
+    * cos(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_cos<T,O,N,R1> >
+    forceinline cos(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_cos<T,O,N,R1> >(vec_cos<T,O,N,R1>(a.rep()));
+    }
+
+    /**
+    * tan(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_tan<T,O,N,R1> >
+    forceinline tan(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_tan<T,O,N,R1> >(vec_tan<T,O,N,R1>(a.rep()));
+    }
+
+    /**
     * sqrt(a) function
     */
     template<class T, cyme::simd O, int N, class R1>

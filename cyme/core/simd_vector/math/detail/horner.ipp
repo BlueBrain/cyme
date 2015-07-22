@@ -2,6 +2,8 @@
  * Cyme - horner.ipp, Copyright (c), 2014,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
+ * Kai Langen,
+ * kai.langen@usask.ca,
  * All rights reserved.
  * This file is part of Cyme <https://github.com/BlueBrain/cyme>
  *

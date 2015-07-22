@@ -96,6 +96,34 @@ namespace cyme{
         }
     };
 
+    /** cos vertex in the DAG from cos(a) */
+    template<class T, cyme::simd O, int N, class OP1>
+    class vec_cos{
+        typename vec_traits<OP1,O,N>::value_type op1;
+
+    public:
+        forceinline vec_cos(OP1 const& a):op1(a){
+        }
+
+        forceinline vec_simd<T,O,N> operator()() const{
+            return cos(op1());
+        }
+    };
+
+    /** tan vertex in the DAG from tan(a) */
+    template<class T, cyme::simd O, int N, class OP1>
+    class vec_tan{
+        typename vec_traits<OP1,O,N>::value_type op1;
+
+    public:
+        forceinline vec_tan(OP1 const& a):op1(a){
+        }
+
+        forceinline vec_simd<T,O,N> operator()() const{
+            return tan(op1());
+        }
+    };
+
     /** sqrt vertex in the DAG from sqrt(a) */
     template<class T, cyme::simd O, int N, class OP1>
     class vec_sqrt{
