@@ -174,9 +174,16 @@ namespace cyme{
     }
 
     template<class T,cyme::simd O, int N>
-    vec_simd<T,O,N> select_sign(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
+    vec_simd<T,O,N> select_sign_sin(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
         vec_simd<T,O,N> nrv;
-        nrv.xmm = _mm_select_sign<typename simd_trait<T,O,N>::value_type,O,N>(swap.xmm,lhs.xmm,rhs.xmm);
+        nrv.xmm = _mm_select_sign_sin<typename simd_trait<T,O,N>::value_type,O,N>(swap.xmm,lhs.xmm,rhs.xmm);
+        return nrv;
+    }
+
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N> select_sign_cos(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_select_sign_cos<typename simd_trait<T,O,N>::value_type,O,N>(swap.xmm,rhs.xmm);
         return nrv;
     }
 

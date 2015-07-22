@@ -1018,9 +1018,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::avx,1>::register_type
-    _mm_select_sign<double,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
-                                         simd_trait<double,cyme::avx,1>::register_type xmm0,
-                                         simd_trait<double,cyme::avx,1>::register_type xmm1){
+    _mm_select_sign_sin<double,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
+                                             simd_trait<double,cyme::avx,1>::register_type xmm0,
+                                             simd_trait<double,cyme::avx,1>::register_type xmm1){
         __m256d mask = _mm256_castsi256_pd(_mm256_set1_epi32(0x80000000));
         __m128i four = _mm_set1_epi32(4);
 	/* extract the sign bit (upper one) from original val */
@@ -1050,11 +1050,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::avx,2>::register_type
-    _mm_select_sign<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
-                                         simd_trait<double,cyme::avx,2>::register_type  xmm0,
-                                         simd_trait<double,cyme::avx,2>::register_type xmm1){
-	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign<double,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
-	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign<double,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
+    _mm_select_sign_sin<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
+                                             simd_trait<double,cyme::avx,2>::register_type  xmm0,
+                                             simd_trait<double,cyme::avx,2>::register_type xmm1){
+	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
+	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
 	return simd_trait<double,cyme::avx,2>::register_type(r0,r1);
     }
 
@@ -1067,13 +1067,70 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::avx,4>::register_type
-    _mm_select_sign<double,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
+    _mm_select_sign_sin<double,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
                                          simd_trait<double,cyme::avx,4>::register_type  xmm0,
                                          simd_trait<double,cyme::avx,4>::register_type xmm1){
-	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign<double,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
-	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign<double,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
-	simd_trait<double,cyme::avx,1>::register_type r2 = _mm_select_sign<double,cyme::avx,1>(swap.r2,xmm0.r2,xmm1.r2);
-	simd_trait<double,cyme::avx,1>::register_type r3 = _mm_select_sign<double,cyme::avx,1>(swap.r3,xmm0.r3,xmm1.r3);
+	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
+	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
+	simd_trait<double,cyme::avx,1>::register_type r2 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r2,xmm0.r2,xmm1.r2);
+	simd_trait<double,cyme::avx,1>::register_type r3 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r3,xmm0.r3,xmm1.r3);
+	return simd_trait<double,cyme::avx,4>::register_type(r0,r1,r2,r3);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::avx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,1>::register_type
+    _mm_select_sign_cos<double,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
+                                             simd_trait<double,cyme::avx,1>::register_type xmm0){
+        __m128i four = _mm_set1_epi32(4);
+	/* get the swap sign flag */
+        __m128i imm0 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_andnot_si128(_mm256_castsi256_si128(swap),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm1 =  _mm_slli_epi64(imm0,32);
+        imm0 =  _mm_srli_epi64(imm0,32); //mask will be slower because mov + broadcast + and, I need to mask 6 instructions
+        imm0 =  _mm_slli_epi64(imm0,32);
+        swap = _mm256_insertf128_si256(swap, imm0, 0);
+        swap = _mm256_insertf128_si256(swap, imm1, 1);
+
+	/* update the sign of the final value*/
+	xmm0 = _mm256_xor_pd(xmm0, _mm256_castsi256_pd(swap));
+	return xmm0; 
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::avx, 2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,2>::register_type
+    _mm_select_sign_cos<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
+                                             simd_trait<double,cyme::avx,2>::register_type xmm0){
+	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r0,xmm0.r0);
+	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r1,xmm0.r1);
+	return simd_trait<double,cyme::avx,2>::register_type(r0,r1);
+    }
+	
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::avx, 4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,4>::register_type
+    _mm_select_sign_cos<double,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
+                                             simd_trait<double,cyme::avx,4>::register_type xmm0){
+	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r0,xmm0.r0);
+	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r1,xmm0.r1);
+	simd_trait<double,cyme::avx,1>::register_type r2 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r2,xmm0.r2);
+	simd_trait<double,cyme::avx,1>::register_type r3 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r3,xmm0.r3);
 	return simd_trait<double,cyme::avx,4>::register_type(r0,r1,r2,r3);
     }
 
@@ -2278,9 +2335,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::avx,1>::register_type
-    _mm_select_sign<float,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
-                                         simd_trait<float,cyme::avx,1>::register_type  xmm0,
-                                         simd_trait<float,cyme::avx,1>::register_type xmm1){
+    _mm_select_sign_sin<float,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
+                                            simd_trait<float,cyme::avx,1>::register_type  xmm0,
+                                            simd_trait<float,cyme::avx,1>::register_type xmm1){
         simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
         __m128i four = _mm_set1_epi32(4);
 	/* extract the sign bit (upper one) from original val */
@@ -2311,11 +2368,11 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::avx,2>::register_type
-    _mm_select_sign<float,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
-                                         simd_trait<float,cyme::avx,2>::register_type xmm0,
-                                         simd_trait<float,cyme::avx,2>::register_type xmm1){
-	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign<float,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
-	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign<float,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
+    _mm_select_sign_sin<float,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
+                                            simd_trait<float,cyme::avx,2>::register_type xmm0,
+                                            simd_trait<float,cyme::avx,2>::register_type xmm1){
+	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
+	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
 	return simd_trait<float,cyme::avx,2>::register_type(r0,r1);
     }
 
@@ -2328,13 +2385,72 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::avx,4>::register_type
-    _mm_select_sign<float,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
+    _mm_select_sign_sin<float,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
                                          simd_trait<float,cyme::avx,4>::register_type  xmm0,
                                          simd_trait<float,cyme::avx,4>::register_type xmm1){
-	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign<float,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
-	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign<float,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
-	simd_trait<float,cyme::avx,1>::register_type r2 = _mm_select_sign<float,cyme::avx,1>(swap.r2,xmm0.r2,xmm1.r2);
-	simd_trait<float,cyme::avx,1>::register_type r3 = _mm_select_sign<float,cyme::avx,1>(swap.r3,xmm0.r3,xmm1.r3);
+	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
+	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
+	simd_trait<float,cyme::avx,1>::register_type r2 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r2,xmm0.r2,xmm1.r2);
+	simd_trait<float,cyme::avx,1>::register_type r3 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r3,xmm0.r3,xmm1.r3);
+	return simd_trait<float,cyme::avx,4>::register_type(r0,r1,r2,r3);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float ,cyme::avx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,1>::register_type
+    _mm_select_sign_cos<float,cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type swap,
+                                            simd_trait<float,cyme::avx,1>::register_type xmm0){
+        __m128i four = _mm_set1_epi32(4);
+
+	/* get the swap sign flag */
+        __m128i tmp0 = _mm256_extractf128_si256(swap,0);
+	tmp0 = _mm_andnot_si128(tmp0, four);
+	tmp0 = _mm_slli_epi32(tmp0, 29);
+        __m128i tmp1 = _mm256_extractf128_si256(swap,1);
+	tmp1 = _mm_andnot_si128(tmp1, four);
+	tmp1 = _mm_slli_epi32(tmp1, 29);
+        swap = _mm256_insertf128_si256(swap, tmp0, 0);
+        swap = _mm256_insertf128_si256(swap, tmp1, 1);
+
+	/* update the sign of the final value*/
+	xmm0 = _mm256_xor_ps(xmm0, _mm256_castsi256_ps(swap));
+	return xmm0; 
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float ,cyme::avx, 2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,2>::register_type
+    _mm_select_sign_cos<float,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
+                                            simd_trait<float,cyme::avx,2>::register_type xmm0){
+	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r0,xmm0.r0);
+	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r1,xmm0.r1);
+	return simd_trait<float,cyme::avx,2>::register_type(r0,r1);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float ,cyme::avx, 4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,4>::register_type
+    _mm_select_sign_cos<float,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
+                                            simd_trait<float,cyme::avx,4>::register_type xmm0){
+	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r0,xmm0.r0);
+	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r1,xmm0.r1);
+	simd_trait<float,cyme::avx,1>::register_type r2 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r2,xmm0.r2);
+	simd_trait<float,cyme::avx,1>::register_type r3 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r3,xmm0.r3);
 	return simd_trait<float,cyme::avx,4>::register_type(r0,r1,r2,r3);
     }
 
