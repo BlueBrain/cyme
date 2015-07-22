@@ -28,7 +28,14 @@
 #define CYME_WRAPPER_HPP
 
 namespace cyme{
-    /** Free function (wrapper) for loading basic type (double, int) into register */
+  
+    /**
+      Free function (wrapper) to round integer up to the next even value.
+    */
+    template<cyme::simd O, int N>
+    forceinline typename simd_trait<int,O,N>::register_type _mm_round_up_even(typename simd_trait<int,O,N>::register_type xmm0);
+
+	   /** Free function (wrapper) for loading basic type (double, int) into register */
     template<class T, cyme::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_load1(const typename simd_trait<T,O,N>::value_type& a);
 

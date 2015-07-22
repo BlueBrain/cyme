@@ -113,6 +113,10 @@ namespace cyme{
         register_type xmm;
     };
 
+    /** Round up to the next even integer */
+    template<cyme::simd O, int N>
+    forceinline vec_simd<int,O,N> round_up_even(const vec_simd<int,O,N>& rhs);
+
     /** Cast int to float */
     template<class T, cyme::simd O, int N>
     forceinline vec_simd<T,O,N> cast(const vec_simd<int,O,N>& ths);

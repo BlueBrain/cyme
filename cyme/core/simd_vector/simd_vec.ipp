@@ -29,7 +29,16 @@
 #define CYME_SIMD_VEC_IPP
 
 namespace cyme{
-    template<class T,cyme::simd O, int N>
+   
+    /** Round up to the next even integer */
+    template<cyme::simd O, int N>
+    vec_simd<int,O,N> round_up_even(const vec_simd<int,O,N>& rhs){
+        vec_simd<int,O,N> nrv;
+	nrv.xmm = _mm_round_up_even<O,N>(rhs.xmm);
+	return nrv;
+    }
+
+   template<class T,cyme::simd O, int N>
     vec_simd<T,O,N>::vec_simd(const typename simd_trait<T,O,N>::value_type& a){
         xmm = _mm_load1<typename simd_trait<T,O,N>::value_type,O,N>(a);
     }

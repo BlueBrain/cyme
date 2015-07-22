@@ -46,6 +46,7 @@ namespace cyme{
 	    y *= z;
 	    y -= (z*vec_simd<T,O,N>(0.5));
 	    y += vec_simd<T,O,N>(1);
+//	    y = vec_simd<T,O,N>(0.0);
 	    return y;
 	}
     };
@@ -59,20 +60,11 @@ namespace cyme{
 					      poly_order<T,coeff_cephes_sin>::value>::horner(z);
 	    y *= x;
 	    y += x;
+	    //y = vec_simd<T,O,N>(0.0);
 	    return y;
 	}
     };
 
-    /** Selector for the polynomial algorithm (sin_hi or sin_lo) */
-/*    template<class T, cyme::simd O, int N, int p, std::size_t n = poly_order<T,coeff_cephes_sin>::value,//coeff_sin_cos
-	    class Solver = Poly_helper<T,O,N,p,n> > //sin_hi or sin_lo
-    struct Selector_poly{
-        static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
-	    x = Solver::poly(x);
-	    return x;
-	}
-    };
-*/
     /** free function for sin 
     Used references:
     (http://github.com/jeremybarnes/cephes)
@@ -88,7 +80,7 @@ namespace cyme{
 
 	//create values p and j
 	vec_simd<T,O,N> y = x*cephes_FOPI;
-	const vec_simd<int,O,N> j = floor(y);// + vec_simd<T,O,N>(1.0));
+	vec_simd<int,O,N> j = round_up_even(floor(y));
 	vec_simd<T,O,N> p(cast<T,O,N>(j)); // j float
 
 	//magic pass
