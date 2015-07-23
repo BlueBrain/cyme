@@ -123,7 +123,7 @@ namespace cyme{
 
     /** Free function to return the absolute value of a float */
     template<class T, cyme::simd O, int N>
-    forceinline typename simd_trait<T,O,N>::register_type _mm_abs(typename simd_trait<T,O,N>::register_type xmm0);
+    forceinline typename simd_trait<T,O,N>::register_type _mm_fabs(typename simd_trait<T,O,N>::register_type xmm0);
 
     /** Free function to return poly1 or poly2 depending on the value of sel */
     template<class T, cyme::simd O, int N>

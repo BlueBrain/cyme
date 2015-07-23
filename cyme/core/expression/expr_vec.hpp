@@ -70,15 +70,15 @@ namespace cyme{
 
     /** abs vertex in the DAG from abs(a) */
     template<class T, cyme::simd O, int N, class OP1>
-    class vec_abs{
+    class vec_fabs{
         typename vec_traits<OP1,O,N>::value_type op1;
 
     public:
-        forceinline vec_abs(OP1 const& a):op1(a){
+        forceinline vec_fabs(OP1 const& a):op1(a){
         }
 
         forceinline vec_simd<T,O,N> operator()() const{
-            return abs(op1());
+            return fabs(op1());
         }
     };
 

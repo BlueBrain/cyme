@@ -911,7 +911,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::avx,1>::register_type
-    _mm_abs<double,cyme::avx,1>( simd_trait<double,cyme::avx,1>::register_type xmm0){
+    _mm_fabs<double,cyme::avx,1>( simd_trait<double,cyme::avx,1>::register_type xmm0){
         simd_trait<double,cyme::avx,1>::register_type mask(_mm256_castsi256_pd(_mm256_set1_epi64x(0x7fffffffffffffff)));
 	return _mm256_and_pd(xmm0, mask);
     }
@@ -923,7 +923,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::avx,2>::register_type
-    _mm_abs<double,cyme::avx,2>( simd_trait<double,cyme::avx,2>::register_type xmm0){
+    _mm_fabs<double,cyme::avx,2>( simd_trait<double,cyme::avx,2>::register_type xmm0){
         simd_trait<double,cyme::avx,1>::register_type mask(_mm256_castsi256_pd(_mm256_set1_epi64x(0x7fffffffffffffff)));
 	return simd_trait<double,cyme::avx,2>::register_type(_mm256_and_pd(xmm0.r0, mask),
 							     _mm256_and_pd(xmm0.r1, mask));
@@ -936,7 +936,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::avx,4>::register_type
-    _mm_abs<double,cyme::avx,4>( simd_trait<double,cyme::avx,4>::register_type xmm0){
+    _mm_fabs<double,cyme::avx,4>( simd_trait<double,cyme::avx,4>::register_type xmm0){
         simd_trait<double,cyme::avx,1>::register_type mask(_mm256_castsi256_pd(_mm256_set1_epi64x(0x7fffffffffffffff)));
 	return simd_trait<double,cyme::avx,4>::register_type(_mm256_and_pd(xmm0.r0, mask),
 							     _mm256_and_pd(xmm0.r1, mask),
@@ -2229,7 +2229,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::avx,1>::register_type
-    _mm_abs<float,cyme::avx,1>( simd_trait<float,cyme::avx,1>::register_type xmm0){
+    _mm_fabs<float,cyme::avx,1>( simd_trait<float,cyme::avx,1>::register_type xmm0){
         simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x7fffffff));
 	return _mm256_and_ps(xmm0, mask);
     }
@@ -2241,7 +2241,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::avx,2>::register_type
-    _mm_abs<float,cyme::avx,2>( simd_trait<float,cyme::avx,2>::register_type xmm0){
+    _mm_fabs<float,cyme::avx,2>( simd_trait<float,cyme::avx,2>::register_type xmm0){
         simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x7fffffff));
 	return simd_trait<float,cyme::avx,2>::register_type(_mm256_and_ps(xmm0.r0, mask),
 							    _mm256_and_ps(xmm0.r1, mask));
@@ -2254,7 +2254,7 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::avx,4>::register_type
-    _mm_abs<float,cyme::avx,4>( simd_trait<float,cyme::avx,4>::register_type xmm0){
+    _mm_fabs<float,cyme::avx,4>( simd_trait<float,cyme::avx,4>::register_type xmm0){
         simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x7fffffff));
 	return simd_trait<float,cyme::avx,4>::register_type(_mm256_and_ps(xmm0.r0, mask),
 							    _mm256_and_ps(xmm0.r1, mask),

@@ -16,7 +16,15 @@ test: std_pow_comparison
 
 sin.cpp
 test: std_sin_comparison
-    - Test sin(x), type list floating_point_test_types
+    - Test implementation of sin(x), type list floating_point_test_types
+
+cos.cpp
+test: std_cos_comparison
+    - Test iimplementation of cos(x), type list floating_point_test_types
+
+tan.cpp
+test: std_tan_comparison
+    - Test implementation of tan(x), type list floating_point_test_types
 
 vec.cpp
 the vec class encapsulate the SIMD register
