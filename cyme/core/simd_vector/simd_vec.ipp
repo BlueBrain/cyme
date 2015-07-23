@@ -160,9 +160,9 @@ namespace cyme{
     }
 
     template<class T,cyme::simd O, int N>
-    vec_simd<T,O,N> abs(const vec_simd<T,O,N>& rhs){
+    vec_simd<T,O,N> fabs(const vec_simd<T,O,N>& rhs){
         vec_simd<T,O,N> nrv;
-        nrv.xmm = _mm_abs<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
+        nrv.xmm = _mm_fabs<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
         return nrv;
     }
 

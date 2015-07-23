@@ -74,7 +74,7 @@ namespace cyme{
 	const vec_simd<T,O,N> cephes_FOPI(1.27323954473516); // 4/PI
 
 	//take abs value
-	vec_simd<T,O,N> x = abs(rhs);
+	vec_simd<T,O,N> x = fabs(rhs);
 
 	//create values p and j
 	vec_simd<T,O,N> y = x*cephes_FOPI;
@@ -112,7 +112,7 @@ namespace cyme{
 	const vec_simd<T,O,N> cephes_FOPI(1.27323954473516); // 4/PI
 
 	//take abs value
-	vec_simd<T,O,N> x = abs(rhs);
+	vec_simd<T,O,N> x = fabs(rhs);
 
 	//create values p and j
 	vec_simd<T,O,N> y = x*cephes_FOPI;
@@ -153,7 +153,7 @@ namespace cyme{
 	const vec_simd<T,O,N> cephes_FOPI(1.27323954473516); // 4/PI
 
 	//take abs value
-	vec_simd<T,O,N> x = abs(rhs);
+	vec_simd<T,O,N> x = fabs(rhs);
 
 	//create values p and j
 	vec_simd<T,O,N> y = x*cephes_FOPI;

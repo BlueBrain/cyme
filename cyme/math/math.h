@@ -144,6 +144,19 @@ inline float ssqrt(float a){
     return res;
 }
 
+/** Construction of the serial abs function, 32-bit precision.
+
+  The single function load/unload a serial number only.
+*/
+inline float sfabs(float a){
+    float res __attribute__((aligned (32)));
+    cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = fabs(v);
+    v.single(&res);
+    return res;
+}
+
 /** Construction of the serial sin function, 32-bit precision.
 
   The single function load/unload a serial number only.
@@ -274,6 +287,19 @@ inline double ssqrt(double a){
     return res;
 }
 
+/** Brief Constructon of the serial abs function, 64-bit precision.
+
+   The single function load/unload a serial number only.
+*/
+inline double sfabs(double a){
+    double res __attribute__((aligned (32)));
+    cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
+    v.single(a);
+    v = fabs(v);
+    v.single(&res);
+    return res;
+}
+
 /** Brief Constructon of the serial sin function, 64-bit precision.
 
    The single function load/unload a serial number only.
@@ -341,6 +367,9 @@ float  cyme_flog10(float a);
 float  cyme_fsqrt(float a);
 
 /** single-precision 32-bit serial sin function, C library only */
+float  cyme_ffabs(float a);
+
+/** single-precision 32-bit serial sin function, C library only */
 float  cyme_fsin(float a);
 
 /** single-precision 32-bit serial cos function, C library only */
@@ -369,6 +398,9 @@ double cyme_log10(double a);
 
 /** double-precision 64-bit serial sqrt, C library only */
 double cyme_sqrt(double a);
+
+/** double-precision 64-bit serial sin function, C library only */
+double cyme_fabs(double a);
 
 /** double-precision 64-bit serial sin function, C library only */
 double cyme_sin(double a);

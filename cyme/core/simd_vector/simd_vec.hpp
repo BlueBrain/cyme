@@ -127,7 +127,7 @@ namespace cyme{
 
     /** Return the absolute value of the floating point number */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> abs(const vec_simd<T,O,N>& rhs);
+    forceinline vec_simd<T,O,N> fabs(const vec_simd<T,O,N>& rhs);
 
     /** Returns poly1 or poly2 depending on the value of sel */ 
     template<class T,cyme::simd O, int N>
