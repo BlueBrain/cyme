@@ -133,7 +133,7 @@ while for \f$n>1\f$, \f$n\f$ odd:
     x^n = x\,.\,x^{\lfloor n/2 \rfloor}\,.\,x^{\lfloor n/2 \rfloor}.
 \f]
 
-\section op5 Sin/Cos
+\section op5 Trigonometric Functions
 
 The implementation of Sin(x) was derived from the Cephes implementation. It can be broken up into 5 steps:
 1. Take the absolute value of the x
@@ -150,9 +150,10 @@ where j is
 5. Select the sign of the final result depending on the sign of the original input, x,
 and the value j & 4.
 
-The calculation for Cos is calculated using a trigonometric identity and the previous definition of Sin
+Cos is calculated in a similar fashion, but with modifications to the way it selects the sign and polynomial.
+Tan calculates both the cos and sin of the input uses the trigonometric identity:
 \f[
-    Cos(x) = Sin(x - \frac{PI}{2}) .
+   tan(x) = \frac{sin(x)}{cos(x)} .
 \f]
 
 \section serial Serial library
