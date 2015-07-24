@@ -27,7 +27,7 @@
 #ifndef CYME_SIMD_WRAPPER_SSE_IPP
 #define CYME_SIMD_WRAPPER_SSE_IPP
 namespace cyme{
- 
+
     /**
       Rounds xmm0 up to the next even integer.
       Specialisation int, cyme::sse, 1 reg
@@ -39,7 +39,7 @@ namespace cyme{
 	xmm0 = _mm_and_si128(xmm0, _mm_set1_epi32(~1));
 	return xmm0;
     }
-  
+
     /**
       Rounds xmm0 up to the next even integer.
       Specialisation int, cyme::sse, 2 reg
@@ -54,7 +54,7 @@ namespace cyme{
         return simd_trait<int,cyme::sse,2>::register_type(xmm0.r0,
 							  xmm0.r1);
     }
-  
+
     /**
       Rounds xmm0 up to the next even integer.
       Specialisation int, cyme::sse, 4 reg
@@ -73,7 +73,7 @@ namespace cyme{
         return simd_trait<int,cyme::sse,4>::register_type(xmm0.r0,xmm0.r1,
         						  xmm0.r2,xmm0.r3);
     }
- 
+
     /**  Load a double-precision (64-bit) floating-point element from cyme into
      lower element of dst . */
     template<> forceinline simd_trait<double,cyme::sse,1>::register_type
