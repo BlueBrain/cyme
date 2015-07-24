@@ -39,6 +39,37 @@ extern "C" vector double expd4(vector double vx);// link to the fortran one
 extern "C" vector double logd4(vector double vx);// link to the fortran one
 
 namespace cyme{
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::vmx, 1 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,1>::register_type
+    _mm_round_up_even<cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type __attribute((unused))xmm0){
+	assert(false);
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::vmx, 2 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,2>::register_type
+    _mm_round_up_even<cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type __attribute((unused))xmm0){
+	assert(false);
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::vmx, 4 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,4>::register_type
+    _mm_round_up_even<cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type __attribute((unused))xmm0){
+	assert(false);
+    }
+
     /**
        Load a single-precision (32-bit) floating-point element from cyme into lower element of dst.
      */
@@ -470,7 +501,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_neg<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
-	return vec_xor(xmm0,(vector float)vec_splats(0x80000000));
+	vector float mask = (vector float)vec_splats(0x80000000);
+	return vec_xor(xmm0,mask);
 	//return vec_xor(xmm0, vec_splats((float)-0.));
     }
 
@@ -481,8 +513,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_neg<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
-	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,(vector float)vec_splats(0x80000000)),
-							    vec_xor(xmm0.r1,(vector float)vec_splats(0x80000000)));
+	vector float mask = (vector float)vec_splats(0x80000000);
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,mask),
+							    vec_xor(xmm0.r1,mask));
 
     }
 
@@ -493,10 +526,11 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_neg<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
-	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,(vector float)vec_splats(0x80000000)),
-							    vec_xor(xmm0.r1,(vector float)vec_splats(0x80000000)),
-							    vec_xor(xmm0.r2,(vector float)vec_splats(0x80000000)),
-							    vec_xor(xmm0.r3,(vector float)vec_splats(0x80000000)));
+	vector float mask = (vector float)vec_splats(0x80000000);
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,mask),
+							    vec_xor(xmm0.r1,mask),
+							    vec_xor(xmm0.r2,mask),
+							    vec_xor(xmm0.r3,mask));
     }
 
     /**
@@ -726,7 +760,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_fabs<float,cyme::vmx,1>( simd_trait<float,cyme::vmx,1>::register_type xmm0){
-	assert(false);
+	vector float mask = (vector float)vec_splats(~0x80000000);
+	return vec_and(xmm0,mask);
     }
 
     /**
@@ -737,7 +772,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_fabs<float,cyme::vmx,2>( simd_trait<float,cyme::vmx,2>::register_type xmm0){
-	assert(false);
+	vector float mask = (vector float)vec_splats(~0x80000000);
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_and(xmm0.r0,mask),
+							    vec_and(xmm0.r1,mask));
     }
 
     /**
@@ -748,6 +785,55 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_fabs<float,cyme::vmx,4>( simd_trait<float,cyme::vmx,4>::register_type xmm0){
+	vector float mask = (vector float)vec_splats(~0x80000000);
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_and(xmm0.r0,mask),
+							    vec_and(xmm0.r1,mask),
+							    vec_and(xmm0.r2,mask),
+							    vec_and(xmm0.r3,mask));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::vmx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,1>::register_type
+    _mm_select_poly<float,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type __attribute__((unused))sel,
+                                         simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
+                                         simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+	assert(false);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::vmx, 2 reg
+     */
+   template<>
+    forceinline simd_trait<float,cyme::vmx,2>::register_type
+    _mm_select_poly<float,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type __attribute__((unused))sel,
+                                         simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
+                                         simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+	assert(false);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::vmx, 4 reg
+     */
+   template<>
+    forceinline simd_trait<float,cyme::vmx,4>::register_type
+    _mm_select_poly<float,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type __attribute__((unused))sel,
+                                         simd_trait<float,cyme::vmx,4>::register_type  __attribute__((unused))xmm0,
+                                         simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
 	assert(false);
     }
 
@@ -760,9 +846,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_select_sign_sin<float,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type swap,
-                                            simd_trait<float,cyme::vmx,1>::register_type  xmm0,
-                                            simd_trait<float,cyme::vmx,1>::register_type xmm1){
+    _mm_select_sign_sin<float,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type __attribute__((unused))swap,
+                                            simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
+                                            simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
 	assert(false);
     }
 
@@ -775,9 +861,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_select_sign_sin<float,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type swap,
-                                            simd_trait<float,cyme::vmx,2>::register_type  xmm0,
-                                            simd_trait<float,cyme::vmx,2>::register_type xmm1){
+    _mm_select_sign_sin<float,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type __attribute__((unused))swap,
+                                            simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
+                                            simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
 	assert(false);
     }
 
@@ -790,9 +876,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_select_sign_sin<float,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type swap,
-                                            simd_trait<float,cyme::vmx,4>::register_type  xmm0,
-                                            simd_trait<float,cyme::vmx,4>::register_type xmm1){
+    _mm_select_sign_sin<float,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type __attribute__((unused))swap,
+                                            simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
+                                            simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
 	assert(false);
     }
 
@@ -804,8 +890,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
-    _mm_select_sign_cos<float,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type swap,
-                                            simd_trait<float,cyme::vmx,1>::register_type xmm0){
+    _mm_select_sign_cos<float,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type __attribute__((unused))swap,
+                                            simd_trait<float,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
 	assert(false);
     }
 
@@ -817,8 +903,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
-    _mm_select_sign_cos<float,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type swap,
-                                            simd_trait<float,cyme::vmx,2>::register_type xmm0){
+    _mm_select_sign_cos<float,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type __attribute__((unused))swap,
+                                            simd_trait<float,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
 	assert(false);
     }
 
@@ -830,8 +916,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
-    _mm_select_sign_cos<float,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type swap,
-                                            simd_trait<float,cyme::vmx,4>::register_type xmm0){
+    _mm_select_sign_cos<float,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type __attribute__((unused))swap,
+                                            simd_trait<float,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
 	assert(false);
     }
 
@@ -1435,7 +1521,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_neg<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	return vec_xor(xmm0,(vector double)vec_splats(0x8000000000000000));
+	vector double mask = (vector double)vec_splats(0x8000000000000000);
+	return vec_xor(xmm0,mask);
 	//return vec_xor(xmm0, vec_splats(-0.));
 }
 
@@ -1446,8 +1533,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_neg<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,(vector double)vec_splats(0x8000000000000000)),
-							     vec_xor(xmm0.r1,(vector double)vec_splats(0x8000000000000000)));
+	vector double mask = (vector double)vec_splats(0x8000000000000000);
+	return simd_trait<double,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,mask),
+							     vec_xor(xmm0.r1,mask));
     }
 
     /**
@@ -1457,10 +1545,11 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_neg<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,(vector double)vec_splats(0x8000000000000000)),
-							     vec_xor(xmm0.r1,(vector double)vec_splats(0x8000000000000000)),
-							     vec_xor(xmm0.r2,(vector double)vec_splats(0x8000000000000000)),
-							     vec_xor(xmm0.r3,(vector double)vec_splats(0x8000000000000000)));
+	vector double mask = (vector double)vec_splats(0x8000000000000000);
+	return simd_trait<double,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,mask),
+							     vec_xor(xmm0.r1,mask),
+							     vec_xor(xmm0.r2,mask),
+							     vec_xor(xmm0.r3,mask));
     }
 
     /**
@@ -1786,7 +1875,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_fabs<double,cyme::vmx,1>( simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	assert(false);
+	vector double mask = (vector double)vec_splats(~0x8000000000000000);
+	return vec_and(xmm0,mask);
     }
 
     /**
@@ -1797,7 +1887,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_fabs<double,cyme::vmx,2>( simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	assert(false);
+	vector double mask = (vector double)vec_splats(~0x8000000000000000);
+	return simd_trait<double,cyme::vmx,2>::register_type(vec_and(xmm0.r0,mask),
+							      vec_and(xmm0.r1,mask));
     }
 
     /**
@@ -1808,6 +1900,55 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_fabs<double,cyme::vmx,4>( simd_trait<double,cyme::vmx,4>::register_type xmm0){
+	vector double mask = (vector double)vec_splats(~0x8000000000000000);
+	return simd_trait<double,cyme::vmx,4>::register_type(vec_and(xmm0.r0,mask),
+							      vec_and(xmm0.r1,mask),
+							      vec_and(xmm0.r2,mask),
+							      vec_and(xmm0.r3,mask));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::vmx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,1>::register_type
+    _mm_select_poly<double,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type __attribute__((unused))sel,
+                                         simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
+                                         simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
+	assert(false);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::vmx, 2 reg
+     */
+   template<>
+    forceinline simd_trait<double,cyme::vmx,2>::register_type
+    _mm_select_poly<double,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type __attribute__((unused))sel,
+                                         simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
+                                         simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
+	assert(false);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::vmx, 4 reg
+     */
+   template<>
+    forceinline simd_trait<double,cyme::vmx,4>::register_type
+    _mm_select_poly<double,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type __attribute__((unused))sel,
+                                         simd_trait<double,cyme::vmx,4>::register_type  __attribute__((unused))xmm0,
+                                         simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
 	assert(false);
     }
 
@@ -1820,9 +1961,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_select_sign_sin<double,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type swap,
-                                             simd_trait<double,cyme::vmx,1>::register_type xmm0,
-                                             simd_trait<double,cyme::vmx,1>::register_type xmm1){
+    _mm_select_sign_sin<double,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type __attribute__((unused))swap,
+                                             simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0,
+                                             simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm1){
 	assert(false);
     }
 
@@ -1835,9 +1976,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_select_sign_sin<double,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type swap,
-                                             simd_trait<double,cyme::vmx,2>::register_type xmm0,
-                                             simd_trait<double,cyme::vmx,2>::register_type xmm1){
+    _mm_select_sign_sin<double,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type __attribute__((unused))swap,
+                                             simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0,
+                                             simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm1){
 	assert(false);
     }
 
@@ -1850,9 +1991,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_select_sign_sin<double,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type swap,
-                                             simd_trait<double,cyme::vmx,4>::register_type xmm0,
-                                             simd_trait<double,cyme::vmx,4>::register_type xmm1){
+    _mm_select_sign_sin<double,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type __attribute__((unused))swap,
+                                             simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0,
+                                             simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm1){
 	assert(false);
     }
 
@@ -1864,8 +2005,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
-    _mm_select_sign_cos<double,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type swap,
-                                             simd_trait<double,cyme::vmx,1>::register_type xmm0){
+    _mm_select_sign_cos<double,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type __attribute__((unused))swap,
+                                             simd_trait<double,cyme::vmx,1>::register_type __attribute__((unused))xmm0){
 	assert(false);
     }
 
@@ -1877,8 +2018,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
-    _mm_select_sign_cos<double,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type swap,
-                                             simd_trait<double,cyme::vmx,2>::register_type xmm0){
+    _mm_select_sign_cos<double,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type __attribute__((unused))swap,
+                                             simd_trait<double,cyme::vmx,2>::register_type __attribute__((unused))xmm0){
 	assert(false);
     }
 
@@ -1890,8 +2031,8 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
-    _mm_select_sign_cos<double,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type swap,
-                                             simd_trait<double,cyme::vmx,4>::register_type xmm0){
+    _mm_select_sign_cos<double,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type __attribute__((unused))swap,
+                                             simd_trait<double,cyme::vmx,4>::register_type __attribute__((unused))xmm0){
 	assert(false);
     }
 

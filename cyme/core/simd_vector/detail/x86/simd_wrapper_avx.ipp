@@ -27,7 +27,7 @@
 #ifndef CYME_SIMD_WRAPPER_AVX_IPP
 #define CYME_SIMD_WRAPPER_AVX_IPP
 namespace cyme{
- 
+
     /**
       Rounds xmm0 up to the next even integer.
       Specialisation int, cyme::avx, 1 reg
@@ -37,14 +37,14 @@ namespace cyme{
     _mm_round_up_even<cyme::avx,1>( simd_trait<int,cyme::avx,1>::register_type xmm0){
         __m128i lo = _mm256_extractf128_si256(xmm0,0);
         __m128i hi = _mm256_extractf128_si256(xmm0,1);
-	
+
         hi = _mm_round_up_even<cyme::sse,1>(hi);
         lo = _mm_round_up_even<cyme::sse,1>(lo);
         xmm0 =  _mm256_insertf128_si256(xmm0, lo, 0);
         xmm0 =  _mm256_insertf128_si256(xmm0, hi, 1);
 	return xmm0;
     }
-   
+
     /**
       Rounds xmm0 up to the next even integer.
       Specialisation int, cyme::avx, 2 reg
@@ -68,7 +68,7 @@ namespace cyme{
         xmm0.r1 =  _mm256_insertf128_si256(xmm0.r1, hi1, 1);
         return simd_trait<int,cyme::avx,2>::register_type(xmm0.r0,xmm0.r1);
     }
- 
+
     /**
       Rounds xmm0 up to the next even integer.
       Specialisation int, cyme::avx, 4 reg
@@ -106,7 +106,7 @@ namespace cyme{
         return simd_trait<int,cyme::avx,4>::register_type(xmm0.r0,xmm0.r1,
 							  xmm0.r2,xmm0.r3);
     }
- 
+
    /**
       Broadcast a double-precision (64-bit) floating-point element from cyme to all elements of dst.
       specialisation double,cyme::avx, 1 regs
@@ -958,7 +958,7 @@ namespace cyme{
                                          simd_trait<double,cyme::avx,1>::register_type xmm1){
  	__m128i mask = _mm_set1_epi32(2);
  	__m128i zero = _mm_set1_epi32(0);
- 
+
         __m128i imm0 = _mm_shuffle_epi32(_mm_cmpeq_epi32(_mm_and_si128(_mm256_castsi256_si128(sel),mask),zero),
                                          _MM_SHUFFLE(1,3,0,2));
         __m128i imm1 =  _mm_slli_epi64(imm0,32);
@@ -966,7 +966,7 @@ namespace cyme{
         imm0 =  _mm_slli_epi64(imm0,32);
         sel = _mm256_insertf128_si256(sel, imm0, 0);
         sel = _mm256_insertf128_si256(sel, imm1, 1);
- 
+
  	xmm0 = _mm256_andnot_pd(_mm256_castsi256_pd(sel), xmm0);
  	xmm1 = _mm256_and_pd(_mm256_castsi256_pd(sel), xmm1);
  	return _mm256_add_pd(xmm0,xmm1);
@@ -1038,7 +1038,7 @@ namespace cyme{
 	/* update the sign of the final value*/
 	xmm1 = _mm256_xor_pd(xmm1, _mm256_castsi256_pd(swap));
 	xmm1 = _mm256_xor_pd(xmm1, xmm0);
-	return xmm1; 
+	return xmm1;
     }
 
     /**
@@ -1099,7 +1099,7 @@ namespace cyme{
 
 	/* update the sign of the final value*/
 	xmm0 = _mm256_xor_pd(xmm0, _mm256_castsi256_pd(swap));
-	return xmm0; 
+	return xmm0;
     }
 
     /**
@@ -1116,7 +1116,7 @@ namespace cyme{
 	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r1,xmm0.r1);
 	return simd_trait<double,cyme::avx,2>::register_type(r0,r1);
     }
-	
+
     /**
       Selects the sign (+/-) for cos function. Inputs are:
 	- swap int
@@ -2266,7 +2266,7 @@ namespace cyme{
       Selects the polynomial for sin function. Inputs are:
 	- Selector int
 	- Option one
-	- Option two 
+	- Option two
       specialisation float,cyme::avx, 1 reg
      */
     template<>
@@ -2293,7 +2293,7 @@ namespace cyme{
       Selects the polynomial for sin function. Inputs are:
 	- Selector int
 	- Option one
-	- Option two 
+	- Option two
       specialisation float,cyme::avx, 2 reg
      */
     template<>
@@ -2311,7 +2311,7 @@ namespace cyme{
       Selects the polynomial for sin function. Inputs are:
 	- Selector int
 	- Option one
-	- Option two 
+	- Option two
       specialisation float,cyme::avx, 4 reg
      */
     template<>
@@ -2356,7 +2356,7 @@ namespace cyme{
 	/* update the sign of the final value*/
 	xmm1 = _mm256_xor_ps(xmm1, _mm256_castsi256_ps(swap));
 	xmm1 = _mm256_xor_ps(xmm1, xmm0);
-	return xmm1; 
+	return xmm1;
     }
 
     /**
@@ -2419,7 +2419,7 @@ namespace cyme{
 
 	/* update the sign of the final value*/
 	xmm0 = _mm256_xor_ps(xmm0, _mm256_castsi256_ps(swap));
-	return xmm0; 
+	return xmm0;
     }
 
     /**
