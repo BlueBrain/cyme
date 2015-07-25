@@ -50,8 +50,8 @@ namespace cyme{
 	    return y;
 	}
     };
- 
-    /** Helper for polynom where Pi/4 <= x <= Pi/2 (sin/cos hi)*/ 
+
+    /** Helper for polynom where Pi/4 <= x <= Pi/2 (sin/cos hi)*/
     template<class T, cyme::simd O, int N>
     struct Poly_helper<T,O,N,coeff_cephes_sin>{
 	static forceinline vec_simd<T,O,N> poly(vec_simd<T,O,N> x){
@@ -64,7 +64,7 @@ namespace cyme{
 	}
     };
 
-    /** free function for sin 
+    /** free function for sin
     Used references:
     (http://github.com/jeremybarnes/cephes)
     (http://gruntthepeon.free.fr/ssemath/sse_mathfun.h)
@@ -101,8 +101,8 @@ namespace cyme{
 	return select_sign_sin(j,rhs,x);
     }
 
-    /** 
-      free function for cos 
+    /**
+      free function for cos
       Used references:
       (http://github.com/jeremybarnes/cephes)
       (http://gruntthepeon.free.fr/ssemath/sse_mathfun.h)
@@ -142,8 +142,8 @@ namespace cyme{
 	return (x);
     }
 
-    /** 
-      free function for tan 
+    /**
+      free function for tan
       Used references:
       (http://github.com/jeremybarnes/cephes)
       (http://gruntthepeon.free.fr/ssemath/sse_mathfun.h)
