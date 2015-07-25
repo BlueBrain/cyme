@@ -44,7 +44,7 @@ namespace cyme{
     */
     template<>
     forceinline simd_trait<int,cyme::neon,1>::register_type
-    _mm_round_up_even<cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type __attribute((unused))xmm0){
+    _mm_round_up_even<cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type __attribute((unused))__xmm0){
 	assert(false);
     }
 
@@ -54,7 +54,7 @@ namespace cyme{
     */
     template<>
     forceinline simd_trait<int,cyme::neon,2>::register_type
-    _mm_round_up_even<cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type __attribute((unused))xmm0){
+    _mm_round_up_even<cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type __attribute((unused))__xmm0){
 	assert(false);
     }
 
@@ -64,7 +64,7 @@ namespace cyme{
     */
     template<>
     forceinline simd_trait<int,cyme::neon,4>::register_type
-    _mm_round_up_even<cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type __attribute((unused))xmm0){
+    _mm_round_up_even<cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type __attribute((unused))__xmm0){
 	assert(false);
     }
 
