@@ -985,9 +985,30 @@ namespace cyme{
     _mm_select_poly<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type sel,
                                          simd_trait<double,cyme::avx,2>::register_type xmm0,
                                          simd_trait<double,cyme::avx,2>::register_type xmm1){
-	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_poly<double,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
-	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_poly<double,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
-	return simd_trait<double,cyme::avx,2>::register_type(r0,r1);
+ 	__m128i mask = _mm_set1_epi32(2);
+ 	__m128i zero = _mm_set1_epi32(0);
+
+        __m128i imm0_0 = _mm_shuffle_epi32(_mm_cmpeq_epi32(_mm_and_si128(_mm256_castsi256_si128(sel.r0),mask),zero),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_1 = _mm_shuffle_epi32(_mm_cmpeq_epi32(_mm_and_si128(_mm256_castsi256_si128(sel.r1),mask),zero),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm1_0 =  _mm_slli_epi64(imm0_0,32);
+        __m128i imm1_1 =  _mm_slli_epi64(imm0_1,32);
+        imm0_0 =  _mm_srli_epi64(imm0_0,32);
+        imm0_1 =  _mm_srli_epi64(imm0_1,32);
+        imm0_0 =  _mm_slli_epi64(imm0_0,32);
+        imm0_1 =  _mm_slli_epi64(imm0_1,32);
+        sel.r0 = _mm256_insertf128_si256(sel.r0, imm0_0, 0);
+        sel.r1 = _mm256_insertf128_si256(sel.r1, imm0_1, 0);
+        sel.r0 = _mm256_insertf128_si256(sel.r0, imm1_0, 1);
+        sel.r1 = _mm256_insertf128_si256(sel.r1, imm1_1, 1);
+
+ 	xmm0.r0 = _mm256_andnot_pd(_mm256_castsi256_pd(sel.r0), xmm0.r0);
+ 	xmm0.r1 = _mm256_andnot_pd(_mm256_castsi256_pd(sel.r1), xmm0.r1);
+ 	xmm1.r0 = _mm256_and_pd(_mm256_castsi256_pd(sel.r0), xmm1.r0);
+ 	xmm1.r1 = _mm256_and_pd(_mm256_castsi256_pd(sel.r1), xmm1.r1);
+ 	return simd_trait<double,cyme::avx,2>::register_type(_mm256_add_pd(xmm0.r0,xmm1.r0),
+							     _mm256_add_pd(xmm0.r1,xmm1.r1));
     }
 
     /**
@@ -1002,11 +1023,50 @@ namespace cyme{
     _mm_select_poly<double,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type sel,
                                          simd_trait<double,cyme::avx,4>::register_type  xmm0,
                                          simd_trait<double,cyme::avx,4>::register_type xmm1){
-	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_poly<double,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
-	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_poly<double,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
-	simd_trait<double,cyme::avx,1>::register_type r2 = _mm_select_poly<double,cyme::avx,1>(sel.r2,xmm0.r2,xmm1.r2);
-	simd_trait<double,cyme::avx,1>::register_type r3 = _mm_select_poly<double,cyme::avx,1>(sel.r3,xmm0.r3,xmm1.r3);
-	return simd_trait<double,cyme::avx,4>::register_type(r0,r1,r2,r3);
+ 	__m128i mask = _mm_set1_epi32(2);
+ 	__m128i zero = _mm_set1_epi32(0);
+
+        __m128i imm0_0 = _mm_shuffle_epi32(_mm_cmpeq_epi32(_mm_and_si128(_mm256_castsi256_si128(sel.r0),mask),zero),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_1 = _mm_shuffle_epi32(_mm_cmpeq_epi32(_mm_and_si128(_mm256_castsi256_si128(sel.r1),mask),zero),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_2 = _mm_shuffle_epi32(_mm_cmpeq_epi32(_mm_and_si128(_mm256_castsi256_si128(sel.r2),mask),zero),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_3 = _mm_shuffle_epi32(_mm_cmpeq_epi32(_mm_and_si128(_mm256_castsi256_si128(sel.r3),mask),zero),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm1_0 =  _mm_slli_epi64(imm0_0,32);
+        __m128i imm1_1 =  _mm_slli_epi64(imm0_1,32);
+        __m128i imm1_2 =  _mm_slli_epi64(imm0_2,32);
+        __m128i imm1_3 =  _mm_slli_epi64(imm0_3,32);
+        imm0_0 =  _mm_srli_epi64(imm0_0,32);
+        imm0_1 =  _mm_srli_epi64(imm0_1,32);
+        imm0_2 =  _mm_srli_epi64(imm0_2,32);
+        imm0_3 =  _mm_srli_epi64(imm0_3,32);
+        imm0_0 =  _mm_slli_epi64(imm0_0,32);
+        imm0_1 =  _mm_slli_epi64(imm0_1,32);
+        imm0_2 =  _mm_slli_epi64(imm0_2,32);
+        imm0_3 =  _mm_slli_epi64(imm0_3,32);
+        sel.r0 = _mm256_insertf128_si256(sel.r0, imm0_0, 0);
+        sel.r1 = _mm256_insertf128_si256(sel.r1, imm0_1, 0);
+        sel.r2 = _mm256_insertf128_si256(sel.r2, imm0_2, 0);
+        sel.r3 = _mm256_insertf128_si256(sel.r3, imm0_3, 0);
+        sel.r0 = _mm256_insertf128_si256(sel.r0, imm1_0, 1);
+        sel.r1 = _mm256_insertf128_si256(sel.r1, imm1_1, 1);
+        sel.r2 = _mm256_insertf128_si256(sel.r2, imm1_2, 1);
+        sel.r3 = _mm256_insertf128_si256(sel.r3, imm1_3, 1);
+
+ 	xmm0.r0 = _mm256_andnot_pd(_mm256_castsi256_pd(sel.r0), xmm0.r0);
+ 	xmm0.r1 = _mm256_andnot_pd(_mm256_castsi256_pd(sel.r1), xmm0.r1);
+ 	xmm0.r2 = _mm256_andnot_pd(_mm256_castsi256_pd(sel.r2), xmm0.r2);
+ 	xmm0.r3 = _mm256_andnot_pd(_mm256_castsi256_pd(sel.r3), xmm0.r3);
+ 	xmm1.r0 = _mm256_and_pd(_mm256_castsi256_pd(sel.r0), xmm1.r0);
+ 	xmm1.r1 = _mm256_and_pd(_mm256_castsi256_pd(sel.r1), xmm1.r1);
+ 	xmm1.r2 = _mm256_and_pd(_mm256_castsi256_pd(sel.r2), xmm1.r2);
+ 	xmm1.r3 = _mm256_and_pd(_mm256_castsi256_pd(sel.r3), xmm1.r3);
+ 	return simd_trait<double,cyme::avx,4>::register_type(_mm256_add_pd(xmm0.r0,xmm1.r0),
+							     _mm256_add_pd(xmm0.r1,xmm1.r1),
+							     _mm256_add_pd(xmm0.r2,xmm1.r2),
+							     _mm256_add_pd(xmm0.r3,xmm1.r3));
     }
 
     /**
@@ -1053,9 +1113,34 @@ namespace cyme{
     _mm_select_sign_sin<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
                                              simd_trait<double,cyme::avx,2>::register_type  xmm0,
                                              simd_trait<double,cyme::avx,2>::register_type xmm1){
-	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
-	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
-	return simd_trait<double,cyme::avx,2>::register_type(r0,r1);
+        __m256d mask = _mm256_castsi256_pd(_mm256_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = _mm256_and_pd(xmm0.r0, mask);
+	xmm0.r1 = _mm256_and_pd(xmm0.r1, mask);
+
+	/* get the swap sign flag */
+        __m128i imm0_0 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_and_si128(_mm256_castsi256_si128(swap.r0),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_1 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_and_si128(_mm256_castsi256_si128(swap.r1),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm1_0 =  _mm_slli_epi64(imm0_0,32);
+        __m128i imm1_1 =  _mm_slli_epi64(imm0_1,32);
+        imm0_0 =  _mm_srli_epi64(imm0_0,32);
+        imm0_1 =  _mm_srli_epi64(imm0_1,32);
+        imm0_0 =  _mm_slli_epi64(imm0_0,32);
+        imm0_1 =  _mm_slli_epi64(imm0_1,32);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, imm0_0, 0);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, imm0_1, 0);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, imm1_0, 1);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, imm1_1, 1);
+
+	/* update the sign of the final value*/
+	xmm1.r0 = _mm256_xor_pd(xmm1.r0, _mm256_castsi256_pd(swap.r0));
+	xmm1.r1 = _mm256_xor_pd(xmm1.r1, _mm256_castsi256_pd(swap.r1));
+	xmm1.r0 = _mm256_xor_pd(xmm1.r0, xmm0.r0);
+	xmm1.r1 = _mm256_xor_pd(xmm1.r1, xmm0.r1);
+	return simd_trait<double,cyme::avx,2>::register_type(xmm1.r0,xmm1.r1);
     }
 
     /**
@@ -1070,11 +1155,55 @@ namespace cyme{
     _mm_select_sign_sin<double,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
                                          simd_trait<double,cyme::avx,4>::register_type  xmm0,
                                          simd_trait<double,cyme::avx,4>::register_type xmm1){
-	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
-	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
-	simd_trait<double,cyme::avx,1>::register_type r2 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r2,xmm0.r2,xmm1.r2);
-	simd_trait<double,cyme::avx,1>::register_type r3 = _mm_select_sign_sin<double,cyme::avx,1>(swap.r3,xmm0.r3,xmm1.r3);
-	return simd_trait<double,cyme::avx,4>::register_type(r0,r1,r2,r3);
+        __m256d mask = _mm256_castsi256_pd(_mm256_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = _mm256_and_pd(xmm0.r0, mask);
+	xmm0.r1 = _mm256_and_pd(xmm0.r1, mask);
+	xmm0.r2 = _mm256_and_pd(xmm0.r2, mask);
+	xmm0.r3 = _mm256_and_pd(xmm0.r3, mask);
+
+	/* get the swap sign flag */
+        __m128i imm0_0 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_and_si128(_mm256_castsi256_si128(swap.r0),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_1 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_and_si128(_mm256_castsi256_si128(swap.r1),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_2 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_and_si128(_mm256_castsi256_si128(swap.r2),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_3 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_and_si128(_mm256_castsi256_si128(swap.r3),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm1_0 =  _mm_slli_epi64(imm0_0,32);
+        __m128i imm1_1 =  _mm_slli_epi64(imm0_1,32);
+        __m128i imm1_2 =  _mm_slli_epi64(imm0_2,32);
+        __m128i imm1_3 =  _mm_slli_epi64(imm0_3,32);
+        imm0_0 =  _mm_srli_epi64(imm0_0,32);
+        imm0_1 =  _mm_srli_epi64(imm0_1,32);
+        imm0_2 =  _mm_srli_epi64(imm0_2,32);
+        imm0_3 =  _mm_srli_epi64(imm0_3,32);
+        imm0_0 =  _mm_slli_epi64(imm0_0,32);
+        imm0_1 =  _mm_slli_epi64(imm0_1,32);
+        imm0_2 =  _mm_slli_epi64(imm0_2,32);
+        imm0_3 =  _mm_slli_epi64(imm0_3,32);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, imm0_0, 0);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, imm0_1, 0);
+        swap.r2 = _mm256_insertf128_si256(swap.r2, imm0_2, 0);
+        swap.r3 = _mm256_insertf128_si256(swap.r3, imm0_3, 0);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, imm1_0, 1);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, imm1_1, 1);
+        swap.r2 = _mm256_insertf128_si256(swap.r2, imm1_2, 1);
+        swap.r3 = _mm256_insertf128_si256(swap.r3, imm1_3, 1);
+
+	/* update the sign of the final value*/
+	xmm1.r0 = _mm256_xor_pd(xmm1.r0, _mm256_castsi256_pd(swap.r0));
+	xmm1.r1 = _mm256_xor_pd(xmm1.r1, _mm256_castsi256_pd(swap.r1));
+	xmm1.r2 = _mm256_xor_pd(xmm1.r2, _mm256_castsi256_pd(swap.r2));
+	xmm1.r3 = _mm256_xor_pd(xmm1.r3, _mm256_castsi256_pd(swap.r3));
+	xmm1.r0 = _mm256_xor_pd(xmm1.r0, xmm0.r0);
+	xmm1.r1 = _mm256_xor_pd(xmm1.r1, xmm0.r1);
+	xmm1.r2 = _mm256_xor_pd(xmm1.r2, xmm0.r2);
+	xmm1.r3 = _mm256_xor_pd(xmm1.r3, xmm0.r3);
+	return simd_trait<double,cyme::avx,4>::register_type(xmm1.r0,xmm1.r1,
+							     xmm1.r2,xmm1.r3);
     }
 
     /**
@@ -1112,9 +1241,27 @@ namespace cyme{
     forceinline simd_trait<double,cyme::avx,2>::register_type
     _mm_select_sign_cos<double,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
                                              simd_trait<double,cyme::avx,2>::register_type xmm0){
-	simd_trait<double,cyme::avx,1>::register_type r0 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r0,xmm0.r0);
-	simd_trait<double,cyme::avx,1>::register_type r1 = _mm_select_sign_cos<double,cyme::avx,1>(swap.r1,xmm0.r1);
-	return simd_trait<double,cyme::avx,2>::register_type(r0,r1);
+        __m128i four = _mm_set1_epi32(4);
+	/* get the swap sign flag */
+        __m128i imm0_0 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_andnot_si128(_mm256_castsi256_si128(swap.r0),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm0_1 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_andnot_si128(_mm256_castsi256_si128(swap.r1),four),29),
+                                         _MM_SHUFFLE(1,3,0,2));
+        __m128i imm1_0 =  _mm_slli_epi64(imm0_0,32);
+        __m128i imm1_1 =  _mm_slli_epi64(imm0_1,32);
+        imm0_0 =  _mm_srli_epi64(imm0_0,32);
+        imm0_1 =  _mm_srli_epi64(imm0_1,32);
+        imm0_0 =  _mm_slli_epi64(imm0_0,32);
+        imm0_1 =  _mm_slli_epi64(imm0_1,32);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, imm0_0, 0);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, imm0_1, 0);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, imm1_0, 1);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, imm1_1, 1);
+
+	/* update the sign of the final value*/
+	xmm0.r0 = _mm256_xor_pd(xmm0.r0, _mm256_castsi256_pd(swap.r0));
+	xmm0.r1 = _mm256_xor_pd(xmm0.r1, _mm256_castsi256_pd(swap.r1));
+	return simd_trait<double,cyme::avx,2>::register_type(xmm0.r0,xmm0.r1);
     }
 
     /**
@@ -2301,9 +2448,30 @@ namespace cyme{
     _mm_select_poly<float,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type sel,
                                         simd_trait<float,cyme::avx,2>::register_type xmm0,
                                         simd_trait<float,cyme::avx,2>::register_type xmm1){
-	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_poly<float,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
-	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_poly<float,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
-	return simd_trait<float,cyme::avx,2>::register_type(r0,r1);
+	__m128i mask = _mm_set1_epi32(2);
+        __m128i tmp0_0 = _mm256_extractf128_si256(sel.r0,0);
+        __m128i tmp0_1 = _mm256_extractf128_si256(sel.r1,0);
+        tmp0_0 = _mm_and_si128(tmp0_0,mask);
+        tmp0_1 = _mm_and_si128(tmp0_1,mask);
+	tmp0_0 = _mm_cmpeq_epi32(tmp0_0, _mm_set1_epi32(0));
+	tmp0_1 = _mm_cmpeq_epi32(tmp0_1, _mm_set1_epi32(0));
+        __m128i tmp1_0 = _mm256_extractf128_si256(sel.r0,1);
+        __m128i tmp1_1 = _mm256_extractf128_si256(sel.r1,1);
+        tmp1_0 = _mm_and_si128(tmp1_0,mask);
+        tmp1_1 = _mm_and_si128(tmp1_1,mask);
+	tmp1_0 = _mm_cmpeq_epi32(tmp1_0, _mm_set1_epi32(0));
+	tmp1_1 = _mm_cmpeq_epi32(tmp1_1, _mm_set1_epi32(0));
+        sel.r0 = _mm256_insertf128_si256(sel.r0, tmp0_0, 0);
+        sel.r1 = _mm256_insertf128_si256(sel.r1, tmp0_1, 0);
+        sel.r0 = _mm256_insertf128_si256(sel.r0, tmp1_0, 1);
+        sel.r1 = _mm256_insertf128_si256(sel.r1, tmp1_1, 1);
+
+	xmm0.r0 = _mm256_andnot_ps(_mm256_castsi256_ps(sel.r0), xmm0.r0);
+	xmm0.r1 = _mm256_andnot_ps(_mm256_castsi256_ps(sel.r1), xmm0.r1);
+	xmm1.r0 = _mm256_and_ps(_mm256_castsi256_ps(sel.r0), xmm1.r0);
+	xmm1.r1 = _mm256_and_ps(_mm256_castsi256_ps(sel.r1), xmm1.r1);
+	return simd_trait<float,cyme::avx,2>::register_type(_mm256_add_ps(xmm0.r0,xmm1.r0),
+							    _mm256_add_ps(xmm0.r1,xmm1.r1));
     }
 
 
@@ -2319,11 +2487,52 @@ namespace cyme{
     _mm_select_poly<float,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type sel,
                                         simd_trait<float,cyme::avx,4>::register_type xmm0,
                                         simd_trait<float,cyme::avx,4>::register_type xmm1){
-	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_poly<float,cyme::avx,1>(sel.r0,xmm0.r0,xmm1.r0);
-	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_poly<float,cyme::avx,1>(sel.r1,xmm0.r1,xmm1.r1);
-	simd_trait<float,cyme::avx,1>::register_type r2 = _mm_select_poly<float,cyme::avx,1>(sel.r2,xmm0.r2,xmm1.r2);
-	simd_trait<float,cyme::avx,1>::register_type r3 = _mm_select_poly<float,cyme::avx,1>(sel.r3,xmm0.r3,xmm1.r3);
-	return simd_trait<float,cyme::avx,4>::register_type(r0,r1,r2,r3);
+	__m128i mask = _mm_set1_epi32(2);
+        __m128i tmp0_0 = _mm256_extractf128_si256(sel.r0,0);
+        __m128i tmp0_1 = _mm256_extractf128_si256(sel.r1,0);
+        __m128i tmp0_2 = _mm256_extractf128_si256(sel.r2,0);
+        __m128i tmp0_3 = _mm256_extractf128_si256(sel.r3,0);
+        tmp0_0 = _mm_and_si128(tmp0_0,mask);
+        tmp0_1 = _mm_and_si128(tmp0_1,mask);
+        tmp0_2 = _mm_and_si128(tmp0_2,mask);
+        tmp0_3 = _mm_and_si128(tmp0_3,mask);
+	tmp0_0 = _mm_cmpeq_epi32(tmp0_0, _mm_set1_epi32(0));
+	tmp0_1 = _mm_cmpeq_epi32(tmp0_1, _mm_set1_epi32(0));
+	tmp0_2 = _mm_cmpeq_epi32(tmp0_2, _mm_set1_epi32(0));
+	tmp0_3 = _mm_cmpeq_epi32(tmp0_3, _mm_set1_epi32(0));
+        __m128i tmp1_0 = _mm256_extractf128_si256(sel.r0,1);
+        __m128i tmp1_1 = _mm256_extractf128_si256(sel.r1,1);
+        __m128i tmp1_2 = _mm256_extractf128_si256(sel.r2,1);
+        __m128i tmp1_3 = _mm256_extractf128_si256(sel.r3,1);
+        tmp1_0 = _mm_and_si128(tmp1_0,mask);
+        tmp1_1 = _mm_and_si128(tmp1_1,mask);
+        tmp1_2 = _mm_and_si128(tmp1_2,mask);
+        tmp1_3 = _mm_and_si128(tmp1_3,mask);
+	tmp1_0 = _mm_cmpeq_epi32(tmp1_0, _mm_set1_epi32(0));
+	tmp1_1 = _mm_cmpeq_epi32(tmp1_1, _mm_set1_epi32(0));
+	tmp1_2 = _mm_cmpeq_epi32(tmp1_2, _mm_set1_epi32(0));
+	tmp1_3 = _mm_cmpeq_epi32(tmp1_3, _mm_set1_epi32(0));
+        sel.r0 = _mm256_insertf128_si256(sel.r0, tmp0_0, 0);
+        sel.r1 = _mm256_insertf128_si256(sel.r1, tmp0_1, 0);
+        sel.r2 = _mm256_insertf128_si256(sel.r2, tmp0_2, 0);
+        sel.r3 = _mm256_insertf128_si256(sel.r3, tmp0_3, 0);
+        sel.r0 = _mm256_insertf128_si256(sel.r0, tmp1_0, 1);
+        sel.r1 = _mm256_insertf128_si256(sel.r1, tmp1_1, 1);
+        sel.r2 = _mm256_insertf128_si256(sel.r2, tmp1_2, 1);
+        sel.r3 = _mm256_insertf128_si256(sel.r3, tmp1_3, 1);
+
+	xmm0.r0 = _mm256_andnot_ps(_mm256_castsi256_ps(sel.r0), xmm0.r0);
+	xmm0.r1 = _mm256_andnot_ps(_mm256_castsi256_ps(sel.r1), xmm0.r1);
+	xmm0.r2 = _mm256_andnot_ps(_mm256_castsi256_ps(sel.r2), xmm0.r2);
+	xmm0.r3 = _mm256_andnot_ps(_mm256_castsi256_ps(sel.r3), xmm0.r3);
+	xmm1.r0 = _mm256_and_ps(_mm256_castsi256_ps(sel.r0), xmm1.r0);
+	xmm1.r1 = _mm256_and_ps(_mm256_castsi256_ps(sel.r1), xmm1.r1);
+	xmm1.r2 = _mm256_and_ps(_mm256_castsi256_ps(sel.r2), xmm1.r2);
+	xmm1.r3 = _mm256_and_ps(_mm256_castsi256_ps(sel.r3), xmm1.r3);
+	return simd_trait<float,cyme::avx,4>::register_type(_mm256_add_ps(xmm0.r0,xmm1.r0),
+							    _mm256_add_ps(xmm0.r1,xmm1.r1),
+							    _mm256_add_ps(xmm0.r2,xmm1.r2),
+							    _mm256_add_ps(xmm0.r3,xmm1.r3));
     }
 
     /**
@@ -2371,9 +2580,36 @@ namespace cyme{
     _mm_select_sign_sin<float,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
                                             simd_trait<float,cyme::avx,2>::register_type xmm0,
                                             simd_trait<float,cyme::avx,2>::register_type xmm1){
-	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
-	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
-	return simd_trait<float,cyme::avx,2>::register_type(r0,r1);
+        simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = _mm256_and_ps(xmm0.r0, mask);
+	xmm0.r1 = _mm256_and_ps(xmm0.r1, mask);
+
+	/* get the swap sign flag */
+        __m128i tmp0_0 = _mm256_extractf128_si256(swap.r0,0);
+        __m128i tmp0_1 = _mm256_extractf128_si256(swap.r1,0);
+	tmp0_0 = _mm_and_si128(tmp0_0, four);
+	tmp0_1 = _mm_and_si128(tmp0_1, four);
+	tmp0_0 = _mm_slli_epi32(tmp0_0, 29);
+	tmp0_1 = _mm_slli_epi32(tmp0_1, 29);
+        __m128i tmp1_0 = _mm256_extractf128_si256(swap.r0,1);
+        __m128i tmp1_1 = _mm256_extractf128_si256(swap.r1,1);
+	tmp1_0 = _mm_and_si128(tmp1_0, four);
+	tmp1_1 = _mm_and_si128(tmp1_1, four);
+	tmp1_0 = _mm_slli_epi32(tmp1_0, 29);
+	tmp1_1 = _mm_slli_epi32(tmp1_1, 29);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, tmp0_0, 0);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, tmp0_1, 0);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, tmp1_0, 1);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, tmp1_1, 1);
+
+	/* update the sign of the final value*/
+	xmm1.r0 = _mm256_xor_ps(xmm1.r0, _mm256_castsi256_ps(swap.r0));
+	xmm1.r1 = _mm256_xor_ps(xmm1.r1, _mm256_castsi256_ps(swap.r1));
+	xmm1.r0 = _mm256_xor_ps(xmm1.r0, xmm0.r0);
+	xmm1.r1 = _mm256_xor_ps(xmm1.r1, xmm0.r1);
+	return simd_trait<float,cyme::avx,2>::register_type(xmm1.r0,xmm1.r1);
     }
 
     /**
@@ -2388,11 +2624,59 @@ namespace cyme{
     _mm_select_sign_sin<float,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
                                          simd_trait<float,cyme::avx,4>::register_type  xmm0,
                                          simd_trait<float,cyme::avx,4>::register_type xmm1){
-	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r0,xmm0.r0,xmm1.r0);
-	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r1,xmm0.r1,xmm1.r1);
-	simd_trait<float,cyme::avx,1>::register_type r2 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r2,xmm0.r2,xmm1.r2);
-	simd_trait<float,cyme::avx,1>::register_type r3 = _mm_select_sign_sin<float,cyme::avx,1>(swap.r3,xmm0.r3,xmm1.r3);
-	return simd_trait<float,cyme::avx,4>::register_type(r0,r1,r2,r3);
+        simd_trait<float,cyme::avx,1>::register_type mask = _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000));
+        __m128i four = _mm_set1_epi32(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = _mm256_and_ps(xmm0.r0, mask);
+	xmm0.r1 = _mm256_and_ps(xmm0.r1, mask);
+	xmm0.r2 = _mm256_and_ps(xmm0.r2, mask);
+	xmm0.r3 = _mm256_and_ps(xmm0.r3, mask);
+
+	/* get the swap sign flag */
+        __m128i tmp0_0 = _mm256_extractf128_si256(swap.r0,0);
+        __m128i tmp0_1 = _mm256_extractf128_si256(swap.r1,0);
+        __m128i tmp0_2 = _mm256_extractf128_si256(swap.r2,0);
+        __m128i tmp0_3 = _mm256_extractf128_si256(swap.r3,0);
+	tmp0_0 = _mm_and_si128(tmp0_0, four);
+	tmp0_1 = _mm_and_si128(tmp0_1, four);
+	tmp0_2 = _mm_and_si128(tmp0_2, four);
+	tmp0_3 = _mm_and_si128(tmp0_3, four);
+	tmp0_0 = _mm_slli_epi32(tmp0_0, 29);
+	tmp0_1 = _mm_slli_epi32(tmp0_1, 29);
+	tmp0_2 = _mm_slli_epi32(tmp0_2, 29);
+	tmp0_3 = _mm_slli_epi32(tmp0_3, 29);
+        __m128i tmp1_0 = _mm256_extractf128_si256(swap.r0,1);
+        __m128i tmp1_1 = _mm256_extractf128_si256(swap.r1,1);
+        __m128i tmp1_2 = _mm256_extractf128_si256(swap.r2,1);
+        __m128i tmp1_3 = _mm256_extractf128_si256(swap.r3,1);
+	tmp1_0 = _mm_and_si128(tmp1_0, four);
+	tmp1_1 = _mm_and_si128(tmp1_1, four);
+	tmp1_2 = _mm_and_si128(tmp1_2, four);
+	tmp1_3 = _mm_and_si128(tmp1_3, four);
+	tmp1_0 = _mm_slli_epi32(tmp1_0, 29);
+	tmp1_1 = _mm_slli_epi32(tmp1_1, 29);
+	tmp1_2 = _mm_slli_epi32(tmp1_2, 29);
+	tmp1_3 = _mm_slli_epi32(tmp1_3, 29);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, tmp0_0, 0);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, tmp0_1, 0);
+        swap.r2 = _mm256_insertf128_si256(swap.r2, tmp0_2, 0);
+        swap.r3 = _mm256_insertf128_si256(swap.r3, tmp0_3, 0);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, tmp1_0, 1);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, tmp1_1, 1);
+        swap.r2 = _mm256_insertf128_si256(swap.r2, tmp1_2, 1);
+        swap.r3 = _mm256_insertf128_si256(swap.r3, tmp1_3, 1);
+
+	/* update the sign of the final value*/
+	xmm1.r0 = _mm256_xor_ps(xmm1.r0, _mm256_castsi256_ps(swap.r0));
+	xmm1.r1 = _mm256_xor_ps(xmm1.r1, _mm256_castsi256_ps(swap.r1));
+	xmm1.r2 = _mm256_xor_ps(xmm1.r2, _mm256_castsi256_ps(swap.r2));
+	xmm1.r3 = _mm256_xor_ps(xmm1.r3, _mm256_castsi256_ps(swap.r3));
+	xmm1.r0 = _mm256_xor_ps(xmm1.r0, xmm0.r0);
+	xmm1.r1 = _mm256_xor_ps(xmm1.r1, xmm0.r1);
+	xmm1.r2 = _mm256_xor_ps(xmm1.r2, xmm0.r2);
+	xmm1.r3 = _mm256_xor_ps(xmm1.r3, xmm0.r3);
+	return simd_trait<float,cyme::avx,4>::register_type(xmm1.r0,xmm1.r1,
+							    xmm1.r2,xmm1.r3);
     }
 
     /**
@@ -2432,9 +2716,30 @@ namespace cyme{
     forceinline simd_trait<float,cyme::avx,2>::register_type
     _mm_select_sign_cos<float,cyme::avx,2>( simd_trait<int,cyme::avx,2>::register_type swap,
                                             simd_trait<float,cyme::avx,2>::register_type xmm0){
-	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r0,xmm0.r0);
-	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r1,xmm0.r1);
-	return simd_trait<float,cyme::avx,2>::register_type(r0,r1);
+        __m128i four = _mm_set1_epi32(4);
+
+	/* get the swap sign flag */
+        __m128i tmp0_0 = _mm256_extractf128_si256(swap.r0,0);
+        __m128i tmp0_1 = _mm256_extractf128_si256(swap.r1,0);
+	tmp0_0 = _mm_andnot_si128(tmp0_0, four);
+	tmp0_1 = _mm_andnot_si128(tmp0_1, four);
+	tmp0_0 = _mm_slli_epi32(tmp0_0, 29);
+	tmp0_1 = _mm_slli_epi32(tmp0_1, 29);
+        __m128i tmp1_0 = _mm256_extractf128_si256(swap.r0,1);
+        __m128i tmp1_1 = _mm256_extractf128_si256(swap.r1,1);
+	tmp1_0 = _mm_andnot_si128(tmp1_0, four);
+	tmp1_1 = _mm_andnot_si128(tmp1_1, four);
+	tmp1_0 = _mm_slli_epi32(tmp1_0, 29);
+	tmp1_1 = _mm_slli_epi32(tmp1_1, 29);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, tmp0_0, 0);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, tmp0_1, 0);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, tmp1_0, 1);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, tmp1_1, 1);
+
+	/* update the sign of the final value*/
+	xmm0.r0 = _mm256_xor_ps(xmm0.r0, _mm256_castsi256_ps(swap.r0));
+	xmm0.r1 = _mm256_xor_ps(xmm0.r1, _mm256_castsi256_ps(swap.r1));
+	return simd_trait<float,cyme::avx,2>::register_type(xmm0.r0,xmm0.r1);
     }
 
     /**
@@ -2447,11 +2752,49 @@ namespace cyme{
     forceinline simd_trait<float,cyme::avx,4>::register_type
     _mm_select_sign_cos<float,cyme::avx,4>( simd_trait<int,cyme::avx,4>::register_type swap,
                                             simd_trait<float,cyme::avx,4>::register_type xmm0){
-	simd_trait<float,cyme::avx,1>::register_type r0 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r0,xmm0.r0);
-	simd_trait<float,cyme::avx,1>::register_type r1 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r1,xmm0.r1);
-	simd_trait<float,cyme::avx,1>::register_type r2 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r2,xmm0.r2);
-	simd_trait<float,cyme::avx,1>::register_type r3 = _mm_select_sign_cos<float,cyme::avx,1>(swap.r3,xmm0.r3);
-	return simd_trait<float,cyme::avx,4>::register_type(r0,r1,r2,r3);
+        __m128i four = _mm_set1_epi32(4);
+
+	/* get the swap sign flag */
+        __m128i tmp0_0 = _mm256_extractf128_si256(swap.r0,0);
+        __m128i tmp0_1 = _mm256_extractf128_si256(swap.r1,0);
+        __m128i tmp0_2 = _mm256_extractf128_si256(swap.r2,0);
+        __m128i tmp0_3 = _mm256_extractf128_si256(swap.r3,0);
+	tmp0_0 = _mm_andnot_si128(tmp0_0, four);
+	tmp0_1 = _mm_andnot_si128(tmp0_1, four);
+	tmp0_2 = _mm_andnot_si128(tmp0_2, four);
+	tmp0_3 = _mm_andnot_si128(tmp0_3, four);
+	tmp0_0 = _mm_slli_epi32(tmp0_0, 29);
+	tmp0_1 = _mm_slli_epi32(tmp0_1, 29);
+	tmp0_2 = _mm_slli_epi32(tmp0_2, 29);
+	tmp0_3 = _mm_slli_epi32(tmp0_3, 29);
+        __m128i tmp1_0 = _mm256_extractf128_si256(swap.r0,1);
+        __m128i tmp1_1 = _mm256_extractf128_si256(swap.r1,1);
+        __m128i tmp1_2 = _mm256_extractf128_si256(swap.r2,1);
+        __m128i tmp1_3 = _mm256_extractf128_si256(swap.r3,1);
+	tmp1_0 = _mm_andnot_si128(tmp1_0, four);
+	tmp1_1 = _mm_andnot_si128(tmp1_1, four);
+	tmp1_2 = _mm_andnot_si128(tmp1_2, four);
+	tmp1_3 = _mm_andnot_si128(tmp1_3, four);
+	tmp1_0 = _mm_slli_epi32(tmp1_0, 29);
+	tmp1_1 = _mm_slli_epi32(tmp1_1, 29);
+	tmp1_2 = _mm_slli_epi32(tmp1_2, 29);
+	tmp1_3 = _mm_slli_epi32(tmp1_3, 29);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, tmp0_0, 0);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, tmp0_1, 0);
+        swap.r2 = _mm256_insertf128_si256(swap.r2, tmp0_2, 0);
+        swap.r3 = _mm256_insertf128_si256(swap.r3, tmp0_3, 0);
+        swap.r0 = _mm256_insertf128_si256(swap.r0, tmp1_0, 1);
+        swap.r1 = _mm256_insertf128_si256(swap.r1, tmp1_1, 1);
+        swap.r2 = _mm256_insertf128_si256(swap.r2, tmp1_2, 1);
+        swap.r3 = _mm256_insertf128_si256(swap.r3, tmp1_3, 1);
+
+	/* update the sign of the final value*/
+	xmm0.r0 = _mm256_xor_ps(xmm0.r0, _mm256_castsi256_ps(swap.r0));
+	xmm0.r1 = _mm256_xor_ps(xmm0.r1, _mm256_castsi256_ps(swap.r1));
+	xmm0.r2 = _mm256_xor_ps(xmm0.r2, _mm256_castsi256_ps(swap.r2));
+	xmm0.r3 = _mm256_xor_ps(xmm0.r3, _mm256_castsi256_ps(swap.r3));
+	return simd_trait<float,cyme::avx,4>::register_type(xmm0.r0,xmm0.r1,
+							    xmm0.r2,xmm0.r3);
     }
 
 #ifdef  __INTEL_COMPILER
