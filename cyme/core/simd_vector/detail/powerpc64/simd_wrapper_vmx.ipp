@@ -778,8 +778,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_fabs<float,cyme::vmx,1>( simd_trait<float,cyme::vmx,1>::register_type xmm0){
-	vector float mask = (vector float)vec_splats(~0x80000000);
-	return vec_and(xmm0,mask);
+	return vec_abs(xmm0);
     }
 
     /**
@@ -790,9 +789,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_fabs<float,cyme::vmx,2>( simd_trait<float,cyme::vmx,2>::register_type xmm0){
-	vector float mask = (vector float)vec_splats(~0x80000000);
-	return simd_trait<float,cyme::vmx,2>::register_type(vec_and(xmm0.r0,mask),
-							    vec_and(xmm0.r1,mask));
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_abs(xmm0.r0),
+							    vec_abs(xmm0.r1));
     }
 
     /**
@@ -803,11 +801,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_fabs<float,cyme::vmx,4>( simd_trait<float,cyme::vmx,4>::register_type xmm0){
-	vector float mask = (vector float)vec_splats(~0x80000000);
-	return simd_trait<float,cyme::vmx,4>::register_type(vec_and(xmm0.r0,mask),
-							    vec_and(xmm0.r1,mask),
-							    vec_and(xmm0.r2,mask),
-							    vec_and(xmm0.r3,mask));
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_abs(xmm0.r0),
+							    vec_abs(xmm0.r1),
+							    vec_abs(xmm0.r2),
+							    vec_abs(xmm0.r3));
     }
 
     /**
@@ -2028,8 +2025,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_fabs<double,cyme::vmx,1>( simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	vector double mask = (vector double)vec_splats(~0x8000000000000000);
-	return vec_and(xmm0,mask);
+	return vec_abs(xmm0);
     }
 
     /**
@@ -2040,9 +2036,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_fabs<double,cyme::vmx,2>( simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	vector double mask = (vector double)vec_splats(~0x8000000000000000);
-	return simd_trait<double,cyme::vmx,2>::register_type(vec_and(xmm0.r0,mask),
-							      vec_and(xmm0.r1,mask));
+	return simd_trait<double,cyme::vmx,2>::register_type(vec_abs(xmm0.r0),
+							     vec_abs(xmm0.r1));
     }
 
     /**
@@ -2053,11 +2048,10 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_fabs<double,cyme::vmx,4>( simd_trait<double,cyme::vmx,4>::register_type xmm0){
-	vector double mask = (vector double)vec_splats(~0x8000000000000000);
-	return simd_trait<double,cyme::vmx,4>::register_type(vec_and(xmm0.r0,mask),
-							      vec_and(xmm0.r1,mask),
-							      vec_and(xmm0.r2,mask),
-							      vec_and(xmm0.r3,mask));
+	return simd_trait<double,cyme::vmx,4>::register_type(vec_abs(xmm0.r0),
+							     vec_abs(xmm0.r1),
+							     vec_abs(xmm0.r2),
+							     vec_abs(xmm0.r3));
     }
 
     /**
