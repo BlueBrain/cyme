@@ -544,6 +544,35 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(core_operator_negate_expression, T, floating_point
     check(block_a, block_b);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(core_operator_fabs, T, floating_point_block_types) {
+    cyme::vector<synapse<TYPE,N>,cyme::AoS> block_a(1024);
+    cyme::vector<synapse<TYPE,N>,cyme::AoSoA> block_b(1024);
+
+    init(block_a, block_b);
+    typename cyme::vector<synapse<TYPE,N>,cyme::AoS>::iterator it_AoS = block_a.begin();
+    typename cyme::vector<synapse<TYPE,N>,cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::vector<synapse<TYPE,N>,cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = fabs(-(*it_AoS)[4]);
+
+    for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[0] = fabs(-(*it_AoSoA_r)[4]);
+
+    it_AoS = block_a.begin();
+    it_AoSoA_w = block_b.begin();
+    it_AoSoA_r = block_b.begin();
+
+    for(; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[1] = fabs((*it_AoS)[3]);
+
+    for(; it_AoSoA_r != block_b.end(); ++it_AoSoA_w,++it_AoSoA_r)
+        (*it_AoSoA_w)[1] = fabs((*it_AoSoA_r)[3]);
+
+    check(block_a, block_b);
+}
+
+
 #undef TYPE
 #undef N
 #undef MAX
