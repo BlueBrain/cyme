@@ -33,37 +33,6 @@ extern "C" vector4double expd4(vector4double);// link to the fortran one
 extern "C" vector4double logd4(vector4double);// link to the fortran one
 
 namespace cyme{
-
-    /**
-      Rounds xmm0 up to the next even integer.
-      Specialisation int, cyme::qpx, 1 reg
-    */
-    template<>
-    forceinline simd_trait<int,cyme::qpx,1>::register_type
-    _mm_round_up_even<cyme::qpx,1>( simd_trait<int,cyme::qpx,1>::register_type __attribute__((unused))xmm0){
-	assert(false);
-    }
-
-    /**
-      Rounds xmm0 up to the next even integer.
-      Specialisation int, cyme::qpx, 2 reg
-    */
-    template<>
-    forceinline simd_trait<int,cyme::qpx,2>::register_type
-    _mm_round_up_even<cyme::qpx,2>( simd_trait<int,cyme::qpx,2>::register_type __attribute__((unused))xmm0){
-	assert(false);
-    }
-
-    /**
-      Rounds xmm0 up to the next even integer.
-      Specialisation int, cyme::qpx, 4 reg
-    */
-    template<>
-    forceinline simd_trait<int,cyme::qpx,4>::register_type
-    _mm_round_up_even<cyme::qpx,4>( simd_trait<int,cyme::qpx,4>::register_type __attribute__((unused))xmm0){
-	assert(false);
-    }
-
     /**helper to calculate 2^k because vectorial integer operations are not supported */
     typedef union {
         double d;
@@ -75,6 +44,67 @@ namespace cyme{
         ieee754 tmp;
         tmp.ll=ll;
         return tmp.d;
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::qpx, 1 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::qpx,1>::register_type
+    _mm_round_up_even<cyme::qpx,1>( simd_trait<int,cyme::qpx,1>::register_type __attribute__((unused))xmm0){
+	int64_t ll;
+	for (int i=0; i<4; i++){
+	    ll = vec_extract(xmm0,i);
+	    ll = ((ll + 1) & ~1);
+            xmm0 = vec_insert(ll,xmm0,i);
+	}
+	return xmm0;
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::qpx, 2 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::qpx,2>::register_type
+    _mm_round_up_even<cyme::qpx,2>( simd_trait<int,cyme::qpx,2>::register_type __attribute__((unused))xmm0){
+	int64_t ll1, ll2;
+	for (int i=0; i<4; i++){
+	    ll1 = vec_extract(xmm0.r0,i);
+	    ll2 = vec_extract(xmm0.r1,i);
+	    ll1 = ((ll1 + 1) & ~1);
+	    ll2 = ((ll2 + 1) & ~1);
+            xmm0.r0 = vec_insert(ll1,xmm0.r0,i);
+            xmm0.r1 = vec_insert(ll2,xmm0.r1,i);
+	}
+        return simd_trait<int,cyme::qpx,2>::register_type(xmm0.r0,xmm0.r1);
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::qpx, 4 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::qpx,4>::register_type
+    _mm_round_up_even<cyme::qpx,4>( simd_trait<int,cyme::qpx,4>::register_type __attribute__((unused))xmm0){
+	int64_t ll1, ll2, ll3, ll4;
+	for (int i=0; i<4; i++){
+	    ll1 = vec_extract(xmm0.r0,i);
+	    ll2 = vec_extract(xmm0.r1,i);
+	    ll3 = vec_extract(xmm0.r2,i);
+	    ll4 = vec_extract(xmm0.r3,i);
+	    ll1 = ((ll1 + 1) & ~1);
+	    ll2 = ((ll2 + 1) & ~1);
+	    ll3 = ((ll3 + 1) & ~1);
+	    ll4 = ((ll4 + 1) & ~1);
+            xmm0.r0 = vec_insert(ll1,xmm0.r0,i);
+            xmm0.r1 = vec_insert(ll2,xmm0.r1,i);
+            xmm0.r2 = vec_insert(ll3,xmm0.r2,i);
+            xmm0.r3 = vec_insert(ll4,xmm0.r3,i);
+	}
+        return simd_trait<int,cyme::qpx,4>::register_type(xmm0.r0,xmm0.r1,
+							  xmm0.r2,xmm0.r3);
     }
 
     /**
@@ -815,6 +845,7 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::qpx,1>::register_type
     _mm_fabs<float,cyme::qpx,1>( simd_trait<float,cyme::qpx,1>::register_type __attribute__((unused))xmm0){
+	//return vec_abs(xmm0);
 	assert(false);
     }
 
