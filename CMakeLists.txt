@@ -98,10 +98,7 @@ if(APPLE)
      STRING "Build architectures for OS X" FORCE)
 endif()
 
-set(VAR $ENV{CLUSTER})
-if(VAR STREQUAL bgq) #it is dirty ...
-  string(REPLACE "-std=c++11" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-endif()
+string(REPLACE "-std=c++11" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 ########################################################################
 #

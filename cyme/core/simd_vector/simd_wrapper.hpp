@@ -173,7 +173,7 @@ namespace cyme{
     #include "cyme/core/simd_vector/detail/mic/simd_wrapper_mic.ipp"
 #endif
 
-#ifdef __PPC64__
+#if !defined(_ARCH_QP) && defined(__PPC64__)
     #include "cyme/core/simd_vector/detail/powerpc64/simd_wrapper_vmx.ipp"
 #endif
 

@@ -28,7 +28,7 @@
 #ifndef CYME_TRAIT_POWERPC64_IPP
 #define CYME_TRAIT_POWERPC64_IPP
 
-#ifdef __PPC64__
+#if !defined(_ARCH_QP) && defined(__PPC64__)
 #include <altivec.h>
 #endif
 
@@ -139,7 +139,7 @@ namespace cyme{
 
 #endif //_ARCH_QP
 
-#ifdef __PPC64__
+#if !defined(_ARCH_QP) && defined(__PPC64__)
     /** Specialisation of the trait class for int, cyme::vmx  */
     template <>
     struct register_trait<int, cyme::vmx>{
@@ -236,8 +236,7 @@ namespace cyme{
         static const std::size_t value = 4; // card([0-3])=4
     };
 
-#endif // __PPC64__
-
+#endif
 
 }
 #endif //CYME_TRAIT_POWERPC64_IPP

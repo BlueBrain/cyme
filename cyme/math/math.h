@@ -42,7 +42,7 @@
 #  define  __SIMD_VALUE__ sse
 #endif
 
-#ifdef __PPC64__
+#if !defined(_ARCH_QP) && defined(__PPC64__)
 #  define  __SIMD_VALUE__ vmx
 #endif
 
