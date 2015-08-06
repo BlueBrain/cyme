@@ -113,6 +113,10 @@ namespace cyme{
         register_type xmm;
     };
 
+    /** Round up to the next even integer */
+    template<cyme::simd O, int N>
+    forceinline vec_simd<int,O,N> round_up_even(const vec_simd<int,O,N>& rhs);
+
     /** Cast int to float */
     template<class T, cyme::simd O, int N>
     forceinline vec_simd<T,O,N> cast(const vec_simd<int,O,N>& ths);
@@ -120,6 +124,22 @@ namespace cyme{
     /** Return the 2^k where k is a vector base on an integer */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> twok(const vec_simd<int,O,N>& rhs);
+
+    /** Return the absolute value of the floating point number */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> fabs(const vec_simd<T,O,N>& rhs);
+
+    /** Returns poly1 or poly2 depending on the value of sel */ 
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> select_poly(const vec_simd<int,O,N>& sel, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
+
+    /** Returns rhs with a modified sign depending on the values of swap and lhs */ 
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> select_sign_sin(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
+
+    /** Returns rhs with a modified sign, depending on the values of swap and lhs */ 
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> select_sign_cos(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& rhs);
 
     /** Return the exponent of the floating point representation */
     template<class T,cyme::simd O, int N>
@@ -196,6 +216,18 @@ namespace cyme{
     /** Free function for the sqrt */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> sqrt(const vec_simd<T,O,N>& rhs);
+
+    /** Free function for the sin */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> sin(const vec_simd<T,O,N>& rhs);
+
+    /** Free function for the cos */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> cos(const vec_simd<T,O,N>& rhs);
+
+    /** Free function for the tan */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> tan(const vec_simd<T,O,N>& rhs);
 
 #ifdef __FMA__
     /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */

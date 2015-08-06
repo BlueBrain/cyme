@@ -29,14 +29,64 @@
 #define CYME_SIMD_WRAPPER_ARM_IPP
 
 #include <boost/cstdint.hpp>
-#include <assert.h>
 #include <iostream>
+#include <assert.h>
 //extern "C" vector float expf4(vector float vx);// link to the fortran one
 //extern "C" vector float logf4(vector float vx);// link to the fortran one
 //extern "C" vector double expd4(vector double vx);// link to the fortran one
 //extern "C" vector double logd4(vector double vx);// link to the fortran one
 
 namespace cyme{
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::neon, 1 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::neon,1>::register_type
+    _mm_round_up_even<cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type xmm0){
+	xmm0 = vaddq_s32(xmm0,vmovq_n_s32(1));
+	xmm0 = vandq_s32(xmm0,vmovq_n_s32(~1));
+	return xmm0;
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::neon, 2 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::neon,2>::register_type
+    _mm_round_up_even<cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type xmm0){
+	int32x4_t one = vmovq_n_s32(1);
+	int32x4_t inv_one = vmovq_n_s32(~1);
+	xmm0.r0 = vaddq_s32(xmm0.r0,one);
+	xmm0.r1 = vaddq_s32(xmm0.r1,one);
+	xmm0.r0 = vandq_s32(xmm0.r0,inv_one);
+	xmm0.r1 = vandq_s32(xmm0.r1,inv_one);
+	return simd_trait<int,cyme::neon,2>::register_type (xmm0.r0,xmm0.r1);
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::neon, 4 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::neon,4>::register_type
+    _mm_round_up_even<cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type xmm0){
+	int32x4_t one = vmovq_n_s32(1);
+	int32x4_t inv_one = vmovq_n_s32(~1);
+	xmm0.r0 = vaddq_s32(xmm0.r0,one);
+	xmm0.r1 = vaddq_s32(xmm0.r1,one);
+	xmm0.r2 = vaddq_s32(xmm0.r2,one);
+	xmm0.r3 = vaddq_s32(xmm0.r3,one);
+	xmm0.r0 = vandq_s32(xmm0.r0,inv_one);
+	xmm0.r1 = vandq_s32(xmm0.r1,inv_one);
+	xmm0.r2 = vandq_s32(xmm0.r2,inv_one);
+	xmm0.r3 = vandq_s32(xmm0.r3,inv_one);
+	return simd_trait<int,cyme::neon,4>::register_type (xmm0.r0,xmm0.r1,
+							    xmm0.r2,xmm0.r3);
+    }
+
     /**
        Load a single-precision (32-bit) floating-point element from cyme into lower element of dst.
      */
@@ -751,6 +801,308 @@ namespace cyme{
 							     (float32x4_t)tmp2,
 							     (float32x4_t)tmp3,
 							     (float32x4_t)tmp4);
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::neon,1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,1>::register_type
+    _mm_fabs<float,cyme::neon,1>( simd_trait<float,cyme::neon,1>::register_type xmm0){
+	return vabsq_f32(xmm0);
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::neon,2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,2>::register_type
+    _mm_fabs<float,cyme::neon,2>( simd_trait<float,cyme::neon,2>::register_type xmm0){
+	return simd_trait<float,cyme::neon,2>::register_type (vabsq_f32(xmm0.r0),
+							      vabsq_f32(xmm0.r1));
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::neon,4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,4>::register_type
+    _mm_fabs<float,cyme::neon,4>( simd_trait<float,cyme::neon,4>::register_type xmm0){
+	return simd_trait<float,cyme::neon,4>::register_type (vabsq_f32(xmm0.r0),
+							      vabsq_f32(xmm0.r1),
+							      vabsq_f32(xmm0.r2),
+							      vabsq_f32(xmm0.r3));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::neon, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,1>::register_type
+    _mm_select_poly<float,cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type sel,
+                                         simd_trait<float,cyme::neon,1>::register_type xmm0,
+                                         simd_trait<float,cyme::neon,1>::register_type xmm1){
+	int32x4_t mask = vmovq_n_s32(2);
+	int32x4_t zero = vmovq_n_s32(0);
+	sel = vandq_s32(sel,mask);
+	sel = (int32x4_t)vceqq_s32(sel,zero);
+
+	xmm0 = (float32x4_t)vbicq_s32((int32x4_t)xmm0,sel);
+	xmm1 = (float32x4_t)vandq_s32((int32x4_t)xmm1,sel);
+	return vaddq_f32(xmm0,xmm1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::neon, 2 reg
+     */
+   template<>
+    forceinline simd_trait<float,cyme::neon,2>::register_type
+    _mm_select_poly<float,cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type sel,
+                                         simd_trait<float,cyme::neon,2>::register_type xmm0,
+                                         simd_trait<float,cyme::neon,2>::register_type xmm1){
+	int32x4_t mask = vmovq_n_s32(2);
+	int32x4_t zero = vmovq_n_s32(0);
+	sel.r0 = vandq_s32(sel.r0,mask);
+	sel.r1 = vandq_s32(sel.r1,mask);
+	sel.r0 = (int32x4_t)vceqq_s32(sel.r0,zero);
+	sel.r1 = (int32x4_t)vceqq_s32(sel.r1,zero);
+
+	xmm0.r0 = (float32x4_t)vbicq_s32((int32x4_t)xmm0.r0,sel.r0);
+	xmm0.r1 = (float32x4_t)vbicq_s32((int32x4_t)xmm0.r1,sel.r1);
+	xmm1.r0 = (float32x4_t)vandq_s32((int32x4_t)xmm1.r0,sel.r0);
+	xmm1.r1 = (float32x4_t)vandq_s32((int32x4_t)xmm1.r1,sel.r1);
+	return simd_trait<float,cyme::neon,2>::register_type (vaddq_f32(xmm0.r0,xmm1.r0),
+							      vaddq_f32(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::neon, 4 reg
+     */
+   template<>
+    forceinline simd_trait<float,cyme::neon,4>::register_type
+    _mm_select_poly<float,cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type sel,
+                                         simd_trait<float,cyme::neon,4>::register_type  xmm0,
+                                         simd_trait<float,cyme::neon,4>::register_type xmm1){
+	int32x4_t mask = vmovq_n_s32(2);
+	int32x4_t zero = vmovq_n_s32(0);
+	sel.r0 = vandq_s32(sel.r0,mask);
+	sel.r1 = vandq_s32(sel.r1,mask);
+	sel.r2 = vandq_s32(sel.r2,mask);
+	sel.r3 = vandq_s32(sel.r3,mask);
+	sel.r0 = (int32x4_t)vceqq_s32(sel.r0,zero);
+	sel.r1 = (int32x4_t)vceqq_s32(sel.r1,zero);
+	sel.r2 = (int32x4_t)vceqq_s32(sel.r2,zero);
+	sel.r3 = (int32x4_t)vceqq_s32(sel.r3,zero);
+
+	xmm0.r0 = (float32x4_t)vbicq_s32((int32x4_t)xmm0.r0,sel.r0);
+	xmm0.r1 = (float32x4_t)vbicq_s32((int32x4_t)xmm0.r1,sel.r1);
+	xmm0.r2 = (float32x4_t)vbicq_s32((int32x4_t)xmm0.r2,sel.r2);
+	xmm0.r3 = (float32x4_t)vbicq_s32((int32x4_t)xmm0.r3,sel.r3);
+	xmm1.r0 = (float32x4_t)vandq_s32((int32x4_t)xmm1.r0,sel.r0);
+	xmm1.r0 = (float32x4_t)vandq_s32((int32x4_t)xmm1.r0,sel.r0);
+	xmm1.r1 = (float32x4_t)vandq_s32((int32x4_t)xmm1.r1,sel.r1);
+	xmm1.r2 = (float32x4_t)vandq_s32((int32x4_t)xmm1.r2,sel.r2);
+	xmm1.r3 = (float32x4_t)vandq_s32((int32x4_t)xmm1.r3,sel.r3);
+	return simd_trait<float,cyme::neon,4>::register_type (vaddq_f32(xmm0.r0,xmm1.r0),
+							      vaddq_f32(xmm0.r1,xmm1.r1),
+							      vaddq_f32(xmm0.r2,xmm1.r2),
+							      vaddq_f32(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float,cyme::neon,1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,1>::register_type
+    _mm_select_sign_sin<float,cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type swap,
+                                             simd_trait<float,cyme::neon,1>::register_type xmm0,
+                                             simd_trait<float,cyme::neon,1>::register_type xmm1){
+	int32x4_t mask = vmovq_n_s32(0x80000000);
+	int32x4_t four = vmovq_n_s32(4);
+	/* extract the sign bit (upper one) from original val */
+	int32x4_t imm0 = vandq_s32((int32x4_t)xmm0, mask);
+
+	/* get the swap sign flag */
+	swap = vandq_s32(swap, four);
+	swap = vshlq_s32(swap, vmovq_n_s32(29));
+
+	/* update the sign of the final value*/
+	imm0 = veorq_s32(imm0, swap);
+	xmm1 = (float32x4_t)veorq_s32((int32x4_t)xmm1, imm0);
+	return xmm1;
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float,cyme::neon,2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,2>::register_type
+    _mm_select_sign_sin<float,cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type swap,
+                                             simd_trait<float,cyme::neon,2>::register_type xmm0,
+                                             simd_trait<float,cyme::neon,2>::register_type xmm1){
+	int32x4_t mask = vmovq_n_s32(0x80000000);
+	int32x4_t four = vmovq_n_s32(4);
+	/* extract the sign bit (upper one) from original val */
+	int32x4_t imm0_0 = vandq_s32((int32x4_t)xmm0.r0, mask);
+	int32x4_t imm0_1 = vandq_s32((int32x4_t)xmm0.r1, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = vandq_s32(swap.r0, four);
+	swap.r1 = vandq_s32(swap.r1, four);
+	swap.r0 = vshlq_s32(swap.r0, vmovq_n_s32(29));
+	swap.r1 = vshlq_s32(swap.r1, vmovq_n_s32(29));
+
+	/* update the sign of the final value*/
+	imm0_0 = veorq_s32(imm0_0, swap.r0);
+	imm0_1 = veorq_s32(imm0_1, swap.r1);
+	xmm1.r0 = (float32x4_t)veorq_s32((int32x4_t)xmm1.r0, imm0_0);
+	xmm1.r1 = (float32x4_t)veorq_s32((int32x4_t)xmm1.r1, imm0_1);
+	return simd_trait<float,cyme::neon,2>::register_type (xmm1.r0,xmm1.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float,cyme::neon,4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,4>::register_type
+    _mm_select_sign_sin<float,cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type swap,
+                                             simd_trait<float,cyme::neon,4>::register_type xmm0,
+                                             simd_trait<float,cyme::neon,4>::register_type xmm1){
+	int32x4_t mask = vmovq_n_s32(0x80000000);
+	int32x4_t four = vmovq_n_s32(4);
+	/* extract the sign bit (upper one) from original val */
+	int32x4_t imm0_0 = vandq_s32((int32x4_t)xmm0.r0, mask);
+	int32x4_t imm0_1 = vandq_s32((int32x4_t)xmm0.r1, mask);
+	int32x4_t imm0_2 = vandq_s32((int32x4_t)xmm0.r2, mask);
+	int32x4_t imm0_3 = vandq_s32((int32x4_t)xmm0.r3, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = vandq_s32(swap.r0, four);
+	swap.r1 = vandq_s32(swap.r1, four);
+	swap.r2 = vandq_s32(swap.r2, four);
+	swap.r3 = vandq_s32(swap.r3, four);
+	swap.r0 = vshlq_s32(swap.r0, vmovq_n_s32(29));
+	swap.r1 = vshlq_s32(swap.r1, vmovq_n_s32(29));
+	swap.r2 = vshlq_s32(swap.r2, vmovq_n_s32(29));
+	swap.r3 = vshlq_s32(swap.r3, vmovq_n_s32(29));
+
+	/* update the sign of the final value*/
+	imm0_0 = veorq_s32(imm0_0, swap.r0);
+	imm0_1 = veorq_s32(imm0_1, swap.r1);
+	imm0_2 = veorq_s32(imm0_2, swap.r2);
+	imm0_3 = veorq_s32(imm0_3, swap.r3);
+	xmm1.r0 = (float32x4_t)veorq_s32((int32x4_t)xmm1.r0, imm0_0);
+	xmm1.r1 = (float32x4_t)veorq_s32((int32x4_t)xmm1.r1, imm0_1);
+	xmm1.r2 = (float32x4_t)veorq_s32((int32x4_t)xmm1.r2, imm0_2);
+	xmm1.r3 = (float32x4_t)veorq_s32((int32x4_t)xmm1.r3, imm0_3);
+	return simd_trait<float,cyme::neon,4>::register_type (xmm1.r0,xmm1.r1,
+							      xmm1.r2,xmm1.r3);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float,cyme::neon,1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,1>::register_type
+    _mm_select_sign_cos<float,cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type swap,
+                                             simd_trait<float,cyme::neon,1>::register_type xmm0){
+	int32x4_t four = vmovq_n_s32(4);
+
+	/* get the swap sign flag */
+	swap = vbicq_s32(four,swap);
+	swap = vshlq_s32(swap, vmovq_n_s32(29));
+
+	/* update the sign of the final value*/
+	xmm0 = (float32x4_t)veorq_s32((int32x4_t)xmm0,swap);
+	return xmm0;
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float,cyme::neon,2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,2>::register_type
+    _mm_select_sign_cos<float,cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type swap,
+                                            simd_trait<float,cyme::neon,2>::register_type xmm0){
+	int32x4_t four = vmovq_n_s32(4);
+
+	/* get the swap sign flag */
+	swap.r0 = vbicq_s32(four,swap.r0);
+	swap.r1 = vbicq_s32(four,swap.r1);
+	swap.r0 = vshlq_s32(swap.r0, vmovq_n_s32(29));
+	swap.r1 = vshlq_s32(swap.r1, vmovq_n_s32(29));
+
+	/* update the sign of the final value*/
+	xmm0.r0 = (float32x4_t)veorq_s32((int32x4_t)xmm0.r0,swap.r0);
+	xmm0.r1 = (float32x4_t)veorq_s32((int32x4_t)xmm0.r1,swap.r1);
+	return simd_trait<float,cyme::neon,2>::register_type (xmm0.r0,xmm0.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float,cyme::neon,4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::neon,4>::register_type
+    _mm_select_sign_cos<float,cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type swap,
+                                            simd_trait<float,cyme::neon,4>::register_type xmm0){
+	int32x4_t four = vmovq_n_s32(4);
+
+	/* get the swap sign flag */
+	swap.r0 = vbicq_s32(four,swap.r0);
+	swap.r1 = vbicq_s32(four,swap.r1);
+	swap.r2 = vbicq_s32(four,swap.r2);
+	swap.r3 = vbicq_s32(four,swap.r3);
+	swap.r0 = vshlq_s32(swap.r0, vmovq_n_s32(29));
+	swap.r1 = vshlq_s32(swap.r1, vmovq_n_s32(29));
+	swap.r2 = vshlq_s32(swap.r2, vmovq_n_s32(29));
+	swap.r3 = vshlq_s32(swap.r3, vmovq_n_s32(29));
+
+	/* update the sign of the final value*/
+	xmm0.r0 = (float32x4_t)veorq_s32((int32x4_t)xmm0.r0,swap.r0);
+	xmm0.r1 = (float32x4_t)veorq_s32((int32x4_t)xmm0.r1,swap.r1);
+	xmm0.r2 = (float32x4_t)veorq_s32((int32x4_t)xmm0.r2,swap.r2);
+	xmm0.r3 = (float32x4_t)veorq_s32((int32x4_t)xmm0.r3,swap.r3);
+	return simd_trait<float,cyme::neon,4>::register_type (xmm0.r0,xmm0.r1,
+							      xmm0.r2,xmm0.r3);
     }
 
 #ifdef __FMA__
@@ -1723,6 +2075,307 @@ namespace cyme{
 							      (float64x2_t)tmp2,
 							      (float64x2_t)tmp3,
 							      (float64x2_t)tmp4);
+    }
+
+    /**
+      Computes the absolute value for double-precision (64-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::neon, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,1>::register_type
+    _mm_fabs<double,cyme::neon,1>( simd_trait<double,cyme::neon,1>::register_type xmm0){
+	return vabsq_f64(xmm0);
+    }
+
+    /**
+      Computes the absolute value for double-precision (64-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::neon, 2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,2>::register_type
+    _mm_fabs<double,cyme::neon,2>( simd_trait<double,cyme::neon,2>::register_type xmm0){
+	return simd_trait<double,cyme::neon,2>::register_type (vabsq_f64(xmm0.r0),
+							       vabsq_f64(xmm0.r1));
+    }
+
+    /**
+      Computes the absolute value for double-precision (64-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::neon, 4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,4>::register_type
+    _mm_fabs<double,cyme::neon,4>( simd_trait<double,cyme::neon,4>::register_type xmm0){
+	return simd_trait<double,cyme::neon,4>::register_type (vabsq_f64(xmm0.r0),
+							       vabsq_f64(xmm0.r1),
+							       vabsq_f64(xmm0.r2),
+							       vabsq_f64(xmm0.r3));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::neon, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,1>::register_type
+    _mm_select_poly<double,cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type sel,
+                                          simd_trait<double,cyme::neon,1>::register_type xmm0,
+                                          simd_trait<double,cyme::neon,1>::register_type xmm1){
+	int64x2_t mask = vmovq_n_s64(2);
+	int64x2_t zero = vmovq_n_s64(0);
+	int64x2_t imm0 = vandq_s64((int64x2_t)sel,mask);
+	imm0 = (int64x2_t)vceqq_s64(imm0,zero);
+
+	xmm0 = (float64x2_t)vbicq_s64((int64x2_t)xmm0,imm0);
+	xmm1 = (float64x2_t)vandq_s64((int64x2_t)xmm1,imm0);
+	return vaddq_f64(xmm0,xmm1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::neon, 2 reg
+     */
+   template<>
+    forceinline simd_trait<double,cyme::neon,2>::register_type
+    _mm_select_poly<double,cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type sel,
+                                          simd_trait<double,cyme::neon,2>::register_type xmm0,
+                                          simd_trait<double,cyme::neon,2>::register_type xmm1){
+	int64x2_t mask = vmovq_n_s64(2);
+	int64x2_t zero = vmovq_n_s64(0);
+	int64x2_t imm0_0 = vandq_s64((int64x2_t)sel.r0,mask);
+	int64x2_t imm0_1 = vandq_s64((int64x2_t)sel.r1,mask);
+	imm0_0 = (int64x2_t)vceqq_s64(imm0_0,zero);
+	imm0_1 = (int64x2_t)vceqq_s64(imm0_1,zero);
+
+	xmm0.r0 = (float64x2_t)vbicq_s64((int64x2_t)xmm0.r0,imm0_0);
+	xmm0.r1 = (float64x2_t)vbicq_s64((int64x2_t)xmm0.r1,imm0_1);
+	xmm1.r0 = (float64x2_t)vandq_s64((int64x2_t)xmm1.r0,imm0_0);
+	xmm1.r1 = (float64x2_t)vandq_s64((int64x2_t)xmm1.r1,imm0_1);
+	return simd_trait<double,cyme::neon,2>::register_type (vaddq_f64(xmm0.r0,xmm1.r0),
+							       vaddq_f64(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::neon, 4 reg
+     */
+   template<>
+    forceinline simd_trait<double,cyme::neon,4>::register_type
+    _mm_select_poly<double,cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type sel,
+                                          simd_trait<double,cyme::neon,4>::register_type  xmm0,
+                                          simd_trait<double,cyme::neon,4>::register_type xmm1){
+	int64x2_t mask = vmovq_n_s64(2);
+	int64x2_t zero = vmovq_n_s64(0);
+	int64x2_t imm0_0 = vandq_s64((int64x2_t)sel.r0,mask);
+	int64x2_t imm0_1 = vandq_s64((int64x2_t)sel.r1,mask);
+	int64x2_t imm0_2 = vandq_s64((int64x2_t)sel.r2,mask);
+	int64x2_t imm0_3 = vandq_s64((int64x2_t)sel.r3,mask);
+	imm0_0 = (int64x2_t)vceqq_s64(imm0_0,zero);
+	imm0_1 = (int64x2_t)vceqq_s64(imm0_1,zero);
+	imm0_2 = (int64x2_t)vceqq_s64(imm0_2,zero);
+	imm0_3 = (int64x2_t)vceqq_s64(imm0_3,zero);
+
+	xmm0.r0 = (float64x2_t)vbicq_s64((int64x2_t)xmm0.r0,imm0_0);
+	xmm0.r1 = (float64x2_t)vbicq_s64((int64x2_t)xmm0.r1,imm0_1);
+	xmm0.r2 = (float64x2_t)vbicq_s64((int64x2_t)xmm0.r2,imm0_2);
+	xmm0.r3 = (float64x2_t)vbicq_s64((int64x2_t)xmm0.r3,imm0_3);
+	xmm1.r0 = (float64x2_t)vandq_s64((int64x2_t)xmm1.r0,imm0_0);
+	xmm1.r1 = (float64x2_t)vandq_s64((int64x2_t)xmm1.r1,imm0_1);
+	xmm1.r2 = (float64x2_t)vandq_s64((int64x2_t)xmm1.r2,imm0_2);
+	xmm1.r3 = (float64x2_t)vandq_s64((int64x2_t)xmm1.r3,imm0_3);
+	return simd_trait<double,cyme::neon,4>::register_type (vaddq_f64(xmm0.r0,xmm1.r0),
+							       vaddq_f64(xmm0.r1,xmm1.r1),
+							       vaddq_f64(xmm0.r2,xmm1.r2),
+							       vaddq_f64(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::neon, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,1>::register_type
+    _mm_select_sign_sin<double,cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type swap,
+                                              simd_trait<double,cyme::neon,1>::register_type xmm0,
+                                              simd_trait<double,cyme::neon,1>::register_type xmm1){
+	int64x2_t mask = vmovq_n_s64(0x8000000000000000);
+	int64x2_t four = vmovq_n_s64(4);
+	/* extract the sign bit (upper one) from original val */
+	int64x2_t imm0 = vandq_s64((int64x2_t)xmm0, mask);
+
+	/* get the swap sign flag */
+	int64x2_t imm1 = vandq_s64((int64x2_t)swap, four);
+	imm1 = vshlq_s64(imm1, vmovq_n_s64(61));
+
+	/* update the sign of the final value*/
+	imm0 = veorq_s64(imm0, imm1);
+	xmm1 = (float64x2_t)veorq_s64((int64x2_t)xmm1, imm0);
+	return xmm1;
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::neon, 2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,2>::register_type
+    _mm_select_sign_sin<double,cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type swap,
+                                              simd_trait<double,cyme::neon,2>::register_type xmm0,
+                                              simd_trait<double,cyme::neon,2>::register_type xmm1){
+	int64x2_t mask = vmovq_n_s64(0x8000000000000000);
+	int64x2_t four = vmovq_n_s64(4);
+	/* extract the sign bit (upper one) from original val */
+	int64x2_t imm0_0 = vandq_s64((int64x2_t)xmm0.r0, mask);
+	int64x2_t imm0_1 = vandq_s64((int64x2_t)xmm0.r1, mask);
+
+	/* get the swap sign flag */
+	int64x2_t imm1_0 = vandq_s64((int64x2_t)swap.r0, four);
+	int64x2_t imm1_1 = vandq_s64((int64x2_t)swap.r1, four);
+	imm1_0 = vshlq_s64(imm1_0, vmovq_n_s64(61));
+	imm1_1 = vshlq_s64(imm1_1, vmovq_n_s64(61));
+
+	/* update the sign of the final value*/
+	imm0_0 = veorq_s64(imm0_0, imm1_0);
+	imm0_1 = veorq_s64(imm0_1, imm1_1);
+	xmm1.r0 = (float64x2_t)veorq_s64((int64x2_t)xmm1.r0, imm0_0);
+	xmm1.r1 = (float64x2_t)veorq_s64((int64x2_t)xmm1.r1, imm0_1);
+	return simd_trait<double,cyme::neon,2>::register_type (xmm1.r0,xmm1.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::neon, 4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,4>::register_type
+    _mm_select_sign_sin<double,cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type swap,
+                                              simd_trait<double,cyme::neon,4>::register_type xmm0,
+                                              simd_trait<double,cyme::neon,4>::register_type xmm1){
+	int64x2_t mask = vmovq_n_s64(0x8000000000000000);
+	int64x2_t four = vmovq_n_s64(4);
+	/* extract the sign bit (upper one) from original val */
+	int64x2_t imm0_0 = vandq_s64((int64x2_t)xmm0.r0, mask);
+	int64x2_t imm0_1 = vandq_s64((int64x2_t)xmm0.r1, mask);
+	int64x2_t imm0_2 = vandq_s64((int64x2_t)xmm0.r2, mask);
+	int64x2_t imm0_3 = vandq_s64((int64x2_t)xmm0.r3, mask);
+
+	/* get the swap sign flag */
+	int64x2_t imm1_0 = vandq_s64((int64x2_t)swap.r0, four);
+	int64x2_t imm1_1 = vandq_s64((int64x2_t)swap.r1, four);
+	int64x2_t imm1_2 = vandq_s64((int64x2_t)swap.r2, four);
+	int64x2_t imm1_3 = vandq_s64((int64x2_t)swap.r3, four);
+	imm1_0 = vshlq_s64(imm1_0, vmovq_n_s64(61));
+	imm1_1 = vshlq_s64(imm1_1, vmovq_n_s64(61));
+	imm1_2 = vshlq_s64(imm1_2, vmovq_n_s64(61));
+	imm1_3 = vshlq_s64(imm1_3, vmovq_n_s64(61));
+
+	/* update the sign of the final value*/
+	imm0_0 = veorq_s64(imm0_0, imm1_0);
+	imm0_1 = veorq_s64(imm0_1, imm1_1);
+	imm0_2 = veorq_s64(imm0_2, imm1_2);
+	imm0_3 = veorq_s64(imm0_3, imm1_3);
+	xmm1.r0 = (float64x2_t)veorq_s64((int64x2_t)xmm1.r0, imm0_0);
+	xmm1.r1 = (float64x2_t)veorq_s64((int64x2_t)xmm1.r1, imm0_1);
+	xmm1.r2 = (float64x2_t)veorq_s64((int64x2_t)xmm1.r2, imm0_2);
+	xmm1.r3 = (float64x2_t)veorq_s64((int64x2_t)xmm1.r3, imm0_3);
+	return simd_trait<double,cyme::neon,4>::register_type (xmm1.r0,xmm1.r1,
+							       xmm1.r2,xmm1.r3);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::neon,1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,1>::register_type
+    _mm_select_sign_cos<double,cyme::neon,1>( simd_trait<int,cyme::neon,1>::register_type swap,
+                                              simd_trait<double,cyme::neon,1>::register_type xmm0){
+	int64x2_t four = vmovq_n_s64(4);
+
+	/* get the swap sign flag */
+	int64x2_t imm0 = vbicq_s64(four,(int64x2_t)swap);
+	imm0 = vshlq_s64(imm0, vmovq_n_s64(61));
+
+	/* update the sign of the final value*/
+	xmm0 = (float64x2_t)veorq_s64((int64x2_t)xmm0,imm0);
+	return xmm0;
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::neon,2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,2>::register_type
+    _mm_select_sign_cos<double,cyme::neon,2>( simd_trait<int,cyme::neon,2>::register_type swap,
+                                              simd_trait<double,cyme::neon,2>::register_type xmm0){
+	int64x2_t four = vmovq_n_s64(4);
+
+	/* get the swap sign flag */
+	int64x2_t imm0_0 = vbicq_s64(four,(int64x2_t)swap.r0);
+	int64x2_t imm0_1 = vbicq_s64(four,(int64x2_t)swap.r1);
+	imm0_0 = vshlq_s64(imm0_0, vmovq_n_s64(61));
+	imm0_1 = vshlq_s64(imm0_1, vmovq_n_s64(61));
+
+	/* update the sign of the final value*/
+	xmm0.r0 = (float64x2_t)veorq_s64((int64x2_t)xmm0.r0,imm0_0);
+	xmm0.r1 = (float64x2_t)veorq_s64((int64x2_t)xmm0.r1,imm0_1);
+	return simd_trait<double,cyme::neon,2>::register_type (xmm0.r0,xmm0.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::neon,4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::neon,4>::register_type
+    _mm_select_sign_cos<double,cyme::neon,4>( simd_trait<int,cyme::neon,4>::register_type swap,
+                                              simd_trait<double,cyme::neon,4>::register_type xmm0){
+	int64x2_t four = vmovq_n_s64(4);
+
+	/* get the swap sign flag */
+	int64x2_t imm0_0 = vbicq_s64(four,(int64x2_t)swap.r0);
+	int64x2_t imm0_1 = vbicq_s64(four,(int64x2_t)swap.r1);
+	int64x2_t imm0_2 = vbicq_s64(four,(int64x2_t)swap.r2);
+	int64x2_t imm0_3 = vbicq_s64(four,(int64x2_t)swap.r3);
+	imm0_0 = vshlq_s64(imm0_0, vmovq_n_s64(61));
+	imm0_1 = vshlq_s64(imm0_1, vmovq_n_s64(61));
+	imm0_2 = vshlq_s64(imm0_2, vmovq_n_s64(61));
+	imm0_3 = vshlq_s64(imm0_3, vmovq_n_s64(61));
+
+	/* update the sign of the final value*/
+	xmm0.r0 = (float64x2_t)veorq_s64((int64x2_t)xmm0.r0,imm0_0);
+	xmm0.r1 = (float64x2_t)veorq_s64((int64x2_t)xmm0.r1,imm0_1);
+	xmm0.r2 = (float64x2_t)veorq_s64((int64x2_t)xmm0.r2,imm0_2);
+	xmm0.r3 = (float64x2_t)veorq_s64((int64x2_t)xmm0.r3,imm0_3);
+	return simd_trait<double,cyme::neon,4>::register_type (xmm0.r0,xmm0.r1,
+							       xmm0.r2,xmm0.r3);
     }
 
 #ifdef __FMA__

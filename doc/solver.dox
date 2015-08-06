@@ -63,7 +63,7 @@ where \f$a\f$ was either 2 or 10 and \f$c\f$ was the constant expression \f$ln(a
 
 \section op1 Logarithm
 
-The logarithm implementation uses the floating poing binary representation (IEEE 754) of the
+The logarithm implementation uses the floating point binary representation (IEEE 754) of the
 number. A floating point number can be expressed as \f$ x = s \times x_0 \times 2^n \f$,
 where \f$ s \f$ is the sign,  1 or -1,
 \f$ x_0 \in [1,2) \f$ and $n$ is an integer. For positive $x$ then,
@@ -131,6 +131,29 @@ for \f$n>1\f$, \f$n\f$ even:
 while for \f$n>1\f$, \f$n\f$ odd:
 \f[
     x^n = x\,.\,x^{\lfloor n/2 \rfloor}\,.\,x^{\lfloor n/2 \rfloor}.
+\f]
+
+\section op5 Trigonometric Functions
+
+The implementation of Sin(x) was derived from the Cephes implementation. It can be broken up into 5 steps:
+1. Take the absolute value of the x
+2. Perform a calculation using coefficents DP such that
+\f[
+    z = (((z - j\,.\,DP1) - j\,.\,DP2) - j\,.\,DP3)
+\f]
+where j is
+\f[
+    j = ( \lfloor x\,.\,\frac{4}{PI} \rfloor + 1 ) \& (\sim 1)
+\f] 
+3. Calculate the polynomials for both sin and cos using Horner's method
+4. Select the correct polynomial depending on the value j & 2
+5. Select the sign of the final result depending on the sign of the original input, x,
+and the value j & 4.
+
+Cos is calculated in a similar fashion, but with modifications to the way it selects the sign and polynomial.
+Tan calculates both the cos and sin of the input uses the trigonometric identity:
+\f[
+   tan(x) = \frac{sin(x)}{cos(x)} .
 \f]
 
 \section serial Serial library

@@ -50,6 +50,42 @@ namespace cyme{
     };
 
     /**
+    * fabs(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_fabs<T,O,N,R1> >
+    forceinline fabs(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_fabs<T,O,N,R1> >(vec_fabs<T,O,N,R1>(a.rep()));
+    }
+
+    /**
+    * sin(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_sin<T,O,N,R1> >
+    forceinline sin(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_sin<T,O,N,R1> >(vec_sin<T,O,N,R1>(a.rep()));
+    }
+
+    /**
+    * cos(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_cos<T,O,N,R1> >
+    forceinline cos(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_cos<T,O,N,R1> >(vec_cos<T,O,N,R1>(a.rep()));
+    }
+
+    /**
+    * tan(a) function
+    */
+    template<class T, cyme::simd O, int N, class R1>
+    rvec<T,O,N,vec_tan<T,O,N,R1> >
+    forceinline tan(rvec<T,O,N,R1> const& a){
+        return rvec<T,O,N,vec_tan<T,O,N,R1> >(vec_tan<T,O,N,R1>(a.rep()));
+    }
+
+    /**
     * sqrt(a) function
     */
     template<class T, cyme::simd O, int N, class R1>

@@ -37,6 +37,7 @@
     #include "cyme/core/simd_vector/math/simd_log.ipp"
     #include "cyme/core/simd_vector/math/simd_sqrt.ipp"
     #include "cyme/core/simd_vector/math/simd_pow.ipp"
+    #include "cyme/core/simd_vector/math/simd_trig.ipp"
 #ifdef __FMA__
     #include "cyme/core/simd_vector/math/simd_fma.ipp"
     #include "cyme/core/simd_vector/math/simd_fms.ipp"

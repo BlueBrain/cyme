@@ -36,10 +36,8 @@
 #    external repos when set.
 #
 # CMake or environment variables:
-#  GITHUB_USER
-#    If set, a remote called 'user' is set up for github repositories, pointing
-#    to git@github.com:<user>/<project>. Also, this remote is used by default
-#    for 'git push'.
+#  GITHUB_USER If set, a remote called 'user' is set up for github
+#    repositories, pointing to github.com/<user>/<project>.
 
 if(NOT GIT_FOUND)
   find_package(Git QUIET)
@@ -97,11 +95,9 @@ function(GIT_EXTERNAL DIR REPO TAG)
     set(_clone_options --recursive)
     if(GIT_EXTERNAL_LOCAL_SHALLOW)
       list(APPEND _clone_options --depth 1 --branch ${TAG})
-    else()
-      set(_msg_tag "[${TAG}]")
     endif()
     JOIN("${_clone_options}" " " _msg_text)
-    message(STATUS "git clone ${_msg_text} ${REPO} ${DIR} ${_msg_tag}")
+    message(STATUS "git clone ${_msg_text} ${REPO} ${DIR}")
     execute_process(
       COMMAND "${GIT_EXECUTABLE}" clone ${_clone_options} ${REPO} ${DIR}
       RESULT_VARIABLE nok ERROR_VARIABLE error
@@ -131,15 +127,12 @@ function(GIT_EXTERNAL DIR REPO TAG)
     endif()
   endif()
 
-  # set up "user" remote for github forks and make it default for 'git push'
+  # set up "user" remote for github forks
   if(GITHUB_USER AND REPO MATCHES ".*github.com.*")
-    string(REGEX REPLACE ".*(github.com)[\\/:]().*(\\/.*)" "git@\\1:\\2${GITHUB_USER}\\3"
+    string(REGEX REPLACE "(.*github.com[\\/:]).*(\\/.*)" "\\1${GITHUB_USER}\\2"
       GIT_EXTERNAL_USER_REPO ${REPO})
     execute_process(
       COMMAND "${GIT_EXECUTABLE}" remote add user ${GIT_EXTERNAL_USER_REPO}
-      OUTPUT_QUIET ERROR_QUIET WORKING_DIRECTORY "${DIR}")
-    execute_process(
-      COMMAND "${GIT_EXECUTABLE}" config remote.pushdefault user
       OUTPUT_QUIET ERROR_QUIET WORKING_DIRECTORY "${DIR}")
   endif()
 

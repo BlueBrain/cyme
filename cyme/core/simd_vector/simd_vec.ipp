@@ -29,7 +29,16 @@
 #define CYME_SIMD_VEC_IPP
 
 namespace cyme{
-    template<class T,cyme::simd O, int N>
+   
+    /** Round up to the next even integer */
+    template<cyme::simd O, int N>
+    vec_simd<int,O,N> round_up_even(const vec_simd<int,O,N>& rhs){
+        vec_simd<int,O,N> nrv;
+	nrv.xmm = _mm_round_up_even<O,N>(rhs.xmm);
+	return nrv;
+    }
+
+   template<class T,cyme::simd O, int N>
     vec_simd<T,O,N>::vec_simd(const typename simd_trait<T,O,N>::value_type& a){
         xmm = _mm_load1<typename simd_trait<T,O,N>::value_type,O,N>(a);
     }
@@ -147,6 +156,34 @@ namespace cyme{
     vec_simd<T,O,N> twok(const vec_simd<int,O,N>& rhs){
         vec_simd<T,O,N> nrv;
         nrv.xmm = _mm_twok<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
+        return nrv;
+    }
+
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N> fabs(const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_fabs<typename simd_trait<T,O,N>::value_type,O,N>(rhs.xmm);
+        return nrv;
+    }
+
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N> select_poly(const vec_simd<int,O,N>& sel, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_select_poly<typename simd_trait<T,O,N>::value_type,O,N>(sel.xmm,lhs.xmm,rhs.xmm);
+        return nrv;
+    }
+
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N> select_sign_sin(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_select_sign_sin<typename simd_trait<T,O,N>::value_type,O,N>(swap.xmm,lhs.xmm,rhs.xmm);
+        return nrv;
+    }
+
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N> select_sign_cos(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& rhs){
+        vec_simd<T,O,N> nrv;
+        nrv.xmm = _mm_select_sign_cos<typename simd_trait<T,O,N>::value_type,O,N>(swap.xmm,rhs.xmm);
         return nrv;
     }
 

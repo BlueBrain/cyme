@@ -37,6 +37,57 @@ extern "C" vector double expd4(vector double vx);// link to the fortran one
 extern "C" vector double logd4(vector double vx);// link to the fortran one
 
 namespace cyme{
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::vmx, 1 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,1>::register_type
+    _mm_round_up_even<cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type xmm0){
+	xmm0 = vec_add(xmm0,vec_splats(1));
+	xmm0 = vec_and(xmm0,vec_splats(~1));
+	return xmm0;
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::vmx, 2 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,2>::register_type
+    _mm_round_up_even<cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type xmm0){
+	vector int one = vec_splats(1);
+	vector int inv_one = vec_splats(~1);
+	xmm0.r0 = vec_add(xmm0.r0,one);
+	xmm0.r1 = vec_add(xmm0.r1,one);
+	xmm0.r0 = vec_and(xmm0.r0,inv_one);
+	xmm0.r1 = vec_and(xmm0.r1,inv_one);
+        return simd_trait<int,cyme::vmx,2>::register_type(xmm0.r0,
+							  xmm0.r1);
+    }
+
+    /**
+      Rounds xmm0 up to the next even integer.
+      Specialisation int, cyme::vmx, 4 reg
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,4>::register_type
+    _mm_round_up_even<cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type xmm0){
+	vector int one = vec_splats(1);
+	vector int inv_one = vec_splats(~1);
+	xmm0.r0 = vec_add(xmm0.r0,one);
+	xmm0.r1 = vec_add(xmm0.r1,one);
+	xmm0.r2 = vec_add(xmm0.r2,one);
+	xmm0.r3 = vec_add(xmm0.r3,one);
+	xmm0.r0 = vec_and(xmm0.r0,inv_one);
+	xmm0.r1 = vec_and(xmm0.r1,inv_one);
+	xmm0.r2 = vec_and(xmm0.r2,inv_one);
+	xmm0.r3 = vec_and(xmm0.r3,inv_one);
+        return simd_trait<int,cyme::vmx,4>::register_type(xmm0.r0,xmm0.r1,
+							  xmm0.r2,xmm0.r3);
+    }
+
     /**
        Load a single-precision (32-bit) floating-point element from cyme into lower element of dst.
      */
@@ -468,7 +519,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,1>::register_type
     _mm_neg<float,cyme::vmx,1>(simd_trait<float,cyme::vmx,1>::register_type xmm0){
-	return vec_xor(xmm0,(vector float)vec_splats(0x80000000));
+	vector float mask = (vector float)vec_splats(0x80000000);
+	return vec_xor(xmm0,mask);
 	//return vec_xor(xmm0, vec_splats((float)-0.));
     }
 
@@ -479,8 +531,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,2>::register_type
     _mm_neg<float,cyme::vmx,2>(simd_trait<float,cyme::vmx,2>::register_type xmm0){
-	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,(vector float)vec_splats(0x80000000)),
-							    vec_xor(xmm0.r1,(vector float)vec_splats(0x80000000)));
+	vector float mask = (vector float)vec_splats(0x80000000);
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,mask),
+							    vec_xor(xmm0.r1,mask));
 
     }
 
@@ -491,10 +544,11 @@ namespace cyme{
     template<>
     forceinline simd_trait<float,cyme::vmx,4>::register_type
     _mm_neg<float,cyme::vmx,4>(simd_trait<float,cyme::vmx,4>::register_type xmm0){
-	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,(vector float)vec_splats(0x80000000)),
-							    vec_xor(xmm0.r1,(vector float)vec_splats(0x80000000)),
-							    vec_xor(xmm0.r2,(vector float)vec_splats(0x80000000)),
-							    vec_xor(xmm0.r3,(vector float)vec_splats(0x80000000)));
+	vector float mask = (vector float)vec_splats(0x80000000);
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,mask),
+							    vec_xor(xmm0.r1,mask),
+							    vec_xor(xmm0.r2,mask),
+							    vec_xor(xmm0.r3,mask));
     }
 
     /**
@@ -714,6 +768,307 @@ namespace cyme{
 							    (vector float)tmp1,
 							    (vector float)tmp2,
 							    (vector float)tmp3);
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::vmx,1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,1>::register_type
+    _mm_fabs<float,cyme::vmx,1>( simd_trait<float,cyme::vmx,1>::register_type xmm0){
+	return vec_abs(xmm0);
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::vmx,2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,2>::register_type
+    _mm_fabs<float,cyme::vmx,2>( simd_trait<float,cyme::vmx,2>::register_type xmm0){
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_abs(xmm0.r0),
+							    vec_abs(xmm0.r1));
+    }
+
+    /**
+      Computes the absolute value for single-precision (32-bit) floating point elements and stores
+      the result in dst.
+      specialisation float,cyme::vmx,4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,4>::register_type
+    _mm_fabs<float,cyme::vmx,4>( simd_trait<float,cyme::vmx,4>::register_type xmm0){
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_abs(xmm0.r0),
+							    vec_abs(xmm0.r1),
+							    vec_abs(xmm0.r2),
+							    vec_abs(xmm0.r3));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::vmx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,1>::register_type
+    _mm_select_poly<float,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type sel,
+                                         simd_trait<float,cyme::vmx,1>::register_type xmm0,
+                                         simd_trait<float,cyme::vmx,1>::register_type xmm1){
+	vector int mask = vec_splats(2);
+	vector int zero = vec_splats(0);
+	sel = vec_and(sel,mask);
+	sel = (vector int)vec_cmpeq(sel,zero);
+
+	xmm0 = vec_andc(xmm0,(vector float)sel);
+	xmm1 = vec_and(xmm1,(vector float)sel);
+	return vec_add(xmm0,xmm1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::vmx, 2 reg
+     */
+   template<>
+    forceinline simd_trait<float,cyme::vmx,2>::register_type
+    _mm_select_poly<float,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type sel,
+                                         simd_trait<float,cyme::vmx,2>::register_type xmm0,
+                                         simd_trait<float,cyme::vmx,2>::register_type xmm1){
+	vector int mask = vec_splats(2);
+	vector int zero = vec_splats(0);
+	sel.r0 = vec_and(sel.r0,mask);
+	sel.r1 = vec_and(sel.r1,mask);
+	sel.r0 = (vector int)vec_cmpeq(sel.r0,zero);
+	sel.r1 = (vector int)vec_cmpeq(sel.r1,zero);
+
+	xmm0.r0 = vec_andc(xmm0.r0,(vector float)sel.r0);
+	xmm0.r1 = vec_andc(xmm0.r1,(vector float)sel.r1);
+	xmm1.r0 = vec_and(xmm1.r0,(vector float)sel.r0);
+	xmm1.r1 = vec_and(xmm1.r1,(vector float)sel.r1);
+	return simd_trait<float,cyme::vmx,2>::register_type(vec_add(xmm0.r0,xmm1.r0),
+							    vec_add(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation float,cyme::vmx, 4 reg
+     */
+   template<>
+    forceinline simd_trait<float,cyme::vmx,4>::register_type
+    _mm_select_poly<float,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type sel,
+                                         simd_trait<float,cyme::vmx,4>::register_type  xmm0,
+                                         simd_trait<float,cyme::vmx,4>::register_type xmm1){
+	vector int mask = vec_splats(2);
+	vector int zero = vec_splats(0);
+	sel.r0 = vec_and(sel.r0,mask);
+	sel.r1 = vec_and(sel.r1,mask);
+	sel.r2 = vec_and(sel.r2,mask);
+	sel.r3 = vec_and(sel.r3,mask);
+	sel.r0 = (vector int)vec_cmpeq(sel.r0,zero);
+	sel.r1 = (vector int)vec_cmpeq(sel.r1,zero);
+	sel.r2 = (vector int)vec_cmpeq(sel.r2,zero);
+	sel.r3 = (vector int)vec_cmpeq(sel.r3,zero);
+
+	xmm0.r0 = vec_andc(xmm0.r0,(vector float)sel.r0);
+	xmm0.r1 = vec_andc(xmm0.r1,(vector float)sel.r1);
+	xmm0.r2 = vec_andc(xmm0.r2,(vector float)sel.r2);
+	xmm0.r3 = vec_andc(xmm0.r3,(vector float)sel.r3);
+	xmm1.r0 = vec_and(xmm1.r0,(vector float)sel.r0);
+	xmm1.r1 = vec_and(xmm1.r1,(vector float)sel.r1);
+	xmm1.r2 = vec_and(xmm1.r2,(vector float)sel.r2);
+	xmm1.r3 = vec_and(xmm1.r3,(vector float)sel.r3);
+	return simd_trait<float,cyme::vmx,4>::register_type(vec_add(xmm0.r0,xmm1.r0),
+							    vec_add(xmm0.r1,xmm1.r1),
+							    vec_add(xmm0.r2,xmm1.r2),
+							    vec_add(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float,cyme::vmx,1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,1>::register_type
+    _mm_select_sign_sin<float,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type swap,
+                                            simd_trait<float,cyme::vmx,1>::register_type xmm0,
+                                            simd_trait<float,cyme::vmx,1>::register_type xmm1){
+	vector float mask = (vector float)vec_splats(0x80000000);
+	vector int four = vec_splats(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0 = vec_and(xmm0, mask);
+
+	/* get the swap sign flag */
+	swap = vec_and(swap, four);
+	swap = vec_sl(swap, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm1 = vec_xor(xmm1, (vector float)swap);
+	xmm1 = vec_xor(xmm1, xmm0);
+	return xmm1;
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float,cyme::vmx,2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,2>::register_type
+    _mm_select_sign_sin<float,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type swap,
+                                            simd_trait<float,cyme::vmx,2>::register_type xmm0,
+                                            simd_trait<float,cyme::vmx,2>::register_type xmm1){
+	vector float mask = (vector float)vec_splats(0x80000000);
+	vector int four = vec_splats(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = vec_and(xmm0.r0, mask);
+	xmm0.r1 = vec_and(xmm0.r1, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = vec_and(swap.r0, four);
+	swap.r1 = vec_and(swap.r1, four);
+	swap.r0 = vec_sl(swap.r0, vec_splats((unsigned int)29));
+	swap.r1 = vec_sl(swap.r1, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm1.r0 = vec_xor(xmm1.r0, (vector float)swap.r0);
+	xmm1.r1 = vec_xor(xmm1.r1, (vector float)swap.r1);
+	xmm1.r0 = vec_xor(xmm1.r0, xmm0.r0);
+	xmm1.r1 = vec_xor(xmm1.r1, xmm0.r1);
+	return simd_trait<float,cyme::vmx,2>::register_type(xmm1.r0,xmm1.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation float,cyme::vmx,4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,4>::register_type
+    _mm_select_sign_sin<float,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type swap,
+                                            simd_trait<float,cyme::vmx,4>::register_type xmm0,
+                                            simd_trait<float,cyme::vmx,4>::register_type xmm1){
+	vector float mask = (vector float)vec_splats(0x80000000);
+	vector int four = vec_splats(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = vec_and(xmm0.r0, mask);
+	xmm0.r1 = vec_and(xmm0.r1, mask);
+	xmm0.r2 = vec_and(xmm0.r2, mask);
+	xmm0.r3 = vec_and(xmm0.r3, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = vec_and(swap.r0, four);
+	swap.r1 = vec_and(swap.r1, four);
+	swap.r2 = vec_and(swap.r2, four);
+	swap.r3 = vec_and(swap.r3, four);
+	swap.r0 = vec_sl(swap.r0, vec_splats((unsigned int)29));
+	swap.r1 = vec_sl(swap.r1, vec_splats((unsigned int)29));
+	swap.r2 = vec_sl(swap.r2, vec_splats((unsigned int)29));
+	swap.r3 = vec_sl(swap.r3, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm1.r0 = vec_xor(xmm1.r0, (vector float)swap.r0);
+	xmm1.r1 = vec_xor(xmm1.r1, (vector float)swap.r1);
+	xmm1.r2 = vec_xor(xmm1.r2, (vector float)swap.r2);
+	xmm1.r3 = vec_xor(xmm1.r3, (vector float)swap.r3);
+	xmm1.r0 = vec_xor(xmm1.r0, xmm0.r0);
+	xmm1.r1 = vec_xor(xmm1.r1, xmm0.r1);
+	xmm1.r2 = vec_xor(xmm1.r2, xmm0.r2);
+	xmm1.r3 = vec_xor(xmm1.r3, xmm0.r3);
+	return simd_trait<float,cyme::vmx,4>::register_type(xmm1.r0,xmm1.r1,
+							     xmm1.r2,xmm1.r3);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float,cyme::vmx,1 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,1>::register_type
+    _mm_select_sign_cos<float,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type swap,
+                                            simd_trait<float,cyme::vmx,1>::register_type xmm0){
+	vector int four = vec_splats(4);
+
+	/* get the swap sign flag */
+	swap = vec_andc(four,swap);
+	swap = vec_sl(swap, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm0 = vec_xor(xmm0, (vector float)swap);
+	return xmm0;
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float,cyme::vmx,2 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,2>::register_type
+    _mm_select_sign_cos<float,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type swap,
+                                            simd_trait<float,cyme::vmx,2>::register_type xmm0){
+	vector int four = vec_splats(4);
+
+	/* get the swap sign flag */
+	swap.r0 = vec_andc(four,swap.r0);
+	swap.r1 = vec_andc(four,swap.r1);
+	swap.r0 = vec_sl(swap.r0, vec_splats((unsigned int)29));
+	swap.r1 = vec_sl(swap.r1, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm0.r0 = vec_xor(xmm0.r0, (vector float)swap.r0);
+	xmm0.r1 = vec_xor(xmm0.r1, (vector float)swap.r1);
+	return simd_trait<float,cyme::vmx,2>::register_type (xmm0.r0,xmm0.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation float,cyme::vmx,4 reg
+     */
+    template<>
+    forceinline simd_trait<float,cyme::vmx,4>::register_type
+    _mm_select_sign_cos<float,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type swap,
+                                            simd_trait<float,cyme::vmx,4>::register_type xmm0){
+	vector int four = vec_splats(4);
+
+	/* get the swap sign flag */
+	swap.r0 = vec_andc(four,swap.r0);
+	swap.r1 = vec_andc(four,swap.r1);
+	swap.r2 = vec_andc(four,swap.r2);
+	swap.r3 = vec_andc(four,swap.r3);
+	swap.r0 = vec_sl(swap.r0, vec_splats((unsigned int)29));
+	swap.r1 = vec_sl(swap.r1, vec_splats((unsigned int)29));
+	swap.r2 = vec_sl(swap.r2, vec_splats((unsigned int)29));
+	swap.r3 = vec_sl(swap.r3, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm0.r0 = vec_xor(xmm0.r0, (vector float)swap.r0);
+	xmm0.r1 = vec_xor(xmm0.r1, (vector float)swap.r1);
+	xmm0.r2 = vec_xor(xmm0.r2, (vector float)swap.r2);
+	xmm0.r3 = vec_xor(xmm0.r3, (vector float)swap.r3);
+	return simd_trait<float,cyme::vmx,4>::register_type (xmm0.r0,xmm0.r1,
+							     xmm0.r2,xmm0.r3);
     }
 
 #ifdef __FMA__
@@ -1316,7 +1671,8 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,1>::register_type
     _mm_neg<double,cyme::vmx,1>(simd_trait<double,cyme::vmx,1>::register_type xmm0){
-	return vec_xor(xmm0,(vector double)vec_splats(0x8000000000000000));
+	vector double mask = (vector double)vec_splats(0x8000000000000000);
+	return vec_xor(xmm0,mask);
 	//return vec_xor(xmm0, vec_splats(-0.));
 }
 
@@ -1327,8 +1683,9 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,2>::register_type
     _mm_neg<double,cyme::vmx,2>(simd_trait<double,cyme::vmx,2>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,(vector double)vec_splats(0x8000000000000000)),
-							     vec_xor(xmm0.r1,(vector double)vec_splats(0x8000000000000000)));
+	vector double mask = (vector double)vec_splats(0x8000000000000000);
+	return simd_trait<double,cyme::vmx,2>::register_type(vec_xor(xmm0.r0,mask),
+							     vec_xor(xmm0.r1,mask));
     }
 
     /**
@@ -1338,10 +1695,11 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::vmx,4>::register_type
     _mm_neg<double,cyme::vmx,4>(simd_trait<double,cyme::vmx,4>::register_type xmm0){
-	return simd_trait<double,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,(vector double)vec_splats(0x8000000000000000)),
-							     vec_xor(xmm0.r1,(vector double)vec_splats(0x8000000000000000)),
-							     vec_xor(xmm0.r2,(vector double)vec_splats(0x8000000000000000)),
-							     vec_xor(xmm0.r3,(vector double)vec_splats(0x8000000000000000)));
+	vector double mask = (vector double)vec_splats(0x8000000000000000);
+	return simd_trait<double,cyme::vmx,4>::register_type(vec_xor(xmm0.r0,mask),
+							     vec_xor(xmm0.r1,mask),
+							     vec_xor(xmm0.r2,mask),
+							     vec_xor(xmm0.r3,mask));
     }
 
     /**
@@ -1657,6 +2015,307 @@ namespace cyme{
 							     (vector double)tmp1,
 							     (vector double)tmp2,
 							     (vector double)tmp3);
+    }
+
+    /**
+      Computes the absolute value for double-precision (64-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::vmx,1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,1>::register_type
+    _mm_fabs<double,cyme::vmx,1>( simd_trait<double,cyme::vmx,1>::register_type xmm0){
+	return vec_abs(xmm0);
+    }
+
+    /**
+      Computes the absolute value for double-precision (64-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::vmx,2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,2>::register_type
+    _mm_fabs<double,cyme::vmx,2>( simd_trait<double,cyme::vmx,2>::register_type xmm0){
+	return simd_trait<double,cyme::vmx,2>::register_type(vec_abs(xmm0.r0),
+							     vec_abs(xmm0.r1));
+    }
+
+    /**
+      Computes the absolute value for double-precision (64-bit) floating point elements and stores
+      the result in dst.
+      specialisation double,cyme::vmx,4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,4>::register_type
+    _mm_fabs<double,cyme::vmx,4>( simd_trait<double,cyme::vmx,4>::register_type xmm0){
+	return simd_trait<double,cyme::vmx,4>::register_type(vec_abs(xmm0.r0),
+							     vec_abs(xmm0.r1),
+							     vec_abs(xmm0.r2),
+							     vec_abs(xmm0.r3));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::vmx, 1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,1>::register_type
+    _mm_select_poly<double,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type sel,
+                                         simd_trait<double,cyme::vmx,1>::register_type xmm0,
+                                         simd_trait<double,cyme::vmx,1>::register_type xmm1){
+	vector int mask = vec_splats(2);
+	vector int zero = vec_splats(0);
+	sel = vec_and(sel,mask);
+	sel = (vector int)vec_cmpeq(sel,zero);
+
+	xmm0 = vec_andc(xmm0,(vector double)sel);
+	xmm1 = vec_and(xmm1,(vector double)sel);
+	return vec_add(xmm0,xmm1);
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::vmx, 2 reg
+     */
+   template<>
+    forceinline simd_trait<double,cyme::vmx,2>::register_type
+    _mm_select_poly<double,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type sel,
+                                         simd_trait<double,cyme::vmx,2>::register_type xmm0,
+                                         simd_trait<double,cyme::vmx,2>::register_type xmm1){
+	vector int mask = vec_splats(2);
+	vector int zero = vec_splats(0);
+	sel.r0 = vec_and(sel.r0,mask);
+	sel.r1 = vec_and(sel.r1,mask);
+	sel.r0 = (vector int)vec_cmpeq(sel.r0,zero);
+	sel.r1 = (vector int)vec_cmpeq(sel.r1,zero);
+
+	xmm0.r0 = vec_andc(xmm0.r0,(vector double)sel.r0);
+	xmm0.r1 = vec_andc(xmm0.r1,(vector double)sel.r1);
+	xmm1.r0 = vec_and(xmm1.r0,(vector double)sel.r0);
+	xmm1.r1 = vec_and(xmm1.r1,(vector double)sel.r1);
+	return simd_trait<double,cyme::vmx,2>::register_type (vec_add(xmm0.r0,xmm1.r0),
+							      vec_add(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+      Selects the polynomial for sin function. Inputs are:
+	- Selector int
+	- Option one
+	- Option two
+      specialisation double,cyme::vmx, 4 reg
+     */
+   template<>
+    forceinline simd_trait<double,cyme::vmx,4>::register_type
+    _mm_select_poly<double,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type sel,
+                                         simd_trait<double,cyme::vmx,4>::register_type  xmm0,
+                                         simd_trait<double,cyme::vmx,4>::register_type xmm1){
+	vector int mask = vec_splats(2);
+	vector int zero = vec_splats(0);
+	sel.r0 = vec_and(sel.r0,mask);
+	sel.r1 = vec_and(sel.r1,mask);
+	sel.r2 = vec_and(sel.r2,mask);
+	sel.r3 = vec_and(sel.r3,mask);
+	sel.r0 = (vector int)vec_cmpeq(sel.r0,zero);
+	sel.r1 = (vector int)vec_cmpeq(sel.r1,zero);
+	sel.r2 = (vector int)vec_cmpeq(sel.r2,zero);
+	sel.r3 = (vector int)vec_cmpeq(sel.r3,zero);
+
+	xmm0.r0 = vec_andc(xmm0.r0,(vector double)sel.r0);
+	xmm0.r1 = vec_andc(xmm0.r1,(vector double)sel.r1);
+	xmm0.r2 = vec_andc(xmm0.r2,(vector double)sel.r2);
+	xmm0.r3 = vec_andc(xmm0.r3,(vector double)sel.r3);
+	xmm1.r0 = vec_and(xmm1.r0,(vector double)sel.r0);
+	xmm1.r1 = vec_and(xmm1.r1,(vector double)sel.r1);
+	xmm1.r2 = vec_and(xmm1.r2,(vector double)sel.r2);
+	xmm1.r3 = vec_and(xmm1.r3,(vector double)sel.r3);
+	return simd_trait<double,cyme::vmx,4>::register_type (vec_add(xmm0.r0,xmm1.r0),
+							      vec_add(xmm0.r1,xmm1.r1),
+							      vec_add(xmm0.r2,xmm1.r2),
+							      vec_add(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::vmx,1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,1>::register_type
+    _mm_select_sign_sin<double,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type swap,
+                                             simd_trait<double,cyme::vmx,1>::register_type xmm0,
+                                             simd_trait<double,cyme::vmx,1>::register_type xmm1){
+	vector double mask = (vector double)vec_splats(0x80000000);
+	vector int four = vec_splats(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0 = vec_and(xmm0, mask);
+
+	/* get the swap sign flag */
+	swap = vec_and(swap, four);
+	swap = vec_sl(swap, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm1 = vec_xor(xmm1, (vector double)swap);
+	xmm1 = vec_xor(xmm1, xmm0);
+	return xmm1;
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::vmx,2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,2>::register_type
+    _mm_select_sign_sin<double,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type swap,
+                                             simd_trait<double,cyme::vmx,2>::register_type xmm0,
+                                             simd_trait<double,cyme::vmx,2>::register_type xmm1){
+	vector double mask = (vector double)vec_splats(0x80000000);
+	vector int four = vec_splats(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = vec_and(xmm0.r0, mask);
+	xmm0.r1 = vec_and(xmm0.r1, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = vec_and(swap.r0, four);
+	swap.r1 = vec_and(swap.r1, four);
+	swap.r0 = vec_sl(swap.r0, vec_splats((unsigned int)29));
+	swap.r1 = vec_sl(swap.r1, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm1.r0 = vec_xor(xmm1.r0, (vector double)swap.r0);
+	xmm1.r1 = vec_xor(xmm1.r1, (vector double)swap.r1);
+	xmm1.r0 = vec_xor(xmm1.r0, xmm0.r0);
+	xmm1.r1 = vec_xor(xmm1.r1, xmm0.r1);
+	return simd_trait<double,cyme::vmx,2>::register_type (xmm1.r0,xmm1.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for sin function. Inputs are:
+	- swap int
+	- Original input
+	- Final calculated sin value
+      specialisation double,cyme::vmx,4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,4>::register_type
+    _mm_select_sign_sin<double,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type swap,
+                                             simd_trait<double,cyme::vmx,4>::register_type xmm0,
+                                             simd_trait<double,cyme::vmx,4>::register_type xmm1){
+	vector double mask = (vector double)vec_splats(0x80000000);
+	vector int four = vec_splats(4);
+	/* extract the sign bit (upper one) from original val */
+	xmm0.r0 = vec_and(xmm0.r0, mask);
+	xmm0.r1 = vec_and(xmm0.r1, mask);
+	xmm0.r2 = vec_and(xmm0.r2, mask);
+	xmm0.r3 = vec_and(xmm0.r3, mask);
+
+	/* get the swap sign flag */
+	swap.r0 = vec_and(swap.r0, four);
+	swap.r1 = vec_and(swap.r1, four);
+	swap.r2 = vec_and(swap.r2, four);
+	swap.r3 = vec_and(swap.r3, four);
+	swap.r0 = vec_sl(swap.r0, vec_splats((unsigned int)29));
+	swap.r1 = vec_sl(swap.r1, vec_splats((unsigned int)29));
+	swap.r2 = vec_sl(swap.r2, vec_splats((unsigned int)29));
+	swap.r3 = vec_sl(swap.r3, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm1.r0 = vec_xor(xmm1.r0, (vector double)swap.r0);
+	xmm1.r1 = vec_xor(xmm1.r1, (vector double)swap.r1);
+	xmm1.r2 = vec_xor(xmm1.r2, (vector double)swap.r2);
+	xmm1.r3 = vec_xor(xmm1.r3, (vector double)swap.r3);
+	xmm1.r0 = vec_xor(xmm1.r0, xmm0.r0);
+	xmm1.r1 = vec_xor(xmm1.r1, xmm0.r1);
+	xmm1.r2 = vec_xor(xmm1.r2, xmm0.r2);
+	xmm1.r3 = vec_xor(xmm1.r3, xmm0.r3);
+	return simd_trait<double,cyme::vmx,4>::register_type (xmm1.r0,xmm1.r1,
+							      xmm1.r2,xmm1.r3);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::vmx,1 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,1>::register_type
+    _mm_select_sign_cos<double,cyme::vmx,1>( simd_trait<int,cyme::vmx,1>::register_type swap,
+                                             simd_trait<double,cyme::vmx,1>::register_type xmm0){
+	vector int four = vec_splats(4);
+
+	/* get the swap sign flag */
+	swap = vec_andc(four,swap);
+	swap = vec_sl(swap, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm0 = vec_xor(xmm0, (vector double)swap);
+	return xmm0;
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::vmx,2 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,2>::register_type
+    _mm_select_sign_cos<double,cyme::vmx,2>( simd_trait<int,cyme::vmx,2>::register_type swap,
+                                             simd_trait<double,cyme::vmx,2>::register_type xmm0){
+	vector int four = vec_splats(4);
+
+	/* get the swap sign flag */
+	swap.r0 = vec_andc(four,swap.r0);
+	swap.r1 = vec_andc(four,swap.r1);
+	swap.r0 = vec_sl(swap.r0, vec_splats((unsigned int)29));
+	swap.r1 = vec_sl(swap.r1, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm0.r0 = vec_xor(xmm0.r0, (vector double)swap.r0);
+	xmm0.r1 = vec_xor(xmm0.r1, (vector double)swap.r1);
+	return simd_trait<double,cyme::vmx,2>::register_type (xmm0.r0,xmm0.r1);
+    }
+
+    /**
+      Selects the sign (+/-) for cos function. Inputs are:
+	- swap int
+	- Final calculated cos value
+      specialisation double,cyme::vmx,4 reg
+     */
+    template<>
+    forceinline simd_trait<double,cyme::vmx,4>::register_type
+    _mm_select_sign_cos<double,cyme::vmx,4>( simd_trait<int,cyme::vmx,4>::register_type swap,
+                                             simd_trait<double,cyme::vmx,4>::register_type xmm0){
+	vector int four = vec_splats(4);
+
+	/* get the swap sign flag */
+	swap.r0 = vec_andc(four,swap.r0);
+	swap.r1 = vec_andc(four,swap.r1);
+	swap.r2 = vec_andc(four,swap.r2);
+	swap.r3 = vec_andc(four,swap.r3);
+	swap.r0 = vec_sl(swap.r0, vec_splats((unsigned int)29));
+	swap.r1 = vec_sl(swap.r1, vec_splats((unsigned int)29));
+	swap.r2 = vec_sl(swap.r2, vec_splats((unsigned int)29));
+	swap.r3 = vec_sl(swap.r3, vec_splats((unsigned int)29));
+
+	/* update the sign of the final value*/
+	xmm0.r0 = vec_xor(xmm0.r0, (vector double)swap.r0);
+	xmm0.r1 = vec_xor(xmm0.r1, (vector double)swap.r1);
+	xmm0.r2 = vec_xor(xmm0.r2, (vector double)swap.r2);
+	xmm0.r3 = vec_xor(xmm0.r3, (vector double)swap.r3);
+	return simd_trait<double,cyme::vmx,4>::register_type (xmm0.r0,xmm0.r1,
+							      xmm0.r2,xmm0.r3);
     }
 
 #ifdef __FMA__
