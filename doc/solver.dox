@@ -1,0 +1,167 @@
+/*!
+
+\page Page6 Math library
+
+Cyme provides its own mathematical library, as outside of arithmetical operations
+and square root, these functions are not available through native intrinsics.
+Vendors provide these functions in libraries such as svml (Intel) and massv (IBM).
+We also provide an alternative to native division using the Newton-Raphson method.
+The implementations of these elementary functions may be up to 40% faster than
+the corresponding vendor-provided implementations, but they do not respect the IEEE
+specification and their precision is inferior.
+
+The elementary functions implemented in the cyme math library are:
+
+\li exponential, \f$ e^x \f$
+\li logarithm base e, \f$ log_e(x) \f$
+\li division, \f$ a/b \f$
+\li square root, \f$ \sqrt{x} \f$
+\li power of n, \f$ x^n \f$ (\f$ n \f$ unsigned integer)
+
+The implementations of these elementary functions will all use FMA instructions
+if the technology exists on the target platform.
+
+\section op0 Exponential
+
+Suppose we have a real number \f$x\f$,  then
+for all \f$ x \in \textrm{R} \f$ there exists \f$ y \in [0, \log_e 2) \f$ and 
+\f$ k \in \textrm{Z}  \f$, such that \f$x\f$ can then be written as
+\f[
+    x = y + k \times \log_e 2.
+\f]
+
+This equation has two unknowns, \f$y\f$ and \f$k\f$, which can be determined by
+\f{eqnarray*}{
+    \lfloor x/\log_e 2 \rfloor
+    \!&=&\! \lfloor y/\log_e 2 + k \rfloor \\
+    \!&=&\! \lfloor y/\log_e 2 \rfloor + k \\
+    \!&=&\! k
+\f}
+where \f$\lfloor\cdot\rfloor\f$ demotes the floor function. \f$y\f$ is then
+obtained by substitution. We can then express the exponential of \f$ x \f$ by
+\f[
+    e^x   =    2^k\, .\, e^y,
+\f]
+
+For efficiency reasons, \f$2^k\f$ is computed by manipulating the internal hardware
+representation of floating point numbers, writing to the exponent field directly.
+On the other hand \f$e^y\f$ is computed using a polynomial approximation
+\f$P(x) = \sum_{i=0}^n a_i x^i\f$, where the coefficients of \f$ P(x) \f$
+are derived with the Remez algorithm by an external program.
+The order of the polynomial is set to 11, guaranteeing an optimal tradeoff
+between precision and efficiency.  The computation of the polynomial is carried
+out using Horner's method.
+
+The exponents for base 2 and base 10 ( \f$2^x\f$ and  \f$10^x\f$ ) were calculated
+with the previous exponent function using the exponential identity 
+\f{eqnarray*}{
+    a^k \!&=&\! e^{k.ln(a)} \\
+           \!&=&\! e^{k.c},
+\f}
+where \f$a\f$ was either 2 or 10 and \f$c\f$ was the constant expression \f$ln(a)\f$ .
+
+
+\section op1 Logarithm
+
+The logarithm implementation uses the floating point binary representation (IEEE 754) of the
+number. A floating point number can be expressed as \f$ x = s \times x_0 \times 2^n \f$,
+where \f$ s \f$ is the sign,  1 or -1,
+\f$ x_0 \in [1,2) \f$ and $n$ is an integer. For positive $x$ then,
+\f{eqnarray*}{
+    \log x \!&=&\! \log 2\, .\, \log_2 x \\
+           \!&=&\! \log 2\, .\, (\log_2 x_0 + n).
+\f}
+\f$ x_0 \f$ and \f$ n \f$ are derived directly from the floating point
+binary representation, and \f$ \log_2 x_0 \f$ is computed with a polynomial
+approximation determined by the Remez algorithm.
+
+The logarithms for base 2 and base 10 were calculated with the previous log function
+using the identity: 
+\f{eqnarray*}{
+    \log_a x \!&=&\! \frac{\log_e x }{\log_e a } \\
+	    \!&=&\! \log_e x\, .\, \frac{1}{\log_e a }.
+\f}
+where \f$a\f$ is equal to 2 or 10. So, for example, \f$\log_2 x\f$ would be calculated 
+simply by multiplying the result of \f$log_e x\f$ by the constant \f$c\f$ where 
+\f{eqnarray*}{
+    c  \!&=&\!  \frac{1}{log_e 2 }.
+\f} .
+
+\section op2 Division
+
+To compute \f$ a/b \f$, one can multiply \f$a\f$ by the reciprocal of \f$b\f$,
+where the reciprocal is approximated by the Newton-Raphson method.
+
+The Newton-Raphson iterative scheme finds successive approximations \f$x_i\f$ to the
+zero of a differentiable function \f$f\f$ by
+\f[
+x_{n+1} = x_n - \frac{f(x_n)}{f^{'}(x_n)}.
+\f]
+
+In order to approximate the reciprocal of \f$b\f$, we can use Newton-Raphson to
+find the zero of \f$f(x) = 1/x - b\f$, giving
+\f[
+    x_{n+1} = x+n\,.\,(2 - b x_n).
+\f]
+
+A first approximation \f$x_0\f$ to the reciprocal can be obtained via an efficient
+SIMD intrinsic function which has 12-bit precision on x86 architecture, and
+8-bit precision on BG/Q. To achieve sufficient accuracy, the total number of
+Newton-Raphson iterations has been determined to be 4 on x86 architecture, and 5 on BG/Q.
+
+\section op3 Square root
+
+As there is a low-precision (12-bit on x86, 8-bit on BG/Q) SIMD intrinsic for \f$1/\sqrt{x}\f$,
+a fast square root can be obtained by multiplying \f$x\f$ by an approximation to
+\f$1/\sqrt{x}\f$ calculated using the Newton-Raphson method.
+Letting \f$f(x)=1/x^2 - b\f$, the zero of \f$f\f$, \f$1/\sqrt{b}\f$ has successive approximations
+given by
+\f[
+x_{n+1} = \frac{1}{2}x_n\,.\,(3-bx_n^2).
+\f]
+
+\section op4 Power of n
+
+The power function is provided only for positive integer exponents, and is
+implemented using a pure recursive meta-programming approach:
+for \f$n>1\f$, \f$n\f$ even:
+\f[
+    x^n = x^{n/2}\,.\,x^{n/2},
+\f]
+while for \f$n>1\f$, \f$n\f$ odd:
+\f[
+    x^n = x\,.\,x^{\lfloor n/2 \rfloor}\,.\,x^{\lfloor n/2 \rfloor}.
+\f]
+
+\section op5 Trigonometric Functions
+
+The implementation of Sin(x) was derived from the Cephes implementation. It can be broken up into 5 steps:
+1. Take the absolute value of the x
+2. Perform a calculation using coefficents DP such that
+\f[
+    z = (((z - j\,.\,DP1) - j\,.\,DP2) - j\,.\,DP3)
+\f]
+where j is
+\f[
+    j = ( \lfloor x\,.\,\frac{4}{PI} \rfloor + 1 ) \& (\sim 1)
+\f] 
+3. Calculate the polynomials for both sin and cos using Horner's method
+4. Select the correct polynomial depending on the value j & 2
+5. Select the sign of the final result depending on the sign of the original input, x,
+and the value j & 4.
+
+Cos is calculated in a similar fashion, but with modifications to the way it selects the sign and polynomial.
+Tan calculates both the cos and sin of the input uses the trigonometric identity:
+\f[
+   tan(x) = \frac{sin(x)}{cos(x)} .
+\f]
+
+\section serial Serial library
+
+Cyme also generates a C-compatible library for the following functions:
+
+\li \f$ e^x \f$: cyme_fexp(float) and cyme_exp(double)
+\li \f$ \log_e x \f$: cyme_flog(float) and cyme_log(double)
+\li \f$ \sqrt{x} \f$: cyme_fsqrt(float) and cyme_sqrt(double)
+
+*/

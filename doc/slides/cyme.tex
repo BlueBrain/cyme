@@ -1,0 +1,914 @@
+\documentclass{beamer}
+\mode<presentation>
+\usepackage{tikz}
+\usetikzlibrary{lindenmayersystems}
+\usetikzlibrary{automata,arrows}
+\usetikzlibrary{petri}
+\usetikzlibrary[shadings]
+\usetikzlibrary{arrows}
+\usetikzlibrary{trees,snakes}
+
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{amsfonts}
+\usepackage{epstopdf}
+\usepackage{pifont}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{psfrag}
+\usepackage{alltt}
+\usepackage{color,listings}
+
+\usepackage{xcolor,colortbl}
+\usepackage{color}
+\usepackage{epsfig}
+
+\graphicspath{{plot/}{figure/}{logo/}}
+
+%\usefonttheme{professionalfonts}
+%\usepackage{beamerthemesplit}
+
+%MAdrid
+%\usetheme[secheader]{Madrid}
+\usetheme[compress]{Berlin}
+%\usetheme{Berkeley}
+%\usetheme[compress]{Ilmenau}
+\usecolortheme{seahorse}
+%\usecolortheme{default}
+%\usecolortheme{sidebartab}
+%\usecolortheme{albatross}
+%\usecolortheme{beetle} 
+%\usecolortheme{crane}
+%\usecolortheme{dove} 
+%\usecolortheme{fly} 
+%\usecolortheme{seagull}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%crane
+%\beamertemplatetransparentcoverdhigh
+%\useoutertheme[footline=author]{miniframes}
+%\usefonttheme[onlylarge]{structuresmallcapsserif}
+%\setbeamerfont{title}{shape=\itshape,family=\rmfamily}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN SYMBOL
+	\def\cyme{\includegraphics[width=0.3cm]{logo-figure0}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% END SYMBOL
+
+\usepackage[frenchb]{babel}
+\usepackage[applemac]{inputenc}
+
+          \definecolor{C0}{RGB}{207,46,49}
+          \definecolor{C1}{RGB}{226,162,45}
+          \definecolor{C2}{RGB}{227,189,28}
+          \definecolor{C3}{RGB}{162,179,36}
+          \definecolor{C4}{RGB}{29,154,47}
+
+
+\newcommand\cad{
+\tikzstyle{level 1}=[sibling angle=120]
+\tikzstyle{level 2}=[sibling angle=60]
+\tikzstyle{level 3}=[sibling angle=30]
+\tikzstyle{every node}=[fill]
+\tikzstyle{edge from parent}=[snake=expanding waves,segment length=1mm,segment angle=10,draw]
+\begin{tikzpicture}[grow cyclic,shape=circle,very thick,level distance=13mm,   cap=round, rotate=90,scale=0.7]
+\node {} child [color=\A] foreach \A in {C0}
+    { node {} child [color=\A!50!\B] foreach \B in {C2,C3,C4}
+        {  node {}        }
+    };
+\end{tikzpicture}}
+
+%\title[TMAC in Microtube]{Tangential Momemtum Accomodation in Microtube}
+\title[\cyme]{Cyme, HPC library }
+\author{Tim Ewart and Fabien Delalondre}
+%\subtitle{\texttt{timothee.ewart@polytech.univ-mrs.fr}
+ \institute[ BBP - HPC]{
+\tikzstyle{level 1}=[sibling angle=120]
+\tikzstyle{level 2}=[sibling angle=60]
+\tikzstyle{level 3}=[sibling angle=30]
+\tikzstyle{every node}=[fill]
+\tikzstyle{edge from parent}=[snake=expanding waves,segment length=1mm,segment angle=10,draw]
+\begin{center}
+\mbox{
+\includegraphics[scale=0.15]{fleur.jpg}} \hspace{1cm}
+\begin{tikzpicture}[grow cyclic,shape=circle,very thick,level distance=13mm,   cap=round, rotate=90,scale=0.7]
+\node {} child [color=\A] foreach \A in {C0}
+    { node {} child [color=\A!50!\B] foreach \B in {C2,C3,C4}
+        { node {} child [color=\A!50!\B!50!\C] foreach \C in {C2,C3,C4}
+            { node {} }
+        }
+    };
+\end{tikzpicture} 
+\end{center}
+ }
+
+
+\date{}
+%\date[09/03/13]{\includegraphics[scale=0.3]{EPFL_LOG_QUADRI_Red.eps}   }
+
+
+
+\begin{document}
+
+
+
+
+
+\setbeamercolor{structure}{fg=C2, bg=C1}
+
+\lstset{language=C++,
+   keywords={break,case,catch,continue,else,elseif,end,for,function,const,begin,double,float
+      global,if,otherwise,persistent,return,switch,try,while,constexpr,static,inline,size_t,typename
+     mulsd,addsd,mulsd,divsd,movl},
+   keywords=[2]{class,struct,template},
+   keywords=[3]{movapd,AoS,AoSoA},
+   basicstyle=\ttfamily,
+   keywordstyle=\color{C0},
+   keywordstyle=[2]\color{C1},
+   keywordstyle=[3]\color{C2},
+   commentstyle=\color{C3},
+   stringstyle=\color{dkgreen},
+   numbers=left,
+   numberstyle=\tiny\color{gray},
+   stepnumber=1,
+   numbersep=10pt,
+   backgroundcolor=\color{white},
+   tabsize=4,
+   showspaces=false,
+   frame=single,
+   showstringspaces=false}
+
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 0
+\section[Structure of data]{which structure}
+\subsection*{What is the Neurodamus issue ?}
+\begin{frame}
+Neurodamus is a synapse/channel problem
+\begin{enumerate}
+\item 10 000 synapse/channel per neurons 
+\item Typed Synapse/channel (chemical processes )
+\item Synapse/channel represented by (5-20 numbers) 
+\end{enumerate}
+\center
+How do we maximize the  calculation ?
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 1
+\subsection*{Which data layout}
+\begin{frame}
+Problem: 
+\begin{enumerate}
+\item How do we represent a series of small objects ($e.g.$ 5 floats) ? 
+\item How do we manipulate them ? 
+\end{enumerate}
+Solutions:
+\begin{itemize}
+\item Array of Structure  (AoS)
+\item  Array of Structure of Array (AoSoA - interleave data)
+\item Serial or vectorial computation (SIMD)
+\end{itemize}
+
+Cool:
+\begin{itemize}
+\item Run vectorial calculation only
+\end{itemize}
+ 
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 2
+
+\subsection*{AoS  - AoSoA, what is it ?}
+\begin{frame}[fragile]
+An object (5 elements), and data layout 
+
+\begin{tikzpicture}[scale=1.4]
+          \path[fill=C0] (0,0) rectangle ++(0.2,0.2); 
+          \path[fill=C1] (0.2,0) rectangle ++(0.2,0.2); 
+          \path[fill=C2] (0.4,0) rectangle ++(0.2,0.2); 
+          \path[fill=C3] (0.6,0) rectangle ++(0.2,0.2); 
+          \path[fill=C4] (0.8,0) rectangle ++(0.2,0.2);
+          \draw[step=.2,help lines] (0,0) grid (1,0.2); 
+\end{tikzpicture}
+
+\hrulefill
+
+
+AoS 
+
+\begin{tikzpicture}[scale=1.4]
+      \foreach \x in {0.0,1,...,4} {
+          \path[fill=C0] (\x,0) rectangle ++(0.2,0.2); 
+          \path[fill=C1] (\x+0.2,0) rectangle ++(0.2,0.2); 
+          \path[fill=C2] (\x+0.4,0) rectangle ++(0.2,0.2); 
+          \path[fill=C3] (\x+0.6,0) rectangle ++(0.2,0.2); 
+          \path[fill=C4] (\x+0.8,0) rectangle ++(0.2,0.2);
+      }   
+\draw[step=.2,help lines] (0,0) grid (5,0.2); 
+\end{tikzpicture}
+
+\hrulefill
+
+
+%SoA following 256 bit vector register (avx - qpx)
+
+
+%\begin{tikzpicture}[scale=1.4]
+ %      \path[fill=C0] (0,0) rectangle ++(1,0.2); 
+   %    \draw [>=stealth,<->] (0,-0.1)--(0.8,-0.1) ;
+     %  \draw [>=stealth,<->] (0.8,-0.1)--(1.6,-0.1) ;
+   %    \draw (0.4,-0.1) node[below]{avx} ;
+     %  \draw (1.2,-0.1) node[below]{avx} ;
+
+   %    \path[fill=C1] (1.6,0) rectangle ++(1,0.2); 
+     %  \path[fill=C2] (3.2,0) rectangle ++(1,0.2); 
+       %\path[fill=C3] (4.8,0) rectangle ++(1,0.2); 
+    %  \path[fill=C4] (6.4,0) rectangle ++(1,0.2);    
+%\draw[xstep=.8,ystep=.2,help lines] (0,0) grid (8,0.2); 
+%\end{tikzpicture}
+
+\vspace{0.5cm}
+
+AoSoA following  256 bit vector register (avx - qpx)  
+
+\begin{tikzpicture}[scale=1.4]
+       \path[fill=C0] (0,0) rectangle ++(0.8,0.2); 
+       \draw [>=stealth,<->] (0,-0.1)--(0.8,-0.1) ;
+       \draw [>=stealth,<->] (0.8,-0.1)--(1.6,-0.1) ;
+       \draw (0.4,-0.1) node[below]{avx} ;
+       \draw (1.2,-0.1) node[below]{avx} ;
+
+       \path[fill=C1] (0.8,0) rectangle ++(0.8,0.2); 
+       \path[fill=C2] (1.6,0) rectangle ++(0.8,0.2); 
+       \path[fill=C3] (2.4,0) rectangle ++(0.8,0.2); 
+       \path[fill=C4] (3.2,0) rectangle ++(0.8,0.2);  
+       \path[fill=C0] (4,0) rectangle ++(0.2,0.2); 
+       \path[fill=C1] (4.8,0) rectangle ++(0.2,0.2); 
+       \path[fill=C2] (5.6,0) rectangle ++(0.2,0.2); 
+       \path[fill=C3] (6.4,0) rectangle ++(0.2,0.2); 
+       \path[fill=C4] (7.2,0) rectangle ++(0.2,0.2); 
+\draw[xstep=.8,ystep=.2,help lines] (0,0) grid (8,0.2); 
+\end{tikzpicture}
+\begin{center}
+which layout ? Which container ?
+\end{center}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 3
+%\subsection*{Serial or vectorial calculation,  what is it ?}
+%\begin{frame}[fragile]
+%
+%Processors  calculation can be serial and vectorial:  
+%
+%\begin{minipage}{0.4\textwidth}
+%\centering
+%\vspace{0.5cm}
+%Serial \\
+%\vspace{0.5cm}
+%\begin{tikzpicture}[scale=1.4]
+%         \path[fill=C0] (0,0) rectangle ++(0.2,0.2); 
+%         \draw[step=.2,help lines] (0,0) grid (0.2,0.2); 
+%         \path[fill=C0] (0,-0.8) rectangle ++(0.2,0.2); 
+%         \draw (0.1,-0.1) node[below]{+=} ;
+%        \draw[step=.2,help lines] (0,-0.8) grid (0.2,-0.6); 
+%\end{tikzpicture}
+%
+%1 addition
+%\end{minipage}
+%\begin{minipage}{0.4\textwidth}
+%\centering
+%\vspace{0.5cm}
+%Vectorial (AVX 4 double) \\
+%\vspace{0.5cm}
+%\begin{tikzpicture}[scale=1.4]
+%       \path[fill=C0] (0,0) rectangle ++(0.8,0.2);     
+%       \draw[step=.2,help lines] (0,0) grid (0.8,0.2);
+%       \draw (0.4,-0.1) node[below]{+=} ;
+%       \path[fill=C0] (0,-0.8) rectangle ++(0.8,0.2);     
+%       \draw[step=.2,help lines] (0,-0.8) grid (0.8,-0.6);
+%\end{tikzpicture}
+%
+%4 additions
+%\end{minipage}
+%
+%\vspace{0.5cm}
+%
+%Vectorial calculation can give a nice speed up ($\times 4$). 
+%
+%Serial calculation are usuals for the compiler. It may generate vectorial instruction. Else by hand, It necessitates SoA or AoSoA data layout.
+%
+%
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 4
+
+\subsection*{An universal container}
+\begin{frame}[fragile]
+Containers with two data layout
+ \begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
+      cyme::vector<object,double,AoS> vec_AoS;       
+      cyme::vector<object,double,AoSoA>    vec_AoSoA;
+\end{lstlisting}
+
+\hspace{1cm}
+
+Memory layout:
+
+\vspace{0.5cm}
+
+\begin{tikzpicture}[scale=1.2]
+
+\vspace{0.5cm}
+
+              \draw (-0.35,0.35) node[below]{AoS} ;
+              \draw (-0.5,-0.65) node[below]{AoSoA} ;
+
+       \foreach \x in {0.0,1,...,4} {
+          \path[fill=C0] (\x,0) rectangle ++(0.2,0.2); 
+          \path[fill=C1] (\x+0.2,0) rectangle ++(0.2,0.2); 
+          \path[fill=C2] (\x+0.4,0) rectangle ++(0.2,0.2); 
+          \path[fill=C3] (\x+0.6,0) rectangle ++(0.2,0.2); 
+          \path[fill=C4] (\x+0.8,0) rectangle ++(0.2,0.2);
+      }  
+      
+      
+      \draw [>=stealth,->] (0.1,-0.1)--(0.1,-0.7) ;      
+      \draw [>=stealth,->] (1.1,-0.1)--(0.3,-0.7) ;      
+      \draw [>=stealth,->] (2.1,-0.1)--(0.5,-0.7) ;      
+      \draw [>=stealth,->] (3.1,-0.1)--(0.7,-0.7) ;      
+      \draw [>=stealth,->] (4.1,-0.1)--(4.1,-0.7) ;      
+
+       AoSoA layout.
+       \path[fill=C0] (0,-1) rectangle ++(0.8,0.2);              
+       \path[fill=C1] (0.8,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C2] (1.6,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C3] (2.4,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C4] (3.2,-1) rectangle ++(0.8,0.2);  
+       \path[fill=C0] (4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C1] (4.8,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C2] (5.6,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C3] (6.4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C4] (7.2,-1) rectangle ++(0.2,0.2); 
+       \draw[xstep=.8,ystep=.2,help lines] (0,-1) grid (8,-0.8); 
+       \draw[step=.2,help lines] (0,0) grid (5,0.2); 
+
+
+       \draw [>=stealth,<->] (0,-1.1)--(0.8,-1.1) ;
+       \draw (0.4,-1.1) node[below]{avx} ;
+
+       \draw [>=stealth,<->] (4,-1.1)--(4.8,-1.1) ;
+       \draw (4.4,-1.1) node[below]{avx} ;
+
+       \draw [>=stealth,<->] (4.2,-0.7)--(4.8,-0.7) ;
+       \draw (4.49,-0.25) node[below]{pad} ;
+\end{tikzpicture}
+
+
+\end{frame}
+
+\subsection*{Bracket operator (i,j) and [i]}
+\begin{frame}[fragile]
+
+AoS ideology, easier to represent in mind, bracket operator (i,j)
+
+\vspace{0.5cm}
+
+\begin{tikzpicture}[scale=1.2]
+
+\vspace{0.5cm}
+
+              \draw (-0.35,0.35) node[below]{AoS} ;
+              \draw (-0.5,-0.65) node[below]{AoSoA} ;
+
+       \foreach \x in {0.0,1,...,4} {
+          \path[fill=C0] (\x,0) rectangle ++(0.2,0.2); 
+          \path[fill=C1] (\x+0.2,0) rectangle ++(0.2,0.2); 
+          \path[fill=C2] (\x+0.4,0) rectangle ++(0.2,0.2); 
+          \path[fill=C3] (\x+0.6,0) rectangle ++(0.2,0.2); 
+          \path[fill=C4] (\x+0.8,0) rectangle ++(0.2,0.2);
+      }  
+      
+      
+      \draw [>=stealth,<-] (3.1,-0.1)--(4.1,-0.4) ;      
+      \draw [>=stealth,<-] (0.7,-0.7)--(4.1,-0.4) ;      
+      \draw (4.6,-0.1) node[below]{ a(3,0)} ;
+
+
+
+       AoSoA layout.
+       \path[fill=C0] (0,-1) rectangle ++(0.8,0.2);              
+       \path[fill=C1] (0.8,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C2] (1.6,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C3] (2.4,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C4] (3.2,-1) rectangle ++(0.8,0.2);  
+       \path[fill=C0] (4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C1] (4.8,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C2] (5.6,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C3] (6.4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C4] (7.2,-1) rectangle ++(0.2,0.2); 
+       \draw[xstep=.8,ystep=.2,help lines] (0,-1) grid (8,-0.8); 
+       \draw[step=.2,help lines] (0,0) grid (5,0.2); 
+       
+
+      \path[fill=black] (0.6,-1) rectangle ++(0.2,0.2);              
+      \path[fill=black] (3,0) rectangle ++(0.2,0.2);        
+
+\end{tikzpicture}
+
+\vspace{0.5cm}
+
+Iterator and bracket [i] operator, 
+
+\vspace{0.5cm}
+
+\begin{tikzpicture}[scale=1.2]
+
+\vspace{0.5cm}
+
+              \draw (-0.35,0.35) node[below]{AoS} ;
+              \draw (-0.5,-0.65) node[below]{AoSoA} ;
+
+       \foreach \x in {0.0,1,...,4} {
+          \path[fill=C0] (\x,0) rectangle ++(0.2,0.2); 
+          \path[fill=C1] (\x+0.2,0) rectangle ++(0.2,0.2); 
+          \path[fill=C2] (\x+0.4,0) rectangle ++(0.2,0.2); 
+          \path[fill=C3] (\x+0.6,0) rectangle ++(0.2,0.2); 
+          \path[fill=C4] (\x+0.8,0) rectangle ++(0.2,0.2);
+      }  
+      
+      
+      \draw [>=stealth,<-] (0.3,-0.1)--(4.1,-0.4) ;      
+      \draw [>=stealth,<-] (1.1,-0.7)--(4.1,-0.4) ;      
+      \draw (5,-0.1) node[below]{ (*iterator)[1]} ;
+
+
+
+       AoSoA layout.
+       \path[fill=C0] (0,-1) rectangle ++(0.8,0.2);              
+       \path[fill=C1] (0.8,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C2] (1.6,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C3] (2.4,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C4] (3.2,-1) rectangle ++(0.8,0.2);  
+       \path[fill=C0] (4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C1] (4.8,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C2] (5.6,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C3] (6.4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C4] (7.2,-1) rectangle ++(0.2,0.2); 
+       \draw[xstep=.8,ystep=.2,help lines] (0,-1) grid (8,-0.8); 
+       \draw[step=.2,help lines] (0,0) grid (5,0.2); 
+       
+
+      \path[fill=black] (0.8,-1) rectangle ++(0.8,0.2);              
+      \path[fill=black] (0.2,0) rectangle ++(0.2,0.2);        
+
+
+\end{tikzpicture}
+
+\vspace{0.5cm} 
+
+\hspace{5cm} Iterator for computations ...
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 5
+
+\subsection*{Generic syntax}
+\begin{frame}[fragile]
+\centering
+Generic syntax: 
+ \begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
+      cyme::vector<object,double,AoSoA/AoS> vec;
+      typename vec<object,double,AoSoA/AoS>::iterator it;
+      for(it = block.begin();it != block.end();++it){...}
+\end{lstlisting}
+
+\hspace{2cm}
+
+Memory access:
+
+\begin{tikzpicture}[scale=1.4]
+       
+
+       \foreach \x in {0.0,1,...,4} {
+          \path[fill=C0] (\x,0) rectangle ++(0.2,0.2); 
+          \path[fill=C1] (\x+0.2,0) rectangle ++(0.2,0.2); 
+          \path[fill=C2] (\x+0.4,0) rectangle ++(0.2,0.2); 
+          \path[fill=C3] (\x+0.6,0) rectangle ++(0.2,0.2); 
+          \path[fill=C4] (\x+0.8,0) rectangle ++(0.2,0.2);
+      }  
+       \foreach \x in {0.0,1,...,3} {
+            \draw (0.6+\x,0.8) node[below]{++it} ;
+             \draw[->,>=latex] (0.1+\x,0.3) to[bend left] (1.1 + \x,0.3);
+       }
+            \draw[step=.2,help lines] (0,0) grid (5,0.2); 
+            
+            
+       \path[fill=C0] (0,-1) rectangle ++(0.8,0.2);              
+       \path[fill=C1] (0.8,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C2] (1.6,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C3] (2.4,-1) rectangle ++(0.8,0.2); 
+       \path[fill=C4] (3.2,-1) rectangle ++(0.8,0.2);  
+       \path[fill=C0] (4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C1] (4.8,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C2] (5.6,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C3] (6.4,-1) rectangle ++(0.2,0.2); 
+       \path[fill=C4] (7.2,-1) rectangle ++(0.2,0.2); 
+
+
+        \draw (2,-0.1) node[below]{++it} ;
+      \draw[->,>=latex] (0.1, -0.7) to[bend left=10] (4.1 ,-0.7);
+ 
+       
+       \draw[xstep=.8,ystep=.2,help lines] (0,-1) grid (8,-0.8); 
+\end{tikzpicture}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 6
+\section[Expression-template]{Expression-template}
+\subsection*{Template-expression: expression-template 1}
+\begin{frame}[fragile]
+Evaluate: \\
+\centering
+$\boxed{a[0] = a[1]  \times a[2]  +a[3]/1.2}$
+
+\vspace{0.5cm}
+%\hrulefill
+
+\begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
+      cyme::vector<object,AoSoA/AoS> vec;
+      typename cyme::vector<object,AoSoA/AoS>::iterator it;
+      for(it = vec();it != vec(); ++it)
+          (*it)[0] = (*it)[1]x(*it)[2]+(*it)[3]/1.2;
+\end{lstlisting}
+\vspace{0.5cm}
+
+Simple SIMD wrappers are inefficient (too ASM/copy)
+
+Solution : expression-template (Vandevoorde-2002)
+
+
+
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 6
+
+\subsection*{Template-expression: expression-template 2 }
+\begin{frame}[fragile]
+\centering
+Associate the container with "expression-template"  method and a vector (SIMD) class
+\begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
+          (*it)[0] = (*it)[1]x(*it)[2]+(*it)[3]/1.2;
+\end{lstlisting}
+\begin{minipage}{0.4\textwidth}
+\begin{tikzpicture}[auto,node distance=3 cm, scale = 1, transform shape,scale=0.5]
+\draw [fill=orange] (1.2,1) rectangle (4.8,-5.5);
+\node[draw] at (3,-5) {core engine};
+\node[initial,state,fill={C1}] (A)                                        {Container};
+\node[state,state,fill={C3}]         (B) [right of=A]                       {Vector};
+\node[state,state,fill={C2}]         (C) [above of=B]                  {math};
+\node[state,state,fill={C3}]         (D) [below of=B]                   {expression-template};
+
+\path[<->] (A) edge [left]      node [align=center]  {AoS - Scalar} (C)
+               (A) edge [left]          node [align=center]  {AoSoA} (D)
+               (B) edge [right]       node [align=center]  {} (D)
+               (B) edge [right]       node [align=center]  {SIMD} (C);
+\end{tikzpicture}
+
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{tikzpicture}[every node/.style={circle,draw,scale=0.55},scale=0.7]
+     \node[circle, draw,fill={C0}] (a){$=$} 
+        child{node (b){$(*it)[0]$}}
+        child{node[fill={C1}] (c){$+$}
+            child { node[left=1.4cm,fill={C1}]  (d){$\times$}
+                child {	node (e){$(*it)[1]$}}
+                child {	node (f){$(*it)[2]$}}
+            }
+            child { node[circle,draw,fill={C1}]  (g){/}
+                child { node (h) {$(*it)[3]$} }			
+                child {	node (i) {1.2} }			
+            }
+        };
+\end{tikzpicture}
+\end{minipage}
+
+\begin{center}
+Reorder operations (DAG - compile time) \underline{without useless reg. mov}
+\end{center}
+\end{frame}
+
+
+\subsection*{Supported platform }
+\begin{frame}[fragile]
+
+\begin{center}
+Various platforms and technologies supported
+
+\begin{itemize}
+\item X86: SSE4 and AVX
+\item BG/Q: QPX
+\item MIC accelerator
+\item Tuned solver (Newton-Raphson and $e^x$)
+\end{itemize}
+
+one constraint: good compiler supporting template expression 
+\end{center}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 7
+%
+%\subsection*{Template-expression: expression-template 3 }
+%\begin{frame}[fragile]
+%\begin{center}
+% $\boxed{a[0] = a[1]  \times e^{a[2]}  +a[3]/1.2}$,  $ e^x = \sum_i^n a_ix^i$ (Remez-Order 20)
+%\end{center}
+%\begin{minipage}{0.45\textwidth}
+%\begin{tikzpicture}[every node/.style={circle,draw,scale=0.4},scale=0.4]
+%     \node[circle, draw,fill={C0}] {$=$} 
+%        child{node {ymm0}}
+%        child{node [fill={C1}]  {$+$}
+%            child { node[left=1.1cm,fill={C1}]  {$\times$}
+%                child {	node {ymm1}}
+%                child {	node [fill={C1}] {+}
+%                   child {node {$a_0$}}
+%                   child {node [fill={C1}] {$\times$}
+%                       child {node {ymm2}}
+%                       child {node [fill={C1}] {$+$}
+%                          child {node {$a_1$}}
+%                          child {node [fill={C1}] {$\times$}
+%                             child {node {ymm2}}
+%                             child {node [fill={C1}] {$+$}
+%                                 child {node {$a_2$}}
+%                                 child {node [fill={C1}] {$\times$}
+%                                     child {node {ymm2}}
+%                                     child {node {$a_3$}}
+%                                 }
+%                             }
+%                          }
+%                       }
+%                   }
+%                }
+%            }
+%            child { node[circle,draw, fill={C1}]  {/}
+%                child { node  {ymm3} }			
+%                child {	node  {1.2} }			
+%            }
+%        };
+%\end{tikzpicture}
+%\end{minipage}
+%\begin{minipage}{0.4\textwidth}
+%\begin{tikzpicture}[every node/.style={circle,draw,scale=0.4},scale=0.4]
+%     \node[circle, draw,fill={C0}] {$=$} 
+%        child{node {ymm0}}
+%        child{node [fill={C1}]  {fma}
+%                child {	node {ymm1}}
+%                child {	node [fill={C1}] {fma}
+%                   child {node {ymm2}}
+%                   child {node {$a_0$}}
+%                       child {node [fill={C1}] {fma}
+%                       child {node {ymm2}}
+%                       child {node {$a_1$}}
+%                           child {node [fill={C1}] {fma}
+%                           child {node {ymm2}}
+%                           child {node {$a_2$}}
+%                                child {node  {$a_3$}
+%                          }
+%                       }
+%                   }
+%                }
+%            child { node[circle,draw, fill={C1}, right=2cm]  {/}
+%                child { node  {ymm3} }			
+%                child {	node  {1.2} }			
+%            }
+%        };
+%\end{tikzpicture} \\
+%FMA support (not fully)
+%\begin{itemize} 
+%\item BGQ 
+%\item Haswell (Intel proc.)
+%\item MIC (Intel acc.)
+%\end{itemize}
+%\end{minipage}
+%
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 6 bis
+
+%\subsection*{Template-expression: expression-template 4 }
+%\begin{frame}[fragile]
+%\centering
+%Alternative, boost-simd ?  
+%\vspace{0.5cm}
+%
+%\begin{minipage}{0.4\textwidth}
+%\begin{tikzpicture}[auto,node distance=3 cm, scale = 1, transform shape,scale=0.5]
+%\node[initial,state] (A)                                        {Container};
+%\node[state]         (B) [right of=A]                       {Vector};
+%\node[state]         (C) [above of=B]                  {Math};
+%\node[state]         (D) [below of=B]                   {expression-template};
+%
+%\path[<->] (A) edge [left]      node [align=center]  {AoS} (C)
+%               (A) edge [left]          node [align=center]  {AoSoA} (D)
+%               (B) edge [right]       node [align=center]  {} (D)
+%               (B) edge [right]       node [align=center]  {} (C);
+%\end{tikzpicture}
+%\end{minipage}
+%\begin{minipage}{0.4\textwidth}
+%\begin{tikzpicture}[auto,node distance=3 cm, scale = 1, transform shape,scale=0.5]
+%\node[initial,state] (A)                                        {Container};
+%\node[state]         (C) [above of=B]                  {Math};
+%\node[state]         (D) [below of=B]                   {boost-simd};
+%
+%\path[<->] (A) edge [left]      node [align=center]  {AoS} (C)
+%               (A) edge [left]          node [align=center]  {AoSoA} (D)
+%               (C) edge [right]       node [align=center]  {} (D);
+%\end{tikzpicture}
+%\end{minipage}
+%
+%\begin{center}
+%Template expression and vector class remplaced by boost-simd. \\
+%\underline{Same x86-ASM}  between Cyme and boost-simd
+%
+%\end{center}
+%\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 8
+\section[Benchmark]{Na channel, rates and states functions from neurodamus}
+\subsection*{Benchmarks}
+\begin{frame}[fragile]
+\centering
+Object Na has 18 elements,  rates and states look like 
+%\begin{eqnarray}
+ \begin{lstlisting}[flexiblecolumns=true,basicstyle=\sffamily]     
+C[3] += (1.-exp(0.1*(-1./C[7])))*((C[6] /C[7])/(1./C[7])-C[3]);
+and more ....
+\end{lstlisting}
+%\end{eqnarray}
+
+\begin{itemize}
+\item BGQ: Clang 3.4, XLC 12.1
+\end{itemize}
+
+mini app: old and new implementation (cyme)
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 8 bis float
+\subsection*{Size Benchmark, Na channel}
+\begin{frame}[fragile]
+
+
+\begin{center}
+   \includegraphics[scale=0.8]{benchgfc.eps}
+\end{center}
+
+Speed-up: x4.85 ( I developed specific solver $e^x$ and division)
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 8 bis double
+%\subsection*{$1^{st}$ Benchmark, $a[0] = a[4] \times a[5] + a[1] \times e^{a[2]}$}
+%\begin{frame}[fragile]
+%\begin{center}
+%$a[0] = a[4] \times a[5] + a[1] \times e^{a[2]}$, X86 cluster
+%\end{center}
+%\centering
+%\begin{tabular}{ c |  c  | c c }
+%\color{C0}{double}           & AoS & \multicolumn{2}{c}{AoSoA}\\
+%                        & scalar & AVX 256b & SSE 128b\\
+%   \hline
+%   Clang - X86 & 112 263 & 41 059$^2$ & \cellcolor{C2}26 247$^2$\\
+%   GCC - X86  & 110 554   & \cellcolor{C2}17 891$^2$ & 27 290$^2$ \\
+%   Intel - X86   & 37 102$^1$ & 19 223$^3$ & \cellcolor{C2}16 105$^3$\\
+%   \hline
+%\end{tabular}\\
+%\vspace{0.5cm}
+%$^1$ Intel math, $^2$ my vec exp, $^3$ Intel SVML, no FMA
+%\end{frame}
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 8 bis double double
+\subsection*{OMP benchmark}
+\begin{frame}[fragile]
+\begin{center}
+
+   \includegraphics[scale=0.8]{benchgfsc.eps}
+
+Clang OMP: experimental (intel thread ... )
+\end{center}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 8
+%\subsection*{$1^{st}$ Benchmark}
+%\begin{frame}[fragile]
+%\centering
+%
+%Evaluate $e$ from vendor (my precision $10^{-8}$ on [-10:10])
+%
+%\vspace{1cm}
+%$\boxed{a[0] = a[4] \times a[5] + a[1] \times e^{a[2]}}$ \\
+%\vspace{1cm}
+%
+%
+%\begin{tabular}{ c c c  }
+%     \verb+float+                    & AoSoA/AVX & AoSoA/SSE \\
+%                          \hline
+%   GCC - X86  & 9 627 & 15 555 \\
+%   Intel - $e_{v}$ - X86   & \cellcolor{C2}8 293 & \cellcolor{C2}11 181 \\
+%   \hline
+%        \verb+double+                    &  &  \\
+%   GCC - X86  &    \cellcolor{C2}17 891 & 27 290 \\
+%   Intel - $e_{v}$ - X86   &   19 223 & \cellcolor{C2}16 105\\
+%   XLC - BGQ                  &   271 327 &  - \\
+%   XLC - $e_{v}$ - BGQ   &  134 154 & - \\
+%\end{tabular}
+%
+%
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 9
+
+\subsection*{Roofline model}
+\begin{frame}[fragile]
+\begin{center}
+
+Performance modelling, roof line model
+
+\vspace{0.5cm}
+
+
+   \includegraphics[scale=0.8]{bench.eps}
+
+We reach the limit ...
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 10
+
+%\subsection*{$3^{rd}$ Benchmark}
+%\begin{frame}[fragile]
+%\begin{eqnarray}
+%          a[0] &=& a[1] \times a[2]+a[6] + 3.14 \nonumber \\
+%          a[1] &=& a[2] \times a[3]+a[6] + 2.18 \nonumber \\
+%          a[2] &=& a[3] \times a[4]+a[6] + 4.25 \nonumber \\
+%          a[3] &=& a[4] \times a[5]+a[6] + 3 \nonumber 
+%\end{eqnarray}
+%
+%\begin{tabular}{ c c c c c }
+%   \verb+float+                  & AoS/AVX & AoS/SSE & AoSoA/AVX & AoSoA/SSE \\
+%                          \hline
+%   Clang - X86 & 10 985 & 11 033 & 3 057 &\cellcolor{C2}2 547\\
+%   GCC - X86  & 12 239 & 12 305 & \cellcolor{C2}2 529 & 2 534 \\
+%   Intel - X86   & 10 014 & 9 857 & \cellcolor{C2}7 776 & 10 522\\
+%         \hline
+%        \verb+double+                    &  & & & \\
+%   Clang - X86 &  12 784 & 7 940 & 5 961 & \cellcolor{C2}5 090\\
+%   GCC - X86  & 12 278 & 8 525  & 5 033 & \cellcolor{C2}4 968 \\
+%   Intel - X86   & 12 158 & \cellcolor{C2}9 351 & 15 398 & 20 913\\
+%   XLC - BGQ & \cellcolor{C2} 68 245 & - & 163 993 & - \\
+%\end{tabular}
+%
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% EXP 11
+
+\subsection*{Conclusions}
+\begin{frame}[fragile]
+Conclusions:
+\begin{itemize}
+\item Very promising, whatever the expression
+\item Framework works on 3 different hardware
+\item Flexible, specific solvers
+\item Nice Speed-up
+\item Ready for review 
+\end{itemize}
+
+futur
+
+\begin{itemize}
+\item GPU - CSCS collaboration 
+\item ARM ?
+\end{itemize}
+
+\end{frame}
+
+
+\end{document}
+

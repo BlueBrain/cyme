@@ -1,0 +1,48 @@
+Global Remarks, all tests run with a given mpl::list (different type). It means each test is built for the given type of the MPL list, for all SIMD tech and unroll factors
+
+exp.cpp
+test: std_exp_comparison
+    - Test implementation of e^x versus e^x of the compiler, type list floating_point_test_types
+
+log.cpp
+test: std_log_comparison
+    - Test the log(x) to the system, type list floating_point_test_types
+    remarks I do not code log it is a serial call to log
+
+pow.cpp
+test: std_pow_comparison
+    - Test the pow(x,n) where n is the exposen, type list floating_point_test_types
+    remarks n is static and not dynamic
+
+sin.cpp
+test: std_sin_comparison
+    - Test implementation of sin(x), type list floating_point_test_types
+
+cos.cpp
+test: std_cos_comparison
+    - Test iimplementation of cos(x), type list floating_point_test_types
+
+tan.cpp
+test: std_tan_comparison
+    - Test implementation of tan(x), type list floating_point_test_types
+
+vec.cpp
+the vec class encapsulate the SIMD register
+test: vec_simd_init_default_constructor
+   - Test the default constructor, test list:floating_point_test_types
+test: vec_simd_init_constant_constructor
+   - Test the constructor to a given constant, type list:floating_point_test_types
+test: vec_simd_negate
+   - Test the negation,  type list:floating_point_test_types
+test: vec_simd_double_negate
+   - Test double negation, type list:floating_point_test_types
+test: vec_simd_init_pointer_constructor
+   - Test constructor from a pointer,   type list:floating_point_test_types
+test: vec_simd_add_operations
+   - Test the += operator, type list:floating_point_test_types
+test: vec_simd_sub_operations
+   - Test the -= operator, type list:floating_point_test_types
+test: vec_simd_mul_operations
+   - Test the *= operator, type list:floating_point_test_types
+test: vec_simd_div_operations
+   - Test the /= operator, type list:floating_point_test_types
