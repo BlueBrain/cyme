@@ -13,9 +13,9 @@ cmake_minimum_required (VERSION 2.8)
 
 project (cyme)
 
-set(LAST_RELEASE 1.2.0)
+set(LAST_RELEASE 1.3.0)
 set(VERSION_MAJOR "1")
-set(VERSION_MINOR "3")
+set(VERSION_MINOR "4")
 set(VERSION_PATCH "0")
 set(VERSION_ABI "1")
 
