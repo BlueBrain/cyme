@@ -29,6 +29,8 @@
 #ifndef CYME_SIMD_SCATTER_IPP
 #define CYME_SIMD_SCATTER_IPP
 
+#include <boost/assert.hpp>
+
 namespace cyme{
 
     template<class T,cyme::simd O, int N, cyme::scatter_op P>
@@ -71,12 +73,13 @@ namespace cyme{
      */
     template<class T,cyme::simd O, int N, cyme::scatter_op P>
     struct scatter_ops_helper{
-        static void forceinline scatter_ops(vec_simd<T,O,N> const& u, T* dst, const int* ind){
-            const std::size_t size = elems_helper<T,N>::size;
+        static void forceinline scatter_ops(vec_simd<T,O,N> const& u, T* dst, const int* ind, const int range){
+            const int size = elems_helper<T,N>::size;
+            BOOST_ASSERT_MSG( range <= size, "range larger than size" );
             T elems[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
 
             /** load data from the destination */
-            for(std::size_t i = 0; i < size; i++)
+            for(int i = 0; i < range; i++)
                 elems[i] = dst[ind[i]];
 
             vec_simd<T,O,N> tmp(_mm_load<typename simd_trait<T,O,N>::value_type,O,N>(elems));
@@ -86,7 +89,7 @@ namespace cyme{
 
             _mm_store<T,O,N>(tmp.xmm,elems);
 
-            for(std::size_t i = 0; i < size; i++)
+            for(int i = 0; i < range; i++)
                 dst[ind[i]] = elems[i];
         }
     };
@@ -94,20 +97,20 @@ namespace cyme{
     /** partial specialization for pure scatter operation */
     template<class T,cyme::simd O, int N>
     struct scatter_ops_helper<T,O,N,cyme::eq>{
-        static void forceinline scatter_ops(vec_simd<T,O,N> const& u, T* dst, const int* ind){
+        static void forceinline scatter_ops(vec_simd<T,O,N> const& u, T* dst, const int* ind, const int range){
             const std::size_t size = elems_helper<T,N>::size;
             T elems[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
             _mm_store<T,O,N>(u.xmm,elems);
 
-            for(std::size_t i = 0; i < size; i++)
+            for(int i = 0; i < range; i++)
                 dst[ind[i]] = elems[i];
         }
     };
 
     /** Free function for scatter */
     template<class T,cyme::simd O, int N, cyme::scatter_op P>
-    void forceinline help_scatter(cyme::vec_simd<T,O,N> const& u, T* dst, const int* ind){
-        scatter_ops_helper<T,O,N,P>::scatter_ops(u,dst,ind);
+    void forceinline help_scatter(cyme::vec_simd<T,O,N> const& u, T* dst, const int* ind, const int range){
+        scatter_ops_helper<T,O,N,P>::scatter_ops(u,dst,ind,range);
     }
 
 }

@@ -194,11 +194,11 @@ namespace cyme{
 
    /** Free function (wrapper) for loading data into registers using gather instructions */
     template<class T, cyme::simd O, int N>
-    forceinline typename simd_trait<T,O,N>::register_type _mm_gather(const T* src, const int *ind);
+    forceinline typename simd_trait<T,O,N>::register_type _mm_gather(const T* src, const int *ind, const int range);
 
     /** Free function (wrapper) for storing data into a cyme (pointer) using scatter instructions */
     template<class T, cyme::simd O, int N>
-    void _mm_scatter(typename simd_trait<T,O,N>::register_type xmm0, T* dst, const int* ind);
+    void _mm_scatter(typename simd_trait<T,O,N>::register_type xmm0, T* dst, const int* ind, const int range);
 
 } //end namespace
 

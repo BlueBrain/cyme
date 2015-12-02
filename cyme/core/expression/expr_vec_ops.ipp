@@ -52,10 +52,13 @@ namespace cyme{
     /** 
     * free function for gather specific to coreneuron, load only
     * it is not a part of Template Expression
+    * \warning only use in coreneuron, range is equal to size of the composite vector, it should be note
+    * an issue reading only
+    *
     **/
     template<class T, cyme::simd O, int N>
-    forceinline vec<T,O,N> gather(const T* src, const int* ind){
-        return vec<T,O,N>(help_gather<T,O,N>(src, ind));
+    forceinline vec<T,O,N> gather(const T* src, const int* ind, const int range = elems_helper<T,N>::size){
+        return vec<T,O,N>(help_gather<T,O,N>(src, ind, range));
     }
 
     /** 
@@ -63,8 +66,8 @@ namespace cyme{
     * it is not a part of Template Expression
     **/
     template<class T, cyme::simd O, int N, cyme::scatter_op P>
-    forceinline void scatter(vec<T,O,N> const& v, T* dst, const int* ind){
-        help_scatter<T,O,N,P>(v.rep(), dst, ind);
+    forceinline void scatter(vec<T,O,N> const& v, T* dst, const int* ind, const int range = elems_helper<T,N>::size){
+        help_scatter<T,O,N,P>(v.rep(), dst, ind, range);
     }
 
     /**
