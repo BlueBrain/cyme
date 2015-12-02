@@ -253,11 +253,11 @@ namespace cyme{
 
     /** Free function for gather */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> help_gather(const T* src, const int* ind);
+    forceinline vec_simd<T,O,N> help_gather(const T* src, const int* ind, const int range);
 
     /** Free function for scatter */
     template<class T,cyme::simd O, int N, cyme::scatter_op P>
-    void help_scatter(vec_simd<T,O,N> const& src, T* des, const int* ind);
+    void help_scatter(vec_simd<T,O,N> const& src, T* des, const int* ind, const int range);
 
 #ifdef __FMA__
     /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */
