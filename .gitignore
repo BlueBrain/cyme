@@ -1,0 +1,63 @@
+DartConfiguration.tcl
+
+# netbeans project
+nbproject
+
+# makefiles
+[mM]akefile
+
+# cmake temporaries/working files
+CMakeCache.txt
+CMakeFiles
+CTestTestfile.cmake
+cmake_install.cmake
+compile_commands.json
+
+# vim temporary files
+*.swp
+*.swn
+*.swo
+
+# executables
+regression/memory/*test_avx*
+regression/memory/*test_sse*
+
+regression/numeric/*test_avx*
+regression/numeric/*test_sse*
+
+sandbox/main_[cs]_sse*
+sandbox/main_[cs]_avx*
+sandbox/test_print_sse*
+sandbox/test_print_avx*
+
+# testing temporaries
+regression/memory/Testing/
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
