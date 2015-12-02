@@ -36,8 +36,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(interface_gather_scatter_comparison_reverse, T, fl
           ind[i] = i;
       }
       cyme::vec<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> v = cyme::gather<TYPE,cyme::__GETSIMD__(),
-                                                                                  cyme::unroll_factor::N>(a,ind);
-    cyme::scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::eq>(v,b,ind);
+                                                                                  cyme::unroll_factor::N>(a,ind,NN);
+      cyme::scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::eq>(v,b,ind,NN);
 
       for(size_t i=0; i<NN; ++i)
         BOOST_REQUIRE_CLOSE( a[i], b[i], 0.001);
@@ -56,11 +56,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(simd_gather_scatter_comparison_reverse_add, T, flo
           b[i] = GetRandomExp10<TYPE>();
           c[i] = a[i] + b[i];
           ind[i] = i;
-          
+
       }
       cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> v = cyme::help_gather<TYPE,cyme::__GETSIMD__(),
-                                                                                       cyme::unroll_factor::N>(a,ind);
-      cyme::help_scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::add>(v,b,ind);
+                                                                                       cyme::unroll_factor::N>(a,ind,NN);
+      cyme::help_scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::add>(v,b,ind,NN);
 
       for(size_t i=0; i<NN; ++i)
         BOOST_REQUIRE_CLOSE( c[i], b[i], 0.001);
@@ -81,8 +81,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(simd_gather_scatter_comparison_reverse_sub, T, flo
 
     }
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> v = cyme::help_gather<TYPE,cyme::__GETSIMD__(),
-    cyme::unroll_factor::N>(a,ind);
-    cyme::help_scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::sub>(v,b,ind);
+    cyme::unroll_factor::N>(a,ind,NN);
+    cyme::help_scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::sub>(v,b,ind,NN);
 
     for(size_t i=0; i<NN; ++i)
         BOOST_REQUIRE_CLOSE( c[i], b[i], 0.001);
@@ -103,8 +103,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(simd_gather_scatter_comparison_reverse_mul, T, flo
 
     }
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> v = cyme::help_gather<TYPE,cyme::__GETSIMD__(),
-    cyme::unroll_factor::N>(a,ind);
-    cyme::help_scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::mul>(v,b,ind);
+    cyme::unroll_factor::N>(a,ind,NN);
+    cyme::help_scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::mul>(v,b,ind,NN);
 
     for(size_t i=0; i<NN; ++i)
         BOOST_REQUIRE_CLOSE( c[i], b[i], 0.001);
@@ -125,8 +125,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(simd_gather_scatter_comparison_reverse_div, T, flo
 
     }
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> v = cyme::help_gather<TYPE,cyme::__GETSIMD__(),
-    cyme::unroll_factor::N>(a,ind);
-    cyme::help_scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::div>(v,b,ind);
+    cyme::unroll_factor::N>(a,ind,NN);
+    cyme::help_scatter<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N,cyme::div>(v,b,ind,NN);
 
     for(size_t i=0; i<NN; ++i)
         BOOST_REQUIRE_CLOSE( c[i], b[i], 0.001);
