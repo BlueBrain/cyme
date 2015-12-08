@@ -149,7 +149,7 @@ namespace cyme{
        specialisation double,cyme::sse,4 regs
      */
     template<>
-    forceinline  simd_trait<double,cyme::sse,4>::register_type
+    forceinline simd_trait<double,cyme::sse,4>::register_type
     _mm_load<double,cyme::sse,4>(simd_trait<double,cyme::sse,4>::const_pointer a){
         return simd_trait<double,cyme::sse,4>::register_type(_mm_load_pd(a),_mm_load_pd(a+2),
                                                              _mm_load_pd(a+4),_mm_load_pd(a+6));
@@ -161,7 +161,7 @@ namespace cyme{
        specialisation double,cyme::sse,1 regs
      */
     template<>
-    void _mm_store<double,cyme::sse,1>(simd_trait<double,cyme::sse,1>::register_type xmm0,
+    forceinline void _mm_store<double,cyme::sse,1>(simd_trait<double,cyme::sse,1>::register_type xmm0,
                                        simd_trait<double,cyme::sse,1>::pointer a){
         _mm_store_pd(a,xmm0);
     }
@@ -172,7 +172,7 @@ namespace cyme{
        specialisation double,cyme::sse,2 regs
      */
     template<>
-    void _mm_store<double,cyme::sse,2>(simd_trait<double,cyme::sse,2>::register_type xmm0,
+    forceinline void _mm_store<double,cyme::sse,2>(simd_trait<double,cyme::sse,2>::register_type xmm0,
                                        simd_trait<double,cyme::sse,2>::pointer a){
         _mm_store_pd(a,xmm0.r0);
         _mm_store_pd(a+2,xmm0.r1);
@@ -184,7 +184,7 @@ namespace cyme{
        specialisation double,cyme::sse,4 regs
      */
     template<>
-    void _mm_store<double,cyme::sse,4>(simd_trait<double,cyme::sse,4>::register_type xmm0,
+    forceinline void _mm_store<double,cyme::sse,4>(simd_trait<double,cyme::sse,4>::register_type xmm0,
                                        simd_trait<double,cyme::sse,4>::pointer a){
         _mm_store_pd(a,xmm0.r0);
         _mm_store_pd(a+2,xmm0.r1);
@@ -1477,7 +1477,7 @@ namespace cyme{
      specialisation float,cyme::sse,1 regs
      */
     template<>
-    void _mm_store<float,cyme::sse,1>(simd_trait<float,cyme::sse,1>::register_type xmm0,
+    forceinline void _mm_store<float,cyme::sse,1>(simd_trait<float,cyme::sse,1>::register_type xmm0,
                                       simd_trait<float,cyme::sse,1>::pointer a){
         _mm_store_ps(a,xmm0);
     }
@@ -1488,7 +1488,7 @@ namespace cyme{
      specialisation float,cyme::sse,2 regs
      */
     template<>
-    void _mm_store<float,cyme::sse,2>(simd_trait<float,cyme::sse,2>::register_type xmm0,
+    forceinline void _mm_store<float,cyme::sse,2>(simd_trait<float,cyme::sse,2>::register_type xmm0,
                                       simd_trait<float,cyme::sse,2>::pointer a){
         _mm_store_ps(a,xmm0.r0);
         _mm_store_ps(a+4,xmm0.r1);
@@ -1500,7 +1500,7 @@ namespace cyme{
      specialisation float,cyme::sse,4 regs
      */
     template<>
-    void _mm_store<float,cyme::sse,4>(simd_trait<float,cyme::sse,4>::register_type xmm0,
+    forceinline void _mm_store<float,cyme::sse,4>(simd_trait<float,cyme::sse,4>::register_type xmm0,
                                       simd_trait<float,cyme::sse,4>::pointer a){
         _mm_store_ps(a,xmm0.r0);
         _mm_store_ps(a+4,xmm0.r1);
@@ -2726,7 +2726,7 @@ namespace cyme{
      specialisation int,cyme::sse,1 regs
      */
     template<>
-    void _mm_store<int,cyme::sse,1>(simd_trait<int,cyme::sse,1>::register_type xmm0,
+    forceinline void _mm_store<int,cyme::sse,1>(simd_trait<int,cyme::sse,1>::register_type xmm0,
                                     simd_trait<int,cyme::sse,1>::pointer a){
         _mm_store_si128((__m128i*)a,xmm0);
     }
@@ -2737,7 +2737,7 @@ namespace cyme{
      specialisation int,cyme::sse,2 regs
      */
     template<>
-    void _mm_store<int,cyme::sse,2>(simd_trait<int,cyme::sse,2>::register_type xmm0,
+    forceinline void _mm_store<int,cyme::sse,2>(simd_trait<int,cyme::sse,2>::register_type xmm0,
                                     simd_trait<int,cyme::sse,2>::pointer a){
         _mm_store_si128((__m128i*)a,xmm0.r0);
         _mm_store_si128((__m128i*)(a+4),xmm0.r1); // (a+4) != a+4 due to cast __m128i register be carefull
@@ -2749,7 +2749,7 @@ namespace cyme{
      specialisation int,cyme::sse,4 regs
      */
     template<>
-    void _mm_store<int,cyme::sse,4>(simd_trait<int,cyme::sse,4>::register_type xmm0,
+     forceinline void _mm_store<int,cyme::sse,4>(simd_trait<int,cyme::sse,4>::register_type xmm0,
                                     simd_trait<int,cyme::sse,4>::pointer a){
         _mm_store_si128((__m128i*)a,xmm0.r0);
         _mm_store_si128((__m128i*)(a+4),xmm0.r1);
