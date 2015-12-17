@@ -33,7 +33,7 @@
 
 namespace cyme{
     template<class T,cyme::simd O, int N>
-    struct cyme_gather{
+    struct generic_gather{
         static forceinline vec_simd<T,O,N> gather(const T* src, const int *ind, const int range){
             const int size = elems_helper<T,N>::size;
             BOOST_ASSERT_MSG( range <= size, "range larger than size" );
@@ -58,12 +58,12 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     struct simd_gather{
         static forceinline vec_simd<T,O,N> gather(const T* src, const int *ind, const int range){
-            return gather_v(src,ind, range); /* call vendor wrapper */
+            return gather_v<T,O,N>(src,ind, range); /* call vendor wrapper */
         }
     };
 
-    /** Selector for the gather algorithm (vendor or cyme implementation) */
-    template<class T,cyme::simd O, int N, class Solver = cyme_gather<T,O,N> >
+    /** Selector for the gather algorithm (vendor (simd_gather) or generic implementation (generic_gather)) */
+    template<class T,cyme::simd O, int N, class Solver = simd_gather<T,O,N> >
     struct Selector_gather{
          static forceinline vec_simd<T,O,N> gather(const T* src, const int *ind, const int range){
                return Solver::gather(src,ind,range);
@@ -73,7 +73,7 @@ namespace cyme{
     /** free function for gather */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> help_gather(const T* src, const int* ind, const int range){
-        return Selector_gather<T,O,N>::gather(src,ind,range);
+        return Selector_gather<T,O,N>::gather(src,ind,range); // range is useless
     }
 }
 

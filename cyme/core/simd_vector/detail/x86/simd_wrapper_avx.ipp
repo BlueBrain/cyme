@@ -173,6 +173,44 @@ namespace cyme{
                                                              _mm256_load_pd(a+8),_mm256_load_pd(a+12));
     }
 
+     /**
+       Load 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 1 regs
+     */
+     template<>
+     forceinline simd_trait<double,cyme::avx,1>::register_type
+     _mm_gather<double,cyme::avx,1>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+        return _mm256_setr_pd(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]);
+     }
+
+     /**
+       Load 256-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 2 regs
+     */
+     template<>
+     forceinline simd_trait<double,cyme::avx,2>::register_type
+     _mm_gather<double,cyme::avx,2>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<double,cyme::avx,2>::register_type(
+            _mm256_setr_pd(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]),
+            _mm256_setr_pd(src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]])
+        );
+     }
+
+     /**
+       Load 256-bits (composed of 16 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 4 regs
+     */
+     template<>
+     forceinline simd_trait<double,cyme::avx,4>::register_type
+     _mm_gather<double,cyme::avx,4>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<double,cyme::avx,4>::register_type(
+            _mm256_setr_pd(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]),
+            _mm256_setr_pd(src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]),
+            _mm256_setr_pd(src[ind[8]],src[ind[9]],src[ind[10]],src[ind[11]]),
+            _mm256_setr_pd(src[ind[12]],src[ind[13]],src[ind[14]],src[ind[15]])
+        );
+     }
+
     /**
       Store 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from a into cyme.
       mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
@@ -1648,6 +1686,49 @@ namespace cyme{
         return simd_trait<float,cyme::avx,4>::register_type(_mm256_load_ps(a),_mm256_load_ps(a+8),
                                                             _mm256_load_ps(a+16),_mm256_load_ps(a+24));
     }
+
+     /**
+       Load 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 1 regs
+     */
+     template<>
+     forceinline simd_trait<float,cyme::avx,1>::register_type
+     _mm_gather<float,cyme::avx,1>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+        return _mm256_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]],
+                             src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]);
+     }
+
+     /**
+       Load 256-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 2 regs
+     */
+     template<>
+     forceinline simd_trait<float,cyme::avx,2>::register_type
+     _mm_gather<float,cyme::avx,2>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<float,cyme::avx,2>::register_type(
+            _mm256_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]],
+                          src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]),
+            _mm256_setr_ps(src[ind[8]],src[ind[9]],src[ind[10]],src[ind[11]],
+                          src[ind[12]],src[ind[13]],src[ind[14]],src[ind[15]]));
+     }
+
+     /**
+       Load 256-bits (composed of 16 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 4 regs
+     */
+     template<>
+     forceinline simd_trait<float,cyme::avx,4>::register_type
+     _mm_gather<float,cyme::avx,4>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<float,cyme::avx,4>::register_type(
+            _mm256_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]],
+                          src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]),
+            _mm256_setr_ps(src[ind[8]],src[ind[9]],src[ind[10]],src[ind[11]],
+                          src[ind[12]],src[ind[13]],src[ind[14]],src[ind[15]]),
+            _mm256_setr_ps(src[ind[16]],src[ind[17]],src[ind[18]],src[ind[19]],
+                          src[ind[20]],src[ind[21]],src[ind[22]],src[ind[23]]),
+            _mm256_setr_ps(src[ind[24]],src[ind[25]],src[ind[26]],src[ind[27]],
+                          src[ind[28]],src[ind[29]],src[ind[30]],src[ind[31]]));
+     }
 
     /**
       Store 256-bits (composed of 8 packed single-precision (32-bit) floating-point elements) from a into cyme.

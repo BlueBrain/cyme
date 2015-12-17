@@ -156,6 +156,42 @@ namespace cyme{
     }
 
     /**
+    Load 128-bits (composed of 2 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+    using gather operations specialisation double,cyme::sse, 1 regs
+    */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_gather<double,cyme::sse,1>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+        return _mm_setr_pd(src[ind[0]],src[ind[1]]);
+    }
+
+    /**
+    Load 128-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+    using gather operations specialisation double,cyme::sse, 2 regs
+    */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_gather<double,cyme::sse,2>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<double,cyme::sse,2>::register_type(
+                  _mm_setr_pd(src[ind[0]],src[ind[1]]),
+                  _mm_setr_pd(src[ind[2]],src[ind[3]]));
+    }
+
+    /**
+    Load 128-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+    using gather operations specialisation double,cyme::sse, 4 regs
+    */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_gather<double,cyme::sse,4>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+       return simd_trait<double,cyme::sse,4>::register_type(
+                  _mm_setr_pd(src[ind[0]],src[ind[1]]),
+                  _mm_setr_pd(src[ind[2]],src[ind[3]]),
+                  _mm_setr_pd(src[ind[4]],src[ind[5]]),
+                  _mm_setr_pd(src[ind[6]],src[ind[7]]));
+    }
+
+    /**
        Store 128-bits (composed of 2 packed double-precision (64-bit) floating-point elements) from a into cyme.
      mem_addr must be aligned on a 16-byte boundary or a general-protection exception will be generated.
        specialisation double,cyme::sse,1 regs
@@ -1469,6 +1505,42 @@ namespace cyme{
     _mm_load<float,cyme::sse,4>(simd_trait<float,cyme::sse,4>::const_pointer a){
         return simd_trait<float,cyme::sse,4>::register_type(_mm_load_ps(a),_mm_load_ps(a+4),
                                                             _mm_load_ps(a+8),_mm_load_ps(a+12));
+    }
+    
+        /**
+    Load 128-bits (composed of 2 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+    using gather operations specialisation double,cyme::sse, 1 regs
+    */
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_gather<float,cyme::sse,1>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+        return _mm_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]);
+    }
+
+    /**
+    Load 128-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+    using gather operations specialisation double,cyme::sse, 2 regs
+    */
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_gather<float,cyme::sse,2>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<float,cyme::sse,2>::register_type(
+                  _mm_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]),
+                  _mm_setr_ps(src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]));
+    }
+
+    /**
+    Load 128-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+    using gather operations specialisation double,cyme::sse, 4 regs
+    */
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_gather<float,cyme::sse,4>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+       return simd_trait<float,cyme::sse,4>::register_type(
+                  _mm_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]),
+                  _mm_setr_ps(src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]),
+                  _mm_setr_ps(src[ind[8]],src[ind[9]],src[ind[10]],src[ind[11]]),
+                  _mm_setr_ps(src[ind[12]],src[ind[13]],src[ind[14]],src[ind[15]]));
     }
 
     /**

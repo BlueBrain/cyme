@@ -33,40 +33,47 @@
 
 namespace cyme{
 
-    template<class T,cyme::simd O, int N, cyme::scatter_op P>
+    template<class T, cyme::scatter_op P>
     struct scatter_op_selector_helper{};
 
-    template<class T,cyme::simd O, int N>
-    struct scatter_op_selector_helper<T,O,N,cyme::add>{
-        static void forceinline scatter_op_selector(vec_simd<T,O,N> const& a,vec_simd<T,O,N> & b){
-            b += a;
+    template<class T>
+    struct scatter_op_selector_helper<T,cyme::add>{
+        static void forceinline scatter_op_selector(T& a, T const& b){
+            a += b;
         }
     };
 
-    template<class T,cyme::simd O, int N>
-    struct scatter_op_selector_helper<T,O,N,cyme::sub>{
-        static void forceinline scatter_op_selector(vec_simd<T,O,N> const& a,vec_simd<T,O,N> & b){
-            b -= a;
+    template<class T>
+    struct scatter_op_selector_helper<T,cyme::sub>{
+        static void forceinline scatter_op_selector(T& a, T const& b){
+            a -= b;
         }
     };
 
-    template<class T,cyme::simd O, int N>
-    struct scatter_op_selector_helper<T,O,N,cyme::mul>{
-        static void forceinline scatter_op_selector(vec_simd<T,O,N> const& a,vec_simd<T,O,N> & b){
-            b *= a;
+    template<class T>
+    struct scatter_op_selector_helper<T,cyme::mul>{
+        static void forceinline scatter_op_selector(T& a, T const& b){
+            a *= b;
         }
     };
 
-    template<class T,cyme::simd O, int N>
-    struct scatter_op_selector_helper<T,O,N,cyme::div>{
-        static void forceinline scatter_op_selector(vec_simd<T,O,N> const& a,vec_simd<T,O,N> & b){
-            b /= a;
+    template<class T>
+    struct scatter_op_selector_helper<T,cyme::div>{
+        static void forceinline scatter_op_selector(T& a, T const& b){
+            a /= b;
+        }
+    };
+
+    template<class T>
+    struct scatter_op_selector_helper<T,cyme::eq>{
+        static void forceinline scatter_op_selector(T& a, T const& b){
+            a = b;
         }
     };
 
     /** Free function that associate a scatter operations with an operations
      * We are looking for scatter add
-     * 1) load the "destination" data into array
+     * 1) store the "destination" data into array
      * 2) create tmp SIMD vector
      * 3) do the op.
      * 4) scatter the res
@@ -78,32 +85,10 @@ namespace cyme{
             BOOST_ASSERT_MSG( range <= size, "range larger than size" );
             T elems[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
 
-            /** load data from the destination */
-            for(int i = 0; i < range; i++)
-                elems[i] = dst[ind[i]];
-
-            vec_simd<T,O,N> tmp(_mm_load<typename simd_trait<T,O,N>::value_type,O,N>(elems));
-
-            /** compute the operation before the final scatter */
-            scatter_op_selector_helper<T,O,N,P>::scatter_op_selector(u,tmp);
-
-            _mm_store<T,O,N>(tmp.xmm,elems);
-
-            for(int i = 0; i < range; i++)
-                dst[ind[i]] = elems[i];
-        }
-    };
-
-    /** partial specialization for pure scatter operation */
-    template<class T,cyme::simd O, int N>
-    struct scatter_ops_helper<T,O,N,cyme::eq>{
-        static void forceinline scatter_ops(vec_simd<T,O,N> const& u, T* dst, const int* ind, const int range){
-            const std::size_t size = elems_helper<T,N>::size;
-            T elems[size] __attribute__((aligned(static_cast<std::size_t>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
             _mm_store<T,O,N>(u.xmm,elems);
 
             for(int i = 0; i < range; i++)
-                dst[ind[i]] = elems[i];
+                scatter_op_selector_helper<T,P>::scatter_op_selector(dst[ind[i]],elems[i]);
         }
     };
 
