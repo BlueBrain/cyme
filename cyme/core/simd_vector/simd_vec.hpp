@@ -33,11 +33,23 @@
 #include "cyme/core/simd_vector/simd_wrapper.hpp"
 namespace cyme{
     /**
+      structure for improove the polynomial computation
+      The pb is : all recursive polynomial evaluation finish
+      by a multiplication/addition per 0  on normal type (float, double)
+      this multiplication is not performed (compiler optimization). In the case of the
+      vec_simd class it will vec_simd() "*" or "+" vec_simd(0)
+      it will add additional load and one multiplication/addition that are useless.
+      To fix that I create "nuts" structure and do a special overload
+      for operator"+" or "*" (vec, ZERO), where I return the lhs or ZERO
+     */
+    struct ZERO{};
+
+    /**
     Helper for print function
     */
-    template<class T, int N>
+    template<class T, int N = cyme::unroll_factor::N>
     struct elems_helper{
-	static const int size = N*(cyme::trait_register<T,cyme::__GETSIMD__()>::size)/sizeof(T);
+        static const int size = N*(cyme::trait_register<T,cyme::__GETSIMD__()>::size)/sizeof(T);
     };
 
     /** SIMD vector computation class.
@@ -80,6 +92,15 @@ namespace cyme{
 
         /** Operator -= between two vectors */
         forceinline vec_simd& operator -=(const vec_simd& rhs);
+
+        /** Operator &= bewteen two vectors */
+        forceinline vec_simd& operator &= (const vec_simd& rhs);
+
+        /** Operator == for branching */
+        forceinline int operator == (int b);
+
+        /** Operator != for branching */
+        forceinline int operator != (int b);
 
         /** Save the value into the register into the cyme */
         forceinline void store(pointer a) const;
@@ -129,15 +150,15 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> fabs(const vec_simd<T,O,N>& rhs);
 
-    /** Returns poly1 or poly2 depending on the value of sel */ 
+    /** Returns poly1 or poly2 depending on the value of sel */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> select_poly(const vec_simd<int,O,N>& sel, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
 
-    /** Returns rhs with a modified sign depending on the values of swap and lhs */ 
+    /** Returns rhs with a modified sign depending on the values of swap and lhs */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> select_sign_sin(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
 
-    /** Returns rhs with a modified sign, depending on the values of swap and lhs */ 
+    /** Returns rhs with a modified sign, depending on the values of swap and lhs */
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> select_sign_cos(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& rhs);
 
@@ -229,6 +250,14 @@ namespace cyme{
     template<class T,cyme::simd O, int N>
     forceinline vec_simd<T,O,N> tan(const vec_simd<T,O,N>& rhs);
 
+    /** Free function for gather */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> help_gather(const T* src, const int* ind, const int range);
+
+    /** Free function for scatter */
+    template<class T,cyme::simd O, int N, cyme::scatter_op P>
+    void help_scatter(vec_simd<T,O,N> const& src, T* des, const int* ind, const int range);
+
 #ifdef __FMA__
     /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */
     template<class T,cyme::simd O, int N>
@@ -257,4 +286,3 @@ forceinline std::ostream &operator<<(std::ostream &out, const cyme::vec_simd<T,O
 #include "cyme/core/simd_vector/simd_math.ipp" // contains all math operations include
 
 #endif
-

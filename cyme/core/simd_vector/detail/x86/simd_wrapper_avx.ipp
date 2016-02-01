@@ -173,6 +173,44 @@ namespace cyme{
                                                              _mm256_load_pd(a+8),_mm256_load_pd(a+12));
     }
 
+     /**
+       Load 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 1 regs
+     */
+     template<>
+     forceinline simd_trait<double,cyme::avx,1>::register_type
+     _mm_gather<double,cyme::avx,1>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+        return _mm256_setr_pd(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]);
+     }
+
+     /**
+       Load 256-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 2 regs
+     */
+     template<>
+     forceinline simd_trait<double,cyme::avx,2>::register_type
+     _mm_gather<double,cyme::avx,2>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<double,cyme::avx,2>::register_type(
+            _mm256_setr_pd(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]),
+            _mm256_setr_pd(src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]])
+        );
+     }
+
+     /**
+       Load 256-bits (composed of 16 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 4 regs
+     */
+     template<>
+     forceinline simd_trait<double,cyme::avx,4>::register_type
+     _mm_gather<double,cyme::avx,4>(const double* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<double,cyme::avx,4>::register_type(
+            _mm256_setr_pd(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]]),
+            _mm256_setr_pd(src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]),
+            _mm256_setr_pd(src[ind[8]],src[ind[9]],src[ind[10]],src[ind[11]]),
+            _mm256_setr_pd(src[ind[12]],src[ind[13]],src[ind[14]],src[ind[15]])
+        );
+     }
+
     /**
       Store 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from a into cyme.
       mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
@@ -1281,81 +1319,46 @@ namespace cyme{
 	return simd_trait<double,cyme::avx,4>::register_type(r0,r1,r2,r3);
     }
 
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation double,cyme::avx,1 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,1>::register_type
+     _mm_lt<double,cyme::avx,1> (simd_trait<double,cyme::avx,1>::register_type xmm0,
+                                 simd_trait<double,cyme::avx,1>::register_type xmm1){
+        return   _mm256_castpd_si256(_mm256_cmp_pd(xmm0, xmm1,_CMP_LT_OQ));
+     }
+
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation double,cyme::avx,2 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,2>::register_type
+     _mm_lt<double,cyme::avx,2> (simd_trait<double,cyme::avx,2>::register_type xmm0,
+                                 simd_trait<double,cyme::avx,2>::register_type xmm1){
+        return simd_trait<int,cyme::avx,2>::register_type(_mm256_castpd_si256(_mm256_cmp_pd(xmm0.r0, xmm1.r0,_CMP_LT_OQ)),
+                                                          _mm256_castpd_si256(_mm256_cmp_pd(xmm0.r1, xmm1.r1,_CMP_LT_OQ)));
+     }
+
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation double,cyme::avx,4 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,4>::register_type
+     _mm_lt<double,cyme::avx,4> (simd_trait<double,cyme::avx,4>::register_type xmm0,
+                                 simd_trait<double,cyme::avx,4>::register_type xmm1){
+        return simd_trait<int,cyme::avx,4>::register_type(_mm256_castpd_si256(_mm256_cmp_pd(xmm0.r0, xmm1.r0,_CMP_LT_OQ)),
+                                                          _mm256_castpd_si256(_mm256_cmp_pd(xmm0.r1, xmm1.r1,_CMP_LT_OQ)),
+                                                          _mm256_castpd_si256(_mm256_cmp_pd(xmm0.r2, xmm1.r2,_CMP_LT_OQ)),
+                                                          _mm256_castpd_si256(_mm256_cmp_pd(xmm0.r3, xmm1.r3,_CMP_LT_OQ)));
+     }
+
+
+
 #ifdef __INTEL_COMPILER
-    /**
-      Compute the exponential value of e raised to the power of packed double-precision (64-bit)
-     floating-point elements in xmm0, and store the results in dst.
-      specialisation double,cyme::avx, 1 regs
-     */
-    template<>
-    forceinline simd_trait<double,cyme::avx,1>::register_type
-    _mm_exp<double,cyme::avx,1>(simd_trait<double,cyme::avx,1>::register_type xmm0){
-        return _mm256_exp_pd(xmm0);
-    }
-
-    /**
-      Compute the exponential value of e raised to the power of packed double-precision (64-bit)
-     floating-point elements in xmm0, and store the results in dst.
-      specialisation double,cyme::avx, 2 regs
-     */
-    template<>
-    forceinline simd_trait<double,cyme::avx,2>::register_type
-    _mm_exp<double,cyme::avx,2>(simd_trait<double,cyme::avx,2>::register_type xmm0){
-        return simd_trait<double,cyme::avx,2>::register_type(_mm256_exp_pd(xmm0.r0),
-                                                             _mm256_exp_pd(xmm0.r1));
-    }
-
-    /**
-      Compute the exponential value of e raised to the power of packed double-precision (64-bit)
-     floating-point elements in xmm0, and store the results in dst.
-      specialisation double,cyme::avx, 4 regs
-     */
-    template<>
-    forceinline simd_trait<double,cyme::avx,4>::register_type
-    _mm_exp<double,cyme::avx,4>(simd_trait<double,cyme::avx,4>::register_type xmm0){
-        return simd_trait<double,cyme::avx,4>::register_type(_mm256_exp_pd(xmm0.r0),
-                                                             _mm256_exp_pd(xmm0.r1),
-                                                             _mm256_exp_pd(xmm0.r2),
-                                                             _mm256_exp_pd(xmm0.r3));
-    }
-
-    /**
-      Compute the natural logarithm of packed double-precision (64-bit) floating-point elements in xmm0,
-     and store the results in dst.
-      specialisation double,cyme::avx, 1 regs
-     */
-    template<>
-    forceinline simd_trait<double,cyme::avx,1>::register_type
-    _mm_log<double,cyme::avx,1>(simd_trait<double,cyme::avx,1>::register_type xmm0){
-        return _mm256_log_pd(xmm0);
-    }
-
-    /**
-      Compute the natural logarithm of packed double-precision (64-bit) floating-point elements in xmm0,
-     and store the results in dst.
-      specialisation double,cyme::avx, 2 regs
-     */
-    template<>
-    forceinline simd_trait<double,cyme::avx,2>::register_type
-    _mm_log<double,cyme::avx,2>(simd_trait<double,cyme::avx,2>::register_type xmm0){
-        return simd_trait<double,cyme::avx,2>::register_type(_mm256_log_pd(xmm0.r0),
-                                                             _mm256_log_pd(xmm0.r1));
-    }
-
-    /**
-      Compute the natural logarithm of packed double-precision (64-bit) floating-point elements in xmm0,
-     and store the results in dst.
-      specialisation double,cyme::avx, 4 regs
-     */
-    template<>
-    forceinline simd_trait<double,cyme::avx,4>::register_type
-    _mm_log<double,cyme::avx,4>(simd_trait<double,cyme::avx,4>::register_type xmm0){
-        return simd_trait<double,cyme::avx,4>::register_type(_mm256_log_pd(xmm0.r0),
-                                                             _mm256_log_pd(xmm0.r1),
-                                                             _mm256_log_pd(xmm0.r2),
-                                                             _mm256_log_pd(xmm0.r3));
-    }
-#else
     /**
       Compute the exponential value of e raised to the power of packed double-precision (64-bit)
      floating-point elements in xmm0, and store the results in dst.
@@ -1611,7 +1614,7 @@ namespace cyme{
      */
     template<>
     simd_trait<float,cyme::avx,1>::register_type
-    _mm_load1<float,cyme::avx,1>(const simd_trait<float,cyme::avx,1>::value_type& a){
+    forceinline _mm_load1<float,cyme::avx,1>(const simd_trait<float,cyme::avx,1>::value_type& a){
         return _mm256_set1_ps(a);
     }
 
@@ -1642,7 +1645,7 @@ namespace cyme{
       specialisation float,cyme::avx, 1 regs
      */
     template<>
-    simd_trait<float,cyme::avx,1>::register_type
+    forceinline simd_trait<float,cyme::avx,1>::register_type
     _mm_load<float,cyme::avx,1>(simd_trait<float,cyme::avx,1>::const_pointer a){
         return _mm256_load_ps(a);
     }
@@ -1670,15 +1673,57 @@ namespace cyme{
                                                             _mm256_load_ps(a+16),_mm256_load_ps(a+24));
     }
 
+     /**
+       Load 256-bits (composed of 4 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 1 regs
+     */
+     template<>
+     forceinline simd_trait<float,cyme::avx,1>::register_type
+     _mm_gather<float,cyme::avx,1>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+        return _mm256_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]],
+                             src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]);
+     }
+
+     /**
+       Load 256-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 2 regs
+     */
+     template<>
+     forceinline simd_trait<float,cyme::avx,2>::register_type
+     _mm_gather<float,cyme::avx,2>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<float,cyme::avx,2>::register_type(
+            _mm256_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]],
+                          src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]),
+            _mm256_setr_ps(src[ind[8]],src[ind[9]],src[ind[10]],src[ind[11]],
+                          src[ind[12]],src[ind[13]],src[ind[14]],src[ind[15]]));
+     }
+
+     /**
+       Load 256-bits (composed of 16 packed double-precision (64-bit) floating-point elements) from cyme into dst.
+       using gather operations specialisation double,cyme::avx, 4 regs
+     */
+     template<>
+     forceinline simd_trait<float,cyme::avx,4>::register_type
+     _mm_gather<float,cyme::avx,4>(const float* src, const int *ind, const int  __attribute__((unused)) range){
+        return simd_trait<float,cyme::avx,4>::register_type(
+            _mm256_setr_ps(src[ind[0]],src[ind[1]],src[ind[2]],src[ind[3]],
+                          src[ind[4]],src[ind[5]],src[ind[6]],src[ind[7]]),
+            _mm256_setr_ps(src[ind[8]],src[ind[9]],src[ind[10]],src[ind[11]],
+                          src[ind[12]],src[ind[13]],src[ind[14]],src[ind[15]]),
+            _mm256_setr_ps(src[ind[16]],src[ind[17]],src[ind[18]],src[ind[19]],
+                          src[ind[20]],src[ind[21]],src[ind[22]],src[ind[23]]),
+            _mm256_setr_ps(src[ind[24]],src[ind[25]],src[ind[26]],src[ind[27]],
+                          src[ind[28]],src[ind[29]],src[ind[30]],src[ind[31]]));
+     }
+
     /**
       Store 256-bits (composed of 8 packed single-precision (32-bit) floating-point elements) from a into cyme.
      mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
       specialisation float,cyme::avx, 1 regs
      */
     template<>
-    void
-    _mm_store<float,cyme::avx,1>(simd_trait<float,cyme::avx,1>::register_type xmm0,
-                                 simd_trait<float,cyme::avx,1>::pointer a){
+    forceinline void _mm_store<float,cyme::avx,1>(simd_trait<float,cyme::avx,1>::register_type xmm0,
+                                                  simd_trait<float,cyme::avx,1>::pointer a){
         _mm256_store_ps(a,xmm0);
     }
 
@@ -1688,9 +1733,8 @@ namespace cyme{
       specialisation float,cyme::avx, 2 regs
      */
     template<>
-    forceinline void
-    _mm_store<float,cyme::avx,2>(simd_trait<float,cyme::avx,2>::register_type xmm0,
-                                 simd_trait<float,cyme::avx,2>::pointer a){
+    forceinline void _mm_store<float,cyme::avx,2>(simd_trait<float,cyme::avx,2>::register_type xmm0,
+                                                  simd_trait<float,cyme::avx,2>::pointer a){
         _mm256_store_ps(a,xmm0.r0);
         _mm256_store_ps(a+8,xmm0.r1);
     }
@@ -2797,82 +2841,44 @@ namespace cyme{
 							    xmm0.r2,xmm0.r3);
     }
 
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation double,cyme::avx,1 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,1>::register_type
+     _mm_lt<float,cyme::avx,1> (simd_trait<float,cyme::avx,1>::register_type xmm0,
+                                simd_trait<float,cyme::avx,1>::register_type xmm1){
+        return _mm256_castps_si256(_mm256_cmp_ps(xmm0, xmm1,_CMP_LT_OQ));
+     }
+
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation double,cyme::avx,2 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,2>::register_type
+     _mm_lt<float,cyme::avx,2> (simd_trait<float,cyme::avx,2>::register_type xmm0,
+                                simd_trait<float,cyme::avx,2>::register_type xmm1){
+        return simd_trait<int,cyme::avx,2>::register_type(_mm256_castps_si256(_mm256_cmp_ps(xmm0.r0, xmm1.r0,_CMP_LT_OQ)),
+                                                          _mm256_castps_si256(_mm256_cmp_ps(xmm0.r1, xmm1.r1,_CMP_LT_OQ)));
+     }
+
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation double,cyme::avx,4 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,4>::register_type
+     _mm_lt<float,cyme::avx,4> (simd_trait<float,cyme::avx,4>::register_type xmm0,
+                                simd_trait<float,cyme::avx,4>::register_type xmm1){
+        return simd_trait<int,cyme::avx,4>::register_type(_mm256_castps_si256(_mm256_cmp_ps(xmm0.r0, xmm1.r0,_CMP_LT_OQ)),
+                                                          _mm256_castps_si256(_mm256_cmp_ps(xmm0.r1, xmm1.r1,_CMP_LT_OQ)),
+                                                          _mm256_castps_si256(_mm256_cmp_ps(xmm0.r2, xmm1.r2,_CMP_LT_OQ)),
+                                                          _mm256_castps_si256(_mm256_cmp_ps(xmm0.r3, xmm1.r3,_CMP_LT_OQ)));
+     }
+
 #ifdef  __INTEL_COMPILER
-    /**
-      Compute the exponential value of e raised to the power of packed single-precision (32-bit)
-     floating-point elements in xmm0, and store the results in dst.
-      specialisation float,cyme::avx, 1 regs
-     */
-    template<>
-    forceinline simd_trait<float,cyme::avx,1>::register_type
-    _mm_exp<float,cyme::avx,1>( simd_trait<float,cyme::avx,1>::register_type xmm0){
-        return _mm256_exp_ps(xmm0);
-    }
-
-    /**
-      Compute the exponential value of e raised to the power of packed single-precision (32-bit)
-     floating-point elements in xmm0, and store the results in dst.
-      specialisation float,cyme::avx, 2 regs
-     */
-    template<>
-    forceinline  simd_trait<float,cyme::avx,2>::register_type
-    _mm_exp<float,cyme::avx,2>( simd_trait<float,cyme::avx,2>::register_type xmm0){
-        return simd_trait<float,cyme::avx,2>::register_type(_mm256_exp_ps(xmm0.r0),
-                                                            _mm256_exp_ps(xmm0.r1));
-    }
-
-    /**
-      Compute the exponential value of e raised to the power of packed single-precision (32-bit)
-     floating-point elements in xmm0, and store the results in dst.
-      specialisation float,cyme::avx, 4 regs
-     */
-    template<>
-    forceinline  simd_trait<float,cyme::avx,4>::register_type
-    _mm_exp<float,cyme::avx,4>( simd_trait<float,cyme::avx,4>::register_type xmm0){
-        return simd_trait<float,cyme::avx,4>::register_type(_mm256_exp_ps(xmm0.r0),
-                                                            _mm256_exp_ps(xmm0.r1),
-                                                            _mm256_exp_ps(xmm0.r2),
-                                                            _mm256_exp_ps(xmm0.r3));
-    }
-
-    /**
-      Compute the natural logarithm of packed single-precision (32-bit) floating-point elements in xmm0,
-      and store the results in dst.
-      specialisation float,cyme::avx, 1 regs
-     */
-    template<>
-    forceinline simd_trait<float,cyme::avx,1>::register_type
-    _mm_log<float,cyme::avx,1>(simd_trait<float,cyme::avx,1>::register_type xmm0){
-        return _mm256_log_ps(xmm0);
-    }
-
-    /**
-      Compute the natural logarithm of packed single-precision (32-bit) floating-point elements in xmm0,
-      and store the results in dst.
-      specialisation float,cyme::avx, 2 regs
-     */
-    template<>
-    forceinline  simd_trait<float,cyme::avx,2>::register_type
-    _mm_log<float,cyme::avx,2>( simd_trait<float,cyme::avx,2>::register_type xmm0){
-        return simd_trait<float,cyme::avx,2>::register_type(_mm256_log_ps(xmm0.r0),
-                                                            _mm256_log_ps(xmm0.r1));
-    }
-
-    /**
-      Compute the natural logarithm of packed single-precision (32-bit) floating-point elements in xmm0,
-      and store the results in dst.
-      specialisation float,cyme::avx, 4 regs
-     */
-    template<>
-    forceinline  simd_trait<float,cyme::avx,4>::register_type
-    _mm_log<float,cyme::avx,4>( simd_trait<float,cyme::avx,4>::register_type xmm0){
-        return simd_trait<float,cyme::avx,4>::register_type(_mm256_log_ps(xmm0.r0),
-                                                            _mm256_log_ps(xmm0.r1),
-                                                            _mm256_log_ps(xmm0.r2),
-                                                            _mm256_log_ps(xmm0.r3));
-    }
-#else
-
     /**
       Compute the exponential value of e raised to the power of packed single-precision (32-bit)
      floating-point elements in xmm0, and store the results in dst.
@@ -3121,6 +3127,340 @@ namespace cyme{
                                                             _mm256_fnmsub_ps(xmm0.r3, xmm1.r3, xmm2.r3));
     }
 #endif //end FMA
+
+    /** limited support to 32bit integer */
+    /**
+      Load a single-precision (32-bit) integer element from cyme into all elements of dst.
+       specialisation int,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,1>::register_type
+    _mm_load1<int,cyme::avx,1>(const simd_trait<int,cyme::avx,1>::value_type& a){
+        return  _mm256_set1_epi32(a);
+    }
+
+    /**
+      Load a single-precision (32-bit) integer element from cyme into all elements of dst.
+       specialisation int,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,2>::register_type
+    _mm_load1<int,cyme::avx,2>(const simd_trait<int,cyme::avx,2>::value_type& a){
+        return simd_trait<int,cyme::avx,2>::register_type( _mm256_set1_epi32(a), _mm256_set1_epi32(a));
+    }
+
+    /**
+      Load a single-precision (32-bit) integer element from cyme into all elements of dst.
+       specialisation int,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,4>::register_type
+    _mm_load1<int,cyme::avx,4>(const simd_trait<int,cyme::avx,4>::value_type& a){
+        return simd_trait<int,cyme::avx,4>::register_type( _mm256_set1_epi32(a), _mm256_set1_epi32(a),
+                                                           _mm256_set1_epi32(a), _mm256_set1_epi32(a));
+    }
+
+    /**
+      Load 256-bits (composed of 4 packed integer (32-bit)  from cyme
+     into dst. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation float,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,1>::register_type
+    _mm_load<int,cyme::avx,1>(simd_trait<int,cyme::avx,1>::const_pointer a){
+        return _mm256_load_si256((__m256i*)a);
+    }
+
+    /**
+      Load 256-bits (composed of 4 packed integer (32-bit) ) from cyme
+     into dst. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation float,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,2>::register_type
+    _mm_load<int,cyme::avx,2>(simd_trait<int,cyme::avx,2>::const_pointer a){
+        return simd_trait<int,cyme::avx,2>::register_type(_mm256_load_si256((__m256i*)a),
+                                                          _mm256_load_si256((__m256i*)(a+8)));
+    }
+
+    /**
+      Load 256-bits (composed of 4 packed integer(32-bit)) from cyme
+     into dst. mem_addr must be aligned on a 32-byte boundary or a general-protection exception will be generated.
+     specialisation float,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,4>::register_type
+    _mm_load<int,cyme::avx,4>(simd_trait<int,cyme::avx,4>::const_pointer a){
+        return simd_trait<int,cyme::avx,4>::register_type(_mm256_load_si256((__m256i*)a),
+                                                          _mm256_load_si256((__m256i*)(a+8)),
+                                                          _mm256_load_si256((__m256i*)(a+16)),
+                                                          _mm256_load_si256((__m256i*)(a+24)));
+    }
+
+    /**
+       Store 256-bits (composed of 4 packed integer (32-bit)) from a into cyme.
+     mem_addr must be aligned on a 16-byte boundary or a general-protection exception will be generated.
+     specialisation int,cyme::avx,1 regs
+     */
+    template<>
+    forceinline void _mm_store<int,cyme::avx,1>(simd_trait<int,cyme::avx,1>::register_type xmm0,
+                                    simd_trait<int,cyme::avx,1>::pointer a){
+        _mm256_store_si256((__m256i*)a,xmm0);
+    }
+
+    /**
+       Store 256-bits (composed of 4 packed integer (32-bit) ) from a into cyme.
+     mem_addr must be aligned on a 16-byte boundary or a general-protection exception will be generated.
+     specialisation int,cyme::avx,2 regs
+     */
+    template<>
+    forceinline void _mm_store<int,cyme::avx,2>(simd_trait<int,cyme::avx,2>::register_type xmm0,
+                                    simd_trait<int,cyme::avx,2>::pointer a){
+        _mm256_store_si256((__m256i*)a,xmm0.r0);
+        _mm256_store_si256((__m256i*)(a+8),xmm0.r1);
+    }
+
+    /**
+       Store 256-bits (composed of 4 packed integer (32-bit)) from a into cyme.
+     mem_addr must be aligned on a 16-byte boundary or a general-protection exception will be generated.
+     specialisation int,cyme::avx,4 regs
+     */
+    template<>
+    forceinline void _mm_store<int,cyme::avx,4>(simd_trait<int,cyme::avx,4>::register_type xmm0,
+                                    simd_trait<int,cyme::avx,4>::pointer a){
+        _mm256_store_si256((__m256i*)a,xmm0.r0);
+        _mm256_store_si256((__m256i*)(a+8),xmm0.r1);
+        _mm256_store_si256((__m256i*)(a+16),xmm0.r2);
+        _mm256_store_si256((__m256i*)(a+24),xmm0.r3);
+    }
+
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation int,cyme::avx,1 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,1>::register_type
+     _mm_lt<int,cyme::avx,1> (simd_trait<int,cyme::avx,1>::register_type xmm0,
+                              simd_trait<int,cyme::avx,1>::register_type xmm1){
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
+        __m128i tmp0 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0,0),_mm256_extractf128_si256(xmm1,0));
+        __m128i tmp1 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0,1),_mm256_extractf128_si256(xmm1,1));
+        __m256i res = _mm256_insertf128_si256(res, tmp0,0);
+                res = _mm256_insertf128_si256(res, tmp1,1);
+        #pragma GCC diagnostic pop
+        return res;
+     }
+
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation float,cyme::avx,2 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,2>::register_type
+     _mm_lt<int,cyme::avx,2> (simd_trait<int,cyme::avx,2>::register_type xmm0,
+                              simd_trait<int,cyme::avx,2>::register_type xmm1){
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
+        __m128i tmp0 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r0,0),_mm256_extractf128_si256(xmm1.r0,0));
+        __m128i tmp1 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r0,1),_mm256_extractf128_si256(xmm1.r0,1));
+        __m128i tmp2 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r1,0),_mm256_extractf128_si256(xmm1.r1,0));
+        __m128i tmp3 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r1,1),_mm256_extractf128_si256(xmm1.r1,1));
+        __m256i res0 = _mm256_insertf128_si256(res0, tmp0,0);
+                res0 = _mm256_insertf128_si256(res0, tmp1,1);
+        __m256i res1 = _mm256_insertf128_si256(res1, tmp2,0);
+                res1 = _mm256_insertf128_si256(res1, tmp3,1);
+        #pragma GCC diagnostic pop
+        return simd_trait<int,cyme::avx,2>::register_type(res0,res1);
+     }
+
+     /**
+      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+      specialisation int,cyme::avx,1 regs
+     */
+     template<>
+     forceinline simd_trait<int,cyme::avx,4>::register_type
+     _mm_lt<int,cyme::avx,4> (simd_trait<int,cyme::avx,4>::register_type xmm0,
+                              simd_trait<int,cyme::avx,4>::register_type xmm1){
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
+        __m128i tmp0 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r0,0),_mm256_extractf128_si256(xmm1.r0,0));
+        __m128i tmp1 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r0,1),_mm256_extractf128_si256(xmm1.r0,1));
+        __m128i tmp2 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r1,0),_mm256_extractf128_si256(xmm1.r1,0));
+        __m128i tmp3 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r1,1),_mm256_extractf128_si256(xmm1.r1,1));
+        __m128i tmp4 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r2,0),_mm256_extractf128_si256(xmm1.r2,0));
+        __m128i tmp5 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r2,1),_mm256_extractf128_si256(xmm1.r2,1));
+        __m128i tmp6 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r3,0),_mm256_extractf128_si256(xmm1.r3,0));
+        __m128i tmp7 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r3,1),_mm256_extractf128_si256(xmm1.r3,1));
+
+        __m256i res0 = _mm256_insertf128_si256(res0, tmp0,0);
+                res0 = _mm256_insertf128_si256(res0, tmp1,1);
+        __m256i res1 = _mm256_insertf128_si256(res1, tmp2,0);
+                res1 = _mm256_insertf128_si256(res1, tmp3,1);
+        __m256i res2 = _mm256_insertf128_si256(res2, tmp4,0);
+                res2 = _mm256_insertf128_si256(res2, tmp5,1);
+        __m256i res3 = _mm256_insertf128_si256(res3, tmp6,0);
+                res3 = _mm256_insertf128_si256(res3, tmp7,1);
+
+        #pragma GCC diagnostic pop
+        return simd_trait<int,cyme::avx,4>::register_type(res0,res1,res2,res3);
+     }
+
+    /**
+      Add packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+     and store the results in dst.
+      specialisation double,cyme::avx, 1 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,1>::register_type
+    _mm_add<int,cyme::avx,1>(simd_trait<int,cyme::avx,1>::register_type xmm0,
+                             simd_trait<int,cyme::avx,1>::register_type xmm1){
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
+        __m128i tmp0 = _mm_add_epi32(_mm256_extractf128_si256(xmm0,0),_mm256_extractf128_si256(xmm1,0));
+        __m128i tmp1 = _mm_add_epi32(_mm256_extractf128_si256(xmm0,1),_mm256_extractf128_si256(xmm1,1));
+        __m256i res = _mm256_insertf128_si256(res, tmp0,0);
+                res = _mm256_insertf128_si256(res, tmp1,1);
+        #pragma GCC diagnostic pop
+        return res;
+    }
+
+    /**
+      Add packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+     and store the results in dst.
+      specialisation double,cyme::avx, 2 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,2>::register_type
+    _mm_add<int,cyme::avx,2>(simd_trait<int,cyme::avx,2>::register_type xmm0,
+                             simd_trait<int,cyme::avx,2>::register_type xmm1){
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
+        __m128i tmp0 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r0,0),_mm256_extractf128_si256(xmm1.r0,0));
+        __m128i tmp1 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r0,1),_mm256_extractf128_si256(xmm1.r0,1));
+        __m128i tmp2 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r1,0),_mm256_extractf128_si256(xmm1.r1,0));
+        __m128i tmp3 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r1,1),_mm256_extractf128_si256(xmm1.r1,1));
+        __m256i res0 = _mm256_insertf128_si256(res0, tmp0,0);
+                res0 = _mm256_insertf128_si256(res0, tmp1,1);
+        __m256i res1 = _mm256_insertf128_si256(res1, tmp2,0);
+                res1 = _mm256_insertf128_si256(res1, tmp3,1);
+        #pragma GCC diagnostic pop
+        return simd_trait<int,cyme::avx,2>::register_type(res0,res1);
+    }
+
+    /**
+      Add packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+     and store the results in dst.
+      specialisation double,cyme::avx, 4 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,4>::register_type
+    _mm_add<int,cyme::avx,4>(simd_trait<int,cyme::avx,4>::register_type xmm0,
+                             simd_trait<int,cyme::avx,4>::register_type xmm1){
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wuninitialized"
+        __m128i tmp0 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r0,0),_mm256_extractf128_si256(xmm1.r0,0));
+        __m128i tmp1 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r0,1),_mm256_extractf128_si256(xmm1.r0,1));
+        __m128i tmp2 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r1,0),_mm256_extractf128_si256(xmm1.r1,0));
+        __m128i tmp3 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r1,1),_mm256_extractf128_si256(xmm1.r1,1));
+        __m128i tmp4 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r2,0),_mm256_extractf128_si256(xmm1.r2,0));
+        __m128i tmp5 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r2,1),_mm256_extractf128_si256(xmm1.r2,1));
+        __m128i tmp6 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r3,0),_mm256_extractf128_si256(xmm1.r3,0));
+        __m128i tmp7 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r3,1),_mm256_extractf128_si256(xmm1.r3,1));
+
+        __m256i res0 = _mm256_insertf128_si256(res0, tmp0,0);
+                res0 = _mm256_insertf128_si256(res0, tmp1,1);
+        __m256i res1 = _mm256_insertf128_si256(res1, tmp2,0);
+                res1 = _mm256_insertf128_si256(res1, tmp3,1);
+        __m256i res2 = _mm256_insertf128_si256(res2, tmp4,0);
+                res2 = _mm256_insertf128_si256(res2, tmp5,1);
+        __m256i res3 = _mm256_insertf128_si256(res3, tmp6,0);
+                res3 = _mm256_insertf128_si256(res3, tmp7,1);
+
+        #pragma GCC diagnostic pop
+        return simd_trait<int,cyme::avx,4>::register_type(res0,res1,res2,res3);
+    }
+
+    /**
+     Evaluate the the && operator between two registers
+     specialisation double,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,1>::register_type
+    _mm_and<int,cyme::avx,1> (simd_trait<int,cyme::avx,1>::register_type xmm0,
+                              simd_trait<int,cyme::avx,1>::register_type xmm1){
+        return _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0),_mm256_castsi256_pd(xmm1)));
+    }
+
+    /**
+     Evaluate the the && operator between two registers
+     specialisation double,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,2>::register_type
+    _mm_and<int,cyme::avx,2> (simd_trait<int,cyme::avx,2>::register_type xmm0,
+                              simd_trait<int,cyme::avx,2>::register_type xmm1){
+        return simd_trait<int,cyme::avx,2>::register_type(_mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0.r0),
+                                                                                            _mm256_castsi256_pd(xmm1.r0))),
+                                                          _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0.r1),
+                                                                                            _mm256_castsi256_pd(xmm1.r1))));
+    }
+
+    /**
+     Evaluate the the && operator between two registers
+     specialisation double,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::avx,4>::register_type
+    _mm_and<int,cyme::avx,4> (simd_trait<int,cyme::avx,4>::register_type xmm0,
+                              simd_trait<int,cyme::avx,4>::register_type xmm1){
+        return simd_trait<int,cyme::avx,4>::register_type(_mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0.r0),
+                                                                                            _mm256_castsi256_pd(xmm1.r0))),
+                                                          _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0.r1),
+                                                                                            _mm256_castsi256_pd(xmm1.r1))),
+                                                          _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0.r2),
+                                                                                            _mm256_castsi256_pd(xmm1.r2))),
+                                                          _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0.r3),
+                                                                                            _mm256_castsi256_pd(xmm1.r3))));
+    }
+
+    /**
+     Evaluate the the != operator between a register and a bool
+     specialisation double,cyme::avx,1 regs
+     */
+    template<>
+    forceinline int
+    _mm_test_all_one<int,cyme::avx,1> (simd_trait<int,cyme::avx,1>::register_type xmm0){
+        simd_trait<int,cyme::avx,1>::register_type mask(_mm256_set1_epi32(0x1));
+        return  _mm256_testc_si256(xmm0,mask);
+    }
+
+    /**
+     Evaluate the the != operator between a register and a bool
+     specialisation double,cyme::avx,2 regs
+     */
+    template<>
+    forceinline int
+    _mm_test_all_one<int,cyme::avx,2> (simd_trait<int,cyme::avx,2>::register_type xmm0){
+        simd_trait<int,cyme::avx,1>::register_type mask(_mm256_set1_epi32(0x1));
+        return _mm256_testc_si256(_mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(xmm0.r0),
+                                                      _mm256_castsi256_pd(xmm0.r1))),mask);
+    }
+
+    /**
+     Evaluate the the != operator between a register and a bool
+     specialisation double,cyme::avx,4 regs
+     */
+    template<>
+    forceinline int
+    _mm_test_all_one<int,cyme::avx,4> (simd_trait<int,cyme::avx,4>::register_type xmm0){
+        simd_trait<int,cyme::avx,1>::register_type mask(_mm256_set1_epi32(0x1));
+        return _mm256_testc_si256(_mm256_castpd_si256(_mm256_or_pd(_mm256_or_pd(_mm256_castsi256_pd(xmm0.r0),
+                                                            _mm256_castsi256_pd(xmm0.r1)),
+                                               _mm256_or_pd(_mm256_castsi256_pd(xmm0.r2),
+                                                            _mm256_castsi256_pd(xmm0.r3)))),mask);
+    }
+
 } //end namespace
 
 #endif

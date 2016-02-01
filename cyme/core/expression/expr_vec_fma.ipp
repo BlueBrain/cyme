@@ -32,18 +32,18 @@ namespace cyme{
     * FMA from operator a*b+c
     */
     template<class T, cyme::simd O, int N, class R1, class R2, class R3>
-    rvec<T,O,N, vec_muladd<T,O,N,R1,R2,R3> >
-    forceinline operator +(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, rvec<T,O,N,R3> const& b){
-        return  rvec<T,O,N,vec_muladd<T,O,N,R1,R2,R3> >(vec_muladd<T,O,N,R1,R2,R3>(a.rep(),b.rep()));
+    vec<T,O,N, vec_muladd<T,O,N,R1,R2,R3> >
+    forceinline operator +(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, vec<T,O,N,R3> const& b){
+        return  vec<T,O,N,vec_muladd<T,O,N,R1,R2,R3> >(vec_muladd<T,O,N,R1,R2,R3>(a.rep(),b.rep()));
     }
 
     /**
     * FMA from operator a*b+c where c is a scalar
     */
     template<class T, cyme::simd O, int N, class R1, class R2>
-    rvec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator +(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, typename identity<T>::value_type const& b){
-        return  rvec<T,O,N,vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    vec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator +(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, typename identity<T>::value_type const& b){
+        return  vec<T,O,N,vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
             (vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(b))));
     }
 
@@ -51,8 +51,8 @@ namespace cyme{
     * FMA from operator a+b*c
     */
     template<class T, cyme::simd O, int N, class R1, class R2, class R3>
-    rvec<T,O,N, vec_muladd<T,O,N,R1,R2,R3> >
-    forceinline operator +(rvec<T,O,N,R3> const& b, rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
+    vec<T,O,N, vec_muladd<T,O,N,R1,R2,R3> >
+    forceinline operator +(vec<T,O,N,R3> const& b, vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
         return operator+(a,b); //take previous one ^_^, as the addition is commutative
     }
 
@@ -60,8 +60,8 @@ namespace cyme{
     * FMA from operator a+b*c where c is a scalar
     */
     template<class T, cyme::simd O, int N, class R1, class R2>
-    rvec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator +(typename identity<T>::value_type const& b, rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
+    vec<T,O,N, vec_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator +(typename identity<T>::value_type const& b, vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a){
         return operator+(a,b);
     }
 
@@ -70,27 +70,27 @@ namespace cyme{
     * (ambiguous fma(a,b,c*d) or fma(c,d,a*b), with the two previous wrappers)
     */
     template<class T, cyme::simd O, int N, class R1, class R2, class R3, class R4>
-    rvec<T,O,N, vec_mul_add_mul<T,O,N,R1,R2,R3,R4> >
-    forceinline operator +(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, rvec<T,O,N,vec_mul<T,O,N,R3,R4> >const& b){
-        return  rvec<T,O,N, vec_mul_add_mul<T,O,N,R1,R2,R3,R4> >(vec_mul_add_mul<T,O,N,R1,R2,R3,R4>(a.rep(),b.rep()));
+    vec<T,O,N, vec_mul_add_mul<T,O,N,R1,R2,R3,R4> >
+    forceinline operator +(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, vec<T,O,N,vec_mul<T,O,N,R3,R4> >const& b){
+        return  vec<T,O,N, vec_mul_add_mul<T,O,N,R1,R2,R3,R4> >(vec_mul_add_mul<T,O,N,R1,R2,R3,R4>(a.rep(),b.rep()));
     }
 
     /**
     * FMS from operator a*b-c
     */
     template<class T, cyme::simd O, int N, class R1, class R2, class R3>
-    rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,R3> >
-    forceinline operator -(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, rvec<T,O,N,R3> const& b){
-        return  rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,R3> >(vec_mulsub<T,O,N,R1,R2,R3>(a.rep(),b.rep()));
+    vec<T,O,N, vec_mulsub<T,O,N,R1,R2,R3> >
+    forceinline operator -(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, vec<T,O,N,R3> const& b){
+        return  vec<T,O,N, vec_mulsub<T,O,N,R1,R2,R3> >(vec_mulsub<T,O,N,R1,R2,R3>(a.rep(),b.rep()));
     }
 
     /**
     * FMS from operator a*b-c where c is a scalar
     */
     template<class T, cyme::simd O, int N, class R1, class R2>
-    rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator -(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, typename identity<T>::value_type const& b){
-        return  rvec<T,O,N,vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    vec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator -(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, typename identity<T>::value_type const& b){
+        return  vec<T,O,N,vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
             (vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(b))));
     }
 
@@ -98,18 +98,18 @@ namespace cyme{
     * FMS from operator a-b*c
     */
     template<class T, cyme::simd O, int N, class R1, class R2, class R3>
-    rvec<T,O,N, vec_negate_muladd<T,O,N,R1,R2,R3> >
-    forceinline operator -(rvec<T,O,N,R3> const& a, rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
-        return  rvec<T,O,N, vec_negate_muladd<T,O,N,R1,R2,R3> >(vec_negate_muladd<T,O,N,R1,R2,R3>(b.rep(),a.rep()));
+    vec<T,O,N, vec_negate_muladd<T,O,N,R1,R2,R3> >
+    forceinline operator -(vec<T,O,N,R3> const& a, vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
+        return  vec<T,O,N, vec_negate_muladd<T,O,N,R1,R2,R3> >(vec_negate_muladd<T,O,N,R1,R2,R3>(b.rep(),a.rep()));
     }
 
     /**
     * FMS from operator a-b*c where c is a scalar
     */
     template<class T, cyme::simd O, int N, class R1, class R2>
-    rvec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
-    forceinline operator -(typename identity<T>::value_type const& a,rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
-        return  rvec<T,O,N,vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    vec<T,O,N, vec_mulsub<T,O,N,R1,R2,vec_scalar<T,O,N> > >
+    forceinline operator -(typename identity<T>::value_type const& a,vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& b){
+        return  vec<T,O,N,vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> > >
             (vec_negate_muladd<T,O,N,R1,R2,vec_scalar<T,O,N> >(b.rep(),vec_scalar<T,O,N>(static_cast<T>(a))));
     }
 
@@ -118,9 +118,9 @@ namespace cyme{
     * a*b - c*d (ambiguous fms(a,b,c*d) or fms(c,d,a*b)), with the two previous wrappers
     */
     template<class T, cyme::simd O, int N,class R1, class R2, class R3, class R4>
-    rvec<T,O,N, vec_mul_sub_mul<T,O,N,R1,R2,R3,R4> >
-    forceinline operator -(rvec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, rvec<T,O,N,vec_mul<T,O,N,R3,R4> >const& b){
-        return  rvec<T,O,N, vec_mul_sub_mul<T,O,N,R1,R2,R3,R4> >(vec_mul_sub_mul<T,O,N,R1,R2,R3,R4>(a.rep(),b.rep()));
+    vec<T,O,N, vec_mul_sub_mul<T,O,N,R1,R2,R3,R4> >
+    forceinline operator -(vec<T,O,N,vec_mul<T,O,N,R1,R2> >const& a, vec<T,O,N,vec_mul<T,O,N,R3,R4> >const& b){
+        return  vec<T,O,N, vec_mul_sub_mul<T,O,N,R1,R2,R3,R4> >(vec_mul_sub_mul<T,O,N,R1,R2,R3,R4>(a.rep(),b.rep()));
     }
 }
 #endif

@@ -1,5 +1,5 @@
 #list tests
-set(tests alignment array core_engine core_scalar vector serial)
+set(tests alignment array core_engine core_scalar vector serial gather_scatter)
 set(unrolls 1 2 4)
 
 #loop over SIMD techno

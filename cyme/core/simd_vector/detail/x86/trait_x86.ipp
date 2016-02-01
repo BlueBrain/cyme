@@ -40,7 +40,9 @@ namespace cyme{
     template<class T, cyme::simd O>
     struct register_trait;
 
-    /** Specialisation of the trait class for int, cyme::sse  */
+    /** Specialisation of the trait class for int, cyme::sse
+       integer register name is standard whatever the size 4,8,16,32 or 64 bits
+    */
     template<>
     struct register_trait<int, cyme::sse>{
         typedef __m128i trait_register_type;
@@ -59,7 +61,9 @@ namespace cyme{
     };
 
 #ifdef __AVX__
-    /** Specialisation of the trait class for int, cyme::avx  */
+    /** Specialisation of the trait class for int, cyme::avx
+        integer register name is standard whatever the size 4,8,16,32 or 64 bits
+    */
     template<>
     struct register_trait<int, cyme::avx>{
         typedef __m256i trait_register_type;
@@ -234,6 +238,7 @@ namespace cyme{
     struct simd_trait<int, cyme::avx, 1> : trait<int>{
         typedef __m256i register_type;
     };
+
 #endif
     /** \endcond */
 }

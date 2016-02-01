@@ -33,9 +33,11 @@ namespace cyme{
 *  if the order is AoS, it will provide a basic float/double, else it
 *  encapsulates a SIMD vector. Note for AoSoA version: is serial = ... , it
 *  will generates the tree but it will not save the data into cyme.
+*  Default cyme::AoSoA because I use this object in mod2cyme where
+*  the data layout AoSoA does not "exist"
 */
-    template<class T, cyme::order O, int N = cyme::unroll_factor::N> class
-serial{ };
+    template<class T, cyme::order O = cyme::AoSoA, int N = cyme::unroll_factor::N> class
+    serial{ };
 
     /** Specialisation of the cyme::serial for AoS layout */
     template<class T, int N>
@@ -56,53 +58,77 @@ serial{ };
             return a;
         }
 
-        /** Bracket operator to fit with AoSoA syntax */
-        inline const value_type& operator ()() const{
-            return a;
-        }
-
         T a;
     };
 
     /** Specialisation of the cyme::serial for AoSoA layout */
     template<class T, int N>
-    struct serial<T,cyme::AoSoA,N>{
+    struct serial<T,cyme::AoSoA,N> : public vec<T,cyme::__GETSIMD__(),N>{
         typedef T value_type;
-        typedef cyme::rvec<value_type,cyme::__GETSIMD__(),N> base_type;
 
-        /** constructor */
-        serial(base_type m = base_type()):a(m){}
+        /** default constructor */
+        explicit serial():vec<T,cyme::__GETSIMD__(),N>(){}
 
         /** constructor constant */
-        explicit serial(typename base_type::value_type m):a(m){}
+        serial(value_type m):vec<T,cyme::__GETSIMD__(),N>(m){}
 
-
-        /** copy constructor create the tree with bracket operator call
-
-           \warning   not a = rhs.rep()() else I call store -> a crash (pointer not initialized)
-         */
-        template<class T2, cyme::simd O, class Rep>
-        serial(cyme::rvec<T2,O,N,Rep > const& rhs){
-            a.rep()() = rhs.rep()();
-        }
-
-        /** normal situation initialize serial by vector returned by the iterates serial = (*it)[1]; */
-        inline serial& operator=(base_type b){
-            a.rep()() = b.rep()();
+        /** serial -> serial mod2cyme */
+        forceinline serial operator=(serial const& s){
+            this->rep()() = s.rep()();
             return *this;
         }
 
-        /** implicit conversion operator */
-        inline operator base_type (){
-            return a;
+        /* T1 because it is also used for u<int>( u<double> < v<double> ) */
+        template<class T1, class Rep>
+        serial(cyme::vec<T1,cyme::__GETSIMD__(),N,Rep > const& v){
+            this->rep()() = v.rep()();
         }
 
-        /** bracket operator return the vector */
-        inline const base_type& operator ()() const{
-            return a;
+        /* T1 because it is also used for u<int>( u<double> < v<double> ) */
+        template<class T1, class Rep>
+        forceinline serial operator= (vec<T1,cyme::__GETSIMD__(),N,Rep > const& v){
+            this->rep()() = v.rep()();
+            return *this;
         }
 
-        base_type a;
+        template<class Rep>
+        forceinline serial operator= (vec<T,cyme::__GETSIMD__(),N,Rep > const& v){
+            this->rep()() = v.rep()();
+            return *this;
+        }
+
+        template<class Rep>
+        forceinline serial operator+= (vec<T,cyme::__GETSIMD__(),N,Rep > const& v){
+            this->rep()() += v.rep()();
+            return *this;
+        }
+
+        template<class Rep>
+        forceinline serial operator-= (vec<T,cyme::__GETSIMD__(),N,Rep > const& v){
+            this->rep()() -= v.rep()();
+            return *this;
+        }
+
+        template<class Rep>
+        forceinline serial operator*= (vec<T,cyme::__GETSIMD__(),N,Rep > const& v){
+            this->rep()() *= v.rep()();
+            return *this;
+        }
+
+        template<class Rep>
+        forceinline serial operator/= (vec<T,cyme::__GETSIMD__(),N,Rep > const& v){
+            this->rep()() /= v.rep()();
+            return *this;
+        }
+
+        forceinline bool operator != (bool b){
+            return this->rep()() != b;
+        }
+
+        forceinline bool operator == (bool b){
+            return this->rep()() == b;
+        }
+
     };
 }
 
