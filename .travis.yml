@@ -15,7 +15,7 @@ os:
 - osx
 before_script:
   - sudo apt-get -qq update
-  - sudo apt-get install libboost-chrono-dev libboost-system-dev libboost-test-dev
+  - sudo apt-get install libboost-all-dev
   - mkdir build
   - cd build
   - cmake ..
