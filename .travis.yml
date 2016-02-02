@@ -8,17 +8,22 @@
 
 language: cpp
 compiler:
-- clang
-- gcc
+  - clang
+  - gcc
+dist:
+  - trusty
 os:
-- linux
-- osx
+  - linux
 before_script:
-  - sudo apt-get install libboost-chrono-dev libboost-system-dev libboost-test-dev
+  - sudo apt-get -qq update
+  - sudo apt-get install libboost-all-dev cmake
+  - sudo apt-get install software-properties-common
   - mkdir build
   - cd build
   - cmake ..
-script: make
+script:
+  - make
+  - make test
 notifications:
   email:
     recipients:
