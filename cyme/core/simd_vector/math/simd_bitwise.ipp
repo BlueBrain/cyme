@@ -1,5 +1,5 @@
 /*
- * Cyme - simd_mul.ipp, Copyright (c), 2014,
+ * Cyme - simd_bitwise.ipp, Copyright (c), 2015,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
@@ -20,34 +20,21 @@
  */
 
 /**
- * @file cyme/core/simd_vector/math/simd_mul.ipp
- * Implements operator* for vec_simd class
+ * @file cyme/core/simd_vector/math/simd_bitwise.ipp
+ * Implements bitwise for vec_simd class
  */
 
-#ifndef CYME_SIMD_MUL_IPP
-#define CYME_SIMD_MUL_IPP
+#ifndef SIMD_BITWISE_IPP
+#define SIMD_BITWISE_IPP
 
 namespace cyme{
-
-    /** Implements operator* for cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator* (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
+    template<class T, cyme::simd O, int N>
+    vec_simd<T,O,N> operator&& (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
         vec_simd<T,O,N> nrv(lhs);
-        nrv *= rhs;
+        nrv &= rhs; 
         return nrv;
     }
-
-    /** Implements operator* for cyme::vec_simd and 0*/
-    template<class T,cyme::simd O, int N>
-    forceinline ZERO operator* (const vec_simd<T,O,N>&, ZERO){
-        return ZERO();
-    }
-
-    /** Implements operator* for 0 and cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline ZERO operator* (ZERO, const vec_simd<T,O,N>&){
-        return ZERO();
-    }
 }
+
 #endif
 

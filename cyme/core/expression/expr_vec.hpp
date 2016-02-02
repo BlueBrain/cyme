@@ -21,7 +21,7 @@
 
 /**
  * @file cyme/core/expression/expr_vec.hpp
- * Defines vertex class, rvec and wvec vector class
+ * Defines vertex class, vec and vec vector class
  *
  *  This uses template expressions to parse a series of basic operations into a tree at compile time.
  *  Effort was made to limit the number of local copies.
@@ -236,6 +236,41 @@ namespace cyme{
         }
     };
 
+    /** and vertex in the DAG from a && b integer only, it look likes weird
+     *
+     */
+    template<class T, class T2, cyme::simd O, int N, class OP1, class OP2>
+    class vec_and{
+        typename vec_traits<OP1,O,N>::value_type op1;
+        typename vec_traits<OP2,O,N>::value_type op2;
+
+    public:
+        forceinline vec_and(OP1 const& a, OP2 const& b):op1(a), op2(b){
+        }
+
+        /* always return int */
+        forceinline vec_simd<int,O,N> operator()() const{
+            return op1() && op2();
+        }
+    };
+
+    /** less than vertex in the DAG from a < b
+        /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
+    */
+    template<class T, cyme::simd O, int N, class OP1, class OP2>
+    class vec_lt{
+        typename vec_traits<OP1,O,N>::value_type op1;
+        typename vec_traits<OP2,O,N>::value_type op2;
+
+    public:
+        forceinline vec_lt(OP1 const& a, OP2 const& b):op1(a), op2(b){
+        }
+        /* always return int */
+        forceinline vec_simd<int,O,N> operator()() const{
+            return op1() < op2();
+        }
+    };
+
     /** add vertex in the DAG from a+b */
     template<class T, cyme::simd O, int N, class OP1, class OP2>
     class vec_add{
@@ -270,6 +305,10 @@ namespace cyme{
 
     Contrary to other class it is a structure, I did an optimization in case
     I get multiple negate e.g. -(-(a)) the vertex is transformed to a.
+<<<<<<< HEAD
+=======
+
+>>>>>>> cymepoly
     For this I need to get the original operator (op1)
     */
     template<class T, cyme::simd O, int N, class OP1>
@@ -444,155 +483,54 @@ namespace cyme{
         vec_simd<T,O,N> const s; // value of the scalar
     };
 
-    /** read vector used during the construction of the DAG, rhs only !
+
+    /** vector used during the construction of the DA
 
     This class is an "interface" between the iterator and the computation
     vector class (SIMD register). During compilation, the DAG is created.
     The tree is built on the read only vector consequently.
-    rvec is called only with the const [] operators of the
-    class storage.
 
-    If the user utilises rvec like and lhs and rhs, it should be very careful
-    because the results will be note save. You need a wvec for that.
+    An additional pointer (unfortunately) is saved in the class for the saving operation.
+    For the rhs the compiler should delete the pointer for the ASM code
 
-    \remark constrary the wrec I do not keep trace of the pointer of the input.
-    I do not want generate a tree with a useless pointer.
+    \remark The wrec keep trace of the pointer of the input.
     */
-    template<class T, cyme::simd O, int N = cyme::unroll_factor::N, class Rep = vec_simd<T,O,N> >
-    class rvec{
-    public:
+    template<class T, cyme::simd O = cyme::__CYME_SIMD_VALUE__, int N = cyme::unroll_factor::N, class Rep = vec_simd<T,O,N> >
+    class vec{
+        public:
+
         typedef T value_type;
         typedef value_type* pointer;
         typedef value_type const* const_pointer;
         typedef Rep base_type;
 
         /** default constructor nothing special */
-        forceinline explicit rvec():expr_rep(){
+        forceinline explicit vec():expr_rep(){
         }
 
-        /** constructor rhs of the operator= I do not save the pointer, as I read only the cyme on this side */
-        forceinline explicit rvec(Rep const& rb):expr_rep(rb){
+        /** Constructor lhs of the operator=, pointer lhs because non const I save it for saving at the end */
+        forceinline explicit vec(pointer rb):data_pointer(rb),expr_rep(rb){
         }
 
-        /** constructor lhs of the operator= */
-        forceinline explicit rvec(const_pointer rb):expr_rep(rb){
+        /** Constructor lhs of the operator=, I save the data into the cyme after the computation */
+        forceinline explicit vec(Rep const& rb):data_pointer(NULL),expr_rep(rb){
         }
 
-        /** constructor for a given value */
-        forceinline explicit rvec(value_type a):expr_rep(a){
+        /** constructor with const pointer I am rhs I do not care about the pointer */
+        forceinline explicit vec(const_pointer rb):data_pointer(NULL),expr_rep(rb){
         }
 
-        /**
-        operator= creates the tree and execute in normal condition
-        The tree is built at the compilation, the full tree is stored in rhs argument.
-        The execution of the tree is performed when we call the operator()
-        */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline rvec& operator= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            rep() = rhs.rep()();
-            return *this;
+        /*** Constructor with constant, I do not care about the pointer */
+        forceinline vec(value_type b):data_pointer(NULL),expr_rep(b){
         }
 
         /**
-        operator+=, creates the tree and execute in normal condition
-        The tree is built at the compilation, the full tree is stored in rhs argument.
-        The execution of the tree is performed when we call the operator()
-        */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline rvec& operator+= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            rep() += rhs.rep()();
-            return *this;
-        }
-
-        /**
-        operator-=, creates the tree and execute in normal condition
-        The tree is built at the compilation, the full tree is stored in rhs argument.
-        The execution of the tree is performed when we call the operator()
-        */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline rvec& operator-= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            rep() -= rhs.rep()();
-            return *this;
-        }
-
-        /**
-        operator*=, creates the tree and execute in normal condition
-        The tree is built at the compilation, the full tree is stored in rhs argument.
-        The execution of the tree is performed when we call the operator()
-        */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline rvec& operator*= (rvec<T2,O2,N2,Rep2 > const& rhs){ rep() *= rhs.rep()();
-            return *this;
-        }
-
-        /**
-        operator/=, creates the tree and execute in normal condition
-        \warning the division is the system one not my version
-        */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline rvec& operator/= (rvec<T2,O2,N2,Rep2 > const& rhs){
-            rep() /= rhs.rep()();
-            return *this;
-        }
-
-        /** Get the vector class, read only */
-        forceinline Rep const& rep() const{
-            return expr_rep;
-        }
-
-        /** Get the vector class, writable */
-        forceinline Rep& rep(){
-            return expr_rep;
-        }
-
-	/**
-  	Use print function from Rep
- 	*/
-	forceinline void print(std::ostream &out) const{
-	    expr_rep.print(out);
-	}
-
-    private:
-        /** Composition with cyme::vec_simd */
-        Rep expr_rep;
-    };
-
-    /** write vector used during the construction of the DAG, lhs only !
-
-    This class is an "interface" between the iterator and the computation
-    vector class (SIMD register). During compilation, the DAG is created.
-    The tree is built on the read only vector consequently.
-    rvec is called only with the non-const [] operators of the class storage.
-
-    \remark The wrec keep trace of the pointer of the input.
-    */
-    template<class T, cyme::simd O, int N = cyme::unroll_factor::N, class Rep = vec_simd<T,O,N> >
-    class wvec{
-        public:
-        typedef rvec<T,O,N,Rep> V;
-        typedef T value_type;
-        typedef value_type* pointer;
-        typedef Rep base_type;
-
-        /*** Constructor lhs of the operator=, I save the data into the cyme after the computation */
-        forceinline explicit wvec(pointer rb):data_pointer(rb),expr_rep(rb){
-        }
-
-        /**
-        RAII for the store. Altough, we do not allocate cyme, we allocate a SIMD register.
-        If not rewrite this command after the tree creation into the +=, *=, etc ....
-        */
-        ~wvec(){
+         operator= initializes the vec to a given value. The full vector has
+         the same value.
+         */
+        forceinline vec& operator= (vec const& rhs){
+            expr_rep() = rhs.rep()();
             expr_rep.store(data_pointer); //store the SIMD register into main cyme
-        }
-
-        /**
-        operator= initializes the wvec to a given value. The full vector has
-        the same value.
-        */
-        forceinline wvec& operator= (value_type a){
-            rvec<T,O,N,Rep> v(a);
-            expr_rep() = v.rep()();
             return *this;
         }
 
@@ -602,9 +540,10 @@ namespace cyme{
         The execution of the tree is performed when we call the operator()
         we call the operator(). The datas are saved when the destructor is called.
         */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline wvec& operator= (rvec<T2,O2,N2,Rep2> const& rhs){
+        template<class Rep2>
+        forceinline vec& operator= (vec<T,O,N,Rep2> const& rhs){
             expr_rep() = rhs.rep()();
+            expr_rep.store(data_pointer); //store the SIMD register into main cyme
             return *this;
         }
 
@@ -614,9 +553,10 @@ namespace cyme{
         The execution of the tree is performed when we call the operator()
         we call the operator(). The datas are saved when the destructor is called.
         */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline wvec& operator+= (rvec<T2,O2,N2,Rep2 > const& rhs){
+        template<class Rep2>
+        forceinline vec& operator+= (vec<T,O,N,Rep2 > const& rhs){
             expr_rep() += rhs.rep()();
+            expr_rep.store(data_pointer); //store the SIMD register into main cyme
             return *this;
         }
 
@@ -626,9 +566,10 @@ namespace cyme{
         The execution of the tree is performed when we call the operator()
         we call the operator().The datas are saved when the destructor is called.
         */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline wvec& operator-= (rvec<T2,O2,N2,Rep2 > const& rhs){
+        template<class Rep2>
+        forceinline vec& operator-= (vec<T,O,N,Rep2 > const& rhs){
             expr_rep() -= rhs.rep()();
+            expr_rep.store(data_pointer); //store the SIMD register into main cyme
             return *this;
         }
 
@@ -638,9 +579,10 @@ namespace cyme{
         The execution of the tree is performed when we call the operator()
         we call the operator().The datas are saved when the destructor is called.
         */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline wvec& operator*= (rvec<T2,O2,N2,Rep2 > const& rhs){
+        template<class Rep2>
+        forceinline vec& operator*= (vec<T,O,N,Rep2 > const& rhs){
             expr_rep() *= rhs.rep()();
+            expr_rep.store(data_pointer); //store the SIMD register into main cyme
             return *this;
         }
 
@@ -650,10 +592,15 @@ namespace cyme{
         The execution of the tree is performed when we call the operator()
         we call the operator().The datas are saved when the destructor is called.
         */
-        template<class T2, cyme::simd O2, int N2, class Rep2>
-        forceinline wvec& operator/= (rvec<T2,O2,N2,Rep2 > const& rhs){
+        template<class Rep2>
+        forceinline vec& operator/= (vec<T,O,N,Rep2 > const& rhs){
             expr_rep() /= rhs.rep()(); //basic register copy no three
+            expr_rep.store(data_pointer); //store the SIMD register into main cyme
             return *this;
+        }
+
+        forceinline pointer adress(){
+            return data_pointer;
         }
 
         /**
@@ -689,18 +636,12 @@ namespace cyme{
 #include "cyme/core/expression/expr_vec_fma.ipp"
 #endif
 
-/** Ostream operators for rvec and wvec*/
-/**wvec*/
+/** Ostream operators for vec */
+/**vec*/
 template<class T, cyme::simd O, int N, class Rep>
-forceinline std::ostream &operator<<(std::ostream &out, const cyme::wvec<T,O,N,Rep> &vec){
+forceinline std::ostream &operator<<(std::ostream &out, const cyme::vec<T,O,N,Rep> &vec){
 	vec.print(out);
 	return out;
 }
 
-/**rvec*/
-template<class T, cyme::simd O, int N, class Rep>
-forceinline std::ostream &operator<<(std::ostream &out, const cyme::rvec<T,O,N,Rep> &vec){
-	vec.print(out);
-	return out;
-}
 #endif

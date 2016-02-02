@@ -51,11 +51,20 @@ namespace cyme{
         }
     };
 
-    /** Final specialirsation of the pow function */
+    /** Final specialiasation of the pow function */
     template<class T,cyme::simd O, int N>
     struct pow_helper<T,O,N,1,1>{
         static forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs){
              return lhs;
+        }
+    };
+
+    /** Final specialiasation of the pow function, x**0 = 1 */
+    template<class T,cyme::simd O, int N>
+    struct pow_helper<T,O,N,0,0>{
+        static forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& ){
+            std::cout << " PLEASE TUNE YOUR CODE, adjust your partialization " << std::endl;
+            return vec_simd<T,O,N>(1.);
         }
     };
 
