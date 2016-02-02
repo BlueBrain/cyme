@@ -151,7 +151,11 @@ function(GIT_EXTERNAL DIR REPO tag)
       OUTPUT_QUIET ERROR_QUIET WORKING_DIRECTORY "${DIR}")
   endif()
 
-  file(RELATIVE_PATH __dir ${CMAKE_SOURCE_DIR} ${DIR})
+  if(COMMON_SOURCE_DIR)
+    file(RELATIVE_PATH __dir ${COMMON_SOURCE_DIR} ${DIR})
+  else()
+    file(RELATIVE_PATH __dir ${CMAKE_SOURCE_DIR} ${DIR})
+  endif()
   string(REGEX REPLACE "[:/\\.]" "-" __target "${__dir}")
   if(TARGET ${__target}-rebase)
     return()
@@ -297,11 +301,11 @@ if(EXISTS ${GIT_EXTERNALS} AND NOT GIT_EXTERNAL_SCRIPT_MODE)
           file(WRITE "${GIT_EXTERNAL_SCRIPT}" "
 include(\"${CMAKE_CURRENT_LIST_DIR}/GitExternal.cmake\")
 execute_process(COMMAND \"${GIT_EXECUTABLE}\" fetch origin -q
-  WORKING_DIRECTORY \"${DIR}\")
+  WORKING_DIRECTORY \"${CMAKE_SOURCE_DIR}/${DIR}\")
 execute_process(
   COMMAND \"${GIT_EXECUTABLE}\" show-ref --hash=7 refs/remotes/origin/master
   OUTPUT_VARIABLE newref OUTPUT_STRIP_TRAILING_WHITESPACE
-  WORKING_DIRECTORY \"${DIR}\")
+  WORKING_DIRECTORY \"${CMAKE_SOURCE_DIR}/${DIR}\")
 if(newref)
   file(APPEND ${GIT_EXTERNALS} \"# ${DIR} ${REPO} \${newref}\\n\")
   git_external(${DIR} ${REPO} \${newref})
