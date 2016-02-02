@@ -44,6 +44,7 @@
 #    to git@github.com:<user>/<project>. Also, this remote is used by default
 #    for 'git push'.
 
+
 if(NOT GIT_FOUND)
   find_package(Git QUIET)
 endif()
@@ -150,11 +151,7 @@ function(GIT_EXTERNAL DIR REPO tag)
       OUTPUT_QUIET ERROR_QUIET WORKING_DIRECTORY "${DIR}")
   endif()
 
-  if(COMMON_SOURCE_DIR)
-    file(RELATIVE_PATH __dir ${COMMON_SOURCE_DIR} ${DIR})
-  else()
-    file(RELATIVE_PATH __dir ${CMAKE_SOURCE_DIR} ${DIR})
-  endif()
+  file(RELATIVE_PATH __dir ${CMAKE_SOURCE_DIR} ${DIR})
   string(REGEX REPLACE "[:/\\.]" "-" __target "${__dir}")
   if(TARGET ${__target}-rebase)
     return()
