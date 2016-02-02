@@ -33,6 +33,8 @@ include(GitExternal)
 # some common set up of two version
 if(COMMON_LIBRARY_TYPE MATCHES "STATIC")
   set(Boost_USE_STATIC_LIBS ON) # to avoid conflict with common
+else()
+  add_definitions(-DBOOST_TEST_DYN_LINK) # generates main() for unit tests
 endif()
 set(BOOST_MIN_VERSION "1.49.0") # old is bad
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
@@ -98,7 +100,7 @@ if(APPLE)
      STRING "Build architectures for OS X" FORCE)
 endif()
 
-string(REPLACE "-std=c++11" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+string(REPLACE "-std=c++0x" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 ########################################################################
 #
