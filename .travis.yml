@@ -1,0 +1,27 @@
+##
+# @file
+#
+# Travis script for cyme
+#
+# @author Tim Ewart
+#
+
+language: cpp
+compiler:
+- clang
+- gcc
+os:
+- linux
+- osx
+before_script:
+  - sudo apt-get install libboost-chrono-dev libboost-system-dev libboost-test-dev
+  - mkdir build
+  - cd build
+  - cmake ..
+script: make
+notifications:
+  email:
+    recipients:
+      - timothee.ewart@epfl.ch
+    on_success: change
+    on_failure: always
