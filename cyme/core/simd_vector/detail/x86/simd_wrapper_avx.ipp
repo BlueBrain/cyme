@@ -605,6 +605,11 @@ namespace cyme{
         __m128i imm1_r0 =  _mm_slli_epi64(imm0_r0,32);
         __m128i imm1_r1 =  _mm_slli_epi64(imm0_r1,32);
 
+        imm0_r0 =  _mm_srli_epi64(imm0_r0,32);
+        imm0_r0 =  _mm_slli_epi64(imm0_r0,32);
+        imm0_r1 =  _mm_srli_epi64(imm0_r1,32);
+        imm0_r1 =  _mm_slli_epi64(imm0_r1,32);
+
         xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0,imm0_r0,0);
         xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1,imm0_r1,0);
 
@@ -642,6 +647,15 @@ namespace cyme{
         __m128i imm1_r1 =  _mm_slli_epi64(imm0_r1,32);
         __m128i imm1_r2 =  _mm_slli_epi64(imm0_r2,32);
         __m128i imm1_r3 =  _mm_slli_epi64(imm0_r3,32);
+
+        imm0_r0 =  _mm_srli_epi64(imm0_r0,32);
+        imm0_r0 =  _mm_slli_epi64(imm0_r0,32);
+        imm0_r1 =  _mm_srli_epi64(imm0_r1,32);
+        imm0_r1 =  _mm_slli_epi64(imm0_r1,32);
+        imm0_r2 =  _mm_srli_epi64(imm0_r2,32);
+        imm0_r2 =  _mm_slli_epi64(imm0_r2,32);
+        imm0_r3 =  _mm_srli_epi64(imm0_r3,32);
+        imm0_r3 =  _mm_slli_epi64(imm0_r3,32);
 
         xmm0.r0 =   _mm256_insertf128_si256(xmm0.r0,imm0_r0,0);
         xmm0.r1 =   _mm256_insertf128_si256(xmm0.r1,imm0_r1,0);

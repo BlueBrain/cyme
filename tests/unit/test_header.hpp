@@ -135,7 +135,7 @@ namespace cyme {
                             > mandelbroat_test_types;
 
     typedef boost::mpl::list<
-                                data<int,14,cyme::AoS>,
+//                              data<int,14,cyme::AoS>,
                                 data<float,14,cyme::AoS>,
                                 data<double,14,cyme::AoS>
                             > generic_test_types;

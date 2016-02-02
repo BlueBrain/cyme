@@ -63,7 +63,7 @@ namespace cyme{
     };
 
     /** Selector for the gather algorithm (vendor (simd_gather) or generic implementation (generic_gather)) */
-    template<class T,cyme::simd O, int N, class Solver = simd_gather<T,O,N> >
+    template<class T,cyme::simd O, int N, class Solver = generic_gather<T,O,N> >
     struct Selector_gather{
          static forceinline vec_simd<T,O,N> gather(const T* src, const int *ind, const int range){
                return Solver::gather(src,ind,range);

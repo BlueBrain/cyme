@@ -53,6 +53,7 @@ option (CYME_LIBRARY "Build a library for serial computation" ON)
 option (CYME_TESTS "Build the CYME regression tests" ON)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_MIC_HOST "Check if MIC is install" OFF)
+option (CYME_TRIGO "Build trigo kernel" OFF)
 
 ########################################################################
 #
@@ -100,7 +101,7 @@ if(APPLE)
      STRING "Build architectures for OS X" FORCE)
 endif()
 
-string(REPLACE "-std=c++11" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+string(REPLACE "-std=c++0x" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 ########################################################################
 #
