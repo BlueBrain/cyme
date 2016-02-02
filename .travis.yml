@@ -20,7 +20,7 @@ before_script:
   - sudo apt-get update
   - mkdir build
   - cd build
-  - cmake-3.2 ..
+  - cmake-3.x ..
 script: make
 notifications:
   email:
