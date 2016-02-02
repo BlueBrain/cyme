@@ -2483,6 +2483,108 @@ namespace cyme{
 							     vec_nmadd(xmm0.r3,xmm1.r3,xmm2.r3));
     }
 #endif
+
+    /**
+      Loads a vector from the given cyme address.
+       specialisation int,cyme::vmx,1 regs
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,1>::register_type
+    _mm_load<int,cyme::vmx,1>(simd_trait<int,cyme::vmx,1>::const_pointer a){
+        return vec_vsx_ld(0, (vector int*)a);
+    }
+
+    /**
+      Loads a vector from the given cyme address.
+       specialisation int,cyme::vmx,2 regs
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,2>::register_type
+    _mm_load<int,cyme::vmx,2>(simd_trait<int,cyme::vmx,2>::const_pointer a){
+        return simd_trait<int,cyme::vmx,2>::register_type(vec_vsx_ld(0,(vector int*)a),
+			                                  vec_vsx_ld(16,(vector int*)a));
+    }
+
+    /**
+      Loads a vector from the given cyme address.
+       specialisation int,cyme::vmx,4 regs
+    */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,4>::register_type
+    _mm_load<int,cyme::vmx,4>(simd_trait<int,cyme::vmx,4>::const_pointer a){
+        return simd_trait<int,cyme::vmx,4>::register_type(vec_vsx_ld(0,(vector int*)a),
+							  vec_vsx_ld(16,(vector int*)a),
+							  vec_vsx_ld(32,(vector int*)a),
+							  vec_vsx_ld(48,(vector int*)a));
+    }
+
+    /**
+      Stores a vector to cyme at the given address.
+       specialisation float,cyme::vmx,1 regs
+    */
+    template<>
+    forceinline void
+    _mm_store<int,cyme::vmx,1>(simd_trait<int,cyme::vmx,1>::register_type xmm0,
+                                 simd_trait<int,cyme::vmx,1>::pointer  a){
+        vec_vsx_st(xmm0,0,(vector int*)a);
+    }
+
+    /**
+      Stores a vector to cyme at the given address.
+       specialisation int,cyme::vmx,2 regs
+    */
+    template<>
+    forceinline void
+    _mm_store<int,cyme::vmx,2>(simd_trait<int,cyme::vmx,2>::register_type xmm0,
+                                 simd_trait<int,cyme::vmx,2>::pointer a){
+        vec_vsx_st(xmm0.r0,0,(vector int*)a);
+	vec_vsx_st(xmm0.r1,16,(vector int*)a);
+    }
+
+    /**
+      Stores a vector to cyme at the given address.
+       specialisation int,cyme::vmx,4 regs
+    */
+    template<>
+    forceinline void
+    _mm_store<int,cyme::vmx,4>(simd_trait<int,cyme::vmx,4>::register_type xmm0,
+                                 simd_trait<int,cyme::vmx,4>::pointer a){
+        vec_vsx_st(xmm0.r0,0,(vector int*)a);
+	vec_vsx_st(xmm0.r1,16,(vector int*)a);
+	vec_vsx_st(xmm0.r2,32,(vector int*)a);
+	vec_vsx_st(xmm0.r3,48,(vector int*)a);
+    }
+
+    /**
+      Returns a vector of which the value of each element is set to a.
+       specialisation int,cyme::vmx,1 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,1>::register_type
+    _mm_load1<int,cyme::vmx,1>(const simd_trait<int,cyme::vmx,1>::value_type &a){
+       return vec_splats(a);
+    }
+
+    /**
+      Returns a vector of which the value of each element is set to a.
+       specialisation int,cyme::vmx,2 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,2>::register_type
+    _mm_load1<int,cyme::vmx,2>(const simd_trait<int,cyme::vmx,2>::value_type &a){
+        return simd_trait<int,cyme::vmx,2>::register_type(vec_splats(a),vec_splats(a));
+    }
+
+    /**
+      Returns a vector of which the value of each element is set to a.
+       specialisation int,cyme::vmx,4 regs
+     */
+    template<>
+    forceinline simd_trait<int,cyme::vmx,4>::register_type
+    _mm_load1<int,cyme::vmx,4>(const simd_trait<int,cyme::vmx,4>::value_type &a){
+        return simd_trait<int,cyme::vmx,4>::register_type(vec_splats(a),vec_splats(a),
+	                                                  vec_splats(a),vec_splats(a));
+    }
 } //end namespace
 
 #undef vec_ctd

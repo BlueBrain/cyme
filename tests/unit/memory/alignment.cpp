@@ -25,7 +25,7 @@
 
 using namespace cyme::test;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(alignement_test, T, full_test_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(alignement_test, T, floating_point_test_types)
 {
     std::vector<T, cyme::Allocator<T, cyme::Align_POSIX<T, cyme::__GETSIMD__()> > > simd_vec(128);
     boost::uint64_t align = cyme::trait_register<T,cyme::__GETSIMD__()>::size;

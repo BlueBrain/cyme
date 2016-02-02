@@ -1,0 +1,32 @@
+##
+# @file
+#
+# Travis script for cyme
+#
+# @author Tim Ewart
+#
+
+language: cpp
+compiler:
+  - clang
+  - gcc
+dist:
+  - trusty
+os:
+  - linux
+before_script:
+  - sudo apt-get -qq update
+  - sudo apt-get install libboost-all-dev cmake
+  - sudo apt-get install software-properties-common
+  - mkdir build
+  - cd build
+  - cmake ..
+script:
+  - make
+  - make test
+notifications:
+  email:
+    recipients:
+      - timothee.ewart@epfl.ch
+    on_success: change
+    on_failure: always

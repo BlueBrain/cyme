@@ -32,8 +32,7 @@
 
 namespace cyme{
 
-    /** trait class that defined the hardware register
-     */
+    /** trait class that defined the hardware register */
     template<class T, cyme::simd O>
     struct register_trait;
 

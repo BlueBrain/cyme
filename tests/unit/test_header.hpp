@@ -52,6 +52,7 @@ double relative_error(){return 0.001;}
 namespace cyme {
     namespace test {
 
+    static boost::random::uniform_int_distribution<int>       Randomint  = boost::random::uniform_int_distribution<int>(-100,100);
     static boost::random::uniform_real_distribution<float>    Randomfloat  = boost::random::uniform_real_distribution<float>(-70,70);
     static boost::random::uniform_real_distribution<double>   Randomdouble = boost::random::uniform_real_distribution<double>(-700,700);
     static boost::random::uniform_real_distribution<float>    Randomfloatexp10  = boost::random::uniform_real_distribution<float>(-35,35);
@@ -62,6 +63,11 @@ namespace cyme {
     T GetRandom();
 
     template<>
+    int GetRandom<int>(){
+        return Randomint(rng);
+    }
+
+    template<>
     float GetRandom<float>(){
         return Randomfloat(rng);
     }
@@ -70,7 +76,7 @@ namespace cyme {
     double GetRandom<double>(){
         return Randomdouble(rng);
     }
-    
+
     template<class T>
     T GetRandomExp10();
 
@@ -120,6 +126,19 @@ namespace cyme {
     };
 
     typedef boost::mpl::list<float,double> full_test_types;
+
+    typedef boost::mpl::list<
+                                data<float,2,cyme::AoS>,
+                                data<float,2,cyme::AoSoA>,
+                                data<int,2,cyme::AoS>,
+                                data<int,2,cyme::AoSoA>
+                            > mandelbroat_test_types;
+
+    typedef boost::mpl::list<
+//                              data<int,14,cyme::AoS>,
+                                data<float,14,cyme::AoS>,
+                                data<double,14,cyme::AoS>
+                            > generic_test_types;
 
     typedef boost::mpl::list<
                                 data<float,14,cyme::AoS>,

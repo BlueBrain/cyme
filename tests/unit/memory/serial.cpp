@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(serial_doest_not_store, T, floating_point_block_ty
      cyme::vector<synapse<TYPE,1>,ORDER> v(cyme::stride<TYPE,ORDER>::helper_stride(),2.);
      typename cyme::vector<synapse<TYPE,1>,ORDER>::const_iterator it_AoSoA = v.begin();
      cyme::serial<TYPE,ORDER> a = (*it_AoSoA)[0];
-     v[0][0] = a();
+     v[0][0] = a;
      for(size_t i = 0;  i< cyme::stride<TYPE,ORDER>::helper_stride()/sizeof(TYPE);++i)
          BOOST_CHECK_CLOSE(v(i*ORDER,0),2,relative_error<TYPE>());
 }
@@ -59,19 +59,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(serial_doest_not_store, T, floating_point_block_ty
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_ops_value, T, floating_point_block_types) {
      cyme::serial<TYPE,ORDER> a(2.);
      cyme::vector<synapse<TYPE,1>,ORDER> v(cyme::stride<TYPE,ORDER>::helper_stride(),2.);
-     v[0][0] += a();
+     v[0][0] += a;
      for(size_t i = 0;  i< cyme::stride<TYPE,ORDER>::helper_stride()/sizeof(TYPE);++i)
           BOOST_CHECK_CLOSE(v(i*ORDER,0),4,relative_error<TYPE>());
 
-     v[0][0] *= a();
+     v[0][0] *= a;
      for(size_t i = 0;  i< cyme::stride<TYPE,ORDER>::helper_stride()/sizeof(TYPE);++i)
           BOOST_CHECK_CLOSE(v(i*ORDER,0),8,relative_error<TYPE>());
 
-     v[0][0] -= a();
+     v[0][0] -= a;
      for(size_t i = 0;  i< cyme::stride<TYPE,ORDER>::helper_stride()/sizeof(TYPE);++i)
           BOOST_CHECK_CLOSE(v(i*ORDER,0),6,relative_error<TYPE>());
 
-     v[0][0] /= a();
+     v[0][0] /= a;
      for(size_t i = 0;  i< cyme::stride<TYPE,ORDER>::helper_stride()/sizeof(TYPE);++i)
           BOOST_CHECK_CLOSE(v(i*ORDER,0),3,relative_error<TYPE>());
 }

@@ -1,5 +1,6 @@
+
 /*
- * Cyme - simd_mul.ipp, Copyright (c), 2014,
+ * Cyme - simd_inequality.ipp, Copyright (c), 2015,
  * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
  * timothee.ewart@epfl.ch,
  * All rights reserved.
@@ -20,34 +21,23 @@
  */
 
 /**
- * @file cyme/core/simd_vector/math/simd_mul.ipp
- * Implements operator* for vec_simd class
+ * @file cyme/core/simd_vector/math/simd_inequality.ipp
+ * Implements inequalities for vec_simd class
  */
 
-#ifndef CYME_SIMD_MUL_IPP
-#define CYME_SIMD_MUL_IPP
+#ifndef SIMD_INEQUALITY_IPP
+#define SIMD_INEQUALITY_IPP
 
 namespace cyme{
-
-    /** Implements operator* for cyme::vec_simd */
+    
+    /* x86 return -1 for true, 0 for false, therefore I do a bit mask to get 1 for true, it 
+    does not affect the false */
     template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator* (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(lhs);
-        nrv *= rhs;
-        return nrv;
-    }
-
-    /** Implements operator* for cyme::vec_simd and 0*/
-    template<class T,cyme::simd O, int N>
-    forceinline ZERO operator* (const vec_simd<T,O,N>&, ZERO){
-        return ZERO();
-    }
-
-    /** Implements operator* for 0 and cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline ZERO operator* (ZERO, const vec_simd<T,O,N>&){
-        return ZERO();
+    vec_simd<int,O,N> operator< (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
+        vec_simd<int,O,N> nrv(_mm_lt<typename simd_trait<T,O,N>::value_type,O,N>(lhs.xmm,rhs.xmm));
+        return (nrv &= vec_simd<int,O,N>(1)); 
     }
 }
+
 #endif
 
