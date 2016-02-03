@@ -28,14 +28,13 @@
 #define CYME_WRAPPER_HPP
 
 namespace cyme{
-  
     /**
       Free function (wrapper) to round integer up to the next even value.
     */
     template<cyme::simd O, int N>
     forceinline typename simd_trait<int,O,N>::register_type _mm_round_up_even(typename simd_trait<int,O,N>::register_type xmm0);
 
-	   /** Free function (wrapper) for loading basic type (double, int) into register */
+   /** Free function (wrapper) for loading basic type (double, int) into register */
     template<class T, cyme::simd O, int N>
     forceinline typename simd_trait<T,O,N>::register_type _mm_load1(const typename simd_trait<T,O,N>::value_type& a);
 
@@ -70,6 +69,10 @@ namespace cyme{
     template<class T, cyme::simd O, int N>  //xmm0 - xmm1
     forceinline typename simd_trait<T,O,N>::register_type _mm_sub(typename simd_trait<T,O,N>::register_type xmm0,
                                                                   typename simd_trait<T,O,N>::register_type xmm1);
+
+    /** Free function (wrapper) for checking a register is true (full of zero) */
+    template<class T, cyme::simd O, int N>
+    forceinline int _mm_test_all_one(typename simd_trait<T,O,N>::register_type xmm0);
 
     /** Free function (wrapper) for calculating the exp of a vector
     \warning this function is only works if the wrapper Helper_exp is setup to Vendor_exp
@@ -150,6 +153,15 @@ namespace cyme{
     template<class T, cyme::simd O, int N>
     forceinline typename simd_trait<T,O,N>::value_type _mm_single_store(typename simd_trait<T,O,N>::register_type xmm0,
                                                                         const typename simd_trait<T,O,N>::pointer);
+    /** Free function (wrapper) to compare two register xmm0 less than xmm1 */
+    template<class T, cyme::simd O, int N>
+    forceinline typename simd_trait<int,O,N>::register_type _mm_lt(typename simd_trait<T,O,N>::register_type xmm0,
+                                                                   typename simd_trait<T,O,N>::register_type xmm1);
+
+    /** Free function (wrapper) to bitwise xmm0 && xmm1 */
+    template<class T, cyme::simd O, int N>
+    forceinline typename simd_trait<int,O,N>::register_type _mm_and(typename simd_trait<T,O,N>::register_type xmm0,
+                                                                    typename simd_trait<T,O,N>::register_type xmm1);
 
 #ifdef __FMA__ // This macro is a compiler one
     /** Free function (wrapper) for FMA between three registers, a*b+c */
@@ -177,6 +189,14 @@ namespace cyme{
                                                                    typename simd_trait<T,O,N>::register_type xmm2);
 
 #endif
+   /** Free function (wrapper) for loading data into registers using gather instructions */
+    template<class T, cyme::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_gather(const T* src, const int *ind, const int range);
+
+    /** Free function (wrapper) for storing data into a cyme (pointer) using scatter instructions */
+    template<class T, cyme::simd O, int N>
+    void _mm_scatter(typename simd_trait<T,O,N>::register_type xmm0, T* dst, const int* ind, const int range);
+
 } //end namespace
 
     #include "cyme/core/simd_vector/detail/x86/simd_svml.ipp" // mix GCC/clang and intel svml

@@ -37,6 +37,22 @@ namespace cyme{
         return nrv;
      }
 
+    /** addition with 0, see vec_simd.hpp for explanation  */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> operator+ (const vec_simd<T,O,N>& lhs, ZERO){
+        return lhs;
+    }
+
+    /** addition with 0, see vec_simd.hpp for explanation  */
+    template<class T,cyme::simd O, int N>
+    forceinline vec_simd<T,O,N> operator+ (ZERO, const vec_simd<T,O,N>& rhs){
+        return rhs;
+    }
+
+    /** addition with 0+0, see vec_simd.hpp for explanation  */
+    forceinline ZERO operator+ (ZERO, ZERO){
+        return ZERO();
+    }
 }
 #endif
 

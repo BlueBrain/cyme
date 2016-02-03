@@ -26,7 +26,6 @@
 using namespace cyme::test;
 
 #define TYPE typename T::value_type
-#define SIZE T::size
 
 #define NN cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE)
 
@@ -81,4 +80,3 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_cos_comparison_serial, T, floating_point_test_
 #undef NN
 #undef TYPE
 #undef MAX
-#undef SIZE

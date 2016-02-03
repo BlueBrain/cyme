@@ -95,14 +95,14 @@ namespace cyme{
     }
 
     template <class T, std::size_t Size>
-    cyme::wvec<T,cyme::__GETSIMD__()>
+    cyme::vec<T,cyme::__GETSIMD__()>
     storage<T, Size, AoSoA>::operator[](size_type i){
-        return cyme::wvec<T,cyme::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
+        return cyme::vec<T,cyme::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 
     template <class T, std::size_t Size>
-    const cyme::rvec<T,cyme::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
-        return cyme::rvec<T,cyme::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
+    const cyme::vec<T,cyme::__GETSIMD__()> storage<T, Size, AoSoA>::operator[](size_type i) const{
+        return cyme::vec<T,cyme::__GETSIMD__()>(&data[i*stride<T,AoSoA>::helper_stride()]);
     }
 } //end namespace
 #endif
