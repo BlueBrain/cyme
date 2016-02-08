@@ -3,7 +3,7 @@
 
 #@remarks Copyright BBP/EPFL 2005-2014; All rights reserved
 
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.6)
 
 ########################################################################
 #
@@ -53,6 +53,7 @@ option (CYME_LIBRARY "Build a library for serial computation" ON)
 option (CYME_TESTS "Build the CYME regression tests" ON)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_MIC_HOST "Check if MIC is install" OFF)
+option (CYME_TRIGO "Build trigo kernel" OFF)
 
 ########################################################################
 #

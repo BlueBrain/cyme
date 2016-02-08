@@ -29,7 +29,7 @@
 #define CYME_SIMD_VEC_IPP
 
 namespace cyme{
-   
+
     /** Round up to the next even integer */
     template<cyme::simd O, int N>
     vec_simd<int,O,N> round_up_even(const vec_simd<int,O,N>& rhs){
@@ -92,6 +92,22 @@ namespace cyme{
     }
 
     template<class T,cyme::simd O, int N>
+    int vec_simd<T,O,N>::operator == (int b){
+        return b == _mm_test_all_one<typename simd_trait<T,O,N>::value_type,O,N>(xmm);
+    }
+
+    template<class T,cyme::simd O, int N>
+    int vec_simd<T,O,N>::operator != (int b){
+        return b != _mm_test_all_one<typename simd_trait<T,O,N>::value_type,O,N>(xmm);
+    }
+
+    template<class T,cyme::simd O, int N>
+    vec_simd<T,O,N>& vec_simd<T,O,N>::operator &= (const vec_simd<T,O,N>& rhs){
+        xmm = _mm_and<typename simd_trait<T,O,N>::value_type,O,N>(xmm,rhs.xmm);
+        return *this;
+    }
+
+    template<class T,cyme::simd O, int N>
     vec_simd<T,O,N>& vec_simd<T,O,N>::single(const typename vec_simd<T,O,N>::value_type& b){
         xmm = _mm_single_load<typename simd_trait<T,O,N>::value_type,O,N>(b);
         return *this;
@@ -111,11 +127,9 @@ namespace cyme{
     void vec_simd<T,O,N>::print(std::ostream &out) const{
 	const int size = elems_helper<T,N>::size;
         T elems[size] __attribute__((aligned(static_cast<int>(cyme::trait_register<T,cyme::__GETSIMD__()>::size))));
-	store(elems);
-	//Print out each element
-	for(unsigned int i = 0; i < size; i++){
-	    out << " " << elems[i];
-	}
+        store(elems);
+        for(unsigned int i = 0; i < size; i++)
+            out << " " << elems[i];
     }
 
     template<class T,cyme::simd O, int N>
