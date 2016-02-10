@@ -27,6 +27,7 @@
 #ifndef CYME_SIMD_HPP
 #define CYME_SIMD_HPP
 
+#include <cstddef>
 
 /** Generic cyme interfaces and implementations.
     The namespace contains two components.
@@ -48,6 +49,13 @@ namespace cyme{
         const static int N = __CYME_UNROLL_VALUE__ ;
     };
 
+/**   Scatter operations (core-neuron specific)
+*
+*     Coreneuron does scatter reduction with usual operators
+*/
+    enum scatter_op {eq,add,sub,mul,div};
+
+
 /**   Simd technology type.
 *
 *  cyme::simd defines the simd technology for which the cyme code will be
@@ -62,7 +70,7 @@ namespace cyme{
 *  whereas AoSoA (Array of Structures of Arrays) corresponds to packed simd
 *  layout.
 */
-    enum order{AoS, AoSoA};
+    enum order{AoS=0, AoSoA=1};
 
     #define __GETSIMD__() __CYME_SIMD_VALUE__
 

@@ -101,9 +101,9 @@ namespace cyme{
          /** read access operator, only use to a direct access to the datas */
          inline const_reference operator()(size_type i) const;
 
-         inline cyme::wvec<T,cyme::__GETSIMD__()> operator[](size_type i);
+         inline cyme::vec<T,cyme::__GETSIMD__()> operator[](size_type i);
 
-         inline const cyme::rvec<T,cyme::__GETSIMD__()> operator[](size_type i) const;
+         inline const cyme::vec<T,cyme::__GETSIMD__()> operator[](size_type i) const;
 
          /** return cyme layout of the container */
          static const cyme::order MemoryOrder = AoSoA;

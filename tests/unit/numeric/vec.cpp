@@ -29,7 +29,8 @@ using namespace cyme::test;
 #pragma GCC diagnostic ignored "-Wvla" // compiler complains about line 13 which is not dynamic at all but determine during compile time
 //MAKE SIMD test is not easy do I do : cyme -> simd register (perform something) -> cyme where I finally test
 //not the SIMD type is presently given bu the __GETSIMD__() function hardcoded into /cyme/detail/simd.h
-BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_default_constructor, T, floating_point_test_types) {
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_default_constructor, T, generic_test_types) {
     int n = cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE);
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> a(0.0);
     TYPE test[n];
@@ -40,7 +41,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_default_constructor, T, floating_poi
     BOOST_CHECK_EQUAL(0,b);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, generic_test_types) {
     int n = cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE);
     TYPE Random = GetRandom<TYPE>();
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> a(Random);
@@ -90,7 +91,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_double_negate, T, floating_point_test_typ
 }
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_pointer_constructor, T, floating_point_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_pointer_constructor, T, generic_test_types) {
     int n = cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE);
     TYPE test[n]  __attribute__((aligned(64)));
     TYPE res[n] __attribute__((aligned(64)));
@@ -200,7 +201,109 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_div_operations, T, floating_point_test_ty
         BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_ZERO_add, T, generic_test_types) {
+
+    int n = cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE);
+    TYPE a[n] __attribute__((aligned(64)));
+    TYPE b[n] __attribute__((aligned(64)));
+
+    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(3);
+    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(va);
+
+    va = vb + cyme::ZERO();
+
+    va.store(a);
+    vb.store(b);
+
+    for(int i=0; i<n; ++i)
+        BOOST_CHECK_EQUAL(a[i],b[i]);
+
+    va = cyme::ZERO() + vb;
+
+    va.store(a);
+    vb.store(b);
+
+    for(int i=0; i<n; ++i)
+        BOOST_CHECK_EQUAL(a[i],b[i]);
+
+
+}
+
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_ZERO_mul, T, generic_test_types) {
+
+    int n = cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE);
+    TYPE a[n] __attribute__((aligned(64)));
+    TYPE b[n] __attribute__((aligned(64)));
+
+    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(3);
+    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(va);
+
+    va = vb * cyme::ZERO() + vb;
+
+    va.store(a);
+    vb.store(b);
+
+    for(int i=0; i<n; ++i)
+        BOOST_CHECK_EQUAL(a[i],b[i]);
+
+    va = vb + cyme::ZERO() * vb;
+
+    va.store(a);
+    vb.store(b);
+
+    for(int i=0; i<n; ++i)
+        BOOST_CHECK_EQUAL(a[i],b[i]);
+
+
+}
+
+/*
+#ifdef __x86_64__
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_lt_operations, T, mandelbroat_test_types) {
+
+    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(3);
+    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(2);
+    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> vc;
+
+    BOOST_CHECK((va < vb) == false);
+    BOOST_CHECK((vb < va) == true);
+    BOOST_CHECK((va < vb) != true);
+    BOOST_CHECK((vb < va) != false);
+}
+
+BOOST_AUTO_TEST_CASE(vec_simd_and_operation) {
+    int n = cyme::unroll_factor::N*cyme::trait_register<int,cyme::__GETSIMD__()>::size/sizeof(int);
+    int a[n] __attribute__((aligned(16)));
+    int b[n] __attribute__((aligned(16)));
+    int c[n] __attribute__((aligned(16)));
+    int res[n] __attribute__((aligned(16)));
+
+    for(int i=0; i<n; ++i){
+       a[i] = GetRandom<int>();
+       b[i] = GetRandom<int>();
+    }
+
+    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(a);
+    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> vc;
+
+    for(int i=0; i<n; ++i){
+        a[i] &= b[i];
+        c[i] =a[i] && b[i];
+    }
+
+    va &= vb;
+    vc = va && vb;
+    va.store(res);
+
+    for(int i=0; i<n; ++i)
+       BOOST_CHECK_EQUAL(a[i],res[i]);
+}
+
+#endif
+*/
 #undef SIZE
 #undef TYPE
-
 #undef MAX
