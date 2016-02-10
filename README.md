@@ -51,6 +51,16 @@ RELEASE:
 The serial test unroll 4 fails, again for the division. It is very wierd
 as the operator /= call the system division and not Newton-Raphson
 
+Release 1.4.0
+
+- Google Summer code merge: work of Kai Langen
+- 2^x, 10^x, log_2 and log_10 solver
+- backend power7/power8 (with litle endian support)
+- backend ARM 
+- trigonometric function backend SSE/AVX/NEON and VMX (no mic and not BG/Q)
+- fabs
+- printing functions
+
 Release 1.3.0
 
 - New license lgpl 3.0
