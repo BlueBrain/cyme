@@ -188,7 +188,7 @@ namespace cyme {
             typedef long long int value_type;
         };
 
-        union helper { TYPE d; typename trait_integer<TYPE>::value_type n;};
+
 
     } // end namespace test
 } // end namespace CYME

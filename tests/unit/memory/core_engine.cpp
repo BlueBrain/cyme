@@ -573,6 +573,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(core_operator_fabs, T, floating_point_block_types)
 }
 
 
+
 #undef TYPE
 #undef N
 #undef MAX

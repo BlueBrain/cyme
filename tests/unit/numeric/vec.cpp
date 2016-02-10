@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_ZERO_mul, T, generic_test_types) {
 #ifdef __x86_64__
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_lt_operations, T, generic_test_types) {
-
+        union helper { TYPE d; typename trait_integer<TYPE>::value_type n;};
     helper u;
     // for the test only
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(3);
