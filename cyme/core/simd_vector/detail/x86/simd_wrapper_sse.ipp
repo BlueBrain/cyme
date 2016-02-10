@@ -1126,42 +1126,116 @@ namespace cyme{
 							     xmm0.r2,xmm0.r3);
     }
 
-     /**
+    /**
       Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
-      specialisation float,cyme::sse,1 regs
-     */
-     template<>
-     forceinline simd_trait<int,cyme::sse,1>::register_type
-     _mm_lt<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0,
-                                 simd_trait<double,cyme::sse,1>::register_type xmm1){
-        return  _mm_castpd_si128(_mm_cmplt_pd(xmm0, xmm1));
-     }
+      specialisation double,cyme::sse,1 regs
+    */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_lt<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0,
+                                simd_trait<double,cyme::sse,1>::register_type xmm1){
+        return _mm_cmplt_pd(xmm0, xmm1);
+    }
 
-     /**
+    /**
       Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
-      specialisation float,cyme::sse,2 regs
-     */
-     template<>
-     forceinline simd_trait<int,cyme::sse,2>::register_type
-     _mm_lt<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0,
-                                 simd_trait<double,cyme::sse,2>::register_type xmm1){
-              return simd_trait<int,cyme::sse,2>::register_type(_mm_castpd_si128(_mm_cmplt_pd(xmm0.r0, xmm1.r0)),
-                                                                _mm_castpd_si128(_mm_cmplt_pd(xmm0.r1, xmm1.r1)));
-     }
+      specialisation double,cyme::sse,2 regs
+    */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_lt<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0,
+                                simd_trait<double,cyme::sse,2>::register_type xmm1){
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_cmplt_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_cmplt_pd(xmm0.r1, xmm1.r1));
+    }
 
-     /**
+    /**
       Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
-      specialisation float,cyme::sse,1 regs
+      specialisation double,cyme::sse,1 regs
+    */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_lt<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0,
+                                simd_trait<double,cyme::sse,4>::register_type xmm1){
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_cmplt_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_cmplt_pd(xmm0.r1, xmm1.r1),
+                                                             _mm_cmplt_pd(xmm0.r2, xmm1.r2),
+                                                             _mm_cmplt_pd(xmm0.r3, xmm1.r3));
+    }
+
+    /**
+     Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation double,cyme::sse,1 regs
      */
-     template<>
-     forceinline simd_trait<int,cyme::sse,4>::register_type
-     _mm_lt<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0,
-                                 simd_trait<double,cyme::sse,4>::register_type xmm1){
-             return simd_trait<int,cyme::sse,4>::register_type(_mm_castpd_si128(_mm_cmplt_pd(xmm0.r0, xmm1.r0)),
-                                                               _mm_castpd_si128(_mm_cmplt_pd(xmm0.r1, xmm1.r1)),
-                                                               _mm_castpd_si128(_mm_cmplt_pd(xmm0.r2, xmm1.r2)),
-                                                               _mm_castpd_si128(_mm_cmplt_pd(xmm0.r3, xmm1.r3)));
-     }
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_gt<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0,
+                                simd_trait<double,cyme::sse,1>::register_type xmm1){
+        return _mm_cmpgt_pd(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation double,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_gt<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0,
+                                simd_trait<double,cyme::sse,2>::register_type xmm1){
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_cmpgt_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_cmpgt_pd(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation double,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_gt<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0,
+                                simd_trait<double,cyme::sse,4>::register_type xmm1){
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_cmpgt_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_cmpgt_pd(xmm0.r1, xmm1.r1),
+                                                             _mm_cmpgt_pd(xmm0.r2, xmm1.r2),
+                                                             _mm_cmpgt_pd(xmm0.r3, xmm1.r3));
+    }
+
+    /**
+     Evaluate the the == operator, bit to bit equality, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation double,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_eq<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0,
+                                simd_trait<double,cyme::sse,1>::register_type xmm1){
+        return _mm_cmpeq_pd(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the == operator, bit to bit equality, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation double,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_eq<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0,
+                                simd_trait<double,cyme::sse,2>::register_type xmm1){
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_cmpeq_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_cmpeq_pd(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the == operator, bit to bit equality, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation double,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_eq<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0,
+                                simd_trait<double,cyme::sse,4>::register_type xmm1){
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_cmpeq_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_cmpeq_pd(xmm0.r1, xmm1.r1),
+                                                             _mm_cmpeq_pd(xmm0.r2, xmm1.r2),
+                                                             _mm_cmpeq_pd(xmm0.r3, xmm1.r3));
+    }
 
 
 #ifdef __INTEL_COMPILER
@@ -2435,42 +2509,116 @@ namespace cyme{
 							    xmm0.r2,xmm0.r3);
     }
 
-     /**
-      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
-      specialisation float,cyme::sse,1 regs
+    /**
+     Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,1 regs
      */
-     template<>
-     forceinline simd_trait<int,cyme::sse,1>::register_type
-     _mm_lt<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0,
-                                simd_trait<float,cyme::sse,1>::register_type xmm1){
-        return  _mm_castps_si128(_mm_cmplt_ps(xmm0, xmm1));
-     }
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_lt<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0,
+                               simd_trait<float,cyme::sse,1>::register_type xmm1){
+        return _mm_cmplt_ps(xmm0, xmm1);
+    }
 
-     /**
-      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
-      specialisation float,cyme::sse,2 regs
+    /**
+     Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,2 regs
      */
-     template<>
-     forceinline simd_trait<int,cyme::sse,2>::register_type
-     _mm_lt<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0,
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_lt<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0,
+                               simd_trait<float,cyme::sse,2>::register_type xmm1){
+        return simd_trait<float,cyme::sse,2>::register_type(_mm_cmplt_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_cmplt_ps(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_lt<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0,
+                               simd_trait<float,cyme::sse,4>::register_type xmm1){
+        return simd_trait<float,cyme::sse,4>::register_type(_mm_cmplt_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_cmplt_ps(xmm0.r1, xmm1.r1),
+                                                            _mm_cmplt_ps(xmm0.r2, xmm1.r2),
+                                                            _mm_cmplt_ps(xmm0.r3, xmm1.r3));
+    }
+
+    /**
+     Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_gt<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0,
+                               simd_trait<float,cyme::sse,1>::register_type xmm1){
+        return _mm_cmpgt_ps(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_gt<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0,
+                               simd_trait<float,cyme::sse,2>::register_type xmm1){
+        return simd_trait<float,cyme::sse,2>::register_type(_mm_cmpgt_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_cmpgt_ps(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_gt<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0,
+                               simd_trait<float,cyme::sse,4>::register_type xmm1){
+        return simd_trait<float,cyme::sse,4>::register_type(_mm_cmpgt_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_cmpgt_ps(xmm0.r1, xmm1.r1),
+                                                            _mm_cmpgt_ps(xmm0.r2, xmm1.r2),
+                                                            _mm_cmpgt_ps(xmm0.r3, xmm1.r3));
+    }
+
+    /**
+     Evaluate the the == operator, bit to bit equality, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_eq<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0,
+                               simd_trait<float,cyme::sse,1>::register_type xmm1){
+        return _mm_cmpeq_ps(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the == operator, bit to bit equality, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_eq<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0,
                                 simd_trait<float,cyme::sse,2>::register_type xmm1){
-             return simd_trait<int,cyme::sse,2>::register_type(_mm_castps_si128(_mm_cmplt_ps(xmm0.r0, xmm1.r0)),
-                                                               _mm_castps_si128(_mm_cmplt_ps(xmm0.r1, xmm1.r1)));
-     }
+        return simd_trait<float,cyme::sse,2>::register_type(_mm_cmpeq_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_cmpeq_ps(xmm0.r1, xmm1.r1));
+    }
 
-     /**
-      Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
-      specialisation float,cyme::sse,1 regs
+    /**
+     Evaluate the the == operator, bit to bit equality, return if true return 0xffffffffffffffff (true) else 0 (false)
+     specialisation float,cyme::sse,4 regs
      */
-     template<>
-     forceinline simd_trait<int,cyme::sse,4>::register_type
-     _mm_lt<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0,
-                                simd_trait<float,cyme::sse,4>::register_type xmm1){
-             return simd_trait<int,cyme::sse,4>::register_type(_mm_castps_si128(_mm_cmplt_ps(xmm0.r0, xmm1.r0)),
-                                                               _mm_castps_si128(_mm_cmplt_ps(xmm0.r1, xmm1.r1)),
-                                                               _mm_castps_si128(_mm_cmplt_ps(xmm0.r2, xmm1.r2)),
-                                                               _mm_castps_si128(_mm_cmplt_ps(xmm0.r3, xmm1.r3)));
-     }
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_eq<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0,
+                               simd_trait<float,cyme::sse,4>::register_type xmm1){
+        return simd_trait<float,cyme::sse,4>::register_type(_mm_cmpeq_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_cmpeq_ps(xmm0.r1, xmm1.r1),
+                                                            _mm_cmpeq_ps(xmm0.r2, xmm1.r2),
+                                                            _mm_cmpeq_ps(xmm0.r3, xmm1.r3));
+    }
 
 #ifdef __INTEL_COMPILER
     /**
@@ -2902,37 +3050,6 @@ namespace cyme{
                                                                _mm_and_si128(xmm0.r2, xmm1.r2),
                                                                _mm_and_si128(xmm0.r3, xmm1.r3));
      }
-
-    /**
-     Evaluate the the != operator between a register and a bool
-     specialisation double,cyme::sse,1 regs
-     */
-    template<>
-    forceinline int
-    _mm_test_all_one<int,cyme::sse,1> (simd_trait<int,cyme::sse,1>::register_type xmm0){
-        return  _mm_testc_si128(xmm0,_mm_set1_epi32(0x1));
-    }
-
-    /**
-     Evaluate the the != operator between a register and a bool
-     specialisation double,cyme::sse,2 regs
-     */
-    template<>
-    forceinline int
-    _mm_test_all_one<int,cyme::sse,2> (simd_trait<int,cyme::sse,2>::register_type xmm0){
-        return ( _mm_testc_si128(_mm_or_si128(xmm0.r0, xmm0.r1),_mm_set1_epi32(0x1)));
-    }
-
-    /**
-     Evaluate the the != operator between a register and a bool
-     specialisation double,cyme::sse,4 regs
-     */
-    template<>
-    forceinline int
-    _mm_test_all_one<int,cyme::sse,4> (simd_trait<int,cyme::sse,4>::register_type xmm0){
-        return  _mm_testc_si128(_mm_or_si128( _mm_or_si128(xmm0.r0, xmm0.r1),
-                                              _mm_or_si128(xmm0.r2, xmm0.r3)),_mm_set1_epi32(0x1));
-    }
 
     /**
      add packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,

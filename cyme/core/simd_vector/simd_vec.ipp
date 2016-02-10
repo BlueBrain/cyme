@@ -92,16 +92,6 @@ namespace cyme{
     }
 
     template<class T,cyme::simd O, int N>
-    int vec_simd<T,O,N>::operator == (int b){
-        return b == _mm_test_all_one<typename simd_trait<T,O,N>::value_type,O,N>(xmm);
-    }
-
-    template<class T,cyme::simd O, int N>
-    int vec_simd<T,O,N>::operator != (int b){
-        return b != _mm_test_all_one<typename simd_trait<T,O,N>::value_type,O,N>(xmm);
-    }
-
-    template<class T,cyme::simd O, int N>
     vec_simd<T,O,N>& vec_simd<T,O,N>::operator &= (const vec_simd<T,O,N>& rhs){
         xmm = _mm_and<typename simd_trait<T,O,N>::value_type,O,N>(xmm,rhs.xmm);
         return *this;

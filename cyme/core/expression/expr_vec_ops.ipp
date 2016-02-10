@@ -212,19 +212,57 @@ namespace cyme{
     * less than operator  a < b
     */
     template<class T, cyme::simd O, int N, class R1, class R2>
-    forceinline vec<int,O, N,vec_lt<T,O,N,R1,R2> >
+    forceinline vec<T,O, N,vec_lt<T,O,N,R1,R2> >
     operator <(vec<T,O,N,R1> const& a, vec<T,O,N,R2> const& b){
-        return vec<int,O,N,vec_lt<T,O,N,R1,R2> >(vec_lt<T,O,N,R1,R2>(a.rep(),b.rep()));
+        return vec<T,O,N,vec_lt<T,O,N,R1,R2> >(vec_lt<T,O,N,R1,R2>(a.rep(),b.rep()));
     }
 
     /**
     * less than operator  a < s where b is a scalar
     */
     template<class T, cyme::simd O, int N, class R1>
-    forceinline vec<int,O,N, vec_lt<T,O,N,R1,vec_scalar<T,O,N> > >
+    forceinline vec<T,O,N, vec_lt<T,O,N,R1,vec_scalar<T,O,N> > >
     operator <(vec<T,O,N,R1> const& a, typename identity<T>::value_type const& s){
-        return vec<int,O,N,vec_lt<T,O,N,R1,vec_scalar<T,O,N> > >
-            (vec_lt<int,O,N,R1,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(s))));
+        return vec<T,O,N,vec_lt<T,O,N,R1,vec_scalar<T,O,N> > >
+            (vec_lt<T,O,N,R1,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(s))));
+    }
+
+    /**
+     * less than operator  a > b
+     */
+    template<class T, cyme::simd O, int N, class R1, class R2>
+    forceinline vec<T,O, N,vec_gt<T,O,N,R1,R2> >
+    operator >(vec<T,O,N,R1> const& a, vec<T,O,N,R2> const& b){
+        return vec<T,O,N,vec_gt<T,O,N,R1,R2> >(vec_gt<T,O,N,R1,R2>(a.rep(),b.rep()));
+    }
+
+    /**
+     * less than operator  a > s where b is a scalar
+     */
+    template<class T, cyme::simd O, int N, class R1>
+    forceinline vec<T,O,N, vec_gt<T,O,N,R1,vec_scalar<T,O,N> > >
+    operator >(vec<T,O,N,R1> const& a, typename identity<T>::value_type const& s){
+        return vec<T,O,N,vec_gt<T,O,N,R1,vec_scalar<T,O,N> > >
+        (vec_gt<T,O,N,R1,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(s))));
+    }
+
+    /**
+     * less than operator  a == b
+     */
+    template<class T, cyme::simd O, int N, class R1, class R2>
+    forceinline vec<T,O, N,vec_eq<T,O,N,R1,R2> >
+    operator ==(vec<T,O,N,R1> const& a, vec<T,O,N,R2> const& b){
+        return vec<T,O,N,vec_eq<T,O,N,R1,R2> >(vec_eq<T,O,N,R1,R2>(a.rep(),b.rep()));
+    }
+
+    /**
+     * less than operator  a == s where b is a scalar
+     */
+    template<class T, cyme::simd O, int N, class R1>
+    forceinline vec<T,O,N, vec_eq<T,O,N,R1,vec_scalar<T,O,N> > >
+    operator <(vec<T,O,N,R1> const& a, typename identity<T>::value_type const& s){
+        return vec<T,O,N,vec_eq<T,O,N,R1,vec_scalar<T,O,N> > >
+        (vec_eq<T,O,N,R1,vec_scalar<T,O,N> >(a.rep(),vec_scalar<T,O,N>(static_cast<T>(s))));
     }
 
     /**

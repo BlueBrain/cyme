@@ -266,10 +266,45 @@ namespace cyme{
         forceinline vec_lt(OP1 const& a, OP2 const& b):op1(a), op2(b){
         }
         /* always return int */
-        forceinline vec_simd<int,O,N> operator()() const{
+        forceinline vec_simd<T,O,N> operator()() const{
             return op1() < op2();
         }
     };
+
+    /** less than vertex in the DAG from a < b
+     /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
+     */
+    template<class T, cyme::simd O, int N, class OP1, class OP2>
+    class vec_gt{
+        typename vec_traits<OP1,O,N>::value_type op1;
+        typename vec_traits<OP2,O,N>::value_type op2;
+
+    public:
+        forceinline vec_gt(OP1 const& a, OP2 const& b):op1(a), op2(b){
+        }
+        /* always return int */
+        forceinline vec_simd<T,O,N> operator()() const{
+            return op1() > op2();
+        }
+    };
+
+    /** less than vertex in the DAG from a < b
+     /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
+     */
+    template<class T, cyme::simd O, int N, class OP1, class OP2>
+    class vec_eq{
+        typename vec_traits<OP1,O,N>::value_type op1;
+        typename vec_traits<OP2,O,N>::value_type op2;
+
+    public:
+        forceinline vec_eq(OP1 const& a, OP2 const& b):op1(a), op2(b){
+        }
+        /* always return int */
+        forceinline vec_simd<T,O,N> operator()() const{
+            return op1() == op2();
+        }
+    };
+
 
     /** add vertex in the DAG from a+b */
     template<class T, cyme::simd O, int N, class OP1, class OP2>
@@ -305,10 +340,6 @@ namespace cyme{
 
     Contrary to other class it is a structure, I did an optimization in case
     I get multiple negate e.g. -(-(a)) the vertex is transformed to a.
-<<<<<<< HEAD
-=======
-
->>>>>>> cymepoly
     For this I need to get the original operator (op1)
     */
     template<class T, cyme::simd O, int N, class OP1>

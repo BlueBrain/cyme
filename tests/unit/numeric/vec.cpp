@@ -19,6 +19,7 @@
  */
 
 #include <tests/unit/test_header.hpp>
+#include <limits>
 
 using namespace cyme::test;
 
@@ -258,52 +259,81 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_ZERO_mul, T, generic_test_types) {
 
 }
 
-/*
 #ifdef __x86_64__
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_lt_operations, T, mandelbroat_test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_lt_operations, T, generic_test_types) {
 
+    helper u;
+    // for the test only
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(3);
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(2);
-    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> vc;
+    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vr1;
+    int n = cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE);
+    TYPE r0[n] __attribute__((aligned(64)));
 
-    BOOST_CHECK((va < vb) == false);
-    BOOST_CHECK((vb < va) == true);
-    BOOST_CHECK((va < vb) != true);
-    BOOST_CHECK((vb < va) != false);
-}
 
-BOOST_AUTO_TEST_CASE(vec_simd_and_operation) {
-    int n = cyme::unroll_factor::N*cyme::trait_register<int,cyme::__GETSIMD__()>::size/sizeof(int);
-    int a[n] __attribute__((aligned(16)));
-    int b[n] __attribute__((aligned(16)));
-    int c[n] __attribute__((aligned(16)));
-    int res[n] __attribute__((aligned(16)));
+    vr1 = va < vb;
+    vr1.store(r0);
 
-    for(int i=0; i<n; ++i){
-       a[i] = GetRandom<int>();
-       b[i] = GetRandom<int>();
+    for(int i=0; i < n ; ++i)
+        BOOST_CHECK(r0[i] == 0);
+
+    vr1 = va > vb;
+    vr1.store(r0);
+
+    for(int i=0; i < n ; ++i){
+        u.d = r0[i];
+        BOOST_CHECK(u.n == -1);
     }
 
-    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(a);
-    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
-    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> vc;
+    vr1 = va == vb;
+    vr1.store(r0);
 
-    for(int i=0; i<n; ++i){
-        a[i] &= b[i];
-        c[i] =a[i] && b[i];
+    for(int i=0; i < n ; ++i)
+        BOOST_CHECK(r0[i] == 0);
+
+
+    vr1 = va == va;
+    vr1.store(r0);
+
+    for(int i=0; i < n ; ++i){
+        u.d = r0[i];
+        BOOST_CHECK(u.n == -1);
     }
 
-    va &= vb;
-    vc = va && vb;
-    va.store(res);
-
-    for(int i=0; i<n; ++i)
-       BOOST_CHECK_EQUAL(a[i],res[i]);
 }
+
+//BOOST_AUTO_TEST_CASE(vec_simd_and_operation) {
+//    int n = cyme::unroll_factor::N*cyme::trait_register<int,cyme::__GETSIMD__()>::size/sizeof(int);
+//    int a[n] __attribute__((aligned(16)));
+//    int b[n] __attribute__((aligned(16)));
+//    int c[n] __attribute__((aligned(16)));
+//    int res[n] __attribute__((aligned(16)));
+//
+//    for(int i=0; i<n; ++i){
+//       a[i] = GetRandom<int>();
+//       b[i] = GetRandom<int>();
+//    }
+//
+//    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(a);
+//    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+//    cyme::vec_simd<int,cyme::__GETSIMD__(),cyme::unroll_factor::N> vc;
+//
+//    for(int i=0; i<n; ++i){
+//        a[i] &= b[i];
+//        c[i] =a[i] && b[i];
+//    }
+//
+//    va &= vb;
+//    vc = va && vb;
+//    va.store(res);
+//
+//    for(int i=0; i<n; ++i)
+//       BOOST_CHECK_EQUAL(a[i],res[i]);
+//}
 
 #endif
-*/
+
 #undef SIZE
 #undef TYPE
 #undef MAX

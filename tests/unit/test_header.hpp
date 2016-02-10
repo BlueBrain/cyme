@@ -135,7 +135,6 @@ namespace cyme {
                             > mandelbroat_test_types;
 
     typedef boost::mpl::list<
-//                              data<int,14,cyme::AoS>,
                                 data<float,14,cyme::AoS>,
                                 data<double,14,cyme::AoS>
                             > generic_test_types;
@@ -176,7 +175,20 @@ namespace cyme {
                             > floating_point_block_types;
 
 
+        template<class T>
+        struct trait_integer;
 
+        template<>
+        struct trait_integer<float>{
+            typedef int value_type;
+        };
+
+        template<>
+        struct trait_integer<double>{
+            typedef long long int value_type;
+        };
+
+        union helper { TYPE d; typename trait_integer<TYPE>::value_type n;};
 
     } // end namespace test
 } // end namespace CYME

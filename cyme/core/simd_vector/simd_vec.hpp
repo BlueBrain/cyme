@@ -96,12 +96,6 @@ namespace cyme{
         /** Operator &= bewteen two vectors */
         forceinline vec_simd& operator &= (const vec_simd& rhs);
 
-        /** Operator == for branching */
-        forceinline int operator == (int b);
-
-        /** Operator != for branching */
-        forceinline int operator != (int b);
-
         /** Save the value into the register into the cyme */
         forceinline void store(pointer a) const;
 
