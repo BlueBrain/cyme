@@ -42,7 +42,9 @@ namespace cyme{
     /** coeff order 0 exp(x) */
     template<class T>
     struct coeff_remez_exp<T,0>{
-        const static inline T coeff() {return 1.0000000000000002114940639705245276038539149099858;}
+//        const static inline T coeff() {return 1.0000000000000002114940639705245276038539149099858;}
+        const static inline T coeff() {return 1.;}
+
     };
 
     /** coeff order 1 exp(x) */
@@ -118,3 +120,4 @@ namespace cyme{
 } //end namespace
 
 #endif
+

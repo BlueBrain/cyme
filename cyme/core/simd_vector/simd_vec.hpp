@@ -99,8 +99,8 @@ namespace cyme{
         /** Operator |= bewteen two vectors */
         forceinline vec_simd& operator |= (const vec_simd& rhs);
 
-        /** Operator |= bewteen two vectors, no DAG for this one */
-        forceinline vec_simd& andnot(const vec_simd& rhs);
+        /** Operator negate bewteen two vectors, no DAG for this one */
+        forceinline vec_simd& operator ~();
 
         /** Save the value into the register into the cyme */
         forceinline void store(pointer a) const;

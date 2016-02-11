@@ -104,8 +104,8 @@ namespace cyme{
     }
 
     template<class T,cyme::simd O, int N>
-    vec_simd<T,O,N>& vec_simd<T,O,N>::andnot(const vec_simd<T,O,N>& rhs){
-        xmm = _mm_andnot<typename simd_trait<T,O,N>::value_type,O,N>(xmm,rhs.xmm);
+    vec_simd<T,O,N>& vec_simd<T,O,N>::operator ~(){
+        xmm = _mm_andnot<typename simd_trait<T,O,N>::value_type,O,N>(xmm);
         return *this;
     }
 

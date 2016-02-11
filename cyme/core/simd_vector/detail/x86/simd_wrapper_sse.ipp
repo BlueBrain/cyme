@@ -807,7 +807,7 @@ namespace cyme{
     forceinline simd_trait<double,cyme::sse,1>::register_type
     _mm_fabs<double,cyme::sse,1>( simd_trait<double,cyme::sse,1>::register_type xmm0){
         simd_trait<double,cyme::sse,1>::register_type mask =  _mm_castsi128_pd(_mm_set1_epi64x(0x7fffffffffffffff));
-	return _mm_and_pd(xmm0, mask);
+	    return _mm_and_pd(xmm0, mask);
     }
 
     /**
@@ -1317,9 +1317,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::sse,1>::register_type
-    _mm_andnot<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0,
-                                    simd_trait<double,cyme::sse,1>::register_type xmm1){
-        return  _mm_andnot_pd(xmm0, xmm1);
+    _mm_andnot<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0){
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+        return  _mm_andnot_pd(xmm0, mask);
     }
 
     /**
@@ -1328,10 +1328,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::sse,2>::register_type
-    _mm_andnot<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0,
-                                    simd_trait<double,cyme::sse,2>::register_type xmm1){
-        return simd_trait<double,cyme::sse,2>::register_type(_mm_andnot_pd(xmm0.r0, xmm1.r0),
-                                                             _mm_andnot_pd(xmm0.r1, xmm1.r1));
+    _mm_andnot<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0){
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_andnot_pd(xmm0.r0, mask),
+                                                             _mm_andnot_pd(xmm0.r1, mask));
     }
 
     /**
@@ -1340,12 +1340,12 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<double,cyme::sse,4>::register_type
-    _mm_andnot<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0,
-                                    simd_trait<double,cyme::sse,4>::register_type xmm1){
-        return simd_trait<double,cyme::sse,4>::register_type(_mm_andnot_pd(xmm0.r0, xmm1.r0),
-                                                             _mm_andnot_pd(xmm0.r1, xmm1.r1),
-                                                             _mm_andnot_pd(xmm0.r2, xmm1.r2),
-                                                             _mm_andnot_pd(xmm0.r3, xmm1.r3));
+    _mm_andnot<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0){
+        __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_andnot_pd(xmm0.r0, mask),
+                                                             _mm_andnot_pd(xmm0.r1, mask),
+                                                             _mm_andnot_pd(xmm0.r2, mask),
+                                                             _mm_andnot_pd(xmm0.r3, mask));
     }
 
 #ifdef __INTEL_COMPILER
@@ -2810,9 +2810,9 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::sse,1>::register_type
-    _mm_andnot<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0,
-                                   simd_trait<float,cyme::sse,1>::register_type xmm1){
-        return  _mm_andnot_ps(xmm0, xmm1);
+    _mm_andnot<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0){
+        __m128 mask = _mm_castsi128_ps(_mm_set1_epi32(0xffffffff));
+       return  _mm_andnot_ps(xmm0, mask);
     }
 
     /**
@@ -2821,10 +2821,10 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::sse,2>::register_type
-    _mm_andnot<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0,
-                               simd_trait<float,cyme::sse,2>::register_type xmm1){
-        return simd_trait<float,cyme::sse,2>::register_type(_mm_andnot_ps(xmm0.r0, xmm1.r0),
-                                                            _mm_andnot_ps(xmm0.r1, xmm1.r1));
+    _mm_andnot<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0){
+        __m128 mask = _mm_castsi128_ps(_mm_set1_epi32(0xffffffff));
+        return simd_trait<float,cyme::sse,2>::register_type(_mm_andnot_ps(xmm0.r0, mask),
+                                                            _mm_andnot_ps(xmm0.r1, mask));
     }
 
     /**
@@ -2833,12 +2833,12 @@ namespace cyme{
      */
     template<>
     forceinline simd_trait<float,cyme::sse,4>::register_type
-    _mm_andnot<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0,
-                               simd_trait<float,cyme::sse,4>::register_type xmm1){
-        return simd_trait<float,cyme::sse,4>::register_type(_mm_andnot_ps(xmm0.r0, xmm1.r0),
-                                                            _mm_andnot_ps(xmm0.r1, xmm1.r1),
-                                                            _mm_andnot_ps(xmm0.r2, xmm1.r2),
-                                                            _mm_andnot_ps(xmm0.r3, xmm1.r3));
+    _mm_andnot<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0){
+        __m128 mask = _mm_castsi128_ps(_mm_set1_epi32(0xffffffff));
+        return simd_trait<float,cyme::sse,4>::register_type(_mm_andnot_ps(xmm0.r0, mask),
+                                                            _mm_andnot_ps(xmm0.r1, mask),
+                                                            _mm_andnot_ps(xmm0.r2, mask),
+                                                            _mm_andnot_ps(xmm0.r3, mask));
     }
 
 #ifdef __INTEL_COMPILER

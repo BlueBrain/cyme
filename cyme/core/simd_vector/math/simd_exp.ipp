@@ -40,6 +40,20 @@ namespace cyme{
         }
     };
 
+    /** range for the exp, exponent*log(2) **/
+    template<class T>
+    struct exp_limits{};
+
+    template<>
+    struct exp_limits<double>{
+        static inline  double max_range()  { return 709.089565713;}
+    };
+
+    template<>
+    struct exp_limits<float>{
+        static inline  float max_range() { return 88.0296919311;}
+    };
+
     /** Implementation of the exp,the algorithm is based on e^x = 2^k e^y
 
          where k is signed integer and y belongs to [0,log 2].
@@ -58,6 +72,10 @@ namespace cyme{
              class Solver = Remez_exp<T,O,N,n> > // Remez, series ...
     struct cyme_exp{
         static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> x){
+            vec_simd<T,O,N> mask0(~(fabs(x) > vec_simd<T,O,N>(exp_limits<T>::max_range()))); // mask for the boundary
+            vec_simd<T,O,N> mask1(x < vec_simd<T,O,N>(exp_limits<T>::max_range()));  // mask for the boundary
+            vec_simd<T,O,N> mask2(std::numeric_limits<T>::infinity());
+
             /* calculate k,  k = (int)floor(a); p = (float)k; */
             vec_simd<T,O,N>   log2e(1.4426950408889634073599);
             vec_simd<T,O,N>   y(x*log2e);
@@ -80,6 +98,9 @@ namespace cyme{
             p = twok<T,O,N>(k);
             /* e^x = 2^k * e^y */
             x *= p;
+            x &= mask0; // lower than -700 becomes 0
+            mask2 &= ~mask1; // larger than 700 becomes +inf
+            x |= mask2;  // larger than 700 becomes +inf
             return x;
         }
     };

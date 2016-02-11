@@ -155,49 +155,25 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_or_operations, T, generic_test_types) {
     for(int i=0; i < n ; ++i)
         BOOST_CHECK(r[i] == 0);
 }
-//
-//BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_andnot_operations, T, generic_test_types) {
-//    union helper { TYPE d; typename trait_integer<TYPE>::value_type n;};
-//    helper u,utest;
-//    u.n=-1;
-//    // for the test only
-//
-//    double tmp = drand48();
-//    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(tmp);
-//    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(0.);
-//    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> mask_1(u.d);
-//    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> mask_0(0.);
-//    int n = cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE);
-//    TYPE r[n] __attribute__((aligned(64)));
-//
-//    va = va.andnot(mask_1);
-//    va.store(r);
-//
-//    for(int i=0; i < n ; ++i){
-//        utest.d = r[i];
-//        BOOST_CHECK(utest.n == -1);
-//    }
-//
-//    va |= mask_1;
-//    va.store(r);
-//
-//    for(int i=0; i < n ; ++i){
-//        utest.d = r[i];
-//        BOOST_CHECK(utest.n == -1);
-//    }
-//
-//    vb = vb | mask_0;
-//    vb.store(r);
-//
-//    for(int i=0; i < n ; ++i)
-//        BOOST_CHECK(r[i] == 0);
-//
-//    vb |= mask_0;
-//    vb.store(r);
-//
-//    for(int i=0; i < n ; ++i)
-//        BOOST_CHECK(r[i] == 0);
-//}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_andnot_operations, T, generic_test_types) {
+    union helper { TYPE d; typename trait_integer<TYPE>::value_type n;};
+    helper u,utest;
+    u.n=-1;
+    // for the test only
+
+    double tmp = rand();
+    cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(u.d);
+    int n = cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE);
+    TYPE r[n] __attribute__((aligned(64)));
+
+    va = ~va;
+    va.store(r);
+
+    for(int i=0; i < n ; ++i)
+        BOOST_CHECK(r[i] == 0);
+
+}
 
 
 
