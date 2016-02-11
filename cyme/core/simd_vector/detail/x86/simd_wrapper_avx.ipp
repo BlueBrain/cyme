@@ -1444,6 +1444,117 @@ namespace cyme{
                                                              _mm256_cmp_pd(xmm0.r3, xmm1.r3,_CMP_EQ_OS));
     }
 
+    /**
+     Evaluate the  & operator between two registers
+     specialisation double,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,1>::register_type
+    _mm_and<double,cyme::avx,1> (simd_trait<double,cyme::avx,1>::register_type xmm0,
+                                 simd_trait<double,cyme::avx,1>::register_type xmm1){
+        return _mm256_and_pd(xmm0,xmm1);
+    }
+
+    /**
+     Evaluate the  & operator between two registers
+     specialisation double,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,2>::register_type
+    _mm_and<double,cyme::avx,2> (simd_trait<double,cyme::avx,2>::register_type xmm0,
+                                 simd_trait<double,cyme::avx,2>::register_type xmm1){
+        return simd_trait<double,cyme::avx,2>::register_type(_mm256_and_pd(xmm0.r0,xmm1.r0),
+                                                             _mm256_and_pd(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+     Evaluate the  & operator between two registers
+     specialisation double,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,4>::register_type
+    _mm_and<double,cyme::avx,4> (simd_trait<double,cyme::avx,4>::register_type xmm0,
+                              simd_trait<double,cyme::avx,4>::register_type xmm1){
+        return simd_trait<double,cyme::avx,4>::register_type(_mm256_and_pd(xmm0.r0,xmm1.r0),
+                                                             _mm256_and_pd(xmm0.r1,xmm1.r1),
+                                                             _mm256_and_pd(xmm0.r2,xmm1.r2),
+                                                             _mm256_and_pd(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+     Evaluate the  | operator between two registers
+     specialisation double,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,1>::register_type
+    _mm_or<double,cyme::avx,1> (simd_trait<double,cyme::avx,1>::register_type xmm0,
+                                simd_trait<double,cyme::avx,1>::register_type xmm1){
+        return _mm256_or_pd(xmm0,xmm1);
+    }
+
+    /**
+     Evaluate the  | operator between two registers
+     specialisation double,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,2>::register_type
+    _mm_or<double,cyme::avx,2> (simd_trait<double,cyme::avx,2>::register_type xmm0,
+                                simd_trait<double,cyme::avx,2>::register_type xmm1){
+        return simd_trait<double,cyme::avx,2>::register_type(_mm256_or_pd(xmm0.r0,xmm1.r0),
+                                                             _mm256_or_pd(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+     Evaluate the  | operator between two registers
+     specialisation double,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,4>::register_type
+    _mm_or<double,cyme::avx,4> (simd_trait<double,cyme::avx,4>::register_type xmm0,
+                                simd_trait<double,cyme::avx,4>::register_type xmm1){
+        return simd_trait<double,cyme::avx,4>::register_type(_mm256_or_pd(xmm0.r0,xmm1.r0),
+                                                             _mm256_or_pd(xmm0.r1,xmm1.r1),
+                                                             _mm256_or_pd(xmm0.r2,xmm1.r2),
+                                                             _mm256_or_pd(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+     Evaluate the andnot operator between two registers
+     specialisation double,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,1>::register_type
+    _mm_andnot<double,cyme::avx,1> (simd_trait<double,cyme::avx,1>::register_type xmm0,
+                                    simd_trait<double,cyme::avx,1>::register_type xmm1){
+        return _mm256_andnot_pd(xmm0,xmm1);
+    }
+
+    /**
+     Evaluate the andnot operator between two registers
+     specialisation double,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,2>::register_type
+    _mm_andnot<double,cyme::avx,2> (simd_trait<double,cyme::avx,2>::register_type xmm0,
+                                    simd_trait<double,cyme::avx,2>::register_type xmm1){
+        return simd_trait<double,cyme::avx,2>::register_type(_mm256_andnot_pd(xmm0.r0,xmm1.r0),
+                                                             _mm256_andnot_pd(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+     Evaluate the andnot operator between two registers
+     specialisation double,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::avx,4>::register_type
+    _mm_andnot<double,cyme::avx,4> (simd_trait<double,cyme::avx,4>::register_type xmm0,
+                                    simd_trait<double,cyme::avx,4>::register_type xmm1){
+        return simd_trait<double,cyme::avx,4>::register_type(_mm256_andnot_pd(xmm0.r0,xmm1.r0),
+                                                             _mm256_andnot_pd(xmm0.r1,xmm1.r1),
+                                                             _mm256_andnot_pd(xmm0.r2,xmm1.r2),
+                                                             _mm256_andnot_pd(xmm0.r3,xmm1.r3));
+    }
+
 
 #ifdef __INTEL_COMPILER
     /**
@@ -3040,6 +3151,117 @@ namespace cyme{
                                                             _mm256_cmp_ps(xmm0.r3, xmm1.r3,_CMP_EQ_OS));
     }
 
+    /**
+     Evaluate the  & operator between two registers
+     specialisation float,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,1>::register_type
+    _mm_and<float,cyme::avx,1> (simd_trait<float,cyme::avx,1>::register_type xmm0,
+                                simd_trait<float,cyme::avx,1>::register_type xmm1){
+        return _mm256_and_ps(xmm0,xmm1);
+    }
+
+    /**
+     Evaluate the  & operator between two registers
+     specialisation float,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,2>::register_type
+    _mm_and<float,cyme::avx,2> (simd_trait<float,cyme::avx,2>::register_type xmm0,
+                                simd_trait<float,cyme::avx,2>::register_type xmm1){
+        return simd_trait<float,cyme::avx,2>::register_type(_mm256_and_ps(xmm0.r0,xmm1.r0),
+                                                            _mm256_and_ps(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+     Evaluate the  & operator between two registers
+     specialisation float,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,4>::register_type
+    _mm_and<float,cyme::avx,4> (simd_trait<float,cyme::avx,4>::register_type xmm0,
+                                simd_trait<float,cyme::avx,4>::register_type xmm1){
+        return simd_trait<float,cyme::avx,4>::register_type(_mm256_and_ps(xmm0.r0,xmm1.r0),
+                                                            _mm256_and_ps(xmm0.r1,xmm1.r1),
+                                                            _mm256_and_ps(xmm0.r2,xmm1.r2),
+                                                            _mm256_and_ps(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+     Evaluate the  | operator between two registers
+     specialisation float,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,1>::register_type
+    _mm_or<float,cyme::avx,1> (simd_trait<float,cyme::avx,1>::register_type xmm0,
+                               simd_trait<float,cyme::avx,1>::register_type xmm1){
+        return _mm256_or_ps(xmm0,xmm1);
+    }
+
+    /**
+     Evaluate the  | operator between two registers
+     specialisation float,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,2>::register_type
+    _mm_or<float,cyme::avx,2> (simd_trait<float,cyme::avx,2>::register_type xmm0,
+                               simd_trait<float,cyme::avx,2>::register_type xmm1){
+        return simd_trait<float,cyme::avx,2>::register_type(_mm256_or_ps(xmm0.r0,xmm1.r0),
+                                                            _mm256_or_ps(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+     Evaluate the  | operator between two registers
+     specialisation float,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,4>::register_type
+    _mm_or<float,cyme::avx,4> (simd_trait<float,cyme::avx,4>::register_type xmm0,
+                               simd_trait<float,cyme::avx,4>::register_type xmm1){
+        return simd_trait<float,cyme::avx,4>::register_type(_mm256_or_pd(xmm0.r0,xmm1.r0),
+                                                            _mm256_or_ps(xmm0.r1,xmm1.r1),
+                                                            _mm256_or_ps(xmm0.r2,xmm1.r2),
+                                                            _mm256_or_ps(xmm0.r3,xmm1.r3));
+    }
+
+    /**
+     Evaluate the andnot  operator between two registers
+     specialisation float,cyme::avx,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,1>::register_type
+    _mm_andnot<float,cyme::avx,1> (simd_trait<float,cyme::avx,1>::register_type xmm0,
+                               simd_trait<float,cyme::avx,1>::register_type xmm1){
+        return _mm256_andnot_ps(xmm0,xmm1);
+    }
+
+    /**
+     Evaluate the  andnot operator between two registers
+     specialisation float,cyme::avx,2 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,2>::register_type
+    _mm_andnot<float,cyme::avx,2> (simd_trait<float,cyme::avx,2>::register_type xmm0,
+                               simd_trait<float,cyme::avx,2>::register_type xmm1){
+        return simd_trait<float,cyme::avx,2>::register_type(_mm256_andnot_ps(xmm0.r0,xmm1.r0),
+                                                            _mm256_andnot_ps(xmm0.r1,xmm1.r1));
+    }
+
+    /**
+     Evaluate the  andnot operator between two registers
+     specialisation float,cyme::avx,4 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::avx,4>::register_type
+    _mm_andnot<float,cyme::avx,4> (simd_trait<float,cyme::avx,4>::register_type xmm0,
+                                   simd_trait<float,cyme::avx,4>::register_type xmm1){
+        return simd_trait<float,cyme::avx,4>::register_type(_mm256_andnot_pd(xmm0.r0,xmm1.r0),
+                                                            _mm256_andnot_ps(xmm0.r1,xmm1.r1),
+                                                            _mm256_andnot_ps(xmm0.r2,xmm1.r2),
+                                                            _mm256_andnot_ps(xmm0.r3,xmm1.r3));
+    }
+
 #ifdef  __INTEL_COMPILER
     /**
       Compute the exponential value of e raised to the power of packed single-precision (32-bit)
@@ -3544,8 +3766,8 @@ namespace cyme{
     }
 
     /**
-     Evaluate the the && operator between two registers
-     specialisation double,cyme::avx,1 regs
+     Evaluate the the & operator between two registers
+     specialisation int,cyme::avx,1 regs
      */
     template<>
     forceinline simd_trait<int,cyme::avx,1>::register_type
@@ -3555,8 +3777,8 @@ namespace cyme{
     }
 
     /**
-     Evaluate the the && operator between two registers
-     specialisation double,cyme::avx,2 regs
+     Evaluate the the & operator between two registers
+     specialisation int,cyme::avx,2 regs
      */
     template<>
     forceinline simd_trait<int,cyme::avx,2>::register_type
@@ -3569,8 +3791,8 @@ namespace cyme{
     }
 
     /**
-     Evaluate the the && operator between two registers
-     specialisation double,cyme::avx,4 regs
+     Evaluate the the & operator between two registers
+     specialisation int,cyme::avx,4 regs
      */
     template<>
     forceinline simd_trait<int,cyme::avx,4>::register_type

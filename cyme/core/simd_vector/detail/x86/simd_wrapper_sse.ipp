@@ -1237,6 +1237,116 @@ namespace cyme{
                                                              _mm_cmpeq_pd(xmm0.r3, xmm1.r3));
     }
 
+    /**
+     Evaluate the the & operator between two registers
+     specialisation double,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_and<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0,
+                                 simd_trait<double,cyme::sse,1>::register_type xmm1){
+        return  _mm_and_pd(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the & operator between two registers
+     specialisation double,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_and<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0,
+                                 simd_trait<double,cyme::sse,2>::register_type xmm1){
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_and_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_and_pd(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the & operator between two registers
+     specialisation double,cyme::sse,4 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_and<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0,
+                                 simd_trait<double,cyme::sse,4>::register_type xmm1){
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_and_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_and_pd(xmm0.r1, xmm1.r1),
+                                                             _mm_and_pd(xmm0.r2, xmm1.r2),
+                                                             _mm_and_pd(xmm0.r3, xmm1.r3));
+    }
+
+    /**
+     Evaluate the the | operator between two registers
+     specialisation double,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_or<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0,
+                                simd_trait<double,cyme::sse,1>::register_type xmm1){
+        return  _mm_or_pd(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the | operator between two registers
+     specialisation double,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_or<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0,
+                                simd_trait<double,cyme::sse,2>::register_type xmm1){
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_or_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_or_pd(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the | operator between two registers
+     specialisation double,cyme::sse,4 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_or<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0,
+                                simd_trait<double,cyme::sse,4>::register_type xmm1){
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_or_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_or_pd(xmm0.r1, xmm1.r1),
+                                                             _mm_or_pd(xmm0.r2, xmm1.r2),
+                                                             _mm_or_pd(xmm0.r3, xmm1.r3));
+    }
+
+    /**
+     Evaluate the andnot operator between two registers
+     specialisation double,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_andnot<double,cyme::sse,1> (simd_trait<double,cyme::sse,1>::register_type xmm0,
+                                    simd_trait<double,cyme::sse,1>::register_type xmm1){
+        return  _mm_andnot_pd(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the andnot operator between two registers
+     specialisation double,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_andnot<double,cyme::sse,2> (simd_trait<double,cyme::sse,2>::register_type xmm0,
+                                    simd_trait<double,cyme::sse,2>::register_type xmm1){
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_andnot_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_andnot_pd(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the andnot operator between two registers
+     specialisation double,cyme::sse,4 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_andnot<double,cyme::sse,4> (simd_trait<double,cyme::sse,4>::register_type xmm0,
+                                    simd_trait<double,cyme::sse,4>::register_type xmm1){
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_andnot_pd(xmm0.r0, xmm1.r0),
+                                                             _mm_andnot_pd(xmm0.r1, xmm1.r1),
+                                                             _mm_andnot_pd(xmm0.r2, xmm1.r2),
+                                                             _mm_andnot_pd(xmm0.r3, xmm1.r3));
+    }
 
 #ifdef __INTEL_COMPILER
     /**
@@ -2620,6 +2730,117 @@ namespace cyme{
                                                             _mm_cmpeq_ps(xmm0.r3, xmm1.r3));
     }
 
+    /**
+     Evaluate the the & operator between two registers
+     specialisation float,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_and<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0,
+                                simd_trait<float,cyme::sse,1>::register_type xmm1){
+        return  _mm_and_ps(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the & operator between two registers
+     specialisation float,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_and<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0,
+                                simd_trait<float,cyme::sse,2>::register_type xmm1){
+        return simd_trait<float,cyme::sse,2>::register_type(_mm_and_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_and_ps(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the & operator between two registers
+     specialisation float,cyme::sse,4 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_and<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0,
+                                simd_trait<float,cyme::sse,4>::register_type xmm1){
+        return simd_trait<float,cyme::sse,4>::register_type(_mm_and_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_and_ps(xmm0.r1, xmm1.r1),
+                                                            _mm_and_ps(xmm0.r2, xmm1.r2),
+                                                            _mm_and_ps(xmm0.r3, xmm1.r3));
+    }
+
+    /**
+     Evaluate the the | operator between two registers
+     specialisation float,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_or<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0,
+                                simd_trait<float,cyme::sse,1>::register_type xmm1){
+        return  _mm_or_ps(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the | operator between two registers
+     specialisation float,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_or<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0,
+                               simd_trait<float,cyme::sse,2>::register_type xmm1){
+        return simd_trait<float,cyme::sse,2>::register_type(_mm_or_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_or_ps(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the | operator between two registers
+     specialisation double,cyme::sse,4 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_or<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0,
+                               simd_trait<float,cyme::sse,4>::register_type xmm1){
+        return simd_trait<float,cyme::sse,4>::register_type(_mm_or_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_or_ps(xmm0.r1, xmm1.r1),
+                                                            _mm_or_ps(xmm0.r2, xmm1.r2),
+                                                            _mm_or_ps(xmm0.r3, xmm1.r3));
+    }
+
+    /**
+     Evaluate the the andnot operator between two registers
+     specialisation float,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,1>::register_type
+    _mm_andnot<float,cyme::sse,1> (simd_trait<float,cyme::sse,1>::register_type xmm0,
+                                   simd_trait<float,cyme::sse,1>::register_type xmm1){
+        return  _mm_andnot_ps(xmm0, xmm1);
+    }
+
+    /**
+     Evaluate the the andnot operator between two registers
+     specialisation float,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,2>::register_type
+    _mm_andnot<float,cyme::sse,2> (simd_trait<float,cyme::sse,2>::register_type xmm0,
+                               simd_trait<float,cyme::sse,2>::register_type xmm1){
+        return simd_trait<float,cyme::sse,2>::register_type(_mm_andnot_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_andnot_ps(xmm0.r1, xmm1.r1));
+    }
+
+    /**
+     Evaluate the the andnot operator between two registers
+     specialisation double,cyme::sse,4 regs
+     */
+    template<>
+    forceinline simd_trait<float,cyme::sse,4>::register_type
+    _mm_andnot<float,cyme::sse,4> (simd_trait<float,cyme::sse,4>::register_type xmm0,
+                               simd_trait<float,cyme::sse,4>::register_type xmm1){
+        return simd_trait<float,cyme::sse,4>::register_type(_mm_andnot_ps(xmm0.r0, xmm1.r0),
+                                                            _mm_andnot_ps(xmm0.r1, xmm1.r1),
+                                                            _mm_andnot_ps(xmm0.r2, xmm1.r2),
+                                                            _mm_andnot_ps(xmm0.r3, xmm1.r3));
+    }
+
 #ifdef __INTEL_COMPILER
     /**
         Compute the exponential value of e raised to the power of packed single-precision (32-bit)
@@ -3015,7 +3236,7 @@ namespace cyme{
      }
 
     /**
-      Evaluate the the && operator between two registers
+      Evaluate the the & operator between two registers
       specialisation int,cyme::sse,1 regs
      */
      template<>
@@ -3026,7 +3247,7 @@ namespace cyme{
      }
 
      /**
-      Evaluate the the && operator between two registers
+      Evaluate the the & operator between two registers
       specialisation double,cyme::sse,2 regs
      */
      template<>
@@ -3038,7 +3259,7 @@ namespace cyme{
      }
 
      /**
-      Evaluate the the && operator between two registers
+      Evaluate the the & operator between two registers
       specialisation double,cyme::sse,4 regs
      */
      template<>

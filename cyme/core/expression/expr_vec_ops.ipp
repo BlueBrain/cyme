@@ -197,15 +197,12 @@ namespace cyme{
     }
 
     /**
-    * bitwise logic operator and,  a && b
-    * the node a and b can not be necessarely of the same type (mandelbroat example)
-    * where we have: [ |z| < 4. && n < 255 ], z is a vec instantiated with double whereas
-    * n is instantiated with int
+    * bitwise logic operator and,  a & b
     */
-    template<class T1, class T2, cyme::simd O, int N, class R1, class R2>
-    vec<int,O, N,vec_and<T1,T2,O,N,R1,R2> >
-    forceinline operator &&(vec<T1,O,N,R1> const& a, vec<T2,O,N,R2> const& b){
-        return vec<int,O,N,vec_and<T1,T2,O,N,R1,R2> >(vec_and<T1,T2,O,N,R1,R2>(a.rep(),b.rep()));
+    template<class T, cyme::simd O, int N, class R1, class R2>
+    forceinline vec<T,O,N,vec_and<T,O,N,R1,R2> >
+    operator &(vec<T,O,N,R1> const& a, vec<T,O,N,R2> const& b){
+        return vec<T,O,N,vec_and<T,O,N,R1,R2> >(vec_and<T,O,N,R1,R2>(a.rep(),b.rep()));
     }
 
     /**

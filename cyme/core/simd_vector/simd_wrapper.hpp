@@ -164,11 +164,20 @@ namespace cyme{
     forceinline typename simd_trait<T,O,N>::register_type _mm_eq(typename simd_trait<T,O,N>::register_type xmm0,
                                                                  typename simd_trait<T,O,N>::register_type xmm1);
 
-
-    /** Free function (wrapper) to bitwise xmm0 && xmm1 */
+    /** Free function (wrapper) to bitwise xmm0 & xmm1 */
     template<class T, cyme::simd O, int N>
-    forceinline typename simd_trait<int,O,N>::register_type _mm_and(typename simd_trait<T,O,N>::register_type xmm0,
-                                                                    typename simd_trait<T,O,N>::register_type xmm1);
+    forceinline typename simd_trait<T,O,N>::register_type _mm_and(typename simd_trait<T,O,N>::register_type xmm0,
+                                                                  typename simd_trait<T,O,N>::register_type xmm1);
+
+    /** Free function (wrapper) to bitwise xmm0 | xmm1 */
+    template<class T, cyme::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_or(typename simd_trait<T,O,N>::register_type xmm0,
+                                                                 typename simd_trait<T,O,N>::register_type xmm1);
+
+    /** Free function (wrapper) to bitwise xmm0 &! xmm1 */
+    template<class T, cyme::simd O, int N>
+    forceinline typename simd_trait<T,O,N>::register_type _mm_andnot(typename simd_trait<T,O,N>::register_type xmm0,
+                                                                     typename simd_trait<T,O,N>::register_type xmm1);
 
 #ifdef __FMA__ // This macro is a compiler one
     /** Free function (wrapper) for FMA between three registers, a*b+c */
