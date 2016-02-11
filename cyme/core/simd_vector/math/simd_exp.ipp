@@ -67,7 +67,13 @@ namespace cyme{
          \endcode
          We get k so easy y.  e^y simply calculates with the approximation
          2^k use the internal representation of the floating point number
-    */
+     
+        working range:
+            x > exp_limits<T>::exp_limits() : +inf
+            x < exp_limits<T>::exp_limits() : -inf
+            x == 0                          : 1.0
+            x == NaN                        : NaN
+     */
     template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_exp>::value,
              class Solver = Remez_exp<T,O,N,n> > // Remez, series ...
     struct cyme_exp{
@@ -98,9 +104,9 @@ namespace cyme{
             p = twok<T,O,N>(k);
             /* e^x = 2^k * e^y */
             x *= p;
-            x &= mask0; // lower than -700 becomes 0
-            mask2 &= ~mask1; // larger than 700 becomes +inf
-            x |= mask2;  // larger than 700 becomes +inf
+            x &= mask0; // lower than -max_range becomes 0
+            mask2 &= ~mask1; // larger than max_range becomes +inf, step1
+            x |= mask2;  // larger than max_range becomes +inf, step2
             return x;
         }
     };
