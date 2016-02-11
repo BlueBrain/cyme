@@ -140,8 +140,8 @@ namespace cyme {
                             > generic_test_types;
 
     typedef boost::mpl::list<
-                          //      data<float,14,cyme::AoS>,
-                          //      data<float,14,cyme::AoSoA>,
+                                data<float,14,cyme::AoS>,
+                                data<float,14,cyme::AoSoA>,
                                 data<double,14,cyme::AoS>,
                                 data<double,14,cyme::AoSoA>
                             > floating_point_test_types;
