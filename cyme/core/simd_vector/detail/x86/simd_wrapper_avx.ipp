@@ -3219,7 +3219,7 @@ namespace cyme{
     forceinline simd_trait<float,cyme::avx,4>::register_type
     _mm_or<float,cyme::avx,4> (simd_trait<float,cyme::avx,4>::register_type xmm0,
                                simd_trait<float,cyme::avx,4>::register_type xmm1){
-        return simd_trait<float,cyme::avx,4>::register_type(_mm256_or_pd(xmm0.r0,xmm1.r0),
+        return simd_trait<float,cyme::avx,4>::register_type(_mm256_or_ps(xmm0.r0,xmm1.r0),
                                                             _mm256_or_ps(xmm0.r1,xmm1.r1),
                                                             _mm256_or_ps(xmm0.r2,xmm1.r2),
                                                             _mm256_or_ps(xmm0.r3,xmm1.r3));
@@ -3256,7 +3256,7 @@ namespace cyme{
     forceinline simd_trait<float,cyme::avx,4>::register_type
     _mm_andnot<float,cyme::avx,4> (simd_trait<float,cyme::avx,4>::register_type xmm0){
         __m256 mask = _mm256_castsi256_ps(_mm256_set1_epi32(0xffffffff));
-        return simd_trait<float,cyme::avx,4>::register_type(_mm256_andnot_pd(xmm0.r0,mask),
+        return simd_trait<float,cyme::avx,4>::register_type(_mm256_andnot_ps(xmm0.r0,mask),
                                                             _mm256_andnot_ps(xmm0.r1,mask),
                                                             _mm256_andnot_ps(xmm0.r2,mask),
                                                             _mm256_andnot_ps(xmm0.r3,mask));

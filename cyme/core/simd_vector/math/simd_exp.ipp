@@ -27,6 +27,7 @@
 #ifndef CYME_SIMD_EXP_IPP
 #define CYME_SIMD_EXP_IPP
 
+#include <limits>
 #include "cyme/core/simd_vector/math/detail/horner.ipp"
 #include "cyme/core/simd_vector/math/detail/coeff_exp.ipp"
 
@@ -67,7 +68,7 @@ namespace cyme{
          \endcode
          We get k so easy y.  e^y simply calculates with the approximation
          2^k use the internal representation of the floating point number
-     
+
         working range:
             x > exp_limits<T>::exp_limits() : +inf
             x < exp_limits<T>::exp_limits() : -inf

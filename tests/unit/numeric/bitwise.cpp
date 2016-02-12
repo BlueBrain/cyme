@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_and_operations, T, generic_test_types) {
     u.n=-1;
     // for the test only
 
-    double tmp = rand();
+    double tmp = 1;
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(tmp);
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> mask_1(u.d);
     cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> mask_0(0.);
