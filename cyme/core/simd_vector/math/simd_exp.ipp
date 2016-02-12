@@ -27,6 +27,7 @@
 #ifndef CYME_SIMD_EXP_IPP
 #define CYME_SIMD_EXP_IPP
 
+#include <limits>
 #include "cyme/core/simd_vector/math/detail/horner.ipp"
 #include "cyme/core/simd_vector/math/detail/coeff_exp.ipp"
 
@@ -38,6 +39,20 @@ namespace cyme{
         static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> const& a){
             return helper_horner<T,O,N,coeff_remez_exp,n>::horner(a);
         }
+    };
+
+    /** range for the exp, exponent*log(2) **/
+    template<class T>
+    struct exp_limits{};
+
+    template<>
+    struct exp_limits<double>{
+        static inline  double max_range()  { return 709.089565713;}
+    };
+
+    template<>
+    struct exp_limits<float>{
+        static inline  float max_range() { return 88.0296919311;}
     };
 
     /** Implementation of the exp,the algorithm is based on e^x = 2^k e^y
@@ -53,11 +68,21 @@ namespace cyme{
          \endcode
          We get k so easy y.  e^y simply calculates with the approximation
          2^k use the internal representation of the floating point number
-    */
+
+        working range:
+            x > exp_limits<T>::exp_limits() : +inf
+            x < exp_limits<T>::exp_limits() : -inf
+            x == 0                          : 1.0
+            x == NaN                        : NaN
+     */
     template<class T, cyme::simd O, int N,std::size_t n = poly_order<T,coeff_remez_exp>::value,
              class Solver = Remez_exp<T,O,N,n> > // Remez, series ...
     struct cyme_exp{
         static forceinline vec_simd<T,O,N> exp(vec_simd<T,O,N> x){
+            vec_simd<T,O,N> mask0(~(fabs(x) > vec_simd<T,O,N>(exp_limits<T>::max_range()))); // mask for the boundary
+            vec_simd<T,O,N> mask1(x < vec_simd<T,O,N>(exp_limits<T>::max_range()));  // mask for the boundary
+            vec_simd<T,O,N> mask2(std::numeric_limits<T>::infinity());
+
             /* calculate k,  k = (int)floor(a); p = (float)k; */
             vec_simd<T,O,N>   log2e(1.4426950408889634073599);
             vec_simd<T,O,N>   y(x*log2e);
@@ -80,6 +105,9 @@ namespace cyme{
             p = twok<T,O,N>(k);
             /* e^x = 2^k * e^y */
             x *= p;
+            x &= mask0; // lower than -max_range becomes 0
+            mask2 &= ~mask1; // larger than max_range becomes +inf, step1
+            x |= mask2;  // larger than max_range becomes +inf, step2
             return x;
         }
     };

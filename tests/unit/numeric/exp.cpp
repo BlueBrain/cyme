@@ -18,6 +18,7 @@
  * License along with this library.
  */
 
+#include <limits>
 #include <tests/unit/test_header.hpp>
 #include "cyme/math/math.h"
 
@@ -76,6 +77,104 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp_comparison_serial, T, floating_point_test_
           BOOST_REQUIRE_CLOSE( a[i], sa[i], 0.001);
     }
 }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_boundary, T, floating_point_test_types) {
+    TYPE b[NN] __attribute__((aligned(64)));
+    TYPE res[NN] __attribute__((aligned(64)));
+
+    {
+
+        for(size_t i=0; i<NN; ++i)
+            b[i] = std::numeric_limits<TYPE>::signaling_NaN();
+
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va;
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+
+        va = exp(vb);
+        va.store(res);
+
+        for(size_t i=0; i<NN; ++i)
+            BOOST_CHECK( std::isnan(res[i]));
+
+        for(size_t i=0; i<NN; ++i){
+            b[i] = 0;
+        }
+    }
+
+    {
+        for(size_t i=0; i<NN; ++i)
+            b[i] = 0;
+
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va;
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+
+        va = exp(vb);
+        va.store(res);
+
+        for(size_t i=0; i<NN; ++i)
+            BOOST_CHECK(res[i] == 1);
+    }
+
+    {
+        for(size_t i=0; i<NN; ++i)
+            b[i] = std::numeric_limits<TYPE>::infinity();
+
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va;
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+
+        va = exp(vb);
+        va.store(res);
+
+        for(size_t i=0; i<NN; ++i)
+            BOOST_CHECK_EQUAL(res[i], std::numeric_limits<TYPE>::infinity());
+    }
+
+    {
+        for(size_t i=0; i<NN; ++i)
+            b[i] = -std::numeric_limits<TYPE>::infinity();
+
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va;
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+
+        va = exp(vb);
+        va.store(res);
+
+        for(size_t i=0; i<NN; ++i)
+            BOOST_CHECK_EQUAL(res[i], 0);
+    }
+
+
+    {
+        for(size_t i=0; i<NN; ++i)
+            b[i] = -1000;
+
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va;
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+
+        va = exp(vb);
+        va.store(res);
+
+        for(size_t i=0; i<NN; ++i)
+            BOOST_CHECK_EQUAL(res[i], 0);
+    }
+
+    {
+        for(size_t i=0; i<NN; ++i)
+            b[i] = 1000;
+
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va;
+        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+
+        va = exp(vb);
+        va.store(res);
+
+        for(size_t i=0; i<NN; ++i)
+            BOOST_CHECK_EQUAL(res[i], std::numeric_limits<TYPE>::infinity());
+    }
+
+}
+
+
 
 #undef NN
 #undef TYPE
