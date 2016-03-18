@@ -54,6 +54,8 @@ as the operator /= call the system division and not Newton-Raphson
 Release 1.5.0
 - Merge rvec and wvec into vec
 - fix bugs in the exponential all backends
+- boundary limite for the exp with the new corresponding wrappers for integer manipulation
+- Prepare work for the next release !
 
 Release 1.4.0
 
