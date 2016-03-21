@@ -11,7 +11,11 @@ function(compiler_flag testing_ techno_ test_ unroll_)
 
      CYME_TECH_MATCH(avx ${techno_})
      IF (CYME_TRUE)
-         test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" "-mavx" "avx" ${unroll_} ${test_})
+         if(CYME_AVX2_FOUND)
+             test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" "-mavx2" "avx2" ${unroll_} ${test_})
+         else()
+             test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" "-mavx" "avx" ${unroll_} ${test_})
+         endif()
      endif ()
 
      CYME_TECH_MATCH(neon ${techno_})
