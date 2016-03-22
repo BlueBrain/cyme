@@ -562,6 +562,10 @@ namespace cyme{
                                                              _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r3)));
     }
 
+    typedef long long int v4int __attribute((vector_size(32)));
+    typedef long long int v2int __attribute((vector_size(16)));
+
+
     /**
       Compute 2^k packed integer (64-bit) elements in xmm0 to packed double-precision (64-bit)
      floating-point elements, and store the results in dst.
@@ -570,6 +574,31 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::avx,1>::register_type
     _mm_twok<double,cyme::avx,1>(simd_trait<int,cyme::avx,1>::register_type xmm0){
+/*
+        simd_trait<int,cyme::avx,1>::register_type xmm0c = xmm0;
+        v4int v3 = xmm0c;
+        std::cout << "original xmm0 " << std::hex << v3[0] << " " << v3[1] << " " << v3[2] << " " << v3[3] << std::endl;
+        __m128i imm0 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_add_epi32(_mm256_castsi256_si128(xmm0c),_mm_set1_epi32(1023)),20),
+                                         _MM_SHUFFLE(1,3,0,2));
+        v2int toto = imm0;
+       std::cout << "intermediate m128i " << toto[0] << " " << toto[1] << " " << toto[2] << " " << toto[3] << std::endl; 
+        __m128i imm1 =  _mm_slli_epi64(imm0,32);
+        imm0 =  _mm_srli_epi64(imm0,32); //mask will be slower because mov + broadcast + and, I need to mask 6 instructions
+        imm0 =  _mm_slli_epi64(imm0,32);
+        xmm0c =   _mm256_insertf128_si256(xmm0c, imm0,0);
+        xmm0c =   _mm256_insertf128_si256(xmm0c, imm1,1);
+        v4int v2 = xmm0c;
+        std::cout << "originalres  xmm0 " << std::hex << v2[0] << " " << v2[1] << " " << v2[2] << " " << v2[3] << std::endl;
+*/
+        #ifdef __AVX2__
+        __m256i permutation = _mm256_setr_epi32(0,4,1,6,2,5,3,7);
+        xmm0 = _mm256_permutevar8x32_epi32(xmm0,permutation);
+        xmm0 = _mm256_add_epi64(xmm0,_mm256_set1_epi64x(1023));
+        xmm0 = _mm256_slli_epi64(xmm0,52); 
+//      v4int v0 = xmm0;
+//      std::cout << "apres " << std::hex << v0[0] << " " << v0[1] << " " << v0[2] << " " << v0[3] << std::endl;
+        return  _mm256_castsi256_pd(xmm0);
+        #else
         // ORIGINAL
         // ((int + 127) << 23) <=> int to float
         __m128i imm0 = _mm_shuffle_epi32(_mm_slli_epi32(_mm_add_epi32(_mm256_castsi256_si128(xmm0),_mm_set1_epi32(1023)),20),
@@ -583,6 +612,7 @@ namespace cyme{
         // TUNE VERSION, ok if |x| < 89
         // return _mm256_cvtps_pd(_mm_castsi128_ps(_mm_shuffle_epi32(_mm_slli_epi32(
         //          _mm_add_epi32(_mm256_castsi256_si128(xmm0), _mm_set1_epi32(127)), 23), _MM_SHUFFLE(1,3,0,2))));
+        #endif
     }
 
     /**
@@ -593,6 +623,17 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::avx,2>::register_type
     _mm_twok<double,cyme::avx,2>(simd_trait<int,cyme::avx,2>::register_type xmm0){
+    #ifdef __AVX2__
+        __m256i permutation = _mm256_setr_epi32(0,4,1,6,2,5,3,7);
+        xmm0.r0 = _mm256_permutevar8x32_epi32(xmm0.r0,permutation);
+        xmm0.r1 = _mm256_permutevar8x32_epi32(xmm0.r1,permutation);
+        xmm0.r0 = _mm256_add_epi64(xmm0.r0,_mm256_set1_epi64x(1023));
+        xmm0.r1 = _mm256_add_epi64(xmm0.r1,_mm256_set1_epi64x(1023));
+        xmm0.r0 = _mm256_slli_epi64(xmm0.r0,52); 
+        xmm0.r1 = _mm256_slli_epi64(xmm0.r1,52); 
+        return simd_trait<double,cyme::avx,2>::register_type(_mm256_castsi256_pd(xmm0.r0),
+                                                             _mm256_castsi256_pd(xmm0.r1));
+    #else
         __m128i imm0_r0 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r0), _mm_set1_epi32(1023));
         __m128i imm0_r1 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r1), _mm_set1_epi32(1023));
 
@@ -618,6 +659,7 @@ namespace cyme{
 
         return simd_trait<double,cyme::avx,2>::register_type(_mm256_castsi256_pd(xmm0.r0),
                                                              _mm256_castsi256_pd(xmm0.r1));
+    #endif
     }
 
     /**
@@ -628,6 +670,25 @@ namespace cyme{
     template<>
     forceinline simd_trait<double,cyme::avx,4>::register_type
     _mm_twok<double,cyme::avx,4>(simd_trait<int,cyme::avx,4>::register_type xmm0){
+    #ifdef __AVX2__
+        __m256i permutation = _mm256_setr_epi32(0,4,1,6,2,5,3,7);
+        xmm0.r0 = _mm256_permutevar8x32_epi32(xmm0.r0,permutation);
+        xmm0.r1 = _mm256_permutevar8x32_epi32(xmm0.r1,permutation);
+        xmm0.r2 = _mm256_permutevar8x32_epi32(xmm0.r2,permutation);
+        xmm0.r3 = _mm256_permutevar8x32_epi32(xmm0.r3,permutation);
+        xmm0.r0 = _mm256_add_epi64(xmm0.r0,_mm256_set1_epi64x(1023));
+        xmm0.r1 = _mm256_add_epi64(xmm0.r1,_mm256_set1_epi64x(1023));
+        xmm0.r2 = _mm256_add_epi64(xmm0.r2,_mm256_set1_epi64x(1023));
+        xmm0.r3 = _mm256_add_epi64(xmm0.r3,_mm256_set1_epi64x(1023));
+        xmm0.r0 = _mm256_slli_epi64(xmm0.r0,52); 
+        xmm0.r1 = _mm256_slli_epi64(xmm0.r1,52); 
+        xmm0.r2 = _mm256_slli_epi64(xmm0.r2,52); 
+        xmm0.r3 = _mm256_slli_epi64(xmm0.r3,52); 
+        return simd_trait<double,cyme::avx,4>::register_type(_mm256_castsi256_pd(xmm0.r0),
+                                                             _mm256_castsi256_pd(xmm0.r1),
+                                                             _mm256_castsi256_pd(xmm0.r2),
+                                                             _mm256_castsi256_pd(xmm0.r3));
+    #else
         __m128i imm0_r0 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r0),_mm_set1_epi32(1023));
         __m128i imm0_r1 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r1),_mm_set1_epi32(1023));
         __m128i imm0_r2 = _mm_add_epi32(_mm256_castsi256_si128(xmm0.r2),_mm_set1_epi32(1023));
@@ -671,6 +732,7 @@ namespace cyme{
                                                              _mm256_castsi256_pd(xmm0.r1),
                                                              _mm256_castsi256_pd(xmm0.r2),
                                                              _mm256_castsi256_pd(xmm0.r3));
+     #endif
     }
 
     /**
