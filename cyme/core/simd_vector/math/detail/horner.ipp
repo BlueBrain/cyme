@@ -33,33 +33,35 @@
 #include "cyme/core/simd_vector/math/detail/coeff_log.ipp"
 #include "cyme/core/simd_vector/math/detail/coeff_sin_cos.ipp"
 
-namespace cyme{
+namespace cyme {
 
-    /** Implementation of a polynomial computation using Horner's method
+/** Implementation of a polynomial computation using Horner's method
 
-    (http://en.wikipedia.org/wiki/Horner's_method)
-     The template parameter C represents the coefficients described (log or exp coeff). This function is called
-     into simd_log.hpp or simd_exp.log with the needed coefficient.
-     */
-    template<class T, cyme::simd O, int N, template <typename,std::size_t> class C, std::size_t n>
-    struct helper_horner{
-        static forceinline vec_simd<T,O,N> horner(vec_simd<T,O,N> const& a){
+(http://en.wikipedia.org/wiki/Horner's_method)
+ The template parameter C represents the coefficients described (log or exp coeff). This function is called
+ into simd_log.hpp or simd_exp.log with the needed coefficient.
+ */
+template <class T, cyme::simd O, int N, template <typename, std::size_t> class C, std::size_t n>
+struct helper_horner {
+    static forceinline vec_simd<T, O, N> horner(vec_simd<T, O, N> const &a) {
 #ifdef __FMA__
-            return muladd(helper_horner<T,O,N,C,n-1>::horner(a),a,vec_simd<T,O,N>(C<T,poly_order<T,C>::value-n>::coeff()));
+        return muladd(helper_horner<T, O, N, C, n - 1>::horner(a), a,
+                      vec_simd<T, O, N>(C<T, poly_order<T, C>::value - n>::coeff()));
 #else
-            return vec_simd<T,O,N>(C<T,poly_order<T,C>::value-n>::coeff()) + helper_horner<T,O,N,C,n-1>::horner(a)*a;
+        return vec_simd<T, O, N>(C<T, poly_order<T, C>::value - n>::coeff()) +
+               helper_horner<T, O, N, C, n - 1>::horner(a) * a;
 #endif
-        }
-    };
+    }
+};
 
-    /** Implementation of the polynomial computation recursive template, final specialization */
-    template<class T, cyme::simd O, int N, template <typename,std::size_t> class C>
-    struct helper_horner<T,O,N,C,0>{
-        static forceinline vec_simd<T,O,N> horner(vec_simd<T,O,N> const&){
-            return vec_simd<T,O,N>(C<T,poly_order<T,C>::value>::coeff());
-        }
-    };
+/** Implementation of the polynomial computation recursive template, final specialization */
+template <class T, cyme::simd O, int N, template <typename, std::size_t> class C>
+struct helper_horner<T, O, N, C, 0> {
+    static forceinline vec_simd<T, O, N> horner(vec_simd<T, O, N> const &) {
+        return vec_simd<T, O, N>(C<T, poly_order<T, C>::value>::coeff());
+    }
+};
 
-} //end namespace
+} // end namespace
 
 #endif

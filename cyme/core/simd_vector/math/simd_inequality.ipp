@@ -28,30 +28,28 @@
 #ifndef SIMD_INEQUALITY_IPP
 #define SIMD_INEQUALITY_IPP
 
-namespace cyme{
+namespace cyme {
 
-    /* create a new vector that contains the results of the quality == */
-    template<class T,cyme::simd O, int N>
-    vec_simd<T,O,N> operator== (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(_mm_eq<T,O,N>(lhs.xmm,rhs.xmm));
-        return nrv;
-    }
+/* create a new vector that contains the results of the quality == */
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> operator==(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(_mm_eq<T, O, N>(lhs.xmm, rhs.xmm));
+    return nrv;
+}
 
-    /* create a new vector that contains the results of the inequality < */
-    template<class T,cyme::simd O, int N>
-    vec_simd<T,O,N> operator< (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(_mm_lt<T,O,N>(lhs.xmm,rhs.xmm));
-        return nrv;
-    }
+/* create a new vector that contains the results of the inequality < */
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> operator<(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(_mm_lt<T, O, N>(lhs.xmm, rhs.xmm));
+    return nrv;
+}
 
-    /* create a new vector that contains the results of the inequality > */
-    template<class T,cyme::simd O, int N>
-    vec_simd<T,O,N> operator> (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(_mm_gt<T,O,N>(lhs.xmm,rhs.xmm));
-        return nrv;
-    }
-
+/* create a new vector that contains the results of the inequality > */
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> operator>(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(_mm_gt<T, O, N>(lhs.xmm, rhs.xmm));
+    return nrv;
+}
 }
 
 #endif
-

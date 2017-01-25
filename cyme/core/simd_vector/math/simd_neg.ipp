@@ -27,15 +27,14 @@
 #ifndef CYME_SIMD_NEG_IPP
 #define CYME_SIMD_NEG_IPP
 
-namespace cyme{
+namespace cyme {
 
-    /** Implements negate operator for cyme::vec_simd */
-    template<class T,cyme::simd O,int N>
-    forceinline vec_simd<T,O,N> neg(vec_simd<T,O,N> const& rhs){
-        vec_simd<T,O,N> nrv(rhs);
-        nrv.neg();
-        return nrv;
-    }
+/** Implements negate operator for cyme::vec_simd */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> neg(vec_simd<T, O, N> const &rhs) {
+    vec_simd<T, O, N> nrv(rhs);
+    nrv.neg();
+    return nrv;
+}
 }
 #endif
-

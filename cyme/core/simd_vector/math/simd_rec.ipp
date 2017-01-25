@@ -27,16 +27,15 @@
 #ifndef CYME_SIMD_REC_IPP
 #define CYME_SIMD_REC_IPP
 
-namespace cyme{
+namespace cyme {
 
-    /** free function thatcall the reciprocal for the Newton-Raphson division */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> rec(vec_simd<T,O,N> const& rhs){
-        vec_simd<T,O,N> nrv;
-        nrv.xmm = _mm_rec<T,O,N>(rhs.xmm);
-        return nrv;
-    }
-} //end namespace
+/** free function thatcall the reciprocal for the Newton-Raphson division */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> rec(vec_simd<T, O, N> const &rhs) {
+    vec_simd<T, O, N> nrv;
+    nrv.xmm = _mm_rec<T, O, N>(rhs.xmm);
+    return nrv;
+}
+} // end namespace
 
 #endif
-

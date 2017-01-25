@@ -27,16 +27,15 @@
 #ifndef CYME_SIMD_RSQRT_IPP
 #define CYME_SIMD_RSQRT_IPP
 
-namespace cyme{
+namespace cyme {
 
-    /** free function that call thei inverse sqrt reciprocal for the Newton-Raphson sqrt */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> recsqrt(vec_simd<T,O,N> const& rhs){
-        vec_simd<T,O,N> nrv;
-        nrv.xmm = _mm_rsqrt<T,O,N>(rhs.xmm);
-        return nrv;
-    }
-} //end namespace
+/** free function that call thei inverse sqrt reciprocal for the Newton-Raphson sqrt */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> recsqrt(vec_simd<T, O, N> const &rhs) {
+    vec_simd<T, O, N> nrv;
+    nrv.xmm = _mm_rsqrt<T, O, N>(rhs.xmm);
+    return nrv;
+}
+} // end namespace
 
 #endif
-

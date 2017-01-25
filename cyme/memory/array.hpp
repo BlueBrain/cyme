@@ -30,8 +30,7 @@
 #include "cyme/memory/detail/array_helper.ipp" // copy of boost::array + align
 #include "cyme/memory/detail/storage.hpp"
 
-namespace cyme{
-
+namespace cyme {
 
 /** cyme::array container based on the boost::array.
 *
@@ -48,165 +47,136 @@ namespace cyme{
 *  a basic array named cyme::storage (or storage_type), the size of storage
 *  depends of the value_size and the requested SIMD technology.
 */
-template<class T, std::size_t N, cyme::order O> class array{};
+template <class T, std::size_t N, cyme::order O>
+class array {};
 
 /** Specialisation of the cyme::array for the AoS layout.  */
-template<class T, std::size_t N>
-class array<T,N,cyme::AoS>{
-public:
-    const static cyme::order       order_value = cyme::AoS;
-    typedef std::size_t            size_type;
+template <class T, std::size_t N>
+class array<T, N, cyme::AoS> {
+  public:
+    const static cyme::order order_value = cyme::AoS;
+    typedef std::size_t size_type;
     typedef typename T::value_type value_type;
-    typedef value_type&            reference;
-    typedef const value_type&      const_reference;
-    typedef cyme::storage<value_type,T::value_size,cyme::AoS>     storage_type;
-    typedef cyme::array_helper<storage_type,N>   base_type;
+    typedef value_type &reference;
+    typedef const value_type &const_reference;
+    typedef cyme::storage<value_type, T::value_size, cyme::AoS> storage_type;
+    typedef cyme::array_helper<storage_type, N> base_type;
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
 
     /** Default constructor, initialisation to zero */
-    explicit array(){
-        std::fill(data.begin(),data.end(),storage_type());
-    }
+    explicit array() { std::fill(data.begin(), data.end(), storage_type()); }
 
     /** Constructor, initialisation to given value */
-    array(value_type value){
-        std::fill(data.begin(),data.end(),storage_type(value));
-    }
+    array(value_type value) { std::fill(data.begin(), data.end(), storage_type(value)); }
 
     /** Return first iterator */
-    iterator begin(){
-        return data.begin();
-    }
+    iterator begin() { return data.begin(); }
 
     /** Return last iterator */
-    iterator end(){
-        return data.end();
-    }
+    iterator end() { return data.end(); }
 
     /** Return the storage_type needed for writing */
-    inline storage_type& operator [](size_type i){
-        return data[i];
-    }
+    inline storage_type &operator[](size_type i) { return data[i]; }
 
     /** Return the storage_type needed for reading */
-    const inline storage_type& operator [](size_type i) const{
-        return data[i];
-    }
+    const inline storage_type &operator[](size_type i) const { return data[i]; }
 
     /** Return the size of storage_type */
-    static inline size_type size_block() {
-        return T::value_size;
-    }
+    static inline size_type size_block() { return T::value_size; }
 
     /** Return the number of storage_type */
-    inline size_type size() {
-        return data.size();
-    }
+    inline size_type size() { return data.size(); }
 
     /** Return a needed element of particular storage_type - serial - write */
-    inline reference operator()(size_type i, size_type j){
-        BOOST_ASSERT_MSG( i < base_type::size(), "out of range: storage_type_v AoS i" );
-        BOOST_ASSERT_MSG( j < T::value_size, "out of range: storage_type_v AoS j" );
+    inline reference operator()(size_type i, size_type j) {
+        BOOST_ASSERT_MSG(i < base_type::size(), "out of range: storage_type_v AoS i");
+        BOOST_ASSERT_MSG(j < T::value_size, "out of range: storage_type_v AoS j");
         return data[i](j);
     }
 
     /** Return a needed element of particular storage_type - serial - read */
-    inline const_reference operator()(size_type i, size_type j) const{
-        BOOST_ASSERT_MSG( i < base_type::size(), "out of range: storage_type_v AoS i" );
-        BOOST_ASSERT_MSG( j < T::value_size, "out of range: storage_type_v AoS j" );
+    inline const_reference operator()(size_type i, size_type j) const {
+        BOOST_ASSERT_MSG(i < base_type::size(), "out of range: storage_type_v AoS i");
+        BOOST_ASSERT_MSG(j < T::value_size, "out of range: storage_type_v AoS j");
         return data[i](j);
     }
 
-private:
+  private:
     base_type data;
 };
 
 /** Specialisation of the cyme::array for the AoSoS layout.  */
-template<class T, std::size_t N>
-class array<T,N,cyme::AoSoA>{
-public:
-    const static cyme::order       order_value = cyme::AoSoA;
-    typedef std::size_t            size_type;
+template <class T, std::size_t N>
+class array<T, N, cyme::AoSoA> {
+  public:
+    const static cyme::order order_value = cyme::AoSoA;
+    typedef std::size_t size_type;
     typedef typename T::value_type value_type;
-    typedef value_type&            reference;
-    typedef const value_type&      const_reference;
+    typedef value_type &reference;
+    typedef const value_type &const_reference;
 
-    static const size_type offset =  cyme::unroll_factor::N
-                                    *cyme::trait_register<value_type,cyme::__GETSIMD__()>::size
-                                    /sizeof(value_type);
+    static const size_type offset =
+        cyme::unroll_factor::N * cyme::trait_register<value_type, cyme::__GETSIMD__()>::size / sizeof(value_type);
 
-    static const size_type storage_width = N/offset+1;
+    static const size_type storage_width = N / offset + 1;
 
-    typedef cyme::storage<value_type,offset*T::value_size,cyme::AoSoA> storage_type;
-    typedef cyme::array_helper<storage_type,storage_width> base_type;
+    typedef cyme::storage<value_type, offset * T::value_size, cyme::AoSoA> storage_type;
+    typedef cyme::array_helper<storage_type, storage_width> base_type;
 
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
 
     /** Default constructor, initialisation to zero */
-    explicit array(){
-        for(size_type i(0); i<storage_width; ++i)
+    explicit array() {
+        for (size_type i(0); i < storage_width; ++i)
             data[i] = storage_type(); // fill up to 0
     }
 
     /** Constructor, initialisation to given value */
-    array(value_type value){
-        for(size_type i(0); i<storage_width; ++i)
+    array(value_type value) {
+        for (size_type i(0); i < storage_width; ++i)
             data[i] = storage_type(value);
     }
 
     /** Return first iterator */
-    iterator begin(){
-        return data.begin();
-    }
+    iterator begin() { return data.begin(); }
 
     /** Return last iterator */
-    iterator end(){
-        return data.end();
-    }
+    iterator end() { return data.end(); }
 
     /** Return the storage_type needed for writing */
-    inline  storage_type& operator [](size_type i){
-        return data[i];
-    }
+    inline storage_type &operator[](size_type i) { return data[i]; }
 
     /** Return the storage_type needed for reading */
-    const inline  storage_type& operator [](size_type i) const{
-        return data[i];
-    }
+    const inline storage_type &operator[](size_type i) const { return data[i]; }
 
     /** Return the size of storage_type */
-    static inline size_type size_block() {
-        return T::value_size;
-    }
+    static inline size_type size_block() { return T::value_size; }
 
     /** Return the number of storage_type */
-    inline size_type size() {
-        return data.size();
-    }
+    inline size_type size() { return data.size(); }
 
     /** Return a needed element of perticular storage_type - serial - write */
-    inline reference operator()(size_type i, size_type j){
+    inline reference operator()(size_type i, size_type j) {
         // nothing on i as the original size is destroyed in the constructor
-        BOOST_ASSERT_MSG(j < T::value_size, "out of range: storage_type_v AoSoA j" );
+        BOOST_ASSERT_MSG(j < T::value_size, "out of range: storage_type_v AoSoA j");
         // Please tune me ! (does it exist an alternative to this ? ^_^
-        return data[(i*T::value_size+j)/(T::value_size*offset)](j*offset+i%offset);  // [..i..](..j..)
+        return data[(i * T::value_size + j) / (T::value_size * offset)](j * offset + i % offset); // [..i..](..j..)
     }
 
     /** Return a needed element of perticular storage_type - serial - read */
-    inline const_reference operator()(size_type i, size_type j) const{
+    inline const_reference operator()(size_type i, size_type j) const {
         // nothing on i as the original size is destroyed in the constructor
-        BOOST_ASSERT_MSG(j < T::value_size, "out of range: storage_type_v AoSoA j" );
+        BOOST_ASSERT_MSG(j < T::value_size, "out of range: storage_type_v AoSoA j");
         // Please tune me ! (does it exist an alternative to this ? ^_^
-        return data[(i*T::value_size+j)/(T::value_size*offset)](j*offset+i%offset);  // [..i..](..j..)
+        return data[(i * T::value_size + j) / (T::value_size * offset)](j * offset + i % offset); // [..i..](..j..)
     }
 
-private:
+  private:
     base_type data;
     size_type size_cyme;
 };
-
 }
 
 #endif

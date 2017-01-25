@@ -42,7 +42,7 @@ function(make_program main_ flag_ simd_ unroll_)
 endfunction(make_program)
 
 set(listunroll 1 2 4)
-set(listmain main_c test_print)
+set(listmain main_c test_print branching)
 
 foreach(test ${listmain})
     foreach(unroll ${listunroll})

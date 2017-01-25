@@ -27,24 +27,25 @@
 #ifndef CYME_SIMD_FMS_IPP
 #define CYME_SIMD_FMS_IPP
 
-namespace cyme{
+namespace cyme {
 
-    /** Implements fms function for cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> mulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(lhs);
-        nrv.ms(mhs,rhs);
-        return nrv;
-    }
+/** Implements fms function for cyme::vec_simd */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> mulsub(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &mhs,
+                                     const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(lhs);
+    nrv.ms(mhs, rhs);
+    return nrv;
+}
 
-    /** Implements negate fms function for cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> negatemulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(lhs);
-        nrv.nms(mhs,rhs);
-        return nrv;
-    }
-} //end namespace
+/** Implements negate fms function for cyme::vec_simd */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> negatemulsub(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &mhs,
+                                           const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(lhs);
+    nrv.nms(mhs, rhs);
+    return nrv;
+}
+} // end namespace
 
 #endif
-

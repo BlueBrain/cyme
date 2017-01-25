@@ -3,7 +3,7 @@
 
 #@remarks Copyright BBP/EPFL 2005-2014; All rights reserved
 
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.1)
 
 ########################################################################
 #
@@ -26,9 +26,11 @@ set(VERSION_ABI "1")
 ######################################################################
 set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 
+
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake
   ${PROJECT_SOURCE_DIR}/CMake/common)
 include(GitExternal)
+include(clang-format)#format
 
 # some common set up of two version
 if(COMMON_LIBRARY_TYPE MATCHES "STATIC")
@@ -54,6 +56,15 @@ option (CYME_TESTS "Build the CYME regression tests" ON)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_MIC_HOST "Check if MIC is install" OFF)
 option (CYME_TRIGO "Build trigo kernel" OFF)
+
+########################################################################
+#
+# COMPILER
+#
+########################################################################
+
+
+set (CMAKE_CXX_STANDARD 11)
 
 ########################################################################
 #

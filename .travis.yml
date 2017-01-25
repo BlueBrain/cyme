@@ -6,18 +6,23 @@
 # @author Tim Ewart
 #
 
+sudo: false
 language: cpp
 compiler:
-  - clang
   - gcc
-dist:
-  - trusty
-os:
-  - linux
+  - clang
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
+    - clang
+    - libboost-all-dev
 before_script:
-  - sudo apt-get -qq update
-  - sudo apt-get install libboost-all-dev cmake
-  - sudo apt-get install software-properties-common
   - mkdir build
   - cd build
   - cmake ..
@@ -27,6 +32,6 @@ script:
 notifications:
   email:
     recipients:
-      - timothee.ewart@epfl.ch
+      - timothee.ewart@gmail.com
     on_success: change
     on_failure: always

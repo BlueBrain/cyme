@@ -20,32 +20,26 @@
 
 #pragma once
 
-#include <vector>
 #include <sstream>
+#include <vector>
 
-template<typename T>
+template <typename T>
 struct name {
-    static const std::string print() {
-        return "unknown";
-    }
+    static const std::string print() { return "unknown"; }
 };
 
-template<>
+template <>
 struct name<float> {
-    static const std::string print() {
-        return "float";
-    }
+    static const std::string print() { return "float"; }
 };
 
-template<>
+template <>
 struct name<double> {
-    static const std::string print() {
-        return "double";
-    }
+    static const std::string print() { return "double"; }
 };
 
-template<typename T>
-struct name<cyme::vector<T, cyme::AoS> > {
+template <typename T>
+struct name<cyme::vector<T, cyme::AoS>> {
     static const std::string print() {
         std::stringstream s;
         s << "cyme::vector<" << name<T>::print() << ",\tAoS>";
@@ -53,8 +47,8 @@ struct name<cyme::vector<T, cyme::AoS> > {
     }
 };
 
-template<typename T>
-struct name<cyme::vector<T, cyme::AoSoA> > {
+template <typename T>
+struct name<cyme::vector<T, cyme::AoSoA>> {
     static const std::string print() {
         std::stringstream s;
         s << "cyme::vector<" << name<T>::print() << ",\tAoSoA>";
@@ -62,29 +56,27 @@ struct name<cyme::vector<T, cyme::AoSoA> > {
     }
 };
 
-template<class T>
-void average(std::vector<double> &v_time){
-        double sum = std::accumulate(v_time.begin(), v_time.end(), 0.0);
-        double mean = sum / v_time.size();
-        double sq_sum = std::inner_product(v_time.begin(), v_time.end(), v_time.begin(), 0.0);
-        double stdev = std::sqrt(sq_sum / v_time.size() - mean * mean);
-        std::cout << "\t" << name<T>::print()  << "\tmean " << mean << " [s], stdev " << stdev << std::endl;
+template <class T>
+void average(std::vector<double> &v_time) {
+    double sum = std::accumulate(v_time.begin(), v_time.end(), 0.0);
+    double mean = sum / v_time.size();
+    double sq_sum = std::inner_product(v_time.begin(), v_time.end(), v_time.begin(), 0.0);
+    double stdev = std::sqrt(sq_sum / v_time.size() - mean * mean);
+    std::cout << "\t" << name<T>::print() << "\tmean " << mean << " [s], stdev " << stdev << std::endl;
 }
 
-// wrapper around boost::chrono timers
+// wrapper around std::chrono timers
 class timer {
-    public:
-    typedef boost::chrono::duration<double> duration_type;
-    typedef boost::chrono::system_clock::time_point point_type;
-    void tic() {
-        start_ = boost::chrono::system_clock::now();
-    }
+  public:
+    typedef std::chrono::duration<double> duration_type;
+    typedef std::chrono::system_clock::time_point point_type;
+    void tic() { start_ = std::chrono::system_clock::now(); }
     double toc() {
-        sec_ = boost::chrono::system_clock::now() - start_;
+        sec_ = std::chrono::system_clock::now() - start_;
         return sec_.count();
     }
 
-    private:
+  private:
     point_type start_;
     duration_type sec_;
 };

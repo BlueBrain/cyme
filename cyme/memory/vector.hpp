@@ -31,7 +31,7 @@
 #include "cyme/memory/allocator.hpp"
 #include "cyme/memory/detail/storage.hpp"
 
-namespace cyme{
+namespace cyme {
 
 /** cyme::vector container based on the std::vector.
 *
@@ -49,180 +49,138 @@ namespace cyme{
 *  (or storage_type), the size of storage depends of the value_size and the
 *  requested SIMD technology.
 */
-    template<class T, cyme::order O> class vector{};
+template <class T, cyme::order O>
+class vector {};
 
 /** Specialisation of the cyme::vector for the AoS layout.  */
-    template<class T>
-    class vector<T,cyme::AoS>{
-    public:
-        const static cyme::order order_value = cyme::AoSoA;
-        typedef std::size_t size_type;
-        typedef typename    T::value_type value_type;
-        typedef value_type&                                                  reference;
-        typedef const value_type&                                            const_reference;
-        typedef cyme::storage<value_type,T::value_size,cyme::AoS>        storage_type;
-        typedef std::vector<storage_type, cyme::Allocator<storage_type> >  base_type;
-        typedef typename base_type::iterator iterator;
-        typedef typename base_type::const_iterator const_iterator;
+template <class T>
+class vector<T, cyme::AoS> {
+  public:
+    const static cyme::order order_value = cyme::AoSoA;
+    typedef std::size_t size_type;
+    typedef typename T::value_type value_type;
+    typedef value_type &reference;
+    typedef const value_type &const_reference;
+    typedef cyme::storage<value_type, T::value_size, cyme::AoS> storage_type;
+    typedef std::vector<storage_type, cyme::Allocator<storage_type>> base_type;
+    typedef typename base_type::iterator iterator;
+    typedef typename base_type::const_iterator const_iterator;
 
-        /** Default constructor, initialisation to given value or default value type */
-        vector(const size_t Size=1, value_type value=value_type())
-        :data(Size,value){
-        }
+    /** Default constructor, initialisation to given value or default value type */
+    vector(const size_t Size = 1, value_type value = value_type()) : data(Size, value) {}
 
-        /** Copy constructor */
-        vector(vector& v):data(v.size()){
-            std::copy(v.begin(),v.end(),begin());
-        }
+    /** Copy constructor */
+    vector(vector &v) : data(v.size()) { std::copy(v.begin(), v.end(), begin()); }
 
-        /** Resize data container */
-        void resize(size_type Size){
-            data.resize(Size);
-        }
+    /** Resize data container */
+    void resize(size_type Size) { data.resize(Size); }
 
-        /** Return first iterator */
-        iterator begin(){
-            return data.begin();
-        }
+    /** Return first iterator */
+    iterator begin() { return data.begin(); }
 
-        /** Return last iterator */
-        iterator end(){
-            return data.end();
-        }
+    /** Return last iterator */
+    iterator end() { return data.end(); }
 
-        /** Return the storage_type needed for writing */
-        inline storage_type& operator [](size_type i){
-            return data[i];
-        }
+    /** Return the storage_type needed for writing */
+    inline storage_type &operator[](size_type i) { return data[i]; }
 
-        /** Return the storage_type needed for reading */
-        const inline storage_type& operator [](size_type i) const{
-            return data[i];
-        }
+    /** Return the storage_type needed for reading */
+    const inline storage_type &operator[](size_type i) const { return data[i]; }
 
-        /** Return the size of storage_type */
-        static inline size_type size_block() {
-            return T::value_size;
-        }
+    /** Return the size of storage_type */
+    static inline size_type size_block() { return T::value_size; }
 
-        /** Return the number of storage_type */
-        inline size_type size() {
-            return data.size();
-        }
+    /** Return the number of storage_type */
+    inline size_type size() { return data.size(); }
 
-        /** Return a needed element of particular storage_type - serial - write */
-        inline reference operator()(size_type i, size_type j){
-            BOOST_ASSERT_MSG( i < data.size(), "out of range: block_v AoS i" );
-            BOOST_ASSERT_MSG( j < T::value_size, "out of range: block_v AoS j" );
-            return data[i](j);
-        }
+    /** Return a needed element of particular storage_type - serial - write */
+    inline reference operator()(size_type i, size_type j) {
+        BOOST_ASSERT_MSG(i < data.size(), "out of range: block_v AoS i");
+        BOOST_ASSERT_MSG(j < T::value_size, "out of range: block_v AoS j");
+        return data[i](j);
+    }
 
-        /** Return a needed element of particular storage_type - serial - read */
-        inline const_reference operator()(size_type i, size_type j) const{
-            BOOST_ASSERT_MSG( i < data.size(), "out of range: block_v AoS i" );
-            BOOST_ASSERT_MSG( j < T::value_size, "out of range: block_v AoS j" );
-            return data[i](j);
-        }
+    /** Return a needed element of particular storage_type - serial - read */
+    inline const_reference operator()(size_type i, size_type j) const {
+        BOOST_ASSERT_MSG(i < data.size(), "out of range: block_v AoS i");
+        BOOST_ASSERT_MSG(j < T::value_size, "out of range: block_v AoS j");
+        return data[i](j);
+    }
 
-    private:
-        base_type data;
-    };
-
+  private:
+    base_type data;
+};
 
 /** Specialisation of the cyme::vector for the AoSoA layout.  */
-    template<class T>
-    class vector<T,cyme::AoSoA>{
-    public:
-        const static cyme::order order_value = cyme::AoSoA;
-        typedef std::size_t size_type;
-        typedef typename    T::value_type value_type;
-        typedef value_type&                                               reference;
-        typedef const value_type&                                         const_reference;
+template <class T>
+class vector<T, cyme::AoSoA> {
+  public:
+    const static cyme::order order_value = cyme::AoSoA;
+    typedef std::size_t size_type;
+    typedef typename T::value_type value_type;
+    typedef value_type &reference;
+    typedef const value_type &const_reference;
 
-        static const size_type offset =  cyme::unroll_factor::N
-                                         *cyme::trait_register<value_type,cyme::__GETSIMD__()>::size
-                                         /sizeof(value_type);
+    static const size_type offset =
+        cyme::unroll_factor::N * cyme::trait_register<value_type, cyme::__GETSIMD__()>::size / sizeof(value_type);
 
-        static const size_type storage_width = offset*T::value_size;
+    static const size_type storage_width = offset * T::value_size;
 
-        typedef cyme::storage<value_type,storage_width,cyme::AoSoA>  storage_type;
-        typedef std::vector<
-        storage_type,
-        cyme::Allocator<storage_type>
-        > base_type;
-        typedef typename base_type::iterator iterator;
-        typedef typename base_type::const_iterator const_iterator;
+    typedef cyme::storage<value_type, storage_width, cyme::AoSoA> storage_type;
+    typedef std::vector<storage_type, cyme::Allocator<storage_type>> base_type;
+    typedef typename base_type::iterator iterator;
+    typedef typename base_type::const_iterator const_iterator;
 
-        /** Default constructor, initialisation to given value or default value type */
-        vector(const size_t Size=1  , value_type value=value_type()):data(Size/offset+1,value),size_cyme(Size){
-        }
+    /** Default constructor, initialisation to given value or default value type */
+    vector(const size_t Size = 1, value_type value = value_type()) : data(Size / offset + 1, value), size_cyme(Size) {}
 
-        /** Copy constructor */
-        vector(vector& v):data(v.size()),size_cyme(v.cyme_size()){
-            std::copy(v.begin(),v.end(),begin());
-        }
+    /** Copy constructor */
+    vector(vector &v) : data(v.size()), size_cyme(v.cyme_size()) { std::copy(v.begin(), v.end(), begin()); }
 
-        /** Resize data container */
-        void resize(size_type Size){
-            data.resize(Size/offset+1);
-        }
+    /** Resize data container */
+    void resize(size_type Size) { data.resize(Size / offset + 1); }
 
-        /** Return first iterator */
-        iterator begin(){
-            return data.begin();
-        }
+    /** Return first iterator */
+    iterator begin() { return data.begin(); }
 
-        /** Return last iterator */
-        iterator end(){
-            return data.end();
-        }
+    /** Return last iterator */
+    iterator end() { return data.end(); }
 
-        /** Return the storage_type needed for writing */
-        inline  storage_type& operator [](size_type i){
-            return data[i];
-        }
+    /** Return the storage_type needed for writing */
+    inline storage_type &operator[](size_type i) { return data[i]; }
 
-        /** Return the storage_type needed for reading */
-        const inline  storage_type& operator [](size_type i) const{
-            return data[i];
-        }
+    /** Return the storage_type needed for reading */
+    const inline storage_type &operator[](size_type i) const { return data[i]; }
 
-        /** Return the size of storage_type */
-        static inline size_type size_block() {
-            return T::value_size;
-        }
+    /** Return the size of storage_type */
+    static inline size_type size_block() { return T::value_size; }
 
-        /** Return the number of storage_type */
-        inline size_type size() {
-            return data.size();
-        }
+    /** Return the number of storage_type */
+    inline size_type size() { return data.size(); }
 
-        /** Return the AoSoA stride size */
-        inline size_type cyme_size() {
-            return size_cyme;
-        }
+    /** Return the AoSoA stride size */
+    inline size_type cyme_size() { return size_cyme; }
 
-        /** Return a needed element of perticular storage_type - serial - write */
-        inline reference operator()(size_type i, size_type j){
+    /** Return a needed element of perticular storage_type - serial - write */
+    inline reference operator()(size_type i, size_type j) {
         // nothing on i as the original size is destroyed in the constructor
-        BOOST_ASSERT_MSG(     j < T::value_size, "out of range: block_v AoSoA j" );
+        BOOST_ASSERT_MSG(j < T::value_size, "out of range: block_v AoSoA j");
         // Please tune me ! (does it exist an alternative to this ? ^_^
-        return data[(i*T::value_size+j)/(T::value_size*offset)](j*offset+i%offset);  // [..i..](..j..)
-        }
+        return data[(i * T::value_size + j) / (T::value_size * offset)](j * offset + i % offset); // [..i..](..j..)
+    }
 
-        /** Return a needed element of perticular storage_type - serial - read */
-        inline const_reference operator()(size_type i, size_type j) const{
+    /** Return a needed element of perticular storage_type - serial - read */
+    inline const_reference operator()(size_type i, size_type j) const {
         // nothing on i as the original size is destroyed in the constructor
-        BOOST_ASSERT_MSG(     j < T::value_size, "out of range: block_v AoSoA j" );
+        BOOST_ASSERT_MSG(j < T::value_size, "out of range: block_v AoSoA j");
         // Please tune me ! (does it exist an alternative to this ? ^_^
-        return data[(i*T::value_size+j)/(T::value_size*offset)](j*offset+i%offset);  // [..i..](..j..)
-        }
+        return data[(i * T::value_size + j) / (T::value_size * offset)](j * offset + i % offset); // [..i..](..j..)
+    }
 
-    private:
-        base_type data;
-        size_type size_cyme;
-    };
-
+  private:
+    base_type data;
+    size_type size_cyme;
+};
 }
 
 #endif

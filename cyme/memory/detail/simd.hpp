@@ -36,7 +36,7 @@
     Second "the memory" inside the memory directory. It contains the
     cyme container.
  */
-namespace cyme{
+namespace cyme {
 
 /**  Number of simd registers contained in the composite vector.
 *
@@ -45,23 +45,22 @@ namespace cyme{
 *  automatically by CMake.
 *
 */
-    struct unroll_factor{
-        const static int N = __CYME_UNROLL_VALUE__ ;
-    };
+struct unroll_factor {
+    const static int N = __CYME_UNROLL_VALUE__;
+};
 
 /**   Scatter operations (core-neuron specific)
 *
 *     Coreneuron does scatter reduction with usual operators
 */
-    enum scatter_op {eq,add,sub,mul,div};
-
+enum scatter_op { eq, add, sub, mul, div };
 
 /**   Simd technology type.
 *
 *  cyme::simd defines the simd technology for which the cyme code will be
 *  compiled. This is automatically detected by CMake at compile time.
 */
-    enum simd{sse, avx, neon, vmx, qpx, mic};
+enum simd { sse, avx, neon, vmx, qpx, mic };
 
 /**   Memory layout of composite vector.
 *
@@ -70,9 +69,9 @@ namespace cyme{
 *  whereas AoSoA (Array of Structures of Arrays) corresponds to packed simd
 *  layout.
 */
-    enum order{AoS=0, AoSoA=1};
+enum order { AoS = 0, AoSoA = 1 };
 
-    #define __GETSIMD__() __CYME_SIMD_VALUE__
+#define __GETSIMD__() __CYME_SIMD_VALUE__
 
 /** Size of simd registers and memory alignment.
 *
@@ -87,44 +86,44 @@ namespace cyme{
 *  even though their registers are 16 byte wide.
 *
 */
-    template<class T, cyme::simd O>
-    struct trait_register;
+template <class T, cyme::simd O>
+struct trait_register;
 
 /** Partial specialisation for sse technology.  */
-    template<class T>
-    struct trait_register<T,cyme::sse>{
-        const static size_t size=16;
-        const static size_t a=16;
-    };
+template <class T>
+struct trait_register<T, cyme::sse> {
+    const static size_t size = 16;
+    const static size_t a = 16;
+};
 
 /** Partial specialisation for arm technology. */
-    template<class T>
-    struct trait_register<T,cyme::neon>{
-	/*Filler for now. Will replace with actual ARM values*/
-        const static size_t size=16;
-        const static size_t a=16;
-    };
+template <class T>
+struct trait_register<T, cyme::neon> {
+    /*Filler for now. Will replace with actual ARM values*/
+    const static size_t size = 16;
+    const static size_t a = 16;
+};
 
 /** Partial specialisation for vmx technology. */
-    template<class T>
-    struct trait_register<T,cyme::vmx>{
-        const static size_t size=16;
-        const static size_t a=16;
-    };
+template <class T>
+struct trait_register<T, cyme::vmx> {
+    const static size_t size = 16;
+    const static size_t a = 16;
+};
 
 /** Partial specialisation for avx technology.  */
-    template<class T>
-    struct trait_register<T,cyme::avx>{
-        const static size_t size=32;
-        const static size_t a=32;
-    };
+template <class T>
+struct trait_register<T, cyme::avx> {
+    const static size_t size = 32;
+    const static size_t a = 32;
+};
 
 /** Partial specialisation for intel mic.  */
-    template<class T>
-    struct trait_register<T,cyme::mic>{
-        const static size_t size=64;
-        const static size_t a=64;
-    };
+template <class T>
+struct trait_register<T, cyme::mic> {
+    const static size_t size = 64;
+    const static size_t a = 64;
+};
 
 /**  Partial specialisation for qpx technology.
 *
@@ -134,39 +133,41 @@ namespace cyme{
 *  BG/Q does not support native 8 floats registers, so the memory must be
 *  aligned on 32 byte boundaries on even for floats
 */
-    template<>
-    struct trait_register<float,cyme::qpx>{
-        const static size_t size=16;
-        const static size_t a=32;
-    };
+template <>
+struct trait_register<float, cyme::qpx> {
+    const static size_t size = 16;
+    const static size_t a = 32;
+};
 
 /** Partial specialisation for qpx technology.  */
-    template<class T>
-    struct trait_register<T,cyme::qpx>{
-        const static size_t size=32;
-        const static size_t a=32;
-    };
+template <class T>
+struct trait_register<T, cyme::qpx> {
+    const static size_t size = 32;
+    const static size_t a = 32;
+};
 
 /** stride length for the asssociated iterator.
 *
 *   cyme::stride defines the length of the step to reach the next element of a
 *   structure inside a composite vector, as explained in the \ref tuto2 section.
 */
-    template<class T, order O>
-    struct stride;
+template <class T, order O>
+struct stride;
 
 /** Partial specialisation for AoS layout.  */
-    template<class T>
-    struct stride<T,cyme::AoS>{
-        static inline std::size_t helper_stride(){return 1;}
-    };
+template <class T>
+struct stride<T, cyme::AoS> {
+    static inline std::size_t helper_stride() { return 1; }
+};
 
 /** Partial specialisation for AoSoA layout.  */
-    template<class T>
-    struct stride<T,cyme::AoSoA>{
-        static inline std::size_t helper_stride(){return unroll_factor::N*trait_register<T,__GETSIMD__()>::size/sizeof(T);}
-    };
+template <class T>
+struct stride<T, cyme::AoSoA> {
+    static inline std::size_t helper_stride() {
+        return unroll_factor::N * trait_register<T, __GETSIMD__()>::size / sizeof(T);
+    }
+};
 
-} //end namespace
+} // end namespace
 
 #endif
