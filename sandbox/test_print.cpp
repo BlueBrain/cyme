@@ -23,7 +23,7 @@
 
 #include <cyme/cyme.h>
 
-#include <boost/chrono.hpp>
+#include <chrono>
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
@@ -231,9 +231,9 @@ int main() {
     s.push_back(boost::bind(&pack<Na, cyme::vector<Na, cyme::AoSoA>>::execution, &a)); // fill up the stack
     s.push_back(boost::bind(&pack<Na, cyme::vector<Na, cyme::AoS>>::execution, &b));   // fill up the stack
 
-    boost::chrono::system_clock::time_point start = boost::chrono::system_clock::now();
+    std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
     s.flush(); // execute the stack
-    boost::chrono::duration<double> sec = boost::chrono::system_clock::now() - start;
+    std::chrono::duration<double> sec = std::chrono::system_clock::now() - start;
     std::cout << " sec " << sec.count() << std::endl;
 
     // check(a,b);
