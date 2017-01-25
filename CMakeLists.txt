@@ -27,8 +27,7 @@ set(VERSION_ABI "1")
 set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake
-  ${PROJECT_SOURCE_DIR}/CMake/common)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake ${PROJECT_SOURCE_DIR}/CMake/common)
 include(GitExternal)
 include(clang-format)#format
 
@@ -40,7 +39,7 @@ else()
 endif()
 set(BOOST_MIN_VERSION "1.49.0") # old is bad
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
-include(Common)
+include(common)
 common_package(Boost REQUIRED COMPONENTS unit_test_framework chrono system)
 common_package_post()
 
