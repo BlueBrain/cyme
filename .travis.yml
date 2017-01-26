@@ -7,8 +7,9 @@
 #
 
 
-language: cpp
 sudo: false
+
+language: cpp
 
 compiler:
   - gcc
