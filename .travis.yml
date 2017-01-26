@@ -18,7 +18,6 @@ os:
   - linux
 
 env:
-  global:
     - NINJA_STATUS="[%p %u/%t@%o %r]"
     - PROJECT_NAME=${PWD##*/}
   matrix:
@@ -34,6 +33,8 @@ addons:
     - g++-4.8
     - clang
     - libboost-all-dev
+    - ninja-build
+
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate http://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz   ;fi
