@@ -32,7 +32,8 @@ addons:
     packages:
     - gcc-5
     - g++-5
-    - libboost1.55-all-dev
+    - libboost1.55-test
+    - libboost1.55-system
     - ninja-build
 
 
