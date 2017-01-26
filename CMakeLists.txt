@@ -31,7 +31,7 @@ set(BOOST_MIN_VERSION "1.46.0") # old is bad
 
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
 include(Common)
-common_find_package(Boost REQUIRED COMPONENTS unit_test_framework chrono system)
+common_find_package(Boost REQUIRED COMPONENTS unit_test_framework system)
 common_find_package_post()
 
 include_directories (${CMAKE_BINARY_DIR}/include)
