@@ -19,6 +19,7 @@ os:
   - linux
 
 env:
+  global:
     - NINJA_STATUS="[%p %u/%t@%o %r]"
     - PROJECT_NAME=${PWD##*/}
   matrix:
