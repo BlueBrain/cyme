@@ -27,16 +27,29 @@
 #ifndef CYME_SIMD_ADD_IPP
 #define CYME_SIMD_ADD_IPP
 
-namespace cyme{
+namespace cyme {
 
-    /** Implements operator+ for cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator+ (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(lhs);
-        nrv += rhs;
-        return nrv;
-     }
+/** Implements operator+ for cyme::vec_simd */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator+(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(lhs);
+    nrv += rhs;
+    return nrv;
+}
 
+/** addition with 0, see vec_simd.hpp for explanation  */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator+(const vec_simd<T, O, N> &lhs, ZERO) {
+    return lhs;
+}
+
+/** addition with 0, see vec_simd.hpp for explanation  */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator+(ZERO, const vec_simd<T, O, N> &rhs) {
+    return rhs;
+}
+
+/** addition with 0+0, see vec_simd.hpp for explanation  */
+forceinline ZERO operator+(ZERO, ZERO) { return ZERO(); }
 }
 #endif
-

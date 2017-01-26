@@ -27,29 +27,29 @@ using namespace cyme::test;
 #define SIZE T::size
 #define MAX 1000
 
-#define NN cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE)
+#define NN cyme::unroll_factor::N *cyme::trait_register<TYPE, cyme::__GETSIMD__()>::size / sizeof(TYPE)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp2_comparison, T, floating_point_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
     TYPE res[NN] __attribute__((aligned(64)));
-    for(size_t k=0; k<100; ++k){
-        for(size_t i=0; i<NN; ++i){
+    for (size_t k = 0; k < 100; ++k) {
+        for (size_t i = 0; i < NN; ++i) {
             a[i] = GetRandom<TYPE>();
             b[i] = GetRandom<TYPE>();
         }
 
-        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(a);
-        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
+        cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(a);
+        cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(b);
 
-        for(size_t i=0; i<NN; ++i)
-            a[i] = exp(b[i]*0.6931471805599453094172);
+        for (size_t i = 0; i < NN; ++i)
+            a[i] = exp(b[i] * 0.6931471805599453094172);
 
         va = exp2(vb);
         va.store(res);
 
-        for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], res[i], 0.001);
+        for (size_t i = 0; i < NN; ++i)
+            BOOST_REQUIRE_CLOSE(a[i], res[i], 0.001);
     }
 }
 
@@ -60,20 +60,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_exp2_comparison_serial, T, floating_point_test
     TYPE sa[NN] __attribute__((aligned(64)));
     TYPE sb[NN] __attribute__((aligned(64)));
 
-    for(size_t k=0; k<100; ++k){
-        for(size_t i=0; i<NN; ++i){
+    for (size_t k = 0; k < 100; ++k) {
+        for (size_t i = 0; i < NN; ++i) {
             sa[i] = a[i] = GetRandom<TYPE>();
             sb[i] = b[i] = GetRandom<TYPE>();
         }
 
-
-        for(size_t i=0; i<NN; ++i){
-            a[i] = exp(b[i]*0.6931471805599453094172);
+        for (size_t i = 0; i < NN; ++i) {
+            a[i] = exp(b[i] * 0.6931471805599453094172);
             sa[i] = cyme::sexp2(sb[i]);
         }
 
-        for(size_t i=0; i<NN; ++i)
-          BOOST_REQUIRE_CLOSE( a[i], sa[i], 0.001);
+        for (size_t i = 0; i < NN; ++i)
+            BOOST_REQUIRE_CLOSE(a[i], sa[i], 0.001);
     }
 }
 

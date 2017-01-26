@@ -1,9 +1,6 @@
 set(CYME_TEST_LIBRARIES ${Boost_LIBRARIES})
 unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY) #unset value to avoid pb
 
-add_custom_target(tests DEPENDS test)
-set_target_properties(tests PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD ON)
-
 #check techno supported and give needed compil flag
 function(compiler_flag testing_ techno_ test_ unroll_)
 #$ENV{SLURM_ACCOUNT} --account=proj16
@@ -14,7 +11,11 @@ function(compiler_flag testing_ techno_ test_ unroll_)
 
      CYME_TECH_MATCH(avx ${techno_})
      IF (CYME_TRUE)
-         test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" "-mavx" "avx" ${unroll_} ${test_})
+         if(CYME_AVX2_FOUND)
+             test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" "-mavx2" "avx" ${unroll_} ${test_})
+         else()
+             test_arch_dependence(${testing_} "$ENV{SLURM_ACCOUNT}" "-mavx" "avx" ${unroll_} ${test_})
+         endif()
      endif ()
 
      CYME_TECH_MATCH(neon ${techno_})
@@ -42,7 +43,7 @@ endfunction(compiler_flag)
 #loop over tests
 function(test_arch_dependence testing_ offload_ flag_ simd_ unroll_ test_)
     add_executable(${testing_}_${test_}_${simd_}_${unroll_} ${test_}.cpp)
-    set_target_properties(${testing_}_${test_}_${simd_}_${unroll_} PROPERTIES COMPILE_FLAGS "${flag_} -D__CYME_SIMD_VALUE__=${simd_} ${CYME_FMA_FLAGS} -D__CYME_UNROLL_VALUE__=${unroll_}")
+    SET_TARGET_PROPERTIES(${testing_}_${test_}_${simd_}_${unroll_} PROPERTIES COMPILE_FLAGS "${flag_} -D__CYME_SIMD_VALUE__=${simd_} ${CYME_FMA_FLAGS} -D__CYME_UNROLL_VALUE__=${unroll_}")
     target_link_libraries(${testing_}_${test_}_${simd_}_${unroll_} ${Boost_LIBRARIES} ${SIMD_SVML_LIBRARY} ${CYME_TIME} ${CYME_MIC})
     if(SLURM_FOUND)
         add_test(NAME ${testing_}_${test_}_${simd_}_${unroll_} COMMAND ${SLURM_SRUN_COMMAND} --time=00:03:00 ${testing_}_${test_}_${simd_}_${unroll_})

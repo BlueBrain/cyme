@@ -26,21 +26,25 @@
 
 #ifndef CYME_SIMD_MATH_IPP
 #define CYME_SIMD_MATH_IPP
-    #include "cyme/core/simd_vector/math/simd_neg.ipp"
-    #include "cyme/core/simd_vector/math/simd_recsqrt.ipp"
-    #include "cyme/core/simd_vector/math/simd_rec.ipp"
-    #include "cyme/core/simd_vector/math/simd_div.ipp"
-    #include "cyme/core/simd_vector/math/simd_add.ipp"
-    #include "cyme/core/simd_vector/math/simd_sub.ipp"
-    #include "cyme/core/simd_vector/math/simd_mul.ipp"
-    #include "cyme/core/simd_vector/math/simd_exp.ipp"
-    #include "cyme/core/simd_vector/math/simd_log.ipp"
-    #include "cyme/core/simd_vector/math/simd_sqrt.ipp"
-    #include "cyme/core/simd_vector/math/simd_pow.ipp"
-    #include "cyme/core/simd_vector/math/simd_trig.ipp"
+#include "cyme/core/simd_vector/math/simd_neg.ipp"
+#include "cyme/core/simd_vector/math/simd_recsqrt.ipp"
+#include "cyme/core/simd_vector/math/simd_rec.ipp"
+#include "cyme/core/simd_vector/math/simd_div.ipp"
+#include "cyme/core/simd_vector/math/simd_add.ipp"
+#include "cyme/core/simd_vector/math/simd_sub.ipp"
+#include "cyme/core/simd_vector/math/simd_mul.ipp"
+#include "cyme/core/simd_vector/math/simd_exp.ipp"
+#include "cyme/core/simd_vector/math/simd_log.ipp"
+#include "cyme/core/simd_vector/math/simd_sqrt.ipp"
+#include "cyme/core/simd_vector/math/simd_pow.ipp"
+#include "cyme/core/simd_vector/math/simd_trig.ipp"
+#include "cyme/core/simd_vector/math/simd_gather.ipp"
+#include "cyme/core/simd_vector/math/simd_scatter.ipp"
+#include "cyme/core/simd_vector/math/simd_inequality.ipp"
+#include "cyme/core/simd_vector/math/simd_bitwise.ipp"
 #ifdef __FMA__
-    #include "cyme/core/simd_vector/math/simd_fma.ipp"
-    #include "cyme/core/simd_vector/math/simd_fms.ipp"
+#include "cyme/core/simd_vector/math/simd_fma.ipp"
+#include "cyme/core/simd_vector/math/simd_fms.ipp"
 #endif
 
 #endif

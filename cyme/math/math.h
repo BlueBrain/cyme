@@ -19,7 +19,6 @@
  * License along with this library.
  */
 
-
 /**
  * @file cyme/math/math.h
  * Implement the cyme serial math library
@@ -28,37 +27,35 @@
  * contains everything, specially perform computation with the cyme container.
  */
 
-
 #ifndef CYME_MATH_H
 #define CYME_MATH_H
 
 #ifdef __cplusplus
 
 #ifdef __aarch64__
-#  define  __SIMD_VALUE__ neon
+#define __SIMD_VALUE__ neon
 #endif
 
-#if defined (__SSE__) || (__AVX__)
-#  define  __SIMD_VALUE__ sse
+#if defined(__SSE__) || (__AVX__)
+#define __SIMD_VALUE__ sse
 #endif
 
 #if !defined(_ARCH_QP) && defined(__PPC64__)
-#  define  __SIMD_VALUE__ vmx
+#define __SIMD_VALUE__ vmx
 #endif
 
 #ifdef _ARCH_QP
-#  define  __SIMD_VALUE__ qpx
+#define __SIMD_VALUE__ qpx
 #endif
 
-
-//this file is used for c++ only not install for the library
+// this file is used for c++ only not install for the library
 namespace cyme {
 /** Construction of the serial exponential, 32-bit precision.
 
    The single function load/unload a serial number only.
 */
-inline float sexp(float a){
-    float res __attribute__((aligned (32)));
+inline float sexp(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = exp(v);
@@ -70,8 +67,8 @@ inline float sexp(float a){
 
    The single function load/unload a serial number only.
 */
-inline float sexp2(float a){
-    float res __attribute__((aligned (32)));
+inline float sexp2(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = exp2(v);
@@ -83,8 +80,8 @@ inline float sexp2(float a){
 
    The single function load/unload a serial number only.
 */
-inline float sexp10(float a){
-    float res __attribute__((aligned (32)));
+inline float sexp10(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = exp10(v);
@@ -96,8 +93,8 @@ inline float sexp10(float a){
 
   The single function load/unload a serial number only.
 */
-inline float slog(float a){
-    float res __attribute__((aligned (32)));
+inline float slog(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = log(v);
@@ -109,8 +106,8 @@ inline float slog(float a){
 
   The single function load/unload a serial number only.
 */
-inline float slog2(float a){
-    float res __attribute__((aligned (32)));
+inline float slog2(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = log2(v);
@@ -122,8 +119,8 @@ inline float slog2(float a){
 
   The single function load/unload a serial number only.
 */
-inline float slog10(float a){
-    float res __attribute__((aligned (32)));
+inline float slog10(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = log10(v);
@@ -135,8 +132,8 @@ inline float slog10(float a){
 
   The single function load/unload a serial number only.
 */
-inline float ssqrt(float a){
-    float res __attribute__((aligned (32)));
+inline float ssqrt(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = sqrt(v);
@@ -148,8 +145,8 @@ inline float ssqrt(float a){
 
   The single function load/unload a serial number only.
 */
-inline float sfabs(float a){
-    float res __attribute__((aligned (32)));
+inline float sfabs(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = fabs(v);
@@ -161,8 +158,8 @@ inline float sfabs(float a){
 
   The single function load/unload a serial number only.
 */
-inline float ssin(float a){
-    float res __attribute__((aligned (32)));
+inline float ssin(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = sin(v);
@@ -174,8 +171,8 @@ inline float ssin(float a){
 
   The single function load/unload a serial number only.
 */
-inline float scos(float a){
-    float res __attribute__((aligned (32)));
+inline float scos(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = cos(v);
@@ -187,8 +184,8 @@ inline float scos(float a){
 
   The single function load/unload a serial number only.
 */
-inline float stan(float a){
-    float res __attribute__((aligned (32)));
+inline float stan(float a) {
+    float res __attribute__((aligned(32)));
     cyme::vec_simd<float, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = tan(v);
@@ -200,8 +197,8 @@ inline float stan(float a){
 
    The single function load/unload a serial number only.
 */
-inline double sexp(double a){
-    double res __attribute__((aligned (32)));
+inline double sexp(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = exp(v);
@@ -213,8 +210,8 @@ inline double sexp(double a){
 
    The single function load/unload a serial number only.
 */
-inline double sexp2(double a){
-    double res __attribute__((aligned (32)));
+inline double sexp2(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = exp2(v);
@@ -226,8 +223,8 @@ inline double sexp2(double a){
 
    The single function load/unload a serial number only.
 */
-inline double sexp10(double a){
-    double res __attribute__((aligned (32)));
+inline double sexp10(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = exp10(v);
@@ -239,8 +236,8 @@ inline double sexp10(double a){
 
    The single function load/unload a serial number only.
 */
-inline double slog(double a){
-    double res __attribute__((aligned (32)));
+inline double slog(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = log(v);
@@ -252,8 +249,8 @@ inline double slog(double a){
 
    The single function load/unload a serial number only.
 */
-inline double slog2(double a){
-    double res __attribute__((aligned (32)));
+inline double slog2(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = log2(v);
@@ -265,8 +262,8 @@ inline double slog2(double a){
 
    The single function load/unload a serial number only.
 */
-inline double slog10(double a){
-    double res __attribute__((aligned (32)));
+inline double slog10(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = log10(v);
@@ -278,8 +275,8 @@ inline double slog10(double a){
 
    The single function load/unload a serial number only.
 */
-inline double ssqrt(double a){
-    double res __attribute__((aligned (32)));
+inline double ssqrt(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = sqrt(v);
@@ -291,8 +288,8 @@ inline double ssqrt(double a){
 
    The single function load/unload a serial number only.
 */
-inline double sfabs(double a){
-    double res __attribute__((aligned (32)));
+inline double sfabs(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = fabs(v);
@@ -304,8 +301,8 @@ inline double sfabs(double a){
 
    The single function load/unload a serial number only.
 */
-inline double ssin(double a){
-    double res __attribute__((aligned (32)));
+inline double ssin(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = sin(v);
@@ -317,8 +314,8 @@ inline double ssin(double a){
 
    The single function load/unload a serial number only.
 */
-inline double scos(double a){
-    double res __attribute__((aligned (32)));
+inline double scos(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = cos(v);
@@ -330,8 +327,8 @@ inline double scos(double a){
 
    The single function load/unload a serial number only.
 */
-inline double stan(double a){
-    double res __attribute__((aligned (32)));
+inline double stan(double a) {
+    double res __attribute__((aligned(32)));
     cyme::vec_simd<double, cyme::__SIMD_VALUE__, 1> v;
     v.single(a);
     v = tan(v);
@@ -343,40 +340,39 @@ inline double stan(double a){
 
 #endif
 
-
 #ifndef __cplusplus
 /** single-precision 32-bit serial exponential base e, C library only */
-float  cyme_fexp(float a);
+float cyme_fexp(float a);
 
 /** single-precision 32-bit serial exponential base 2, C library only */
-float  cyme_fexp2(float a);
+float cyme_fexp2(float a);
 
 /** single-precision 32-bit serial exponential base 10, C library only */
-float  cyme_fexp10(float a);
+float cyme_fexp10(float a);
 
 /** single-precision 32-bit serial logarithm base e, C library only */
-float  cyme_flog(float a);
+float cyme_flog(float a);
 
 /** single-precision 32-bit serial logarithm base 2, C library only */
-float  cyme_flog2(float a);
+float cyme_flog2(float a);
 
 /** single-precision 32-bit serial logarithm base 10, C library only */
-float  cyme_flog10(float a);
+float cyme_flog10(float a);
 
 /** single-precision 32-bit serial sqrt, C library only */
-float  cyme_fsqrt(float a);
+float cyme_fsqrt(float a);
 
 /** single-precision 32-bit serial sin function, C library only */
-float  cyme_ffabs(float a);
+float cyme_ffabs(float a);
 
 /** single-precision 32-bit serial sin function, C library only */
-float  cyme_fsin(float a);
+float cyme_fsin(float a);
 
 /** single-precision 32-bit serial cos function, C library only */
-float  cyme_fcos(float a);
+float cyme_fcos(float a);
 
 /** single-precision 32-bit serial tan function, C library only */
-float  cyme_ftan(float a);
+float cyme_ftan(float a);
 
 /** double-precision 64-bit serial exponential base e, C library only */
 double cyme_exp(double a);

@@ -31,230 +31,264 @@
 
 #include "cyme/core/simd_vector/trait.hpp"
 #include "cyme/core/simd_vector/simd_wrapper.hpp"
-namespace cyme{
-    /**
-    Helper for print function
-    */
-    template<class T, int N>
-    struct elems_helper{
-	static const int size = N*(cyme::trait_register<T,cyme::__GETSIMD__()>::size)/sizeof(T);
-    };
+namespace cyme {
+/**
+  structure for improove the polynomial computation
+  The pb is : all recursive polynomial evaluation finish
+  by a multiplication/addition per 0  on normal type (float, double)
+  this multiplication is not performed (compiler optimization). In the case of the
+  vec_simd class it will vec_simd() "*" or "+" vec_simd(0)
+  it will add additional load and one multiplication/addition that are useless.
+  To fix that I create "nuts" structure and do a special overload
+  for operator"+" or "*" (vec, ZERO), where I return the lhs or ZERO
+ */
+struct ZERO {};
 
-    /** SIMD vector computation class.
+/**
+Helper for print function
+*/
+template <class T, int N = cyme::unroll_factor::N>
+struct elems_helper {
+    static const int size = N * (cyme::trait_register<T, cyme::__GETSIMD__()>::size) / sizeof(T);
+};
 
-      The vector is generic, it can be SSE, AVX or QPX. The type is given by the trait class cyme::simd_trait
-    */
-    template<class T,cyme::simd O, int N>
-    struct vec_simd{
-        typedef typename simd_trait<T,O,N>::value_type value_type;
-        typedef typename simd_trait<T,O,N>::pointer pointer;
-        typedef typename simd_trait<T,O,N>::const_pointer const_pointer;
-        typedef typename simd_trait<T,O,N>::register_type register_type;
+/** SIMD vector computation class.
 
-        /** Construtor desired value else 0, note copy constructor generated automaticaly. Only used for constant.  */
-        forceinline explicit vec_simd(const value_type& a);
+  The vector is generic, it can be SSE, AVX or QPX. The type is given by the trait class cyme::simd_trait
+*/
+template <class T, cyme::simd O, int N>
+struct vec_simd {
+    typedef typename simd_trait<T, O, N>::value_type value_type;
+    typedef typename simd_trait<T, O, N>::pointer pointer;
+    typedef typename simd_trait<T, O, N>::const_pointer const_pointer;
+    typedef typename simd_trait<T, O, N>::register_type register_type;
 
-        /** Construtor without nothing load a value cost */
-        forceinline explicit vec_simd();
+    /** Construtor desired value else 0, note copy constructor generated automaticaly. Only used for constant.  */
+    forceinline explicit vec_simd(const value_type &a);
 
-        /** Construtor for exp and log */
-        forceinline explicit vec_simd(register_type x);
+    /** Construtor without nothing load a value cost */
+    forceinline explicit vec_simd();
 
-        /** Construtor from a pointer */
-        forceinline vec_simd(const_pointer a);
+    /** Construtor for exp and log */
+    forceinline explicit vec_simd(register_type x);
 
-        /** Bracket operator called by the parser (expr_vec) */
-        forceinline vec_simd& operator()();
+    /** Construtor from a pointer */
+    forceinline vec_simd(const_pointer a);
 
-        /** Bracket operator called by the parser (expr_vec) */
-        forceinline const vec_simd& operator()() const;
+    /** Bracket operator called by the parser (expr_vec) */
+    forceinline vec_simd &operator()();
 
-        /** Operator *= between two vectors */
-        forceinline vec_simd& operator *=(const vec_simd& rhs);
+    /** Bracket operator called by the parser (expr_vec) */
+    forceinline const vec_simd &operator()() const;
 
-        /** Operator /= between two vectors */
-        forceinline vec_simd& operator /=(const vec_simd& rhs);
+    /** Operator *= between two vectors */
+    forceinline vec_simd &operator*=(const vec_simd &rhs);
 
-        /** Operator += between two vectors */
-        forceinline vec_simd& operator +=(const vec_simd& rhs);
+    /** Operator /= between two vectors */
+    forceinline vec_simd &operator/=(const vec_simd &rhs);
 
-        /** Operator -= between two vectors */
-        forceinline vec_simd& operator -=(const vec_simd& rhs);
+    /** Operator += between two vectors */
+    forceinline vec_simd &operator+=(const vec_simd &rhs);
 
-        /** Save the value into the register into the cyme */
-        forceinline void store(pointer a) const;
+    /** Operator -= between two vectors */
+    forceinline vec_simd &operator-=(const vec_simd &rhs);
 
-        /** Negate the value of the register */
-        forceinline vec_simd& neg();
+    /** Operator &= bewteen two vectors */
+    forceinline vec_simd &operator&=(const vec_simd &rhs);
 
-        /** Function for load only one value type, serial library */
-        forceinline vec_simd& single(const value_type& b);
+    /** Operator |= bewteen two vectors */
+    forceinline vec_simd &operator|=(const vec_simd &rhs);
 
-        /** Function for load only one value type, serial library */
-        forceinline value_type single(pointer b);
+    /** Operator negate bewteen two vectors, no DAG for this one */
+    forceinline vec_simd &operator~();
 
-	/** Print function */
-	forceinline void print(std::ostream &out) const;
+    /** Save the value into the register into the cyme */
+    forceinline void store(pointer a) const;
 
-#ifdef __FMA__
-        /** FMA operator */
-        forceinline void ma(const vec_simd& lhs, const vec_simd& rhs);
+    /** Negate the value of the register */
+    forceinline vec_simd &neg();
 
-        /** FMS operator */
-        forceinline void ms(const vec_simd& lhs, const vec_simd& rhs);
+    /** Function for load only one value type, serial library */
+    forceinline vec_simd &single(const value_type &b);
 
-        /** FMS operator, 2nd case of the operator - */
-        forceinline void nma(const vec_simd& lhs, const vec_simd& rhs);
+    /** Function for load only one value type, serial library */
+    forceinline value_type single(pointer b);
 
-        /** FMS operator, 2nd case of the operator - */
-        forceinline void nms(const vec_simd& lhs, const vec_simd& rhs);
-#endif
-        /** 1,2 or 4 Hardware Registers (SSE, AVXR ...) */
-        register_type xmm;
-    };
-
-    /** Round up to the next even integer */
-    template<cyme::simd O, int N>
-    forceinline vec_simd<int,O,N> round_up_even(const vec_simd<int,O,N>& rhs);
-
-    /** Cast int to float */
-    template<class T, cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> cast(const vec_simd<int,O,N>& ths);
-
-    /** Return the 2^k where k is a vector base on an integer */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> twok(const vec_simd<int,O,N>& rhs);
-
-    /** Return the absolute value of the floating point number */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> fabs(const vec_simd<T,O,N>& rhs);
-
-    /** Returns poly1 or poly2 depending on the value of sel */ 
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> select_poly(const vec_simd<int,O,N>& sel, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
-
-    /** Returns rhs with a modified sign depending on the values of swap and lhs */ 
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> select_sign_sin(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
-
-    /** Returns rhs with a modified sign, depending on the values of swap and lhs */ 
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> select_sign_cos(const vec_simd<int,O,N>& swap, const vec_simd<T,O,N>& rhs);
-
-    /** Return the exponent of the floating point representation */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> ge(const vec_simd<T,O,N>& rhs);
-
-    /** Return the fraction of the floating point representation */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> gf(const vec_simd<T,O,N>& rhs);
-
-    /** Return the exponent/2 of the floating point representation multiplied by sqrt(2) if n is an odd number */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> gesqrt2(const vec_simd<T,O,N>& rhs);
-
-    /** Floor the value return a int simd register */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<int,O,N> floor(const vec_simd<T,O,N>& rhs);
-
-    /** Free function + operator between two vectors, this function uses the return value optimization */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator+ (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
-
-    /** Free function - operator between two vectors, this function uses the return value optimization */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator- (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
-
-    /** Free function * operator between two vectors, this function uses the return value optimization */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator* (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
-
-    /** Free function / operator between two vectors this function uses the return value optimization */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator/ (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs);
-
-    /** Free function for call the reciprocal for the Newton-Raphson division (initialization only) */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> rec(vec_simd<T,O,N> const& rhs);
-
-    /** Free function for call the reciprocal for the Newton-Raphson square root (initialization only) */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> recsqrt(vec_simd<T,O,N> const& rhs);
-
-    /** Free function for the negation */
-    template<class T,cyme::simd O,int N>
-    forceinline vec_simd<T,O,N> neg(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the pow */
-    template<class T,cyme::simd O, int N, int M>
-    forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs);
-
-    /** Free function for the exp */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> exp(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the exp2 */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> exp2(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the exp10 */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> exp10(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the log */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> log(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the log2 */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> log2(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the log10 */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> log10(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the sqrt */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> sqrt(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the sin */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> sin(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the cos */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> cos(const vec_simd<T,O,N>& rhs);
-
-    /** Free function for the tan */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> tan(const vec_simd<T,O,N>& rhs);
+    /** Print function */
+    forceinline void print(std::ostream &out) const;
 
 #ifdef __FMA__
-    /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> muladd(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
+    /** FMA operator */
+    forceinline void ma(const vec_simd &lhs, const vec_simd &rhs);
 
-    /** Free function nFMA */
-    template<class T,cyme::simd O,int N>
-    forceinline vec_simd<T,O,N> negatemuladd(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
+    /** FMS operator */
+    forceinline void ms(const vec_simd &lhs, const vec_simd &rhs);
 
-    /** Free function FMS between 3 vectors, only a*b - c, - is not commutative */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> mulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
+    /** FMS operator, 2nd case of the operator - */
+    forceinline void nma(const vec_simd &lhs, const vec_simd &rhs);
 
-    /** Free function nFMS */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> negatemulsub(const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& mhs, const vec_simd<T,O,N>& rhs);
+    /** FMS operator, 2nd case of the operator - */
+    forceinline void nms(const vec_simd &lhs, const vec_simd &rhs);
+#endif
+    /** 1,2 or 4 Hardware Registers (SSE, AVXR ...) */
+    register_type xmm;
+};
+
+/** Round up to the next even integer */
+template <cyme::simd O, int N>
+forceinline vec_simd<int, O, N> round_up_even(const vec_simd<int, O, N> &rhs);
+
+/** Cast int to float */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> cast(const vec_simd<int, O, N> &ths);
+
+/** Return the 2^k where k is a vector base on an integer */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> twok(const vec_simd<int, O, N> &rhs);
+
+/** Return the absolute value of the floating point number */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> fabs(const vec_simd<T, O, N> &rhs);
+
+/** Returns poly1 or poly2 depending on the value of sel */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> select_poly(const vec_simd<int, O, N> &sel, const vec_simd<T, O, N> &lhs,
+                                          const vec_simd<T, O, N> &rhs);
+
+/** Returns rhs with a modified sign depending on the values of swap and lhs */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> select_sign_sin(const vec_simd<int, O, N> &swap, const vec_simd<T, O, N> &lhs,
+                                              const vec_simd<T, O, N> &rhs);
+
+/** Returns rhs with a modified sign, depending on the values of swap and lhs */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> select_sign_cos(const vec_simd<int, O, N> &swap, const vec_simd<T, O, N> &rhs);
+
+/** Return the exponent of the floating point representation */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> ge(const vec_simd<T, O, N> &rhs);
+
+/** Return the fraction of the floating point representation */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> gf(const vec_simd<T, O, N> &rhs);
+
+/** Return the exponent/2 of the floating point representation multiplied by sqrt(2) if n is an odd number */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> gesqrt2(const vec_simd<T, O, N> &rhs);
+
+/** Floor the value return a int simd register */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<int, O, N> floor(const vec_simd<T, O, N> &rhs);
+
+/** Free function + operator between two vectors, this function uses the return value optimization */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator+(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs);
+
+/** Free function - operator between two vectors, this function uses the return value optimization */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator-(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs);
+
+/** Free function * operator between two vectors, this function uses the return value optimization */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator*(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs);
+
+/** Free function / operator between two vectors this function uses the return value optimization */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator/(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs);
+
+/** Free function for call the reciprocal for the Newton-Raphson division (initialization only) */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> rec(vec_simd<T, O, N> const &rhs);
+
+/** Free function for call the reciprocal for the Newton-Raphson square root (initialization only) */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> recsqrt(vec_simd<T, O, N> const &rhs);
+
+/** Free function for the negation */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> neg(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the pow */
+template <class T, cyme::simd O, int N, int M>
+forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &lhs);
+
+/** Free function for the exp */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> exp(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the exp2 */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> exp2(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the exp10 */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> exp10(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the log */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> log(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the log2 */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> log2(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the log10 */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> log10(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the sqrt */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> sqrt(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the sin */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> sin(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the cos */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> cos(const vec_simd<T, O, N> &rhs);
+
+/** Free function for the tan */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> tan(const vec_simd<T, O, N> &rhs);
+
+/** Free function for gather */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> help_gather(const T *src, const int *ind, const int range);
+
+/** Free function for scatter */
+template <class T, cyme::simd O, int N, cyme::scatter_op P>
+void help_scatter(vec_simd<T, O, N> const &src, T *des, const int *ind, const int range);
+
+#ifdef __FMA__
+/** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> muladd(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &mhs,
+                                     const vec_simd<T, O, N> &rhs);
+
+/** Free function nFMA */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> negatemuladd(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &mhs,
+                                           const vec_simd<T, O, N> &rhs);
+
+/** Free function FMS between 3 vectors, only a*b - c, - is not commutative */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> mulsub(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &mhs,
+                                     const vec_simd<T, O, N> &rhs);
+
+/** Free function nFMS */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> negatemulsub(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &mhs,
+                                           const vec_simd<T, O, N> &rhs);
 #endif
 
-} //end namespace
+} // end namespace
 
 /** Ostream operator */
-template<class T, cyme::simd O, int N>
-forceinline std::ostream &operator<<(std::ostream &out, const cyme::vec_simd<T,O,N> &vec);
+template <class T, cyme::simd O, int N>
+forceinline std::ostream &operator<<(std::ostream &out, const cyme::vec_simd<T, O, N> &vec);
 
 #include "cyme/core/simd_vector/simd_vec.ipp"
 #include "cyme/core/simd_vector/simd_math.ipp" // contains all math operations include
 
 #endif
-

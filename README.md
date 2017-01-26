@@ -51,6 +51,12 @@ RELEASE:
 The serial test unroll 4 fails, again for the division. It is very wierd
 as the operator /= call the system division and not Newton-Raphson
 
+Release 1.5.0
+- Merge rvec and wvec into vec
+- fix bugs in the exponential all backends
+- boundary limite for the exp with the new corresponding wrappers for integer manipulation
+- Prepare work for the next release !
+
 Release 1.4.0
 
 - Google Summer code merge: work of Kai Langen

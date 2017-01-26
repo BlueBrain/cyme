@@ -31,26 +31,26 @@
 #ifndef _ARCH_QP
 #ifndef __aarch64__
 #ifdef __AVX__
-extern "C"{
-    __m128 __svml_expf4(__m128);
-    __m128 __svml_logf4(__m128);
+extern "C" {
+__m128 __svml_expf4(__m128);
+__m128 __svml_logf4(__m128);
 
-    __m128d __svml_exp2(__m128d);
-    __m128d __svml_log2(__m128d);
+__m128d __svml_exp2(__m128d);
+__m128d __svml_log2(__m128d);
 
-    __m256 __svml_expf8(__m256);
-    __m256 __svml_logf8(__m256);
+__m256 __svml_expf8(__m256);
+__m256 __svml_logf8(__m256);
 
-    __m256d __svml_exp4(__m256d);
-    __m256d __svml_log4(__m256d);
+__m256d __svml_exp4(__m256d);
+__m256d __svml_log4(__m256d);
 }
 #else
-extern "C"{
-    __m128 __svml_expf4(__m128);
-    __m128 __svml_logf4(__m128);
+extern "C" {
+__m128 __svml_expf4(__m128);
+__m128 __svml_logf4(__m128);
 
-    __m128d __svml_exp2(__m128d);
-    __m128d __svml_log2(__m128d);
+__m128d __svml_exp2(__m128d);
+__m128d __svml_log2(__m128d);
 }
 #endif
 #endif
