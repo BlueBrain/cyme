@@ -31,18 +31,19 @@ addons:
     sources:
     - boost-latest
     - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.6
     packages:
-    - gcc-4.8
-    - g++-4.8
+    - gcc-5
+    - g++-5
     - libboost1.55-all-dev
-    - clang
+    - clang-3.6
     - ninja-build
 
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate http://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz   ;fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar -xzf cmake-3.7.2-Linux-x86_64.tar.gz                                                  ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8" ;fi                         ;fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5" ;fi                         ;fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PATH=$PWD/cmake-3.7.2-Linux-x86_64/bin:$PATH                                       ;fi
 
 script:
