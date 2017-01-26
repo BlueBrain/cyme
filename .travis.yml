@@ -19,7 +19,6 @@ os:
 
 env:
   global:
-    - NINJA_STATUS="[%p %u/%t@%o %r]"
     - PROJECT_NAME=${PWD##*/}
   matrix:
     - BUILD_TYPE=Debug
@@ -33,7 +32,6 @@ addons:
     - gcc-5
     - g++-5
     - libboost1.55-all-dev
-    - ninja-build
 
 
 before_install:
@@ -45,8 +43,8 @@ before_install:
 script:
   - mkdir $BUILD_TYPE
   - cd $BUILD_TYPE
-  - cmake -GNinja -DCMAKE_INSTALL_PREFIX=$PWD/install -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
-  - ninja all && ninja test && ninja install
+  - cmake  -DCMAKE_INSTALL_PREFIX=$PWD/install -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+  - VERBOSE=1 make && make test && make install
 
 notifications:
   email:
