@@ -25,29 +25,22 @@ addons:
     - clang
     - libboost-all-dev
 
-matrix:
-    exclude:
-    - os: osx
-      compiler: gcc
+  matrix:
+  - BUILD_TYPE=Debug
+  - BUILD_TYPE=Release
 
 install:
-# Linux Setup 
+# Linux Setup
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate http://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz   ;fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar -xzf cmake-3.7.2-Linux-x86_64.tar.gz                                                  ;fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8" ;fi                         ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PATH=$PWD/cmake-3.7.2-Linux-x86_64/bin:$PATH                                       ;fi 
-# OSX Setup 
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then wget --no-check-certificate http://cmake.org/files/v3.7/cmake-3.7.2-Darwin-x86_64.tar.gz  ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then tar -xzf cmake-3.7.2-Darwin-x86_64.tar.gz                                                 ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then export PATH=$PWD/cmake-3.7.2-Darwin-x86_64/CMake.app/Contents/bin:$PATH                   ;fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PATH=$PWD/cmake-3.7.2-Linux-x86_64/bin:$PATH                                       ;fi
 
-before_script:
-  - mkdir build
-  - cd build
-  - cmake ..
 script:
-  - make
-  - make test
+  - mkdir $BUILD_TYPE
+  - cd $BUILD_TYPE
+  - cmake -GNinja -DCMAKE_INSTALL_PREFIX=$PWD/install -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+  - ninja all && ninja test && ninja install
 notifications:
   email:
     recipients:

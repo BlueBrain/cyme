@@ -27,7 +27,7 @@ if(COMMON_LIBRARY_TYPE MATCHES "STATIC")
 else()
   add_definitions(-DBOOST_TEST_DYN_LINK) # generates main() for unit tests
 endif()
-set(BOOST_MIN_VERSION "1.49.0") # old is bad
+set(BOOST_MIN_VERSION "1.46.0") # old is bad
 
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
 include(Common)
