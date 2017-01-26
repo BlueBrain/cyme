@@ -29,12 +29,13 @@ env:
 addons:
   apt:
     sources:
+    - boost-latest
     - ubuntu-toolchain-r-test
     packages:
     - gcc-4.8
     - g++-4.8
+    - libboost1.55-all-dev
     - clang
-    - libboost-all-dev
     - ninja-build
 
 
