@@ -6,14 +6,24 @@
 # @author Tim Ewart
 #
 
-sudo: false
 
 language: cpp
+sudo: false
 
 compiler:
   - gcc
   - clang
 
+os:
+  - linux
+
+env:
+  global:
+    - NINJA_STATUS="[%p %u/%t@%o %r]"
+    - PROJECT_NAME=${PWD##*/}
+  matrix:
+    - BUILD_TYPE=Debug
+    - BUILD_TYPE=Release
 
 addons:
   apt:
@@ -25,12 +35,7 @@ addons:
     - clang
     - libboost-all-dev
 
-  matrix:
-  - BUILD_TYPE=Debug
-  - BUILD_TYPE=Release
-
-install:
-# Linux Setup
+before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate http://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz   ;fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar -xzf cmake-3.7.2-Linux-x86_64.tar.gz                                                  ;fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8" ;fi                         ;fi
@@ -41,6 +46,7 @@ script:
   - cd $BUILD_TYPE
   - cmake -GNinja -DCMAKE_INSTALL_PREFIX=$PWD/install -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
   - ninja all && ninja test && ninja install
+
 notifications:
   email:
     recipients:
