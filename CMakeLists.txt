@@ -3,7 +3,7 @@
 
 #@remarks Copyright BBP/EPFL 2005-2014; All rights reserved
 
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.1)
 
 ########################################################################
 #
@@ -11,24 +11,15 @@ cmake_minimum_required (VERSION 2.6)
 #
 ########################################################################
 
-project (cyme)
+project (cyme VERSION 1.5.0)
+set(cyme_VERSION_ABI "1")
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake
+                              ${CMAKE_SOURCE_DIR}/CMake/common)
+include(GitExternal)
 
-set(LAST_RELEASE 1.4.0)
-set(VERSION_MAJOR "1")
-set(VERSION_MINOR "5")
-set(VERSION_PATCH "0")
-set(VERSION_ABI "1")
-
-######################################################################
-#
-# CMake Modules Buildyard and description
-#
-######################################################################
 set(CYME_DESCRIPTION "SIMD computation over user cyme container")
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake
-  ${PROJECT_SOURCE_DIR}/CMake/common)
-include(GitExternal)
+include(clang-format)#format
 
 # some common set up of two version
 if(COMMON_LIBRARY_TYPE MATCHES "STATIC")
@@ -36,11 +27,15 @@ if(COMMON_LIBRARY_TYPE MATCHES "STATIC")
 else()
   add_definitions(-DBOOST_TEST_DYN_LINK) # generates main() for unit tests
 endif()
-set(BOOST_MIN_VERSION "1.49.0") # old is bad
+set(BOOST_MIN_VERSION "1.46.0") # old is bad
+
 set(COMMON_PROJECT_DOMAIN ch.epfl.bluebrain)
 include(Common)
-common_package(Boost REQUIRED COMPONENTS unit_test_framework chrono system)
-common_package_post()
+common_find_package(Boost REQUIRED COMPONENTS unit_test_framework system)
+common_find_package_post()
+
+include_directories (${CMAKE_BINARY_DIR}/include)
+include_directories (${PROJECT_SOURCE_DIR})
 
 ########################################################################
 #
@@ -54,6 +49,15 @@ option (CYME_TESTS "Build the CYME regression tests" ON)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_MIC_HOST "Check if MIC is install" OFF)
 option (CYME_TRIGO "Build trigo kernel" OFF)
+
+########################################################################
+#
+# COMPILER
+#
+########################################################################
+
+
+set (CMAKE_CXX_STANDARD 11)
 
 ########################################################################
 #
@@ -100,8 +104,6 @@ if(APPLE)
    set(CMAKE_OSX_ARCHITECTURES ${CMAKE_OSX_ARCHITECTURES} CACHE
      STRING "Build architectures for OS X" FORCE)
 endif()
-
-string(REPLACE "-std=c++0x" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 ########################################################################
 #

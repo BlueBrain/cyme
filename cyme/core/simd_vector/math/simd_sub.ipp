@@ -27,15 +27,14 @@
 #ifndef CYME_SIMD_SUB_IPP
 #define CYME_SIMD_SUB_IPP
 
-namespace cyme{
+namespace cyme {
 
-    /** Implements operator- for cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator- (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(lhs);
-        nrv -= rhs;
-        return nrv;
-    }
+/** Implements operator- for cyme::vec_simd */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator-(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(lhs);
+    nrv -= rhs;
+    return nrv;
+}
 }
 #endif
-

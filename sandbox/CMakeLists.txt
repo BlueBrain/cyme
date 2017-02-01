@@ -7,7 +7,11 @@ function(compil_flag techno_ main_ unroll_)
 
      CYME_TECH_MATCH(avx ${techno_})
      IF (CYME_TRUE)
-         make_program(${main_} "-mavx" "avx1.0" ${unroll_})
+         if(CYME_AVX2_FOUND)
+             make_program(${main_} "-mavx2" "avx" ${unroll_})
+         else()
+             make_program(${main_} "-mavx" "avx" ${unroll_})
+         endif()
      endif ()
 
      CYME_TECH_MATCH(neon ${techno_})
@@ -38,7 +42,7 @@ function(make_program main_ flag_ simd_ unroll_)
 endfunction(make_program)
 
 set(listunroll 1 2 4)
-set(listmain main_c test_print)
+set(listmain main_c test_print branching)
 
 foreach(test ${listmain})
     foreach(unroll ${listunroll})

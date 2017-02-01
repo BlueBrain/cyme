@@ -30,89 +30,87 @@
 #include "cyme/core/simd_vector/simd_vec.hpp"
 #include "cyme/core/expression/expr_vec.hpp"
 
-namespace cyme{
-     /**   Basic subblock of cyme for the cyme container*/
-     template <class T, std::size_t Size, order O>
-     class storage;
+namespace cyme {
+/**   Basic subblock of cyme for the cyme container*/
+template <class T, std::size_t Size, order O>
+class storage;
 
-     /** subblock of cyme needed by the block class, AoS specialization */
-     template <class T, std::size_t Size>
-     class storage<T,Size,AoS>{
-         public:
+/** subblock of cyme needed by the block class, AoS specialization */
+template <class T, std::size_t Size>
+class storage<T, Size, AoS> {
+  public:
+    typedef std::size_t size_type;
+    typedef T value_type;
+    typedef value_type *pointer;
+    typedef const pointer *const_pointer;
+    typedef value_type &reference;
+    typedef const value_type &const_reference;
 
-         typedef std::size_t       size_type;
-         typedef T                 value_type;
-         typedef value_type*       pointer;
-         typedef const pointer*    const_pointer;
-         typedef value_type&       reference;
-         typedef const value_type& const_reference;
+    static const int size = Size;
 
-         static const int size = Size;
+    /** Default constructor, the subblock is set up to 0 */
+    storage();
 
-         /** Default constructor, the subblock is set up to 0 */
-         storage();
+    /** Default constructor, the subblock is set up to a desired value */
+    storage(value_type value);
 
-         /** Default constructor, the subblock is set up to a desired value */
-         storage(value_type value);
+    /** write access operator, only use to a direct access to the datas */
+    inline reference operator()(size_type i);
 
-         /** write access operator, only use to a direct access to the datas */
-         inline reference operator()(size_type i);
+    /** read access operator, only use to a direct access to the datas */
+    inline const_reference operator()(size_type i) const;
 
-         /** read access operator, only use to a direct access to the datas */
-         inline const_reference operator()(size_type i) const;
+    /** write access operator, only use by the iterator when calculations are performed */
+    inline reference operator[](size_type i);
 
-         /** write access operator, only use by the iterator when calculations are performed */
-         inline reference operator[](size_type i);
+    /** read access operator, only use by the iterator when calculations are performed */
+    inline const_reference operator[](size_type i) const;
 
-         /** read access operator, only use by the iterator when calculations are performed */
-         inline const_reference operator[](size_type i) const;
+    /** return cyme layout of the container */
+    static const cyme::order MemoryOrder = AoS;
 
-         /** return cyme layout of the container */
-         static const cyme::order MemoryOrder = AoS;
+  private:
+    /** a basic array is the container */
+    value_type data[Size];
+};
 
-         private:
-         /** a basic array is the container */
-         value_type data[Size];
-     };
+/** subblock of cyme needed by the block class, AoSoA specialization */
+template <class T, std::size_t Size>
+class storage<T, Size, AoSoA> {
+  public:
+    typedef std::size_t size_type;
+    typedef T value_type;
+    typedef value_type *pointer;
+    typedef const pointer *const_pointer;
+    typedef value_type &reference;
+    typedef const value_type &const_reference;
 
-     /** subblock of cyme needed by the block class, AoSoA specialization */
-     template <class T, std::size_t Size>
-     class storage<T,Size,AoSoA>{
-         public:
+    static const int size = Size;
 
-         typedef std::size_t       size_type;
-         typedef T                 value_type;
-         typedef value_type*       pointer;
-         typedef const pointer*    const_pointer;
-         typedef value_type&       reference;
-         typedef const value_type& const_reference;
+    /** Default constructor, the subblock is set up to 0 */
+    storage();
 
-         static const int size = Size;
+    /** Default constructor, the subblock is set up to a desired value */
+    storage(value_type value);
 
-         /** Default constructor, the subblock is set up to 0 */
-         storage();
+    /** write access operator, only use to a direct access to the datas */
+    inline reference operator()(size_type i);
 
-         /** Default constructor, the subblock is set up to a desired value */
-         storage(value_type value);
+    /** read access operator, only use to a direct access to the datas */
+    inline const_reference operator()(size_type i) const;
 
-         /** write access operator, only use to a direct access to the datas */
-         inline reference operator()(size_type i);
+    inline cyme::vec<T, cyme::__GETSIMD__()> operator[](size_type i);
 
-         /** read access operator, only use to a direct access to the datas */
-         inline const_reference operator()(size_type i) const;
+    inline const cyme::vec<T, cyme::__GETSIMD__()> operator[](size_type i) const;
 
-         inline cyme::vec<T,cyme::__GETSIMD__()> operator[](size_type i);
+    /** return cyme layout of the container */
+    static const cyme::order MemoryOrder = AoSoA;
 
-         inline const cyme::vec<T,cyme::__GETSIMD__()> operator[](size_type i) const;
-
-         /** return cyme layout of the container */
-         static const cyme::order MemoryOrder = AoSoA;
-
-         private:
-         /**  storage type is basic array for AoSoA*/
-         value_type data[Size];
-     };
-} //end namespace
+  private:
+    /**  storage type is basic array for AoSoA*/
+    value_type data[Size];
+};
+} // end namespace
 
 #include "cyme/memory/detail/storage.ipp"
 

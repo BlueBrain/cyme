@@ -27,61 +27,58 @@
 #ifndef CYME_SIMD_POW_IPP
 #define CYME_SIMD_POW_IPP
 
-namespace cyme{
-    /** Specialization of pow for even number
+namespace cyme {
+/** Specialization of pow for even number
 
-       Tthe template parameter K (default value exponent%2 true) make the selection
-        if it is a multiple of 2
-    */
-    template<class T,cyme::simd O, int N, int M, int K = M%2>
-    struct pow_helper{
-        static forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs){
-             return pow_helper<T,O,N,M/2>::pow(lhs)*pow_helper<T,O,N,M/2>::pow(lhs);
-        }
-    };
-
-    /** Specialization of pow for odd number
-
-        \remarks with integer M/2 is equivalent to (M-1)/2 e.g. 7/2 = 3.5 rounds to 3
-    */
-    template<class T,cyme::simd O, int N, int M>
-    struct pow_helper<T,O,N,M,1>{
-        static forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs){
-             return lhs*pow_helper<T,O,N,M/2>::pow(lhs)*pow_helper<T,O,N,M/2>::pow(lhs);
-        }
-    };
-
-    /** Final specialiasation of the pow function */
-    template<class T,cyme::simd O, int N>
-    struct pow_helper<T,O,N,1,1>{
-        static forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs){
-             return lhs;
-        }
-    };
-
-    /** Final specialiasation of the pow function, x**0 = 1 */
-    template<class T,cyme::simd O, int N>
-    struct pow_helper<T,O,N,0,0>{
-        static forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& ){
-            std::cout << " PLEASE TUNE YOUR CODE, adjust your partialization " << std::endl;
-            return vec_simd<T,O,N>(1.);
-        }
-    };
-
-    /** Implementation of Pow(a,n) m integer
-
-      The algo calculates the power of n (uint given)
-         is the followingr:
-         \code{.cpp}
-              x^n is decomposed following n
-              x^n = (x^n/2)^2 n even
-              x^n = n(x^n/2)^2 n odd
-         \endcode
-    */
-    template<class T,cyme::simd O, int N, int M>
-    forceinline vec_simd<T,O,N> pow(const vec_simd<T,O,N>& lhs){
-        return pow_helper<T,O,N,M>::pow(lhs);
+   Tthe template parameter K (default value exponent%2 true) make the selection
+    if it is a multiple of 2
+*/
+template <class T, cyme::simd O, int N, int M, int K = M % 2>
+struct pow_helper {
+    static forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &lhs) {
+        return pow_helper<T, O, N, M / 2>::pow(lhs) * pow_helper<T, O, N, M / 2>::pow(lhs);
     }
+};
+
+/** Specialization of pow for odd number
+
+    \remarks with integer M/2 is equivalent to (M-1)/2 e.g. 7/2 = 3.5 rounds to 3
+*/
+template <class T, cyme::simd O, int N, int M>
+struct pow_helper<T, O, N, M, 1> {
+    static forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &lhs) {
+        return lhs * pow_helper<T, O, N, M / 2>::pow(lhs) * pow_helper<T, O, N, M / 2>::pow(lhs);
+    }
+};
+
+/** Final specialiasation of the pow function */
+template <class T, cyme::simd O, int N>
+struct pow_helper<T, O, N, 1, 1> {
+    static forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &lhs) { return lhs; }
+};
+
+/** Final specialiasation of the pow function, x**0 = 1 */
+template <class T, cyme::simd O, int N>
+struct pow_helper<T, O, N, 0, 0> {
+    static forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &) {
+        std::cout << " PLEASE TUNE YOUR CODE, adjust your partialization " << std::endl;
+        return vec_simd<T, O, N>(1.);
+    }
+};
+
+/** Implementation of Pow(a,n) m integer
+
+  The algo calculates the power of n (uint given)
+     is the followingr:
+     \code{.cpp}
+          x^n is decomposed following n
+          x^n = (x^n/2)^2 n even
+          x^n = n(x^n/2)^2 n odd
+     \endcode
+*/
+template <class T, cyme::simd O, int N, int M>
+forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &lhs) {
+    return pow_helper<T, O, N, M>::pow(lhs);
+}
 }
 #endif
-

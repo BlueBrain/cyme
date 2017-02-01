@@ -27,27 +27,26 @@
 #ifndef CYME_SIMD_MUL_IPP
 #define CYME_SIMD_MUL_IPP
 
-namespace cyme{
+namespace cyme {
 
-    /** Implements operator* for cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline vec_simd<T,O,N> operator* (const vec_simd<T,O,N>& lhs, const vec_simd<T,O,N>& rhs){
-        vec_simd<T,O,N> nrv(lhs);
-        nrv *= rhs;
-        return nrv;
-    }
+/** Implements operator* for cyme::vec_simd */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> operator*(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(lhs);
+    nrv *= rhs;
+    return nrv;
+}
 
-    /** Implements operator* for cyme::vec_simd and 0*/
-    template<class T,cyme::simd O, int N>
-    forceinline ZERO operator* (const vec_simd<T,O,N>&, ZERO){
-        return ZERO();
-    }
+/** Implements operator* for cyme::vec_simd and 0*/
+template <class T, cyme::simd O, int N>
+forceinline ZERO operator*(const vec_simd<T, O, N> &, ZERO) {
+    return ZERO();
+}
 
-    /** Implements operator* for 0 and cyme::vec_simd */
-    template<class T,cyme::simd O, int N>
-    forceinline ZERO operator* (ZERO, const vec_simd<T,O,N>&){
-        return ZERO();
-    }
+/** Implements operator* for 0 and cyme::vec_simd */
+template <class T, cyme::simd O, int N>
+forceinline ZERO operator*(ZERO, const vec_simd<T, O, N> &) {
+    return ZERO();
+}
 }
 #endif
-
