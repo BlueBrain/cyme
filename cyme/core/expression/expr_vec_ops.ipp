@@ -168,6 +168,15 @@ vec<T, O, N, vec_pow<T, O, N, R1, M>>
 }
 
 /**
+* pow(a,e) function, float only x^y = exp(y*ln(x))
+*/
+template <class T, cyme::simd O, int N, class R1, class R2>
+vec<T, O, N, vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>> forceinline pow(vec<T, O, N, R1> const &x,
+                                                                                           vec<T, O, N, R2> const &y) {
+    return exp(y * log(x));
+}
+
+/**
 * negate operator optimisation --a = a
 */
 template <class T, cyme::simd O, int N, class R1>

@@ -28,6 +28,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
+#include <cmath>
 #include <cyme/cyme.h>
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp>
@@ -64,6 +65,9 @@ static boost::random::uniform_real_distribution<float> Randomfloatexp10 =
     boost::random::uniform_real_distribution<float>(-35, 35);
 static boost::random::uniform_real_distribution<double> Randomdoubleexp10 =
     boost::random::uniform_real_distribution<double>(-305, 305);
+static boost::random::uniform_real_distribution<float> Randomfloatpow =
+    boost::random::uniform_real_distribution<float>(0, 10);
+
 static boost::random::mt19937 rng;
 
 template <class T>
@@ -102,6 +106,16 @@ void init(Ba &block_a, Bb &block_b) {
     for (std::size_t i = 0; i < block_a.size(); ++i)
         for (std::size_t j = 0; j < block_a.size_block(); ++j) {
             typename Ba::value_type random = GetRandom<typename Ba::value_type>();
+            block_a(i, j) = random;
+            block_b(i, j) = random;
+        }
+}
+
+template <class Ba, class Bb> // m and n are differents into the block that why I passe like argument
+void init_pow(Ba &block_a, Bb &block_b) {
+    for (std::size_t i = 0; i < block_a.size(); ++i)
+        for (std::size_t j = 0; j < block_a.size_block(); ++j) {
+            typename Ba::value_type random = Randomfloatpow(rng);
             block_a(i, j) = random;
             block_b(i, j) = random;
         }
