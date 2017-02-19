@@ -63,12 +63,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_is_empty, T, floating_point_test_types) {
     {
         cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> a(2.);
         bool b = a.is_empty(); // it is true so no empty
-        BOOST_CHECK_EQUAL(0, !b);
+        BOOST_CHECK_EQUAL(false, b);
     }
     {
         cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> a(0.);
         bool b = a.is_empty(); // it is true so no empty
-        BOOST_CHECK_EQUAL(0, !b);
+        BOOST_CHECK_EQUAL(true, b);
     }
 }
 
