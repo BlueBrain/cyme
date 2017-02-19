@@ -355,6 +355,14 @@ operator/(vec<T, O, N, R2> const &b, typename identity<T>::value_type const &s) 
     return vec<T, O, N, vec_mul<T, O, N, R2, vec_scalar<T, O, N>>>(
         vec_mul<T, O, N, R2, vec_scalar<T, O, N>>(b.rep(), vec_scalar<T, O, N>(1. / static_cast<T>(s))));
 }
+
+/**
+* minimum operator a,b
+*/
+template <class T, cyme::simd O, int N, class R1, class R2>
+vec<T, O, N, vec_min<T, O, N, R1, R2>> forceinline min(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+    return vec<T, O, N, vec_min<T, O, N, R1, R2>>(vec_min<T, O, N, R1, R2>(a.rep(), b.rep()));
+}
 }
 
 #endif

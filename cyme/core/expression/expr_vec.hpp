@@ -296,6 +296,18 @@ class vec_sub {
     forceinline vec_simd<T, O, N> operator()() const { return op1() - op2(); }
 };
 
+/** minimu vertex in the DAG from min(a,b) */
+template <class T, cyme::simd O, int N, class OP1, class OP2>
+class vec_min {
+    typename vec_traits<OP1, O, N>::value_type op1;
+    typename vec_traits<OP2, O, N>::value_type op2;
+
+  public:
+    forceinline vec_min(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
+
+    forceinline vec_simd<T, O, N> operator()() const { return min(op1(), op2()); }
+};
+
 /** negate vertex in the DAG from -a
 
 Contrary to other class it is a structure, I did an optimization in case
@@ -490,7 +502,8 @@ class vec {
      */
     forceinline vec &operator=(vec const &rhs) {
         expr_rep() = rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data_pointer != NULL)         // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -503,7 +516,8 @@ class vec {
     template <class Rep2>
     forceinline vec &operator=(vec<T, O, N, Rep2> const &rhs) {
         expr_rep() = rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data_pointer != NULL)         // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -516,7 +530,8 @@ class vec {
     template <class Rep2>
     forceinline vec &operator+=(vec<T, O, N, Rep2> const &rhs) {
         expr_rep() += rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data_pointer != NULL)         // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -529,7 +544,8 @@ class vec {
     template <class Rep2>
     forceinline vec &operator-=(vec<T, O, N, Rep2> const &rhs) {
         expr_rep() -= rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data_pointer != NULL)         // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -542,7 +558,8 @@ class vec {
     template <class Rep2>
     forceinline vec &operator*=(vec<T, O, N, Rep2> const &rhs) {
         expr_rep() *= rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data_pointer != NULL)         // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -554,21 +571,33 @@ class vec {
     */
     template <class Rep2>
     forceinline vec &operator/=(vec<T, O, N, Rep2> const &rhs) {
-        expr_rep() /= rhs.rep()();    // basic register copy no three
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        expr_rep() /= rhs.rep()();        // basic register copy no three
+        if (data_pointer != NULL)         // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
-    forceinline pointer adress() { return data_pointer; }
+    template <class Rep2>
+    forceinline vec operator<(vec<T, O, N, Rep2> const &rhs) {
+        return vec(expr_rep() < rhs.rep()()); // basic register copy no three
+    }
+
+    bool is_empty() { return rep()().is_empty(); }
 
     /**
     Get the vector class, read only
     */
     forceinline Rep const &rep() const { return expr_rep; }
+
     /**
     Get the vector class, write only
     */
     forceinline Rep &rep() { return expr_rep; }
+
+    /**
+    Get the pointer
+    */
+    forceinline pointer &data() { return data_pointer; }
 
     /**
     Use print function from Rep

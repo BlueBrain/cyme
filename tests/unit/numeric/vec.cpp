@@ -57,6 +57,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_init_constant_constructor, T, generic_tes
     BOOST_CHECK_EQUAL(0, b);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_is_empty, T, floating_point_test_types) {
+    int n = cyme::unroll_factor::N * cyme::trait_register<TYPE, cyme::__GETSIMD__()>::size / sizeof(TYPE);
+    TYPE Random = GetRandom<TYPE>();
+    {
+        cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> a(2.);
+        bool b = a.is_empty(); // it is true so no empty
+        BOOST_CHECK_EQUAL(0, !b);
+    }
+    {
+        cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> a(0.);
+        bool b = a.is_empty(); // it is true so no empty
+        BOOST_CHECK_EQUAL(0, !b);
+    }
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_negate, T, floating_point_test_types) {
     int n = cyme::unroll_factor::N * cyme::trait_register<TYPE, cyme::__GETSIMD__()>::size / sizeof(TYPE);
     TYPE Random = GetRandom<TYPE>();
@@ -251,6 +266,31 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_ZERO_mul, T, generic_test_types) {
 
     for (int i = 0; i < n; ++i)
         BOOST_CHECK_EQUAL(a[i], b[i]);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_min, T, floating_point_test_types) {
+    int n = cyme::unroll_factor::N * cyme::trait_register<TYPE, cyme::__GETSIMD__()>::size / sizeof(TYPE);
+    TYPE a[n] __attribute__((aligned(64)));
+    TYPE b[n] __attribute__((aligned(64)));
+    TYPE res[n] __attribute__((aligned(64)));
+
+    for (int i = 0; i < n; ++i) {
+        a[i] = GetRandom<TYPE>();
+        b[i] = GetRandom<TYPE>();
+    }
+
+    cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(a);
+    cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(b);
+    cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> vc;
+
+    for (int i = 0; i < n; ++i)
+        a[i] = std::min(a[i], b[i]);
+
+    vc = min(va, vb);
+    vc.store(res);
+
+    for (int i = 0; i < n; ++i)
+        BOOST_REQUIRE_CLOSE(a[i], res[i], 0.001);
 }
 
 #undef SIZE

@@ -140,6 +140,11 @@ vec_simd<T, O, N> &vec_simd<T, O, N>::neg() {
 }
 
 template <class T, cyme::simd O, int N>
+bool vec_simd<T, O, N>::is_empty() {
+    return _mm_is_empty<typename simd_trait<T, O, N>::value_type, O, N>(xmm);
+}
+
+template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> cast(const vec_simd<int, O, N> &rhs) {
     vec_simd<T, O, N> nrv;
     nrv.xmm = _mm_cast<typename simd_trait<T, O, N>::value_type, O, N>(rhs.xmm);
@@ -178,6 +183,13 @@ template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> fabs(const vec_simd<T, O, N> &rhs) {
     vec_simd<T, O, N> nrv;
     nrv.xmm = _mm_fabs<typename simd_trait<T, O, N>::value_type, O, N>(rhs.xmm);
+    return nrv;
+}
+
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> min(const vec_simd<T, O, N> &v1, const vec_simd<T, O, N> &v2) {
+    vec_simd<T, O, N> nrv;
+    nrv.xmm = _mm_min<typename simd_trait<T, O, N>::value_type, O, N>(v1.xmm, v2.xmm);
     return nrv;
 }
 

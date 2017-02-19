@@ -108,6 +108,9 @@ struct vec_simd {
     /** Negate the value of the register */
     forceinline vec_simd &neg();
 
+    /** Check is the reister contains only 0 */
+    forceinline bool is_empty();
+
     /** Function for load only one value type, serial library */
     forceinline vec_simd &single(const value_type &b);
 
@@ -259,6 +262,10 @@ forceinline vec_simd<T, O, N> help_gather(const T *src, const int *ind, const in
 /** Free function for scatter */
 template <class T, cyme::simd O, int N, cyme::scatter_op P>
 void help_scatter(vec_simd<T, O, N> const &src, T *des, const int *ind, const int range);
+
+/** Free function min operator between two vectors, this function uses the return value optimization */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> min(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs);
 
 #ifdef __FMA__
 /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */

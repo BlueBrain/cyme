@@ -446,6 +446,33 @@ _mm_neg<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type xm
 }
 
 /**
+    check if the register is full of 0, return a bool. Specialisation double,cyme::sse,1 regs
+ */
+template <>
+forceinline bool _mm_is_empty<double, cyme::sse, 1>(simd_trait<double, cyme::sse, 1>::register_type xmm0) {
+    return _mm_testz_pd(xmm0, xmm0);
+}
+
+/**
+    check if the register is full of 0, return a bool.
+   specialisation double,cyme::sse,2 regs
+ */
+template <>
+forceinline bool _mm_is_empty<double, cyme::sse, 2>(simd_trait<double, cyme::sse, 2>::register_type xmm0) {
+    return _mm_testz_pd(xmm0.r0, xmm0.r0) | _mm_testz_pd(xmm0.r1, xmm0.r1);
+}
+
+/**
+   check if the register is full of 0, return a bool.
+   specialisation double,cyme::sse,4 regs
+ */
+template <>
+forceinline bool _mm_is_empty<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type xmm0) {
+    return _mm_testz_pd(xmm0.r0, xmm0.r0) | _mm_testz_pd(xmm0.r1, xmm0.r1) | _mm_testz_pd(xmm0.r2, xmm0.r2) |
+           _mm_testz_pd(xmm0.r3, xmm0.r3);
+}
+
+/**
   Convert packed double-precision (64-bit) floating-point elements in xmm0 to packed 32-bit integers with
  truncation, and store the results in dst.
    specialisation double,cyme::sse,1 regs
@@ -1283,6 +1310,40 @@ _mm_andnot<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type
                                                            _mm_andnot_pd(xmm0.r2, mask), _mm_andnot_pd(xmm0.r3, mask));
 }
 
+/**
+ Evaluate the  min operator between two registers
+ specialisation double,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::sse, 1>::register_type
+_mm_min<double, cyme::sse, 1>(simd_trait<double, cyme::sse, 1>::register_type xmm0,
+                              simd_trait<double, cyme::sse, 1>::register_type xmm1) {
+    return _mm_min_pd(xmm0, xmm1);
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation double,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::sse, 2>::register_type
+_mm_min<double, cyme::sse, 2>(simd_trait<double, cyme::sse, 2>::register_type xmm0,
+                              simd_trait<double, cyme::sse, 2>::register_type xmm1) {
+    return simd_trait<double, cyme::sse, 2>::register_type(_mm_min_pd(xmm0.r0, xmm1.r0), _mm_min_pd(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation double,cyme::sse,4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::sse, 4>::register_type
+_mm_min<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type xmm0,
+                              simd_trait<double, cyme::sse, 4>::register_type xmm1) {
+    return simd_trait<double, cyme::sse, 4>::register_type(_mm_min_pd(xmm0.r0, xmm1.r0), _mm_min_pd(xmm0.r1, xmm1.r1),
+                                                           _mm_min_pd(xmm0.r2, xmm1.r2), _mm_min_pd(xmm0.r3, xmm1.r3));
+}
+
 #ifdef __INTEL_COMPILER
 /**
   Compute the exponential value of e raised to the power of packed double-precision (64-bit) floating-point
@@ -1904,6 +1965,33 @@ _mm_neg<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0
     simd_trait<float, cyme::sse, 1>::register_type mask(_mm_castsi128_ps(_mm_set1_epi32(0x80000000)));
     return simd_trait<float, cyme::sse, 4>::register_type(_mm_xor_ps(xmm0.r0, mask), _mm_xor_ps(xmm0.r1, mask),
                                                           _mm_xor_ps(xmm0.r2, mask), _mm_xor_ps(xmm0.r3, mask));
+}
+
+/**
+    check if the register is full of 0, return a bool. Specialisation float,cyme::sse,1 regs
+ */
+template <>
+forceinline bool _mm_is_empty<float, cyme::sse, 1>(simd_trait<float, cyme::sse, 1>::register_type xmm0) {
+    return _mm_testz_ps(xmm0, xmm0);
+}
+
+/**
+    check if the register is full of 0, return a bool.
+   specialisation float,cyme::sse,2 regs
+ */
+template <>
+forceinline bool _mm_is_empty<float, cyme::sse, 2>(simd_trait<float, cyme::sse, 2>::register_type xmm0) {
+    return _mm_testz_ps(xmm0.r0, xmm0.r0) | _mm_testz_ps(xmm0.r1, xmm0.r1);
+}
+
+/**
+    check if the register is full of 0, return a bool.
+   specialisation float,cyme::sse,4 regs
+ */
+template <>
+forceinline bool _mm_is_empty<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0) {
+    return _mm_testz_ps(xmm0.r0, xmm0.r0) | _mm_testz_ps(xmm0.r1, xmm0.r1) | _mm_testz_ps(xmm0.r2, xmm0.r2) |
+           _mm_testz_ps(xmm0.r3, xmm0.r3);
 }
 
 /**
@@ -3160,6 +3248,40 @@ _mm_add<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
     return simd_trait<int, cyme::sse, 4>::register_type(
         _mm_add_epi32(xmm0.r0, xmm1.r0), _mm_add_epi32(xmm0.r1, xmm1.r1), _mm_add_epi32(xmm0.r2, xmm1.r2),
         _mm_add_epi32(xmm0.r3, xmm1.r3));
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation float,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::sse, 1>::register_type
+_mm_min<float, cyme::sse, 1>(simd_trait<float, cyme::sse, 1>::register_type xmm0,
+                             simd_trait<float, cyme::sse, 1>::register_type xmm1) {
+    return _mm_min_ps(xmm0, xmm1);
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation double,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::sse, 2>::register_type
+_mm_min<float, cyme::sse, 2>(simd_trait<float, cyme::sse, 2>::register_type xmm0,
+                             simd_trait<float, cyme::sse, 2>::register_type xmm1) {
+    return simd_trait<float, cyme::sse, 2>::register_type(_mm_min_ps(xmm0.r0, xmm1.r0), _mm_min_ps(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation double,cyme::sse,4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::sse, 4>::register_type
+_mm_min<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0,
+                             simd_trait<float, cyme::sse, 4>::register_type xmm1) {
+    return simd_trait<float, cyme::sse, 4>::register_type(_mm_min_ps(xmm0.r0, xmm1.r0), _mm_min_ps(xmm0.r1, xmm1.r1),
+                                                          _mm_min_ps(xmm0.r2, xmm1.r2), _mm_min_ps(xmm0.r3, xmm1.r3));
 }
 
 } // end namespace
