@@ -450,7 +450,7 @@ _mm_neg<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type xm
  */
 template <>
 forceinline bool _mm_is_empty<double, cyme::sse, 1>(simd_trait<double, cyme::sse, 1>::register_type xmm0) {
-    simd_trait<double, cyme::sse, 1>::register_type mask(_mm_castsi128_pd(_mm_set1_epi64x(0xffffffffffffffff)));
+    simd_trait<int, cyme::sse, 1>::register_type mask(_mm_set1_epi64x(0xffffffffffffffff));
     return _mm_test_all_zeros(_mm_castpd_si128(xmm0), mask);
 }
 
@@ -460,7 +460,7 @@ forceinline bool _mm_is_empty<double, cyme::sse, 1>(simd_trait<double, cyme::sse
  */
 template <>
 forceinline bool _mm_is_empty<double, cyme::sse, 2>(simd_trait<double, cyme::sse, 2>::register_type xmm0) {
-    simd_trait<double, cyme::sse, 1>::register_type mask(_mm_castsi128_pd(_mm_set1_epi64x(0xffffffffffffffff)));
+    simd_trait<int, cyme::sse, 1>::register_type mask(_mm_set1_epi64x(0xffffffffffffffff));
     return _mm_test_all_zeros(_mm_castpd_si128(xmm0.r0), mask) | _mm_test_all_zeros(_mm_castpd_si128(xmm0.r1), mask);
 }
 
@@ -470,7 +470,7 @@ forceinline bool _mm_is_empty<double, cyme::sse, 2>(simd_trait<double, cyme::sse
  */
 template <>
 forceinline bool _mm_is_empty<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type xmm0) {
-    simd_trait<double, cyme::sse, 1>::register_type mask(_mm_castsi128_pd(_mm_set1_epi64x(0xffffffffffffffff)));
+    simd_trait<int, cyme::sse, 1>::register_type mask(_mm_set1_epi64x(0xffffffffffffffff));
     return _mm_test_all_zeros(_mm_castpd_si128(xmm0.r0), mask) | _mm_test_all_zeros(_mm_castpd_si128(xmm0.r1), mask) |
            _mm_test_all_zeros(_mm_castpd_si128(xmm0.r2), mask) | _mm_test_all_zeros(_mm_castpd_si128(xmm0.r3), mask);
 }
@@ -1975,7 +1975,7 @@ _mm_neg<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0
  */
 template <>
 forceinline bool _mm_is_empty<float, cyme::sse, 1>(simd_trait<float, cyme::sse, 1>::register_type xmm0) {
-    simd_trait<float, cyme::sse, 1>::register_type mask(_mm_castsi128_ps(_mm_set1_epi64x(0xffffffff)));
+    simd_trait<int, cyme::sse, 1>::register_type mask(_mm_set1_epi32(0xffffffff));
     return _mm_test_all_zeros(xmm0, mask);
 }
 
@@ -1985,7 +1985,7 @@ forceinline bool _mm_is_empty<float, cyme::sse, 1>(simd_trait<float, cyme::sse, 
  */
 template <>
 forceinline bool _mm_is_empty<float, cyme::sse, 2>(simd_trait<float, cyme::sse, 2>::register_type xmm0) {
-    simd_trait<float, cyme::sse, 1>::register_type mask(_mm_castsi128_ps(_mm_set1_epi64x(0xffffffff)));
+    simd_trait<int, cyme::sse, 1>::register_type mask(_mm_set1_epi32(0xffffffff));
     return _mm_test_all_zeros(xmm0.r0, mask) | _mm_test_all_zeros(xmm0.r1, mask);
 }
 
@@ -1995,7 +1995,7 @@ forceinline bool _mm_is_empty<float, cyme::sse, 2>(simd_trait<float, cyme::sse, 
  */
 template <>
 forceinline bool _mm_is_empty<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0) {
-    simd_trait<float, cyme::sse, 1>::register_type mask(_mm_castsi128_ps(_mm_set1_epi64x(0xffffffff)));
+    simd_trait<int, cyme::sse, 1>::register_type mask(_mm_set1_epi32(0xffffffff));
     return _mm_test_all_zeros(xmm0.r0, mask) | _mm_test_all_zeros(xmm0.r1, mask) | _mm_test_all_zeros(xmm0.r2, mask) |
            _mm_test_all_zeros(xmm0.r3, mask);
 }
