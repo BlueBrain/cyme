@@ -193,6 +193,14 @@ vec<T, O, N, vec_neg<T, O, N, R1>> forceinline operator-(vec<T, O, N, R1> const 
 }
 
 /**
+* negate operator ~a
+*/
+template <class T, cyme::simd O, int N, class R1>
+vec<T, O, N, vec_not<T, O, N, R1>> forceinline operator~(vec<T, O, N, R1> const &a) {
+    return vec<T, O, N, vec_not<T, O, N, R1>>(vec_not<T, O, N, R1>(a.rep()));
+}
+
+/**
 * bitwise logic operator and,  a & b
 */
 template <class T, cyme::simd O, int N, class R1, class R2>
