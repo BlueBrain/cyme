@@ -129,6 +129,10 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_gf(typename simd_tra
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_fabs(typename simd_trait<T, O, N>::register_type xmm0);
 
+/** Free function that change the type of register */
+template <class T, cyme::simd O, int N, class T2>
+forceinline typename simd_trait<T2, O, N>::register_type _mm_cast(typename simd_trait<T, O, N>::register_type xmm0);
+
 /** Free function to return poly1 or poly2 depending on the value of sel */
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type

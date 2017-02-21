@@ -258,21 +258,6 @@ class vec_lt {
     forceinline vec_simd<T, O, N> operator()() const { return op1() < op2(); }
 };
 
-    /** less than vertex in the DAG from a > b
-     /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
-     */
-    template <class T, cyme::simd O, int N, class OP1, class OP2>
-    class vec_ht {
-        typename vec_traits<OP1, O, N>::value_type op1;
-        typename vec_traits<OP2, O, N>::value_type op2;
-
-    public:
-        forceinline vec_ht(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
-        /* always return int */
-        forceinline vec_simd<T, O, N> operator()() const { return op1() > op2(); }
-    };
-
-
 /** less than vertex in the DAG from a < b
  /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
  */
@@ -639,6 +624,16 @@ class vec {
     /** Composition with cyme::vec_simd */
     Rep expr_rep;
 };
+
+
+template <class T2, class T1> //from T1 to T2
+inline vec<T2> cyme_cast(vec<T1> &v1) {
+    vec<T2> v2(0.);
+    cast(v1.rep(), v2.rep());
+    return v2;
+};
+
+
 }
 
 #include "cyme/core/expression/expr_vec_ops.ipp"

@@ -1630,6 +1630,16 @@ _mm_min<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xm
         _mm256_min_pd(xmm0.r3, xmm1.r3));
 }
 
+    /**
+     change the interpretation of the SIMD register
+      specialisation double,cyme::avx,1 regs
+     */
+    template <>
+    forceinline simd_trait<int, cyme::avx, 1>::register_type
+    _mm_cast<float, cyme::avx, 1,int>(simd_trait<float, cyme::avx, 1>::register_type xmm0) {
+        return _mm256_castps_si256(xmm0);
+    }
+
 #ifdef __INTEL_COMPILER
 /**
   Compute the exponential value of e raised to the power of packed double-precision (64-bit)
