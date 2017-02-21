@@ -188,6 +188,11 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_or(typename simd_tra
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_andnot(typename simd_trait<T, O, N>::register_type xmm0);
 
+/** Free function (wrapper) to bitwise xmm0 >> xmm1  */
+template <class T, cyme::simd O, int N>
+forceinline typename simd_trait<T, O, N>::register_type _mm_srl(typename simd_trait<T, O, N>::register_type xmm0,
+                                                                typename simd_trait<T, O, N>::register_type xmm1);
+
 /** Free function (wrapper) of the minimum function */
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_min(typename simd_trait<T, O, N>::register_type xmm0,

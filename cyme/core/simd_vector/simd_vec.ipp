@@ -103,6 +103,12 @@ vec_simd<T, O, N> &vec_simd<T, O, N>::operator|=(const vec_simd<T, O, N> &rhs) {
 }
 
 template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> &vec_simd<T, O, N>::operator>>=(const vec_simd<T, O, N> &rhs) {
+    xmm = _mm_srl<typename simd_trait<T, O, N>::value_type, O, N>(xmm, rhs.xmm);
+    return *this;
+}
+
+template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> &vec_simd<T, O, N>::operator~() {
     xmm = _mm_andnot<typename simd_trait<T, O, N>::value_type, O, N>(xmm);
     return *this;
@@ -217,8 +223,9 @@ vec_simd<T, O, N> select_sign_cos(const vec_simd<int, O, N> &swap, const vec_sim
 }
 
 template <class T1, cyme::simd O, int N, class T2>
-void cast(const vec_simd<T1, O, N> &v1, vec_simd<T2, O, N> &v2){
-    v2.xmm = _mm_cast<typename simd_trait<T1, O, N>::value_type, O, N, typename simd_trait<T2, O, N>::value_type>(v1.xmm);
+void cast(const vec_simd<T1, O, N> &v1, vec_simd<T2, O, N> &v2) {
+    v2.xmm =
+        _mm_cast<typename simd_trait<T1, O, N>::value_type, O, N, typename simd_trait<T2, O, N>::value_type>(v1.xmm);
 }
 
 #ifdef __FMA__

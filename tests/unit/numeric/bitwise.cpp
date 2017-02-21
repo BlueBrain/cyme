@@ -183,6 +183,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_andnot_operations, T, generic_test_types)
         BOOST_CHECK(r[i] == 0);
 }
 
+BOOST_AUTO_TEST_CASE(vec_simd_shift_operations) {
+
+    double tmp = drand48();
+    cyme::vec_simd<int, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(3);
+    cyme::vec_simd<int, cyme::__GETSIMD__(), cyme::unroll_factor::N> mask(1);
+    int n = cyme::unroll_factor::N * cyme::trait_register<int, cyme::__GETSIMD__()>::size / sizeof(int);
+    int r[n] __attribute__((aligned(64)));
+
+    va = va >> mask;
+    va.store(r);
+
+    for (int i = 0; i < n; ++i) {
+        BOOST_CHECK(r[i] == 1);
+    }
+}
+
 #endif
 
 #undef SIZE

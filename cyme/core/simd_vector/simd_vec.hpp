@@ -99,6 +99,9 @@ struct vec_simd {
     /** Operator |= bewteen two vectors */
     forceinline vec_simd &operator|=(const vec_simd &rhs);
 
+    /** Operator >>= bewteen two vectors (right shift) */
+    forceinline vec_simd &operator>>=(const vec_simd &rhs);
+
     /** Operator negate bewteen two vectors */
     forceinline vec_simd &operator~();
 
@@ -269,7 +272,7 @@ forceinline vec_simd<T, O, N> min(const vec_simd<T, O, N> &lhs, const vec_simd<T
 
 /** "SIMD" sense of way static cast, from T1 to T2 */
 template <class T1, cyme::simd O, int N, class T2>
-forceinline void cast(const vec_simd<T1, O, N> &v1, vec_simd<T2, O, N>& v2);
+forceinline void cast(const vec_simd<T1, O, N> &v1, vec_simd<T2, O, N> &v2);
 
 #ifdef __FMA__
 /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */
