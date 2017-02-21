@@ -99,7 +99,7 @@ struct vec_simd {
     /** Operator |= bewteen two vectors */
     forceinline vec_simd &operator|=(const vec_simd &rhs);
 
-    /** Operator negate bewteen two vectors, no DAG for this one */
+    /** Operator negate bewteen two vectors */
     forceinline vec_simd &operator~();
 
     /** Save the value into the register into the cyme */
