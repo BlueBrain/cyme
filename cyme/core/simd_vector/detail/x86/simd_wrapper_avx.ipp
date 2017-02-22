@@ -3961,7 +3961,7 @@ _mm_and<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
 }
 
 /**
- Evaluate the the & operator between two registers
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
  specialisation int,cyme::avx,1 regs
  */
 template <>
@@ -3970,9 +3970,9 @@ _mm_srl<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
                            simd_trait<int, cyme::avx, 1>::register_type xmm1) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
-    __m128i toto = _mm256_extractf128_si256(xmm1, 0);
-    __m128i tmp0 = _mm_srl_epi32(_mm256_extractf128_si256(xmm1, 0), _mm256_extractf128_si256(xmm0, 0));
-    __m128i tmp1 = _mm_srl_epi32(_mm256_extractf128_si256(xmm1, 1), _mm256_extractf128_si256(xmm0, 1));
+    __m128i mask = _mm_set_epi32 (0,0,0,0xffffffff); // the shift is done only with the first 32 bits
+    __m128i tmp0 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1, 0),mask));
+    __m128i tmp1 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1, 1),mask));
     __m256i res = _mm256_insertf128_si256(res, tmp0, 0);
     res = _mm256_insertf128_si256(res, tmp1, 1);
 #pragma GCC diagnostic pop
@@ -3980,7 +3980,7 @@ _mm_srl<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
 }
 
 /**
- Evaluate the the & operator between two registers
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
  specialisation int,cyme::avx,2 regs
  */
 template <>
@@ -3989,10 +3989,11 @@ _mm_srl<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
                            simd_trait<int, cyme::avx, 2>::register_type xmm1) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
-    __m128i tmp0 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm256_extractf128_si256(xmm1.r0, 0));
-    __m128i tmp1 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 1), _mm256_extractf128_si256(xmm1.r0, 1));
-    __m128i tmp2 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 0), _mm256_extractf128_si256(xmm1.r1, 0));
-    __m128i tmp3 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 1), _mm256_extractf128_si256(xmm1.r1, 1));
+    __m128i mask = _mm_set_epi32 (0,0,0,0xffffffff); // the shift is done only with the first 32 bits
+    __m128i tmp0 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 0),mask));
+    __m128i tmp1 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 1),mask));
+    __m128i tmp2 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r1, 0),mask));
+    __m128i tmp3 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r1, 1),mask));
     __m256i res0 = _mm256_insertf128_si256(res0, tmp0, 0);
     res0 = _mm256_insertf128_si256(res0, tmp1, 1);
     __m256i res1 = _mm256_insertf128_si256(res1, tmp2, 0);
@@ -4002,7 +4003,7 @@ _mm_srl<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
 }
 
 /**
- Evaluate the the & operator between two registers
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
  specialisation int,cyme::avx,4 regs
  */
 template <>
@@ -4011,14 +4012,15 @@ _mm_srl<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
                            simd_trait<int, cyme::avx, 4>::register_type xmm1) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
-    __m128i tmp0 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm256_extractf128_si256(xmm1.r0, 0));
-    __m128i tmp1 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 1), _mm256_extractf128_si256(xmm1.r0, 1));
-    __m128i tmp2 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 0), _mm256_extractf128_si256(xmm1.r1, 0));
-    __m128i tmp3 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 1), _mm256_extractf128_si256(xmm1.r1, 1));
-    __m128i tmp4 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r2, 0), _mm256_extractf128_si256(xmm1.r2, 0));
-    __m128i tmp5 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r2, 1), _mm256_extractf128_si256(xmm1.r2, 1));
-    __m128i tmp6 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r3, 0), _mm256_extractf128_si256(xmm1.r3, 0));
-    __m128i tmp7 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r3, 1), _mm256_extractf128_si256(xmm1.r3, 1));
+    __m128i mask = _mm_set_epi32 (0,0,0,0xffffffff); // the shift is done only with the first 32 bits
+    __m128i tmp0 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 0),mask));
+    __m128i tmp1 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 1),mask));
+    __m128i tmp2 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r1, 0),mask));
+    __m128i tmp3 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r1, 1),mask));
+    __m128i tmp4 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r2, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r2, 0),mask));
+    __m128i tmp5 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r2, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r2, 1),mask));
+    __m128i tmp6 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r3, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r3, 0),mask));
+    __m128i tmp7 = _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r3, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r3, 1),mask));
 
     __m256i res0 = _mm256_insertf128_si256(res0, tmp0, 0);
     res0 = _mm256_insertf128_si256(res0, tmp1, 1);

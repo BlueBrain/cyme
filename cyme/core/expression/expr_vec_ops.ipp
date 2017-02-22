@@ -173,10 +173,15 @@ vec<T, O, N, vec_pow<T, O, N, R1, M>>
 template <class T, cyme::simd O, int N, class R1, class R2>
 vec<T, O, N, vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>> forceinline pow(vec<T, O, N, R1> const &x,
                                                                                            vec<T, O, N, R2> const &y) {
-    return exp(y * log(x));
+    return vec<T, O, N, vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>>(
+                        vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>(
+                                         vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>(y.rep(),vec_log<T, O, N, R2>(x.rep())))
+                                                                                      );
+
+//    return exp(y * log(x));
 }
 
-/**
+    /**
 * negate operator optimisation --a = a
 */
 template <class T, cyme::simd O, int N, class R1>
