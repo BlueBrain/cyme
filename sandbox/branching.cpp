@@ -14,6 +14,5 @@ int main() {
 
     b = cyme::cyme_cast<int>(a);
 
-
     return 0;
 }

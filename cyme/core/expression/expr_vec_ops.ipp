@@ -174,14 +174,13 @@ template <class T, cyme::simd O, int N, class R1, class R2>
 vec<T, O, N, vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>> forceinline pow(vec<T, O, N, R1> const &x,
                                                                                            vec<T, O, N, R2> const &y) {
     return vec<T, O, N, vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>>(
-                        vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>(
-                                         vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>(y.rep(),vec_log<T, O, N, R2>(x.rep())))
-                                                                                      );
+        vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>(
+            vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>(y.rep(), vec_log<T, O, N, R2>(x.rep()))));
 
-//    return exp(y * log(x));
+    //    return exp(y * log(x));
 }
 
-    /**
+/**
 * negate operator optimisation --a = a
 */
 template <class T, cyme::simd O, int N, class R1>
@@ -217,7 +216,7 @@ forceinline vec<T, O, N, vec_and<T, O, N, R1, R2>> operator&(vec<T, O, N, R1> co
 * right shift operator  a >> b
 */
 template <class T, cyme::simd O, int N, class R1, class R2>
-forceinline vec<T, O, N, vec_rshift<T, O, N, R1, R2>> operator<(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+forceinline vec<T, O, N, vec_rshift<T, O, N, R1, R2>> operator>>(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
     return vec<T, O, N, vec_rshift<T, O, N, R1, R2>>(vec_rshift<T, O, N, R1, R2>(a.rep(), b.rep()));
 }
 
@@ -226,7 +225,7 @@ forceinline vec<T, O, N, vec_rshift<T, O, N, R1, R2>> operator<(vec<T, O, N, R1>
 */
 template <class T, cyme::simd O, int N, class R1>
 forceinline vec<T, O, N, vec_rshift<T, O, N, R1, vec_scalar<T, O, N>>>
-operator<(vec<T, O, N, R1> const &a, typename identity<T>::value_type const &s) {
+operator>>(vec<T, O, N, R1> const &a, typename identity<T>::value_type const &s) {
     return vec<T, O, N, vec_rshift<T, O, N, R1, vec_scalar<T, O, N>>>(
         vec_rshift<T, O, N, R1, vec_scalar<T, O, N>>(a.rep(), vec_scalar<T, O, N>(static_cast<T>(s))));
 }

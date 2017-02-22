@@ -3217,45 +3217,44 @@ _mm_and<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
         _mm_and_si128(xmm0.r3, xmm1.r3));
 }
 
-    /**
-     Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
-     specialisation int,cyme::avx,1 regs
-     */
-    template <>
-    forceinline simd_trait<int, cyme::sse, 1>::register_type
-    _mm_srl<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
-                               simd_trait<int, cyme::sse, 1>::register_type xmm1) {
-        __m128i mask = _mm_set_epi32 (0,0,0,0xffffffff); // the shift is done only with the first 32 bits
-        return _mm_srl_epi32(xmm0, _mm_and_si128(xmm1,mask));
-    }
+/**
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
+ specialisation int,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_srl<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 1>::register_type xmm1) {
+    __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
+    return _mm_srl_epi32(xmm0, _mm_and_si128(xmm1, mask));
+}
 
-    /**
-     Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
-     specialisation int,cyme::avx,2 regs
-     */
-    template <>
-    forceinline simd_trait<int, cyme::sse, 2>::register_type
-    _mm_srl<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
-                               simd_trait<int, cyme::sse, 2>::register_type xmm1) {
-        __m128i mask = _mm_set_epi32 (0,0,0,0xffffffff); // the shift is done only with the first 32 bits
-        return simd_trait<int, cyme::sse, 2>::register_type(_mm_srl_epi32(xmm0.r0, _mm_and_si128(xmm1.r0,mask)),
-                                                            _mm_srl_epi32(xmm0.r1, _mm_and_si128(xmm1.r1,mask)));
-    }
+/**
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
+ specialisation int,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_srl<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 2>::register_type xmm1) {
+    __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_srl_epi32(xmm0.r0, _mm_and_si128(xmm1.r0, mask)),
+                                                        _mm_srl_epi32(xmm0.r1, _mm_and_si128(xmm1.r1, mask)));
+}
 
-    /**
-     Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
-     specialisation int,cyme::avx,4 regs
-     */
-    template <>
-    forceinline simd_trait<int, cyme::sse, 4>::register_type
-    _mm_srl<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
-                               simd_trait<int, cyme::sse, 4>::register_type xmm1) {
-        __m128i mask = _mm_set_epi32 (0,0,0,0xffffffff); // the shift is done only with the first 32 bits
-        return simd_trait<int, cyme::sse, 4>::register_type(_mm_srl_epi32(xmm0.r0, _mm_and_si128(xmm1.r0,mask)),
-                                                            _mm_srl_epi32(xmm0.r1, _mm_and_si128(xmm1.r1,mask)),
-                                                            _mm_srl_epi32(xmm0.r2, _mm_and_si128(xmm1.r2,mask)),
-                                                            _mm_srl_epi32(xmm0.r3, _mm_and_si128(xmm1.r3,mask)));
-    }
+/**
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
+ specialisation int,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_srl<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 4>::register_type xmm1) {
+    __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
+    return simd_trait<int, cyme::sse, 4>::register_type(
+        _mm_srl_epi32(xmm0.r0, _mm_and_si128(xmm1.r0, mask)), _mm_srl_epi32(xmm0.r1, _mm_and_si128(xmm1.r1, mask)),
+        _mm_srl_epi32(xmm0.r2, _mm_and_si128(xmm1.r2, mask)), _mm_srl_epi32(xmm0.r3, _mm_and_si128(xmm1.r3, mask)));
+}
 
 /**
  add packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
