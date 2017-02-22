@@ -211,7 +211,7 @@ class vec_not {
     forceinline vec_not(OP1 const &a) : op1(a) {}
 
     /* always return int */
-    forceinline vec_simd<T, O, N> operator()() const { return op1(); }
+    forceinline vec_simd<T, O, N> operator()() const { return ~(op1()); }
 };
 
 /** and vertex in the DAG from a & b, it look likes weird
