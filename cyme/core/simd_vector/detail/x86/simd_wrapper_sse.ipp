@@ -1347,6 +1347,68 @@ _mm_min<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type xm
                                                            _mm_min_pd(xmm0.r2, xmm1.r2), _mm_min_pd(xmm0.r3, xmm1.r3));
 }
 
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_cast<double, cyme::sse, 1, int>(simd_trait<double, cyme::sse, 1>::register_type xmm0) {
+    return _mm_castpd_si128(xmm0);
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_cast<double, cyme::sse, 2, int>(simd_trait<double, cyme::sse, 2>::register_type xmm0) {
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_castpd_si128(xmm0.r0), _mm_castpd_si128(xmm0.r1));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::sse,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_cast<double, cyme::sse, 4, int>(simd_trait<double, cyme::sse, 4>::register_type xmm0) {
+    return simd_trait<int, cyme::sse, 4>::register_type(_mm_castpd_si128(xmm0.r0), _mm_castpd_si128(xmm0.r1),
+                                                        _mm_castpd_si128(xmm0.r2), _mm_castpd_si128(xmm0.r3));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::sse, 1>::register_type
+_mm_cast<int, cyme::sse, 1, double>(simd_trait<int, cyme::sse, 1>::register_type xmm0) {
+    return _mm_castsi128_pd(xmm0);
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::sse, 2>::register_type
+_mm_cast<int, cyme::sse, 2, double>(simd_trait<int, cyme::sse, 2>::register_type xmm0) {
+    return simd_trait<double, cyme::sse, 2>::register_type(_mm_castsi128_pd(xmm0.r0), _mm_castsi128_pd(xmm0.r1));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::sse,4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::sse, 4>::register_type
+_mm_cast<int, cyme::sse, 4, double>(simd_trait<int, cyme::sse, 4>::register_type xmm0) {
+    return simd_trait<double, cyme::sse, 4>::register_type(_mm_castsi128_pd(xmm0.r0), _mm_castsi128_pd(xmm0.r1),
+                                                           _mm_castsi128_pd(xmm0.r2), _mm_castsi128_pd(xmm0.r3));
+}
+
 #ifdef __INTEL_COMPILER
 /**
   Compute the exponential value of e raised to the power of packed double-precision (64-bit) floating-point
@@ -3219,7 +3281,7 @@ _mm_and<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
 
 /**
  Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
- specialisation int,cyme::avx,1 regs
+ specialisation int,cyme::sse,1 regs
  */
 template <>
 forceinline simd_trait<int, cyme::sse, 1>::register_type
@@ -3231,7 +3293,7 @@ _mm_srl<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
 
 /**
  Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
- specialisation int,cyme::avx,2 regs
+ specialisation int,cyme::sse,2 regs
  */
 template <>
 forceinline simd_trait<int, cyme::sse, 2>::register_type
@@ -3244,7 +3306,7 @@ _mm_srl<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
 
 /**
  Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
- specialisation int,cyme::avx,4 regs
+ specialisation int,cyme::sse,4 regs
  */
 template <>
 forceinline simd_trait<int, cyme::sse, 4>::register_type
@@ -3327,6 +3389,104 @@ _mm_min<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0
                              simd_trait<float, cyme::sse, 4>::register_type xmm1) {
     return simd_trait<float, cyme::sse, 4>::register_type(_mm_min_ps(xmm0.r0, xmm1.r0), _mm_min_ps(xmm0.r1, xmm1.r1),
                                                           _mm_min_ps(xmm0.r2, xmm1.r2), _mm_min_ps(xmm0.r3, xmm1.r3));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_cast<float, cyme::sse, 1, int>(simd_trait<float, cyme::sse, 1>::register_type xmm0) {
+    return _mm_castps_si128(xmm0);
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_cast<float, cyme::sse, 2, int>(simd_trait<float, cyme::sse, 2>::register_type xmm0) {
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_castps_si128(xmm0.r0), _mm_castps_si128(xmm0.r1));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::sse,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_cast<float, cyme::sse, 4, int>(simd_trait<float, cyme::sse, 4>::register_type xmm0) {
+    return simd_trait<int, cyme::sse, 4>::register_type(_mm_castps_si128(xmm0.r0), _mm_castps_si128(xmm0.r1),
+                                                        _mm_castps_si128(xmm0.r2), _mm_castps_si128(xmm0.r3));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::sse, 1>::register_type
+_mm_cast<int, cyme::sse, 1, float>(simd_trait<int, cyme::sse, 1>::register_type xmm0) {
+    return _mm_castsi128_ps(xmm0);
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::sse, 2>::register_type
+_mm_cast<int, cyme::sse, 2, float>(simd_trait<int, cyme::sse, 2>::register_type xmm0) {
+    return simd_trait<float, cyme::sse, 2>::register_type(_mm_castsi128_ps(xmm0.r0), _mm_castsi128_ps(xmm0.r1));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::sse,4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::sse, 4>::register_type
+_mm_cast<int, cyme::sse, 4, float>(simd_trait<int, cyme::sse, 4>::register_type xmm0) {
+    return simd_trait<float, cyme::sse, 4>::register_type(_mm_castsi128_ps(xmm0.r0), _mm_castsi128_ps(xmm0.r1),
+                                                          _mm_castsi128_ps(xmm0.r2), _mm_castsi128_ps(xmm0.r3));
+}
+
+/**
+ Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+ specialisation float,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_gt<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 1>::register_type xmm1) {
+    return _mm_cmpgt_epi32(xmm0, xmm1);
+}
+
+/**
+ Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+ specialisation float,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_gt<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 2>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_cmpgt_epi32(xmm0.r0, xmm1.r0),
+                                                        _mm_cmpgt_epi32(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+ specialisation float,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_gt<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 4>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 4>::register_type(
+        _mm_cmpgt_epi32(xmm0.r0, xmm1.r0), _mm_cmpgt_epi32(xmm0.r1, xmm1.r1), _mm_cmpgt_epi32(xmm0.r2, xmm1.r2),
+        _mm_cmpgt_epi32(xmm0.r3, xmm1.r3));
 }
 
 } // end namespace

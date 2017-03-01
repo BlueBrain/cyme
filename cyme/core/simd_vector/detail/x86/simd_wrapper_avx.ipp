@@ -2234,8 +2234,9 @@ _mm_neg<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0
  */
 template <>
 forceinline bool _mm_is_empty<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0) {
-    simd_trait<float, cyme::avx, 1>::register_type mask = _mm256_cmp_ps(xmm0, _mm256_set1_ps(0.0f), _CMP_EQ_OQ);
-    return _mm256_movemask_ps(mask); // return 0 means FALSE, something else meanse TRUE
+    __m256i mask = _mm256_set1_epi32(0xffffffff);
+    return _mm256_testz_si256(_mm256_castps_si256(xmm0), mask);
+    // return 0 means FALSE, something else meanse TRUE
 }
 
 /**
@@ -2244,9 +2245,9 @@ forceinline bool _mm_is_empty<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 
  */
 template <>
 forceinline bool _mm_is_empty<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0) {
-    simd_trait<float, cyme::avx, 1>::register_type mask0 = _mm256_cmp_ps(xmm0.r0, _mm256_set1_ps(0.0f), _CMP_EQ_OQ);
-    simd_trait<float, cyme::avx, 1>::register_type mask1 = _mm256_cmp_ps(xmm0.r1, _mm256_set1_ps(0.0f), _CMP_EQ_OQ);
-    return (_mm256_movemask_ps(mask0) | _mm256_movemask_ps(mask1));
+    __m256i mask = _mm256_set1_epi32(0xffffffff);
+    return (_mm256_testz_si256(_mm256_castps_si256(xmm0.r0), mask) |
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r1), mask));
 }
 
 /**
@@ -2255,12 +2256,11 @@ forceinline bool _mm_is_empty<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 
  */
 template <>
 forceinline bool _mm_is_empty<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0) {
-    simd_trait<float, cyme::avx, 1>::register_type mask0 = _mm256_cmp_ps(xmm0.r0, _mm256_set1_ps(0.0f), _CMP_EQ_OQ);
-    simd_trait<float, cyme::avx, 1>::register_type mask1 = _mm256_cmp_ps(xmm0.r1, _mm256_set1_ps(0.0f), _CMP_EQ_OQ);
-    simd_trait<float, cyme::avx, 1>::register_type mask2 = _mm256_cmp_ps(xmm0.r2, _mm256_set1_ps(0.0f), _CMP_EQ_OQ);
-    simd_trait<float, cyme::avx, 1>::register_type mask3 = _mm256_cmp_ps(xmm0.r3, _mm256_set1_ps(0.0f), _CMP_EQ_OQ);
-    return (_mm256_movemask_ps(mask0) | _mm256_movemask_ps(mask1) | _mm256_movemask_ps(mask2) |
-            _mm256_movemask_ps(mask3));
+    __m256i mask = _mm256_set1_epi32(0xffffffff);
+    return (_mm256_testz_si256(_mm256_castps_si256(xmm0.r0), mask) |
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r1), mask) |
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r2), mask) |
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r3), mask));
 }
 
 /**
