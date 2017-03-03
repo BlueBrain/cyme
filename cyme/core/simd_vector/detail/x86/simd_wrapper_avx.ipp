@@ -491,7 +491,7 @@ template <>
 forceinline bool _mm_is_empty<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0) {
     simd_trait<double, cyme::avx, 1>::register_type mask0 = _mm256_cmp_pd(xmm0.r0, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
     simd_trait<double, cyme::avx, 1>::register_type mask1 = _mm256_cmp_pd(xmm0.r1, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    return (_mm256_movemask_pd(mask0) | _mm256_movemask_pd(mask1));
+    return (_mm256_movemask_pd(mask0) & _mm256_movemask_pd(mask1));
 }
 
 /**
@@ -504,7 +504,7 @@ forceinline bool _mm_is_empty<double, cyme::avx, 4>(simd_trait<double, cyme::avx
     simd_trait<double, cyme::avx, 1>::register_type mask1 = _mm256_cmp_pd(xmm0.r1, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
     simd_trait<double, cyme::avx, 1>::register_type mask2 = _mm256_cmp_pd(xmm0.r2, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
     simd_trait<double, cyme::avx, 1>::register_type mask3 = _mm256_cmp_pd(xmm0.r3, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    return (_mm256_movemask_pd(mask0) | _mm256_movemask_pd(mask1) | _mm256_movemask_pd(mask2) |
+    return (_mm256_movemask_pd(mask0) & _mm256_movemask_pd(mask1) & _mm256_movemask_pd(mask2) &
             _mm256_movemask_pd(mask3));
 }
 
@@ -2246,7 +2246,7 @@ forceinline bool _mm_is_empty<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 
 template <>
 forceinline bool _mm_is_empty<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0) {
     __m256i mask = _mm256_set1_epi32(0xffffffff);
-    return (_mm256_testz_si256(_mm256_castps_si256(xmm0.r0), mask) |
+    return (_mm256_testz_si256(_mm256_castps_si256(xmm0.r0), mask) &
             _mm256_testz_si256(_mm256_castps_si256(xmm0.r1), mask));
 }
 
@@ -2257,9 +2257,9 @@ forceinline bool _mm_is_empty<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 
 template <>
 forceinline bool _mm_is_empty<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0) {
     __m256i mask = _mm256_set1_epi32(0xffffffff);
-    return (_mm256_testz_si256(_mm256_castps_si256(xmm0.r0), mask) |
-            _mm256_testz_si256(_mm256_castps_si256(xmm0.r1), mask) |
-            _mm256_testz_si256(_mm256_castps_si256(xmm0.r2), mask) |
+    return (_mm256_testz_si256(_mm256_castps_si256(xmm0.r0), mask) &
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r1), mask) &
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r2), mask) &
             _mm256_testz_si256(_mm256_castps_si256(xmm0.r3), mask));
 }
 
