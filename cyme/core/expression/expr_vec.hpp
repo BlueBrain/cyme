@@ -509,8 +509,8 @@ class vec {
     typedef value_type const *const_pointer;
     typedef Rep base_type;
 
-    /** default constructor nothing special */
-    forceinline explicit vec() : expr_rep() {}
+    //  /** default constructor nothing special */
+    //  forceinline explicit vec() : expr_rep() {}
 
     /** Constructor lhs of the operator=, pointer lhs because non const I save it for saving at the end */
     forceinline explicit vec(pointer rb) : data_pointer(rb), expr_rep(rb) {}
@@ -522,7 +522,7 @@ class vec {
     forceinline explicit vec(const_pointer rb) : data_pointer(NULL), expr_rep(rb) {}
 
     /*** Constructor with constant, I do not care about the pointer */
-    forceinline vec(value_type b) : data_pointer(NULL), expr_rep(b) {}
+    explicit forceinline vec(value_type b = value_type()) : data_pointer(NULL), expr_rep(b) {}
 
     /**
      operator= initializes the vec to a given value. The full vector has
