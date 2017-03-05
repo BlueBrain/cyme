@@ -9,10 +9,17 @@
 
 int main() {
 
-    cyme::vec<float> a(6.);
-    cyme::vec<int> b(5.);
+    int data[8] __attribute__((aligned(32))) = {-1, 1, -2, 3, 4, 5, 6, 7};
 
-    b = cyme::cyme_cast<int>(a);
+    cyme::vec<double> a;
+
+    cyme::vec<int> b(data);
+    cyme::vec<int> zero;
+
+    cyme::vec<int> mask;
+    mask = b > zero;
+
+    a = cyme::cyme_cast<double>(mask);
 
     return 0;
 }
