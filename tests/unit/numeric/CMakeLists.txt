@@ -4,7 +4,7 @@ add_definitions (-Wno-unused-variable)
 if(CYME_TRIGO)
 set(tests exp exp2 exp10 log log2 log10 vec pow sqrt fabs sin cos tan)
 else()
-set(tests exp exp2 exp10 log log2 log10 vec pow sqrt fabs bitwise cast)
+set(tests exp exp2 exp10 log log2 log10 vec pow sqrt fabs bitwise )
 endif()
 
 
