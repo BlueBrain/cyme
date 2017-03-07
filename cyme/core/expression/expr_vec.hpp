@@ -536,9 +536,6 @@ class vec {
     typedef value_type const *const_pointer;
     typedef Rep base_type;
 
-    /** default constructor nothing special */
-    forceinline explicit vec() : expr_rep() {}
-
     /** Constructor lhs of the operator=, pointer lhs because non const I save it for saving at the end */
     forceinline explicit vec(pointer rb) : data_pointer(rb), expr_rep(rb) {}
 
@@ -549,7 +546,7 @@ class vec {
     forceinline explicit vec(const_pointer rb) : data_pointer(NULL), expr_rep(rb) {}
 
     /*** Constructor with constant, I do not care about the pointer */
-    forceinline vec(value_type b) : data_pointer(NULL), expr_rep(b) {}
+    explicit forceinline vec(value_type b = value_type()) : data_pointer(NULL), expr_rep(b) {}
 
     /**
      operator= initializes the vec to a given value. The full vector has
@@ -666,9 +663,13 @@ class vec {
     Rep expr_rep;
 };
 
+/**
+convert the value, half of the register can be lost (e.g. 8xuint32 -> 4xdouble)
+\warning does not copy the pointer to save the data, to do
+*/
 template <class T2, class T1> // from T1 to T2
 inline vec<T2> cyme_cast(vec<T1> &v1) {
-    vec<T2> v2(0.);
+    vec<T2> v2;
     cast(v1.rep(), v2.rep());
     return v2;
 };

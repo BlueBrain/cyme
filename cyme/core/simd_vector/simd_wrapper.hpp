@@ -112,7 +112,7 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_neg(typename simd_tr
 template <class T, cyme::simd O, int N>
 forceinline bool _mm_is_empty(typename simd_trait<T, O, N>::register_type xmm0);
 
-/** Free function to cast in/to float for the exp */
+/** Free function to cast int to float for the exp */
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_cast(typename simd_trait<int, O, N>::register_type xmm0);
 

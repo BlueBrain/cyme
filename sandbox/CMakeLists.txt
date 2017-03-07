@@ -41,8 +41,10 @@ function(make_program main_ flag_ simd_ unroll_)
     target_link_libraries(${main_}_${simd_}_${unroll} ${Boost_CHRONO_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${SIMD_SVML_LIBRARY} ${CYME_TIME} ${CYME_MIC})
 endfunction(make_program)
 
-set(listunroll 1 2 4)
-set(listmain main_c test_print branching)
+#set(listunroll 1 2 4)
+set(listunroll 1)
+#set(listmain main_c test_print branching)
+set(listmain branching)
 
 foreach(test ${listmain})
     foreach(unroll ${listunroll})
