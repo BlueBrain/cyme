@@ -60,6 +60,52 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_pow_comparison, T, floating_point_test_types) 
         BOOST_REQUIRE_CLOSE(a[i], res[i], 0.001);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_pow_comparison_float, T, full_test_types) {
+    int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+    T a[n] __attribute__((aligned(64)));
+    T b[n] __attribute__((aligned(64)));
+    T res[n] __attribute__((aligned(64)));
+    for (size_t i = 0; i < n; ++i) {
+        a[i] = std::abs(GetRandom<T>());
+        b[i] = drand48();
+    }
+
+    cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(a);
+    cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(b);
+
+    for (size_t i = 0; i < n; ++i)
+        a[i] = std::pow(a[i], b[i]);
+
+    va = cyme::pow_f(va, vb);
+    va.store(res);
+
+    for (size_t i = 0; i < n; ++i)
+        BOOST_REQUIRE_CLOSE(a[i], res[i], 0.001);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(std_pow_comparison_float_negative, T, full_test_types) {
+    int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+    T a[n] __attribute__((aligned(64)));
+    T b[n] __attribute__((aligned(64)));
+    T res[n] __attribute__((aligned(64)));
+    for (size_t i = 0; i < n; ++i) {
+        a[i] = std::abs(GetRandom<T>());
+        b[i] = drand48();
+    }
+
+    cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(a);
+    cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(b);
+
+    for (size_t i = 0; i < n; ++i)
+        a[i] = -std::pow(a[i], b[i]);
+
+    va = -cyme::pow_f(va, vb);
+    va.store(res);
+
+    for (size_t i = 0; i < n; ++i)
+        BOOST_REQUIRE_CLOSE(a[i], res[i], 0.001);
+}
+
 #undef NN
 #undef TYPE
 #undef MAX

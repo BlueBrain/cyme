@@ -103,6 +103,12 @@ vec_simd<T, O, N> &vec_simd<T, O, N>::operator|=(const vec_simd<T, O, N> &rhs) {
 }
 
 template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> &vec_simd<T, O, N>::operator^=(const vec_simd<T, O, N> &rhs) {
+    xmm = _mm_xor<typename simd_trait<T, O, N>::value_type, O, N>(xmm, rhs.xmm);
+    return *this;
+}
+
+template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> &vec_simd<T, O, N>::operator>>=(const vec_simd<T, O, N> &rhs) {
     xmm = _mm_srl<typename simd_trait<T, O, N>::value_type, O, N>(xmm, rhs.xmm);
     return *this;
@@ -112,6 +118,13 @@ template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> &vec_simd<T, O, N>::operator~() {
     xmm = _mm_andnot<typename simd_trait<T, O, N>::value_type, O, N>(xmm);
     return *this;
+}
+
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> &vec_simd<T, O, N>::operator-() {
+    vec_simd<T, O, N> s(-0.);
+    xmm = _mm_xor<typename simd_trait<T, O, N>::value_type, O, N>(xmm, s.xmm);
+    return (*this);
 }
 
 template <class T, cyme::simd O, int N>

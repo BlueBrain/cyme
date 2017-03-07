@@ -28,6 +28,7 @@ set(CYME_PUBLIC_HEADERS ${COMMON_INCLUDES}
   "core/simd_vector/math/simd_fms.ipp"
   "core/simd_vector/math/simd_mul.ipp"
   "core/simd_vector/math/simd_pow.ipp"
+  "core/simd_vector/math/simd_powf.ipp"
   "core/simd_vector/math/simd_sub.ipp"
   "core/simd_vector/math/simd_trig.ipp"
   "core/simd_vector/math/simd_gather.ipp"

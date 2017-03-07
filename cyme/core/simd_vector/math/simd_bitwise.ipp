@@ -43,6 +43,13 @@ vec_simd<T, O, N> operator|(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N
 }
 
 template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> operator^(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(lhs);
+    nrv ^= rhs;
+    return nrv;
+}
+
+template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> operator>>(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
     vec_simd<T, O, N> nrv(lhs);
     nrv >>= rhs;

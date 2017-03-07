@@ -168,16 +168,11 @@ vec<T, O, N, vec_pow<T, O, N, R1, M>>
 }
 
 /**
-* pow(a,e) function, float only x^y = exp(y*ln(x))
+* pow(a,e) function, float only x^y
 */
 template <class T, cyme::simd O, int N, class R1, class R2>
-vec<T, O, N, vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>> forceinline pow(vec<T, O, N, R1> const &x,
-                                                                                           vec<T, O, N, R2> const &y) {
-    return vec<T, O, N, vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>>(
-        vec_exp<T, O, N, vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>>(
-            vec_mul<T, O, N, R1, vec_log<T, O, N, R2>>(y.rep(), vec_log<T, O, N, R2>(x.rep()))));
-
-    //    return exp(y * log(x));
+vec<T, O, N, vec_powf<T, O, N, R1, R2>> forceinline pow(vec<T, O, N, R1> const &x, vec<T, O, N, R2> const &y) {
+    return vec<T, O, N, vec_powf<T, O, N, R1, R2>>(vec_powf<T, O, N, R1, R2>(x.rep(), y.rep()));
 }
 
 /**
@@ -210,6 +205,14 @@ vec<T, O, N, vec_not<T, O, N, R1>> forceinline operator~(vec<T, O, N, R1> const 
 template <class T, cyme::simd O, int N, class R1, class R2>
 forceinline vec<T, O, N, vec_and<T, O, N, R1, R2>> operator&(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
     return vec<T, O, N, vec_and<T, O, N, R1, R2>>(vec_and<T, O, N, R1, R2>(a.rep(), b.rep()));
+}
+
+/**
+ * bitwise logic operator and,  a ^ b
+ */
+template <class T, cyme::simd O, int N, class R1, class R2>
+forceinline vec<T, O, N, vec_xor<T, O, N, R1, R2>> operator^(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+    return vec<T, O, N, vec_xor<T, O, N, R1, R2>>(vec_xor<T, O, N, R1, R2>(a.rep(), b.rep()));
 }
 
 /**

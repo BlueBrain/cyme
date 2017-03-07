@@ -89,6 +89,13 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_log(typename simd_tr
 template <class T, cyme::simd O, int N> // Vendor only - to check ?
 forceinline typename simd_trait<T, O, N>::register_type _mm_sqrt(typename simd_trait<T, O, N>::register_type xmm0);
 
+/** Free function (wrapper) for calculating pow of a vector
+ \warning this function is only works if the wrapper Helper_POW is setup to Vendor_sqrt
+ */
+template <class T, cyme::simd O, int N> // Vendor (IBM/Intel) only
+forceinline typename simd_trait<T, O, N>::register_type _mm_pow(typename simd_trait<T, O, N>::register_type xmm0,
+                                                                typename simd_trait<T, O, N>::register_type xmm1);
+
 /** Free function (wrapper) for calculating a light version of the inverse (reciprocal) */
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_rec(typename simd_trait<T, O, N>::register_type xmm0);
@@ -183,6 +190,11 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_and(typename simd_tr
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_or(typename simd_trait<T, O, N>::register_type xmm0,
                                                                typename simd_trait<T, O, N>::register_type xmm1);
+
+/** Free function (wrapper) to bitwise xmm0 ^ xmm1 */
+template <class T, cyme::simd O, int N>
+forceinline typename simd_trait<T, O, N>::register_type _mm_xor(typename simd_trait<T, O, N>::register_type xmm0,
+                                                                typename simd_trait<T, O, N>::register_type xmm1);
 
 /** Free function (wrapper) to bitwise xmm0 &! xmm1 for negate only */
 template <class T, cyme::simd O, int N>

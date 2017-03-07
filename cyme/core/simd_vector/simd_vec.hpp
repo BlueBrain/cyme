@@ -96,6 +96,9 @@ struct vec_simd {
     /** Operator &= bewteen two vectors */
     forceinline vec_simd &operator&=(const vec_simd &rhs);
 
+    /** Operator ^= bewteen two vectors */
+    forceinline vec_simd &operator^=(const vec_simd &rhs);
+
     /** Operator |= bewteen two vectors */
     forceinline vec_simd &operator|=(const vec_simd &rhs);
 
@@ -104,6 +107,9 @@ struct vec_simd {
 
     /** Operator negate bewteen two vectors */
     forceinline vec_simd &operator~();
+
+    /** Operator negate bewteen two vectors */
+    forceinline vec_simd &operator-();
 
     /** Save the value into the register into the cyme */
     forceinline void store(pointer a) const;
@@ -217,6 +223,10 @@ forceinline vec_simd<T, O, N> neg(const vec_simd<T, O, N> &rhs);
 /** Free function for the pow */
 template <class T, cyme::simd O, int N, int M>
 forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &lhs);
+
+/** Free function for the powf */
+template <class T, cyme::simd O, int N, int M>
+forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &x, const vec_simd<T, O, N> &y);
 
 /** Free function for the exp */
 template <class T, cyme::simd O, int N>

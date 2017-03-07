@@ -1559,6 +1559,42 @@ _mm_or<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm
 }
 
 /**
+ Evaluate the  ^ operator between two registers
+ specialisation double,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 1>::register_type
+_mm_xor<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 1>::register_type xmm1) {
+    return _mm256_xor_pd(xmm0, xmm1);
+}
+
+/**
+ Evaluate the  ^ operator between two registers
+ specialisation double,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 2>::register_type
+_mm_xor<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 2>::register_type(_mm256_xor_pd(xmm0.r0, xmm1.r0),
+                                                           _mm256_xor_pd(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the  ^ operator between two registers
+ specialisation double,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 4>::register_type
+_mm_xor<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 4>::register_type(
+        _mm256_xor_pd(xmm0.r0, xmm1.r0), _mm256_xor_pd(xmm0.r1, xmm1.r1), _mm256_xor_pd(xmm0.r2, xmm1.r2),
+        _mm256_xor_pd(xmm0.r3, xmm1.r3));
+}
+
+/**
  Evaluate the andnot operator between two registers
  specialisation double,cyme::avx,1 regs
  */
@@ -1697,6 +1733,45 @@ forceinline simd_trait<double, cyme::avx, 4>::register_type
 _mm_log<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0) {
     return simd_trait<double, cyme::avx, 4>::register_type(__svml_log4(xmm0.r0), __svml_log4(xmm0.r1),
                                                            __svml_log4(xmm0.r2), __svml_log4(xmm0.r3));
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation double,cyme::avx, 1 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 1>::register_type
+_mm_pow<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 1>::register_type xmm1) {
+    return __svml_pow4(xmm0, xmm1);
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation double,cyme::avx, 2 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 2>::register_type
+_mm_pow<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 2>::register_type(__svml_pow4(xmm0.r0, xmm1.r0),
+                                                           __svml_pow4(xmm0.r1, xmm0.r1));
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation double,cyme::avx, 4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 4>::register_type
+_mm_pow<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 4>::register_type(__svml_pow4(xmm0.r0, xmm1.r0), __svml_pow4(xmm0.r1, xmm1.r1),
+                                                           __svml_pow4(xmm0.r2, xmm1.r2),
+                                                           __svml_pow4(xmm0.r3, xmm1.r3));
 }
 #endif
 
@@ -3286,6 +3361,42 @@ _mm_or<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0,
 }
 
 /**
+ Evaluate the  ^ operator between two registers
+ specialisation float,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 1>::register_type
+_mm_xor<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 1>::register_type xmm1) {
+    return _mm256_xor_ps(xmm0, xmm1);
+}
+
+/**
+ Evaluate the  ^ operator between two registers
+ specialisation float,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 2>::register_type
+_mm_xor<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 2>::register_type(_mm256_xor_ps(xmm0.r0, xmm1.r0),
+                                                          _mm256_xor_ps(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the  ^ operator between two registers
+ specialisation float,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 4>::register_type
+_mm_xor<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 4>::register_type(
+        _mm256_xor_ps(xmm0.r0, xmm1.r0), _mm256_xor_ps(xmm0.r1, xmm1.r1), _mm256_xor_ps(xmm0.r2, xmm1.r2),
+        _mm256_xor_ps(xmm0.r3, xmm1.r3));
+}
+
+/**
  Evaluate the andnot  operator between two registers
  specialisation float,cyme::avx,1 regs
  */
@@ -3424,6 +3535,45 @@ forceinline simd_trait<float, cyme::avx, 4>::register_type
 _mm_log<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0) {
     return simd_trait<float, cyme::avx, 4>::register_type(__svml_logf8(xmm0.r0), __svml_logf8(xmm0.r1),
                                                           __svml_logf8(xmm0.r2), __svml_logf8(xmm0.r3));
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation float,cyme::avx, 1 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 1>::register_type
+_mm_pow<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 1>::register_type xmm1) {
+    return __svml_powf8(xmm0, xmm1);
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation float,cyme::avx, 2 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 2>::register_type
+_mm_pow<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 2>::register_type(__svml_powf8(xmm0.r0, xmm1.r0),
+                                                          __svml_powf8(xmm0.r1, xmm0.r1));
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation float,cyme::avx, 4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 4>::register_type
+_mm_pow<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 4>::register_type(
+        __svml_powf8(xmm0.r0, xmm1.r0), __svml_powf8(xmm0.r1, xmm1.r1), __svml_powf8(xmm0.r2, xmm1.r2),
+        __svml_powf8(xmm0.r3, xmm1.r3));
 }
 #endif
 
