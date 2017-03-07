@@ -150,9 +150,9 @@ struct vec_simd {
 template <cyme::simd O, int N>
 forceinline vec_simd<int, O, N> round_up_even(const vec_simd<int, O, N> &rhs);
 
-/** Cast int to float */
+/** Convert int to float */
 template <class T, cyme::simd O, int N>
-forceinline vec_simd<T, O, N> cast(const vec_simd<int, O, N> &ths);
+forceinline vec_simd<T, O, N> convert(const vec_simd<int, O, N> &ths);
 
 /** Return the 2^k where k is a vector base on an integer */
 template <class T, cyme::simd O, int N>

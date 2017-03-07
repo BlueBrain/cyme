@@ -114,7 +114,7 @@ forceinline bool _mm_is_empty(typename simd_trait<T, O, N>::register_type xmm0);
 
 /** Free function to cast int to float for the exp */
 template <class T, cyme::simd O, int N>
-forceinline typename simd_trait<T, O, N>::register_type _mm_cast(typename simd_trait<int, O, N>::register_type xmm0);
+forceinline typename simd_trait<T, O, N>::register_type _mm_convert(typename simd_trait<int, O, N>::register_type xmm0);
 
 /** Free function (wrapper) for calculating the floor */
 template <class T, cyme::simd O, int N>

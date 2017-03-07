@@ -2420,7 +2420,7 @@ _mm_floor<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xm
  */
 template <>
 forceinline simd_trait<float, cyme::avx, 1>::register_type
-_mm_cast<float, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
+_mm_convert<float, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
     return _mm256_cvtepi32_ps(xmm0);
 }
 
@@ -2431,7 +2431,7 @@ _mm_cast<float, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0)
  */
 template <>
 forceinline simd_trait<float, cyme::avx, 2>::register_type
-_mm_cast<float, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
+_mm_convert<float, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
     return simd_trait<float, cyme::avx, 2>::register_type(_mm256_cvtepi32_ps(xmm0.r0), _mm256_cvtepi32_ps(xmm0.r1));
 }
 
@@ -2442,7 +2442,7 @@ _mm_cast<float, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0)
  */
 template <>
 forceinline simd_trait<float, cyme::avx, 4>::register_type
-_mm_cast<float, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
+_mm_convert<float, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
     return simd_trait<float, cyme::avx, 4>::register_type(_mm256_cvtepi32_ps(xmm0.r0), _mm256_cvtepi32_ps(xmm0.r1),
                                                           _mm256_cvtepi32_ps(xmm0.r2), _mm256_cvtepi32_ps(xmm0.r3));
 }

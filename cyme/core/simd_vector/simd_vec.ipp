@@ -164,9 +164,9 @@ bool vec_simd<T, O, N>::is_empty() {
 }
 
 template <class T, cyme::simd O, int N>
-vec_simd<T, O, N> cast(const vec_simd<int, O, N> &rhs) {
+vec_simd<T, O, N> convert(const vec_simd<int, O, N> &rhs) {
     vec_simd<T, O, N> nrv;
-    nrv.xmm = _mm_cast<typename simd_trait<T, O, N>::value_type, O, N>(rhs.xmm);
+    nrv.xmm = _mm_convert<typename simd_trait<T, O, N>::value_type, O, N>(rhs.xmm);
     return nrv;
 }
 
