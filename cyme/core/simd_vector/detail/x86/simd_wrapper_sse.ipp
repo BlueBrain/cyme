@@ -511,39 +511,46 @@ _mm_floor<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type 
         _mm_cvttpd_epi32(_mm_floor_pd(xmm0.r2)), _mm_cvttpd_epi32(_mm_floor_pd(xmm0.r3)));
 }
 
-/**
-  Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
- and store the results in dst.
-   specialisation double,cyme::sse,1 regs
- */
-template <>
-forceinline simd_trait<double, cyme::sse, 1>::register_type
-_mm_cast<int, cyme::sse, 1, double>(simd_trait<int, cyme::sse, 1>::register_type xmm0) {
-    return _mm_cvtepi32_pd(xmm0);
-}
 
-/**
-  Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
- and store the results in dst.
-   specialisation double,cyme::sse,2 regs
- */
-template <>
-forceinline simd_trait<double, cyme::sse, 2>::register_type
-_mm_cast<int, cyme::sse, 2, double>(simd_trait<int, cyme::sse, 2>::register_type xmm0) {
-    return simd_trait<double, cyme::sse, 2>::register_type(_mm_cvtepi32_pd(xmm0.r0), _mm_cvtepi32_pd(xmm0.r1));
-}
+    /**
+     Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+     and store the results in dst.
+     specialisation double,cyme::sse,1 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,1>::register_type
+    _mm_convert<double,cyme::sse,1>(simd_trait<int,cyme::sse,1>::register_type xmm0){
+        return  _mm_cvtepi32_pd(xmm0);
+    }
 
-/**
-  Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
- and store the results in dst.
-   specialisation double,cyme::sse,4 regs
- */
-template <>
-forceinline simd_trait<double, cyme::sse, 4>::register_type
-_mm_cast<int, cyme::sse, 4, double>(simd_trait<int, cyme::sse, 4>::register_type xmm0) {
-    return simd_trait<double, cyme::sse, 4>::register_type(_mm_cvtepi32_pd(xmm0.r0), _mm_cvtepi32_pd(xmm0.r1),
-                                                           _mm_cvtepi32_pd(xmm0.r2), _mm_cvtepi32_pd(xmm0.r3));
-}
+    /**
+     Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+     and store the results in dst.
+     specialisation double,cyme::sse,2 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,2>::register_type
+    _mm_convert<double,cyme::sse,2>(simd_trait<int,cyme::sse,2>::register_type xmm0){
+        return simd_trait<double,cyme::sse,2>::register_type(_mm_cvtepi32_pd(xmm0.r0),
+                                                             _mm_cvtepi32_pd(xmm0.r1));
+    }
+
+    /**
+     Convert packed 32-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+     and store the results in dst.
+     specialisation double,cyme::sse,4 regs
+     */
+    template<>
+    forceinline simd_trait<double,cyme::sse,4>::register_type
+    _mm_convert<double,cyme::sse,4>(simd_trait<int,cyme::sse,4>::register_type xmm0){
+        return simd_trait<double,cyme::sse,4>::register_type(_mm_cvtepi32_pd(xmm0.r0),
+                                                             _mm_cvtepi32_pd(xmm0.r1),
+                                                             _mm_cvtepi32_pd(xmm0.r2),
+                                                             _mm_cvtepi32_pd(xmm0.r3));
+    }
+
+
+
 
 /**
   Compute 2^k packed integer (64-bit) elements in xmm0 to packed double-precision (64-bit) floating-point
