@@ -26,6 +26,9 @@
 
 #ifndef CYME_SIMD_WRAPPER_AVX_IPP
 #define CYME_SIMD_WRAPPER_AVX_IPP
+
+#include <assert.h>
+
 namespace cyme {
 
 /**
@@ -547,43 +550,41 @@ _mm_floor<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type 
         _mm256_castsi128_si256(_mm256_cvttpd_epi32(_mm256_floor_pd(xmm0.r3))));
 }
 
-    /**
-     Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
-     and store the results in dst.
-     specialisation double,cyme::avx, 1 regs
-     */
-    template <>
-    forceinline simd_trait<double, cyme::avx, 1>::register_type
-    _mm_convert<double, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
-        return _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0));
-    }
+/**
+ Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+ and store the results in dst.
+ specialisation double,cyme::avx, 1 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 1>::register_type
+_mm_convert<double, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
+    return _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0));
+}
 
-    /**
-     Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
-     and store the results in dst.
-     specialisation double,cyme::avx, 2 regs
-     */
-    template <>
-    forceinline simd_trait<double, cyme::avx, 2>::register_type
-    _mm_convert<double, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
-        return simd_trait<double, cyme::avx, 2>::register_type(_mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)),
-                                                               _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)));
-    }
+/**
+ Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+ and store the results in dst.
+ specialisation double,cyme::avx, 2 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 2>::register_type
+_mm_convert<double, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
+    return simd_trait<double, cyme::avx, 2>::register_type(_mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)),
+                                                           _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)));
+}
 
-    /**
-     Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
-     and store the results in dst.
-     specialisation double,cyme::avx, 4 regs
-     */
-    template <>
-    forceinline simd_trait<double, cyme::avx, 4>::register_type
-    _mm_convert<double, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
-        return simd_trait<double, cyme::avx, 4>::register_type(
-                                                               _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)), _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)),
-                                                               _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r2)), _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r3)));
-    }
-
-
+/**
+ Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+ and store the results in dst.
+ specialisation double,cyme::avx, 4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 4>::register_type
+_mm_convert<double, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
+    return simd_trait<double, cyme::avx, 4>::register_type(
+        _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)), _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)),
+        _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r2)), _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r3)));
+}
 
 /**
   Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
@@ -595,10 +596,10 @@ template <>
 forceinline simd_trait<double, cyme::avx, 1>::register_type
 _mm_cast<int, cyme::avx, 1, double>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
     // xmm0 A B C D E F G H
-    __m128i lo = _mm256_castsi256_si128(xmm0);                     // A B C D
+    __m128i lo = _mm256_castsi256_si128(xmm0);                                                         // A B C D
     __m128i hi = _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_castsi256_si128(xmm0)), 78)); // C D A B
-    lo = _mm_cvtepi32_epi64(lo);                                                     // A "extension" B "extension"
-    hi = _mm_cvtepi32_epi64(hi);                                                     // C "extension" D "extension"
+    lo = _mm_cvtepi32_epi64(lo); // A "extension" B "extension"
+    hi = _mm_cvtepi32_epi64(hi); // C "extension" D "extension"
     xmm0 = _mm256_insertf128_si256(xmm0, lo, 0);
     xmm0 = _mm256_insertf128_si256(xmm0, hi, 1);
     return _mm256_castsi256_pd(xmm0);
@@ -614,10 +615,11 @@ template <>
 forceinline simd_trait<double, cyme::avx, 2>::register_type
 _mm_cast<int, cyme::avx, 2, double>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
     // xmm0 A B C D E F G H
-    __m128i lo_0 = _mm256_castsi256_si128(xmm0.r0);                          // first 4 integer
-    __m128i hi_0 = _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_castsi256_si128(xmm0.r0)), 78));      // C D A B
-    __m128i lo_1 = _mm256_extractf128_si256(xmm0.r0, 1);                                       // A B C D
-    __m128i hi_1 = _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_extractf128_si256(xmm0.r0, 1)), 78)); // C D A B
+    __m128i lo_0 = _mm256_castsi256_si128(xmm0.r0); // first 4 integer
+    __m128i hi_0 = _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_castsi256_si128(xmm0.r0)), 78)); // C D A B
+    __m128i lo_1 = _mm256_extractf128_si256(xmm0.r0, 1);                                                    // A B C D
+    __m128i hi_1 =
+        _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_extractf128_si256(xmm0.r0, 1)), 78)); // C D A B
 
     lo_0 = _mm_cvtepi32_epi64(lo_0); // A "extension" B "extension"
     hi_0 = _mm_cvtepi32_epi64(hi_0); // C "extension" D "extension"
