@@ -25,6 +25,7 @@
 */
 #ifndef CYME_SIMD_WRAPPER_SSE_IPP
 #define CYME_SIMD_WRAPPER_SSE_IPP
+#include <assert.h>
 namespace cyme {
 
 /**
@@ -1418,6 +1419,40 @@ _mm_cast<double, cyme::sse, 4, int>(simd_trait<double, cyme::sse, 4>::register_t
     return simd_trait<int, cyme::sse, 4>::register_type(_mm_castpd_si128(xmm0.r0), _mm_castpd_si128(xmm0.r1),
                                                         _mm_castpd_si128(xmm0.r2), _mm_castpd_si128(xmm0.r3));
 }
+
+    /**
+     change the interpretation of the SIMD register
+     specialisation float,cyme::sse,1 regs
+     */
+    template <>
+    forceinline simd_trait<double, cyme::sse, 1>::register_type _mm_cast<int, cyme::sse, 1, double>(
+        simd_trait<int, cyme::sse, 1>::register_type  __attribute__((unused)) xmm0) {
+        assert(false);
+        simd_trait<double, cyme::sse, 1>::register_type  tmp;
+        return tmp;
+    }
+
+    /**
+     change the interpretation of the SIMD register
+     specialisation float,cyme::sse,2 regs
+     */
+    template <>
+    forceinline simd_trait<double, cyme::sse, 2>::register_type _mm_cast<int, cyme::sse, 2, double>(
+        simd_trait<int, cyme::sse, 2>::register_type  __attribute__((unused)) xmm0) {
+        simd_trait<double, cyme::sse, 2>::register_type   tmp;
+assert(false); return tmp;
+    }
+
+    /**
+     change the interpretation of the SIMD register
+     specialisation float,cyme::sse,4 regs
+     */
+    template <>
+    forceinline simd_trait<double, cyme::sse, 4>::register_type _mm_cast<int, cyme::sse, 4, double>(
+        simd_trait<int, cyme::sse, 4>::register_type __attribute__((unused))  xmm0) {
+        simd_trait<double, cyme::sse, 4>::register_type   tmp;
+assert(false); return tmp;
+    }
 
 #ifdef __INTEL_COMPILER
 /**

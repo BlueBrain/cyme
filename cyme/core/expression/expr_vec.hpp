@@ -668,10 +668,10 @@ convert the value, half of the register can be lost (e.g. 8xuint32 -> 4xdouble)
 \warning does not copy the pointer to save the data, to do
 */
 template <class T2, class T1> // from T1 to T2
-inline vec<T2> cyme_cast(vec<T1> &v1) {
-    vec<T2> v2;
-    cast(v1.rep(), v2.rep());
-    return v2;
+forceinline vec<T2> cyme_cast(vec<T1> &v1) {
+    vec<T2> v;
+    v.rep() = cast<T2>(v1.rep());
+    return v;
 };
 }
 

@@ -280,9 +280,9 @@ void help_scatter(vec_simd<T, O, N> const &src, T *des, const int *ind, const in
 template <class T, cyme::simd O, int N>
 forceinline vec_simd<T, O, N> min(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs);
 
-/** "SIMD" sense of way static cast, from T1 to T2 */
-template <class T1, cyme::simd O, int N, class T2>
-forceinline void cast(const vec_simd<T1, O, N> &v1, vec_simd<T2, O, N> &v2);
+/** Free function "SIMD" sense of way static cast, from T1 to T2 */
+template <class T2, class T1, cyme::simd O, int N>
+forceinline vec_simd<T2, O, N> cast(const vec_simd<T1, O, N> &v1);
 
 #ifdef __FMA__
 /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */

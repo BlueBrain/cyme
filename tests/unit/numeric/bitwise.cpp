@@ -19,7 +19,6 @@
  */
 
 #include <tests/unit/test_header.hpp>
-#include <limits>
 
 using namespace cyme::test;
 

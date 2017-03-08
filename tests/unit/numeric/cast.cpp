@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(cast_from_mask_single_inequality, T, full_test_typ
 
     mask = zero < one;
 
-//  res = cyme::cyme_cast<T>(mask);
+    res = cyme::cyme_cast<T>(mask);
 
     helper<T> h;
     for (int i = 0; i < n; ++i) {
