@@ -1419,10 +1419,9 @@ _mm_cast<double, cyme::sse, 4, int>(simd_trait<double, cyme::sse, 4>::register_t
  */
 template <>
 forceinline simd_trait<double, cyme::sse, 1>::register_type
-_mm_cast<int, cyme::sse, 1, double>(simd_trait<int, cyme::sse, 1>::register_type __attribute__((unused)) xmm0) {
-    assert(false);
-    simd_trait<double, cyme::sse, 1>::register_type tmp;
-    return tmp;
+_mm_cast<int, cyme::sse, 1, double>(simd_trait<int, cyme::sse, 1>::register_type xmm0) {
+    __m128i lo = _mm_cvtepi32_epi64(xmm0);
+    return _mm_castsi128_pd(lo);
 }
 
 /**
@@ -1431,10 +1430,12 @@ _mm_cast<int, cyme::sse, 1, double>(simd_trait<int, cyme::sse, 1>::register_type
  */
 template <>
 forceinline simd_trait<double, cyme::sse, 2>::register_type
-_mm_cast<int, cyme::sse, 2, double>(simd_trait<int, cyme::sse, 2>::register_type __attribute__((unused)) xmm0) {
-    simd_trait<double, cyme::sse, 2>::register_type tmp;
-    assert(false);
-    return tmp;
+_mm_cast<int, cyme::sse, 2, double>(simd_trait<int, cyme::sse, 2>::register_type xmm0) {
+    __m128i lo = _mm_cvtepi32_epi64(xmm0.r0);
+    __m128i hi = _mm_cvtepi32_epi64(_mm_shuffle_epi32(xmm0.r0,78));
+    lo = _mm_cvtepi32_epi64(lo); // A "extension" B "extension"
+    hi = _mm_cvtepi32_epi64(hi); // C "extension" D "extension"
+    return simd_trait<double, cyme::sse, 2>::register_type(_mm_castsi128_pd(lo), _mm_castsi128_pd(hi));
 }
 
 /**
@@ -1444,9 +1445,20 @@ _mm_cast<int, cyme::sse, 2, double>(simd_trait<int, cyme::sse, 2>::register_type
 template <>
 forceinline simd_trait<double, cyme::sse, 4>::register_type
 _mm_cast<int, cyme::sse, 4, double>(simd_trait<int, cyme::sse, 4>::register_type __attribute__((unused)) xmm0) {
-    simd_trait<double, cyme::sse, 4>::register_type tmp;
-    assert(false);
-    return tmp;
+    __m128i lo0 = _mm_cvtepi32_epi64(xmm0.r0);
+    __m128i lo1 = _mm_cvtepi32_epi64(xmm0.r1);
+    __m128i hi0 = _mm_cvtepi32_epi64(_mm_shuffle_epi32(xmm0.r0,78));
+    __m128i hi1 = _mm_cvtepi32_epi64(_mm_shuffle_epi32(xmm0.r1,78));
+
+    lo0 = _mm_cvtepi32_epi64(lo0); // A "extension" B "extension"
+    lo1 = _mm_cvtepi32_epi64(lo1); // A "extension" B "extension"
+
+    hi0 = _mm_cvtepi32_epi64(hi0); // C "extension" D "extension"
+    hi1 = _mm_cvtepi32_epi64(hi1); // C "extension" D "extension"
+
+    return simd_trait<double, cyme::sse, 4>::register_type(_mm_castsi128_pd(lo0), _mm_castsi128_pd(hi0),
+                                                           _mm_castsi128_pd(lo1), _mm_castsi128_pd(hi1));
+
 }
 
 #ifdef __INTEL_COMPILER
