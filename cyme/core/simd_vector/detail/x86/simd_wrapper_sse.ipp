@@ -3091,6 +3091,7 @@ _mm_pow<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0
     return simd_trait<float, cyme::sse, 4>::register_type(
         __svml_powf4(xmm0.r0, xmm1.r0), __svml_powf4(xmm0.r1, xmm1.r1), __svml_powf4(xmm0.r2, xmm1.r2),
         __svml_powf4(xmm0.r3, xmm1.r3));
+}
 
 #endif
 
