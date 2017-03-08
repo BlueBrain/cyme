@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_pow_comparison_float, T, full_test_types) {
     for (size_t i = 0; i < n; ++i)
         a[i] = std::pow(a[i], b[i]);
 
-    va = cyme::pow_f(va, vb);
+    va = cyme::pow(va, vb);
     va.store(res);
 
     for (size_t i = 0; i < n; ++i)
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_pow_comparison_float_negative, T, full_test_ty
     for (size_t i = 0; i < n; ++i)
         a[i] = -std::pow(a[i], b[i]);
 
-    va = -cyme::pow_f(va, vb);
+    va = -cyme::pow(va, vb);
     va.store(res);
 
     for (size_t i = 0; i < n; ++i)

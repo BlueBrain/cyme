@@ -238,7 +238,8 @@ vec_simd<T, O, N> select_sign_cos(const vec_simd<int, O, N> &swap, const vec_sim
 template <class T2, class T1, cyme::simd O, int N>
 vec_simd<T2, O, N> cast(const vec_simd<T1, O, N> &v1) {
     vec_simd<T2, O, N> nrv;
-    nrv.xmm =  _mm_cast<typename simd_trait<T1, O, N>::value_type, O, N, typename simd_trait<T2, O, N>::value_type>(v1.xmm);
+    nrv.xmm =
+        _mm_cast<typename simd_trait<T1, O, N>::value_type, O, N, typename simd_trait<T2, O, N>::value_type>(v1.xmm);
     return nrv;
 }
 

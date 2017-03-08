@@ -80,5 +80,43 @@ template <class T, cyme::simd O, int N, int M>
 forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &lhs) {
     return pow_helper<T, O, N, M>::pow(lhs);
 }
+
+/** Function object for the vendor pow algorithm */
+template <class T, cyme::simd O, int N>
+struct Vendor_pow {
+    static forceinline vec_simd<T, O, N> pow(vec_simd<T, O, N> const &x, vec_simd<T, O, N> const &y) {
+        return vec_simd<T, O, N>(_mm_pow<T, O, N>(x.xmm, y.xmm)); // vendor call
+    }
+};
+
+/** Function object for the cyme pow algorithm, very poor performance and no boundary check be carefull*/
+template <class T, cyme::simd O, int N>
+struct Cyme_pow {
+    static forceinline vec_simd<T, O, N> pow(vec_simd<T, O, N> const &x, vec_simd<T, O, N> const &y) {
+        // Tim math is not allowed ^_^
+        //            vec_simd<T, O, N> sign_y(-0.); // mask bit sign set up
+        //            sign_y &= x;                   // catch the sign of x
+        //            sign_y |= y;                   // apply it to y
+        return exp(y * log(fabs(x)));
+    }
+};
+
+/** Selector for the pow algorithm (vendor or cyme implementation) */
+template <class T, cyme::simd O, int N, class Solver = Cyme_pow<T, O, N>> // cyme_pow ou vendor
+struct Selector_pow {
+    static forceinline vec_simd<T, O, N> pow(vec_simd<T, O, N> x, const vec_simd<T, O, N> &y) {
+        x = Solver::pow(x, y);
+        return x;
+    }
+};
+
+/** Implementation of Pow(x,y) x, y are floating point vector
+
+ The algo computes x^y using exp(x*log*y))
+ */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &x, const vec_simd<T, O, N> &y) {
+    return Selector_pow<T, O, N>::pow(x, y);
+}
 }
 #endif

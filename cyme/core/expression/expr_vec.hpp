@@ -200,7 +200,7 @@ class vec_pow {
     forceinline vec_simd<T, O, N> operator()() const { return pow<T, O, N, M>(op1()); }
 };
 
-/** pow vertex in the DAG from pow(a,n), float exponent */
+/** pow vertex in the DAG from pow(x,y), float exponent */
 template <class T, cyme::simd O, int N, class OP1, class OP2>
 class vec_powf {
     typename vec_traits<OP1, O, N>::value_type op1;
@@ -209,7 +209,7 @@ class vec_powf {
   public:
     forceinline vec_powf(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
 
-    forceinline vec_simd<T, O, N> operator()() const { return cyme::pow_f<T, O, N>(op1(), op2()); }
+    forceinline vec_simd<T, O, N> operator()() const { return pow<T, O, N>(op1(), op2()); }
 };
 
 /** not vertex in the DAG from ~a
