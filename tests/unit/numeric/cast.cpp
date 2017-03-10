@@ -23,9 +23,22 @@
 
 using namespace cyme::test;
 
+template<class T>
+struct integer_trait;
+
+template<>
+struct integer_trait<float>{
+    typedef uint32_t integer;
+};
+
+template<>
+struct integer_trait<double>{
+    typedef uint64_t integer;
+};
+
 template <class T>
 union helper {
-    uint32_t n;
+    typename integer_trait<T>::integer n;
     T f;
 };
 
@@ -52,6 +65,39 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(cast_from_mask_single_inequality, T, full_test_typ
     helper<T> h;
     for (int i = 0; i < n; ++i) {
         h.f = b[i];
-        BOOST_CHECK(h.n == 0xffffffff);
+        BOOST_CHECK(h.n == -1);
     }
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(cast_from_float_to_int, T, full_test_types) {
+    helper<T> h;
+
+    int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+    int res[n] __attribute__((aligned(64)));
+    T init[n] __attribute__((aligned(64)));
+
+    for (int i = 0; i < n; ++i){
+        if(i%2 == 0)
+            h.n = -1;
+        else
+            h.n = 0;
+
+        init[i] = h.f;
+    }
+
+
+    cyme::vec<int, cyme::__GETSIMD__(), cyme::unroll_factor::N> v1(res);
+    cyme::vec<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> v2(init);
+
+    v1 = cyme::cyme_cast<int>(v2);
+
+    //validation to do
+    for (int i = 0; i < n; ++i){
+        if(i%2 == 0)
+            h.n = -1;
+        else
+            h.n = 0;
+        BOOST_CHECK(res[i] == h.n);
+    }
+
 }

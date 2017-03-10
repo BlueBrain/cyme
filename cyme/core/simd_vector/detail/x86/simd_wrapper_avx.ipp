@@ -678,6 +678,109 @@ _mm_cast<int, cyme::avx, 4, double>(simd_trait<int, cyme::avx, 4>::register_type
                                                            _mm256_castsi256_pd(xmm0.r2), _mm256_castsi256_pd(xmm0.r3));
 }
 
+    /**
+     change the interpretation of the SIMD register
+     specialisation double,cyme::avx,1 regs, 50% value are lost (top)
+     */
+    template <>
+    forceinline simd_trait<int, cyme::avx, 1>::register_type
+    _mm_cast<double, cyme::avx, 1, int>(simd_trait<double, cyme::avx, 1>::register_type xmm0) {
+        // xmm0 = A B C D
+        __m128i mask_low = _mm_set_epi32(0,-1,0,-1);
+        __m128i mask_high = _mm_set_epi32(-1,0,-1,0);
+        __m128i low =  _mm_castpd_si128(_mm256_castpd256_pd128(xmm0)); // A B
+        __m128i high =  _mm_castpd_si128(_mm256_extractf128_pd(xmm0,1)); // C D
+        low =  _mm_and_si128 (mask_low,low); // A 0 B 0
+        high =  _mm_and_si128 (mask_high,high); // C 0 D 0
+        low =  _mm_or_si128 (low,high); // A C B D
+        high =  _mm_xor_si128 (high,high); // 0 0 0 0
+        low = _mm_shuffle_epi32(low, 216); // A B C D
+        return _mm256_set_m128i(high,low); // A B C D 0 0 0 0
+    }
+
+    /**
+     change the interpretation of the SIMD register
+     specialisation double,cyme::avx,2 regs
+     */
+    template <>
+    forceinline simd_trait<int, cyme::avx, 2>::register_type
+    _mm_cast<double, cyme::avx, 2, int>(simd_trait<double, cyme::avx, 2>::register_type xmm0) {
+        // xmm0 = A B C D
+        __m128i mask_low = _mm_set_epi32(0,-1,0,-1);
+        __m128i mask_high = _mm_set_epi32(-1,0,-1,0);
+
+        __m128i low0 =  _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r0)); // A B
+        __m128i low1 =  _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r1)); // A B
+
+        __m128i high1 =  _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r1,1)); // C D
+        __m128i high0 =  _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r0,1)); // C D
+
+
+        low0 =  _mm_and_si128 (mask_low,low0); // A 0 B 0
+        low1 =  _mm_and_si128 (mask_low,low1); // A 0 B 0
+
+        high0 =  _mm_and_si128 (mask_high,high0); // C 0 D 0
+        high1 =  _mm_and_si128 (mask_high,high1); // C 0 D 0
+
+        low0 =  _mm_or_si128 (low0,high0); // A C B D
+        low1 =  _mm_or_si128 (low1,high1); // A C B D
+
+        high0 =  _mm_xor_si128 (high0,high0); // 0 0 0 0
+
+        low0 = _mm_shuffle_epi32(low0, 216); // A B C D
+        low1 = _mm_shuffle_epi32(low1, 216); // A B C D
+
+        return simd_trait<int, cyme::avx, 2>::register_type(_mm256_set_m128i(low0,low1),_mm256_set_m128i(high0,high0));
+    }
+
+    /**
+     change the interpretation of the SIMD register
+     specialisation double,cyme::avx,4 regs
+     */
+    template <>
+    forceinline simd_trait<int, cyme::avx, 4>::register_type
+    _mm_cast<double, cyme::avx, 4, int>(simd_trait<double, cyme::avx, 4>::register_type xmm0) {
+        // xmm0 = A B C D
+        __m128i mask_low = _mm_set_epi32(0,-1,0,-1);
+        __m128i mask_high = _mm_set_epi32(-1,0,-1,0);
+
+        __m128i low0 =  _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r0)); // A B
+        __m128i low1 =  _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r1)); // A B
+        __m128i low2 =  _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r2)); // A B
+        __m128i low3 =  _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r3)); // A B
+
+        __m128i high0 =  _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r0,1)); // C D
+        __m128i high1 =  _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r1,1)); // C D
+        __m128i high2 =  _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r2,1)); // C D
+        __m128i high3 =  _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r3,1)); // C D
+
+        low0 =  _mm_and_si128 (mask_low,low0); // A 0 B 0
+        low1 =  _mm_and_si128 (mask_low,low1); // A 0 B 0
+        low2 =  _mm_and_si128 (mask_low,low2); // A 0 B 0
+        low3 =  _mm_and_si128 (mask_low,low3); // A 0 B 0
+
+        high0 =  _mm_and_si128 (mask_high,high0); // C 0 D 0
+        high1 =  _mm_and_si128 (mask_high,high0); // C 0 D 0
+        high2 =  _mm_and_si128 (mask_high,high0); // C 0 D 0
+        high3 =  _mm_and_si128 (mask_high,high0); // C 0 D 0
+
+        low0 =  _mm_or_si128 (low0,high0); // A C B D
+        low1 =  _mm_or_si128 (low1,high1); // A C B D
+        low2 =  _mm_or_si128 (low2,high2); // A C B D
+        low3 =  _mm_or_si128 (low3,high3); // A C B D
+
+
+        high0 =  _mm_xor_si128 (high0,high0); // 0 0 0 0
+
+        low0 = _mm_shuffle_epi32(low0, 216); // A B C D
+        low1 = _mm_shuffle_epi32(low1, 216); // A B C D
+        low2 = _mm_shuffle_epi32(low2, 216); // A B C D
+        low3 = _mm_shuffle_epi32(low3, 216); // A B C D
+
+        return simd_trait<int, cyme::avx, 4>::register_type(_mm256_set_m128i(low0,low1),_mm256_set_m128i(low2,low3),
+                                                            _mm256_set_m128i(high0,high0),_mm256_set_m128i(high0,high0));
+    }
+
 /**
   Compute 2^k packed integer (64-bit) elements in xmm0 to packed double-precision (64-bit)
  floating-point elements, and store the results in dst.
