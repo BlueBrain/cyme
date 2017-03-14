@@ -23,16 +23,16 @@
 
 using namespace cyme::test;
 
-template<class T>
+template <class T>
 struct integer_trait;
 
-template<>
-struct integer_trait<float>{
+template <>
+struct integer_trait<float> {
     typedef uint32_t integer;
 };
 
-template<>
-struct integer_trait<double>{
+template <>
+struct integer_trait<double> {
     typedef uint64_t integer;
 };
 
@@ -76,8 +76,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(cast_from_float_to_int, T, full_test_types) {
     int res[n] __attribute__((aligned(64)));
     T init[n] __attribute__((aligned(64)));
 
-    for (int i = 0; i < n; ++i){
-        if(i%2 == 0)
+    for (int i = 0; i < n; ++i) {
+        if (i % 2 == 0)
             h.n = -1;
         else
             h.n = 0;
@@ -85,19 +85,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(cast_from_float_to_int, T, full_test_types) {
         init[i] = h.f;
     }
 
-
     cyme::vec<int, cyme::__GETSIMD__(), cyme::unroll_factor::N> v1(res);
     cyme::vec<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> v2(init);
 
     v1 = cyme::cyme_cast<int>(v2);
 
-    //validation to do
-    for (int i = 0; i < n; ++i){
-        if(i%2 == 0)
+    // validation to do
+    for (int i = 0; i < n; ++i) {
+        if (i % 2 == 0)
             h.n = -1;
         else
             h.n = 0;
         BOOST_CHECK(res[i] == h.n);
     }
-
 }

@@ -667,9 +667,9 @@ class vec {
 convert the value, half of the register can be lost (e.g. 8xuint32 -> 4xdouble)
 \warning does not copy the pointer to save the data, to do
 */
-template <class T2, class T1> // from T1 to T2
-forceinline vec<T2> cyme_cast(vec<T1> &v1) {
-    vec<T2> v;
+template <class T2, class T1, cyme::simd O = cyme::__CYME_SIMD_VALUE__, int N = cyme::unroll_factor::N> // from T1 to T2
+forceinline vec<T2, O, N> cyme_cast(vec<T1, O, N> &v1) {
+    vec<T2, O, N> v;
     v.rep() = cast<T2>(v1.rep());
     return v;
 };
