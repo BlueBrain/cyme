@@ -1393,7 +1393,7 @@ _mm_cast<double, cyme::sse, 1, int>(simd_trait<double, cyme::sse, 1>::register_t
     __m128i low = _mm_castpd_si128(xmm0);
     low = _mm_and_si128(low, mask);
     low = _mm_shuffle_epi32(low, 216);
-    return _mm_castpd_si128(low);
+    return low;
 }
 
 /**
@@ -1412,7 +1412,7 @@ _mm_cast<double, cyme::sse, 2, int>(simd_trait<double, cyme::sse, 2>::register_t
     high = _mm_shuffle_epi32(high, 141);
     low = _mm_or_si128(low, high);
     high = _mm_xor_si128(high, high);
-    return simd_trait<int, cyme::sse, 2>::register_type(_mm_castpd_si128(low), _mm_castpd_si128(high));
+    return simd_trait<int, cyme::sse, 2>::register_type(low, high);
 }
 
 /**
@@ -1441,8 +1441,7 @@ _mm_cast<double, cyme::sse, 4, int>(simd_trait<double, cyme::sse, 4>::register_t
     high1 = _mm_shuffle_epi32(high1, 141);
     low1 = _mm_or_si128(low1, high1);
 
-    return simd_trait<int, cyme::sse, 4>::register_type(_mm_castpd_si128(low0), _mm_castpd_si128(low1),
-                                                        _mm_castpd_si128(high0), _mm_castpd_si128(high0));
+    return simd_trait<int, cyme::sse, 4>::register_type(low0, low1, high0, high0);
 }
 
 /**
