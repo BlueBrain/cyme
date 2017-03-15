@@ -478,37 +478,36 @@ _mm_neg<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xm
 }
 
 /**
-    check if the register is full of 0, return a bool. Specialisation double,cyme::avx,1 regs
+ check if the register is full of 0, return a bool. Specialisation double,cyme::avx,1 regs
  */
 template <>
 forceinline bool _mm_is_empty<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0) {
-    simd_trait<double, cyme::avx, 1>::register_type mask = _mm256_cmp_pd(xmm0, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    return _mm256_movemask_pd(mask); // return 0 means FALSE, something else meanse TRUE
+    __m256i mask = _mm256_set1_epi64x(0xffffffffffffffff);
+    return _mm256_testz_si256(_mm256_castpd_si256(xmm0), mask);
 }
 
 /**
-    check if the register is full of 0, return a bool.
-   specialisation double,cyme::avx,2 regs
+ check if the register is full of 0, return a bool.
+ specialisation double,cyme::avx,2 regs
  */
 template <>
 forceinline bool _mm_is_empty<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0) {
-    simd_trait<double, cyme::avx, 1>::register_type mask0 = _mm256_cmp_pd(xmm0.r0, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    simd_trait<double, cyme::avx, 1>::register_type mask1 = _mm256_cmp_pd(xmm0.r1, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    return (_mm256_movemask_pd(mask0) & _mm256_movemask_pd(mask1));
+    __m256i mask = _mm256_set1_epi64x(0xffffffffffffffff);
+    return (_mm256_testz_si256(_mm256_castpd_si256(xmm0.r0), mask) &
+            _mm256_testz_si256(_mm256_castpd_si256(xmm0.r1), mask));
 }
 
 /**
-   check if the register is full of 0, return a bool.
-   specialisation double,cyme::avx,4 regs
+ check if the register is full of 0, return a bool.
+ specialisation double,cyme::avx,4 regs
  */
 template <>
 forceinline bool _mm_is_empty<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0) {
-    simd_trait<double, cyme::avx, 1>::register_type mask0 = _mm256_cmp_pd(xmm0.r0, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    simd_trait<double, cyme::avx, 1>::register_type mask1 = _mm256_cmp_pd(xmm0.r1, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    simd_trait<double, cyme::avx, 1>::register_type mask2 = _mm256_cmp_pd(xmm0.r2, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    simd_trait<double, cyme::avx, 1>::register_type mask3 = _mm256_cmp_pd(xmm0.r3, _mm256_set1_pd(0.0f), _CMP_EQ_OQ);
-    return (_mm256_movemask_pd(mask0) & _mm256_movemask_pd(mask1) & _mm256_movemask_pd(mask2) &
-            _mm256_movemask_pd(mask3));
+    __m256i mask = _mm256_set1_epi64x(0xffffffffffffffff);
+    return (_mm256_testz_si256(_mm256_castpd_si256(xmm0.r0), mask) &
+            _mm256_testz_si256(_mm256_castpd_si256(xmm0.r1), mask) &
+            _mm256_testz_si256(_mm256_castpd_si256(xmm0.r2), mask) &
+            _mm256_testz_si256(_mm256_castpd_si256(xmm0.r3), mask));
 }
 
 /**
