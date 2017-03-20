@@ -1407,7 +1407,7 @@ _mm_cast<double, cyme::sse, 2, int>(simd_trait<double, cyme::sse, 2>::register_t
     __m128i low = _mm_castpd_si128(xmm0.r0);
     __m128i high = _mm_castpd_si128(xmm0.r1);
     low = _mm_and_si128(low, mask);
-    high = _mm_and_si128(low, mask);
+    high = _mm_and_si128(high, mask);
     low = _mm_shuffle_epi32(low, 216);
     high = _mm_shuffle_epi32(high, 141);
     low = _mm_or_si128(low, high);
@@ -1429,14 +1429,14 @@ _mm_cast<double, cyme::sse, 4, int>(simd_trait<double, cyme::sse, 4>::register_t
     __m128i high1 = _mm_castpd_si128(xmm0.r3);
 
     low0 = _mm_and_si128(low0, mask);
-    high0 = _mm_and_si128(low0, mask);
+    high0 = _mm_and_si128(high0, mask);
     low0 = _mm_shuffle_epi32(low0, 216);
     high0 = _mm_shuffle_epi32(high0, 141);
     low0 = _mm_or_si128(low0, high0);
     high0 = _mm_xor_si128(high0, high0);
 
     low1 = _mm_and_si128(low1, mask);
-    high1 = _mm_and_si128(low1, mask);
+    high1 = _mm_and_si128(high1, mask);
     low1 = _mm_shuffle_epi32(low1, 216);
     high1 = _mm_shuffle_epi32(high1, 141);
     low1 = _mm_or_si128(low1, high1);
@@ -3337,7 +3337,7 @@ _mm_load1<int, cyme::sse, 4>(const simd_trait<int, cyme::sse, 4>::value_type &a)
 template <>
 forceinline simd_trait<int, cyme::sse, 1>::register_type
 _mm_load<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::const_pointer a) {
-    return _mm_load_si128((__m128i *)a);
+    return _mm_loadu_si128((__m128i *)a);
 }
 
 /**
@@ -3348,8 +3348,8 @@ _mm_load<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::const_pointer a) {
 template <>
 forceinline simd_trait<int, cyme::sse, 2>::register_type
 _mm_load<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::const_pointer a) {
-    return simd_trait<int, cyme::sse, 2>::register_type(_mm_load_si128((__m128i *)a),
-                                                        _mm_load_si128((__m128i *)(a + 4)));
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_loadu_si128((__m128i *)a),
+                                                        _mm_loadu_si128((__m128i *)(a + 4)));
 }
 
 /**
@@ -3361,8 +3361,8 @@ template <>
 forceinline simd_trait<int, cyme::sse, 4>::register_type
 _mm_load<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::const_pointer a) {
     return simd_trait<int, cyme::sse, 4>::register_type(
-        _mm_load_si128((__m128i *)a), _mm_load_si128((__m128i *)(a + 4)), _mm_load_si128((__m128i *)(a + 8)),
-        _mm_load_si128((__m128i *)(a + 12)));
+        _mm_loadu_si128((__m128i *)a), _mm_loadu_si128((__m128i *)(a + 4)), _mm_loadu_si128((__m128i *)(a + 8)),
+        _mm_loadu_si128((__m128i *)(a + 12)));
 }
 
 /**
@@ -3373,7 +3373,7 @@ _mm_load<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::const_pointer a) {
 template <>
 forceinline void _mm_store<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
                                               simd_trait<int, cyme::sse, 1>::pointer a) {
-    _mm_store_si128((__m128i *)a, xmm0);
+    _mm_storeu_si128((__m128i *)a, xmm0);
 }
 
 /**
@@ -3384,8 +3384,8 @@ forceinline void _mm_store<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::reg
 template <>
 forceinline void _mm_store<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
                                               simd_trait<int, cyme::sse, 2>::pointer a) {
-    _mm_store_si128((__m128i *)a, xmm0.r0);
-    _mm_store_si128((__m128i *)(a + 4), xmm0.r1); // (a+4) != a+4 due to cast __m128i register be carefull
+    _mm_storeu_si128((__m128i *)a, xmm0.r0);
+    _mm_storeu_si128((__m128i *)(a + 4), xmm0.r1); // (a+4) != a+4 due to cast __m128i register be carefull
 }
 
 /**
@@ -3396,10 +3396,10 @@ forceinline void _mm_store<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::reg
 template <>
 forceinline void _mm_store<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
                                               simd_trait<int, cyme::sse, 4>::pointer a) {
-    _mm_store_si128((__m128i *)a, xmm0.r0);
-    _mm_store_si128((__m128i *)(a + 4), xmm0.r1);
-    _mm_store_si128((__m128i *)(a + 8), xmm0.r2);
-    _mm_store_si128((__m128i *)(a + 12), xmm0.r3);
+    _mm_storeu_si128((__m128i *)a, xmm0.r0);
+    _mm_storeu_si128((__m128i *)(a + 4), xmm0.r1);
+    _mm_storeu_si128((__m128i *)(a + 8), xmm0.r2);
+    _mm_storeu_si128((__m128i *)(a + 12), xmm0.r3);
 }
 
 /**
