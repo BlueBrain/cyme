@@ -710,27 +710,27 @@ _mm_cast<double, cyme::avx, 2, int>(simd_trait<double, cyme::avx, 2>::register_t
     __m128i mask_low = _mm_set_epi32(0, -1, 0, -1);
     __m128i mask_high = _mm_set_epi32(-1, 0, -1, 0);
 
-    __m128i low0 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r0)); // A B
-    __m128i low1 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r1)); // A B
+    __m128i low0 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r0)); // A0 B0
+    __m128i low1 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r1)); // A1 B1
 
-    __m128i high1 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r1, 1)); // C D
-    __m128i high0 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r0, 1)); // C D
+    __m128i high0 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r0, 1)); // C0 D0
+    __m128i high1 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r1, 1)); // C1 D1
 
-    low0 = _mm_and_si128(mask_low, low0); // A 0 B 0
-    low1 = _mm_and_si128(mask_low, low1); // A 0 B 0
+    low0 = _mm_and_si128(mask_low, low0); // A0 0 B0 0
+    low1 = _mm_and_si128(mask_low, low1); // A1 0 B1 0
 
-    high0 = _mm_and_si128(mask_high, high0); // C 0 D 0
-    high1 = _mm_and_si128(mask_high, high1); // C 0 D 0
+    high0 = _mm_and_si128(mask_high, high0); // C0 0 D0 0
+    high1 = _mm_and_si128(mask_high, high1); // C1 0 D1 0
 
-    low0 = _mm_or_si128(low0, high0); // A C B D
-    low1 = _mm_or_si128(low1, high1); // A C B D
+    low0 = _mm_or_si128(low0, high0); // A0 C0 B0 D0
+    low1 = _mm_or_si128(low1, high1); // A1 C1 B1 D1
 
     high0 = _mm_xor_si128(high0, high0); // 0 0 0 0
 
-    low0 = _mm_shuffle_epi32(low0, 216); // A B C D
-    low1 = _mm_shuffle_epi32(low1, 216); // A B C D
-
-    return simd_trait<int, cyme::avx, 2>::register_type(_mm256_set_m128i(low0, low1), _mm256_set_m128i(high0, high0));
+    low0 = _mm_shuffle_epi32(low0, 216); // A0 B0 C0 D0
+    low1 = _mm_shuffle_epi32(low1, 216); // A1 B1 C1 D1
+    // A0 B0 C0 D0 A1 B1 C1 D1 0 0 0 0 0 0 0 0
+    return simd_trait<int, cyme::avx, 2>::register_type(_mm256_set_m128i(low1, low0), _mm256_set_m128i(high0, high0));
 }
 
 /**
@@ -744,39 +744,40 @@ _mm_cast<double, cyme::avx, 4, int>(simd_trait<double, cyme::avx, 4>::register_t
     __m128i mask_low = _mm_set_epi32(0, -1, 0, -1);
     __m128i mask_high = _mm_set_epi32(-1, 0, -1, 0);
 
-    __m128i low0 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r0)); // A B
-    __m128i low1 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r1)); // A B
-    __m128i low2 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r2)); // A B
-    __m128i low3 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r3)); // A B
+    __m128i low0 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r0)); // A0 B0
+    __m128i low1 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r1)); // A1 B1
+    __m128i low2 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r2)); // A2 B2
+    __m128i low3 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r3)); // A3 B3
 
-    __m128i high0 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r0, 1)); // C D
-    __m128i high1 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r1, 1)); // C D
-    __m128i high2 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r2, 1)); // C D
-    __m128i high3 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r3, 1)); // C D
+    __m128i high0 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r0, 1)); // C0 D0
+    __m128i high1 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r1, 1)); // C1 D1
+    __m128i high2 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r2, 1)); // C2 D2
+    __m128i high3 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r3, 1)); // C3 D3
 
-    low0 = _mm_and_si128(mask_low, low0); // A 0 B 0
-    low1 = _mm_and_si128(mask_low, low1); // A 0 B 0
-    low2 = _mm_and_si128(mask_low, low2); // A 0 B 0
-    low3 = _mm_and_si128(mask_low, low3); // A 0 B 0
+    low0 = _mm_and_si128(mask_low, low0); // A0 0 B0 0
+    low1 = _mm_and_si128(mask_low, low1); // A1 0 B1 0
+    low2 = _mm_and_si128(mask_low, low2); // A2 0 B2 0
+    low3 = _mm_and_si128(mask_low, low3); // A3 0 B3 0
 
-    high0 = _mm_and_si128(mask_high, high0); // C 0 D 0
-    high1 = _mm_and_si128(mask_high, high0); // C 0 D 0
-    high2 = _mm_and_si128(mask_high, high0); // C 0 D 0
-    high3 = _mm_and_si128(mask_high, high0); // C 0 D 0
+    high0 = _mm_and_si128(mask_high, high0); // C0 0 D0 0
+    high1 = _mm_and_si128(mask_high, high1); // C1 0 D1 0
+    high2 = _mm_and_si128(mask_high, high2); // C2 0 D2 0
+    high3 = _mm_and_si128(mask_high, high3); // C3 0 D3 0
 
-    low0 = _mm_or_si128(low0, high0); // A C B D
-    low1 = _mm_or_si128(low1, high1); // A C B D
-    low2 = _mm_or_si128(low2, high2); // A C B D
-    low3 = _mm_or_si128(low3, high3); // A C B D
+    low0 = _mm_or_si128(low0, high0); // A0 C0 B0 D0
+    low1 = _mm_or_si128(low1, high1); // A1 C1 B1 D1
+    low2 = _mm_or_si128(low2, high2); // A2 C2 B2 D2
+    low3 = _mm_or_si128(low3, high3); // A3 C3 B3 D3
 
     high0 = _mm_xor_si128(high0, high0); // 0 0 0 0
 
-    low0 = _mm_shuffle_epi32(low0, 216); // A B C D
-    low1 = _mm_shuffle_epi32(low1, 216); // A B C D
-    low2 = _mm_shuffle_epi32(low2, 216); // A B C D
-    low3 = _mm_shuffle_epi32(low3, 216); // A B C D
+    low0 = _mm_shuffle_epi32(low0, 216); // A0 B0 C0 D0
+    low1 = _mm_shuffle_epi32(low1, 216); // A1 B1 C1 D1
+    low2 = _mm_shuffle_epi32(low2, 216); // A2 B2 C2 D2
+    low3 = _mm_shuffle_epi32(low3, 216); // A3 B3 C3 D3
 
-    return simd_trait<int, cyme::avx, 4>::register_type(_mm256_set_m128i(low0, low1), _mm256_set_m128i(low2, low3),
+    // A0 B0 C0 D0 A1 B1 C1 D1 A2 B2 C2 D2 A3 B3 C3 D3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    return simd_trait<int, cyme::avx, 4>::register_type(_mm256_set_m128i(low1, low0), _mm256_set_m128i(low3, low2),
                                                         _mm256_set_m128i(high0, high0), _mm256_set_m128i(high0, high0));
 }
 
