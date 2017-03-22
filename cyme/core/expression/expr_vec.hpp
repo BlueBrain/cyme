@@ -200,6 +200,32 @@ class vec_pow {
     forceinline vec_simd<T, O, N> operator()() const { return pow<T, O, N, M>(op1()); }
 };
 
+/** pow vertex in the DAG from pow(x,y), float exponent */
+template <class T, cyme::simd O, int N, class OP1, class OP2>
+class vec_powf {
+    typename vec_traits<OP1, O, N>::value_type op1;
+    typename vec_traits<OP2, O, N>::value_type op2;
+
+  public:
+    forceinline vec_powf(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
+
+    forceinline vec_simd<T, O, N> operator()() const { return pow<T, O, N>(op1(), op2()); }
+};
+
+/** not vertex in the DAG from ~a
+ *
+ */
+template <class T, cyme::simd O, int N, class OP1>
+class vec_not {
+    typename vec_traits<OP1, O, N>::value_type op1;
+
+  public:
+    forceinline vec_not(OP1 const &a) : op1(a) {}
+
+    /* always return int */
+    forceinline vec_simd<T, O, N> operator()() const { return ~(op1()); }
+};
+
 /** and vertex in the DAG from a & b, it look likes weird
  *
  */
@@ -230,6 +256,21 @@ class vec_or {
     forceinline vec_simd<T, O, N> operator()() const { return op1() | op2(); }
 };
 
+/** and vertex in the DAG from a | b, it look likes weird
+ *
+ */
+template <class T, cyme::simd O, int N, class OP1, class OP2>
+class vec_xor {
+    typename vec_traits<OP1, O, N>::value_type op1;
+    typename vec_traits<OP2, O, N>::value_type op2;
+
+  public:
+    forceinline vec_xor(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
+
+    /* always return int */
+    forceinline vec_simd<T, O, N> operator()() const { return op1() ^ op2(); }
+};
+
 /** less than vertex in the DAG from a < b
     /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
 */
@@ -256,6 +297,20 @@ class vec_gt {
     forceinline vec_gt(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
     /* always return int */
     forceinline vec_simd<T, O, N> operator()() const { return op1() > op2(); }
+};
+
+/** right shift vertex in the DAG from a >> b
+ /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
+ */
+template <class T, cyme::simd O, int N, class OP1, class OP2>
+class vec_rshift {
+    typename vec_traits<OP1, O, N>::value_type op1;
+    typename vec_traits<OP2, O, N>::value_type op2;
+
+  public:
+    forceinline vec_rshift(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
+    /* always return int */
+    forceinline vec_simd<T, O, N> operator()() const { return op1() >> op2(); }
 };
 
 /** less than vertex in the DAG from a < b
@@ -294,6 +349,18 @@ class vec_sub {
     forceinline vec_sub(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
 
     forceinline vec_simd<T, O, N> operator()() const { return op1() - op2(); }
+};
+
+/** minimu vertex in the DAG from min(a,b) */
+template <class T, cyme::simd O, int N, class OP1, class OP2>
+class vec_min {
+    typename vec_traits<OP1, O, N>::value_type op1;
+    typename vec_traits<OP2, O, N>::value_type op2;
+
+  public:
+    forceinline vec_min(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
+
+    forceinline vec_simd<T, O, N> operator()() const { return min(op1(), op2()); }
 };
 
 /** negate vertex in the DAG from -a
@@ -469,9 +536,6 @@ class vec {
     typedef value_type const *const_pointer;
     typedef Rep base_type;
 
-    /** default constructor nothing special */
-    forceinline explicit vec() : expr_rep() {}
-
     /** Constructor lhs of the operator=, pointer lhs because non const I save it for saving at the end */
     forceinline explicit vec(pointer rb) : data_pointer(rb), expr_rep(rb) {}
 
@@ -482,7 +546,7 @@ class vec {
     forceinline explicit vec(const_pointer rb) : data_pointer(NULL), expr_rep(rb) {}
 
     /*** Constructor with constant, I do not care about the pointer */
-    forceinline vec(value_type b) : data_pointer(NULL), expr_rep(b) {}
+    explicit forceinline vec(value_type b = value_type()) : data_pointer(NULL), expr_rep(b) {}
 
     /**
      operator= initializes the vec to a given value. The full vector has
@@ -490,7 +554,8 @@ class vec {
      */
     forceinline vec &operator=(vec const &rhs) {
         expr_rep() = rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data_pointer != NULL)         // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -503,7 +568,8 @@ class vec {
     template <class Rep2>
     forceinline vec &operator=(vec<T, O, N, Rep2> const &rhs) {
         expr_rep() = rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data() != NULL)               // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -516,7 +582,8 @@ class vec {
     template <class Rep2>
     forceinline vec &operator+=(vec<T, O, N, Rep2> const &rhs) {
         expr_rep() += rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data() != NULL)               // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -529,7 +596,8 @@ class vec {
     template <class Rep2>
     forceinline vec &operator-=(vec<T, O, N, Rep2> const &rhs) {
         expr_rep() -= rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data() != NULL)               // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -542,7 +610,8 @@ class vec {
     template <class Rep2>
     forceinline vec &operator*=(vec<T, O, N, Rep2> const &rhs) {
         expr_rep() *= rhs.rep()();
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        if (data() != NULL)               // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
@@ -554,21 +623,33 @@ class vec {
     */
     template <class Rep2>
     forceinline vec &operator/=(vec<T, O, N, Rep2> const &rhs) {
-        expr_rep() /= rhs.rep()();    // basic register copy no three
-        expr_rep.store(data_pointer); // store the SIMD register into main cyme
+        expr_rep() /= rhs.rep()();        // basic register copy no three
+        if (data() != NULL)               // compilation time evaluation
+            expr_rep.store(data_pointer); // store the SIMD register into main cyme
         return *this;
     }
 
-    forceinline pointer adress() { return data_pointer; }
+    template <class Rep2>
+    forceinline vec operator<(vec<T, O, N, Rep2> const &rhs) {
+        return vec(expr_rep() < rhs.rep()()); // basic register copy no three
+    }
+
+    bool is_empty() { return rep()().is_empty(); }
 
     /**
     Get the vector class, read only
     */
     forceinline Rep const &rep() const { return expr_rep; }
+
     /**
     Get the vector class, write only
     */
     forceinline Rep &rep() { return expr_rep; }
+
+    /**
+    Get the pointer
+    */
+    forceinline pointer &data() { return data_pointer; }
 
     /**
     Use print function from Rep
@@ -580,6 +661,17 @@ class vec {
     pointer data_pointer;
     /** Composition with cyme::vec_simd */
     Rep expr_rep;
+};
+
+/**
+convert the value, half of the register can be lost (e.g. 8xuint32 -> 4xdouble)
+\warning does not copy the pointer to save the data, to do
+*/
+template <class T2, class T1, cyme::simd O = cyme::__CYME_SIMD_VALUE__, int N = cyme::unroll_factor::N> // from T1 to T2
+forceinline vec<T2, O, N> cyme_cast(vec<T1, O, N> &v1) {
+    vec<T2, O, N> v;
+    v.rep() = cast<T2>(v1.rep());
+    return v;
 };
 }
 

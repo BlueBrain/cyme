@@ -79,7 +79,7 @@ forceinline vec_simd<T, O, N> sin(const vec_simd<T, O, N> &rhs) {
     // create values p and j
     vec_simd<T, O, N> y = x * cephes_FOPI;
     vec_simd<int, O, N> j = round_up_even(floor(y));
-    vec_simd<T, O, N> p(cast<T, O, N>(j)); // j float
+    vec_simd<T, O, N> p(convert<T, O, N>(j)); // j float
 
     // magic pass
     /*x = ((x - y * DP1) - y * DP2) - y * DP3; */
@@ -117,7 +117,7 @@ forceinline vec_simd<T, O, N> cos(const vec_simd<T, O, N> &rhs) {
     // create values p and j
     vec_simd<T, O, N> y = x * cephes_FOPI;
     vec_simd<int, O, N> j = round_up_even(floor(y));
-    vec_simd<T, O, N> p(cast<T, O, N>(j)); // j float
+    vec_simd<T, O, N> p(convert<T, O, N>(j)); // j float
 
     // magic pass
     /*x = ((x - y * DP1) - y * DP2) - y * DP3; */
@@ -158,7 +158,7 @@ forceinline vec_simd<T, O, N> tan(const vec_simd<T, O, N> &rhs) {
     // create values p and j
     vec_simd<T, O, N> y = x * cephes_FOPI;
     vec_simd<int, O, N> j = round_up_even(floor(y));
-    vec_simd<T, O, N> p(cast<T, O, N>(j)); // j float
+    vec_simd<T, O, N> p(convert<T, O, N>(j)); // j float
 
     // magic pass
     /*x = ((x - y * DP1) - y * DP2) - y * DP3; */

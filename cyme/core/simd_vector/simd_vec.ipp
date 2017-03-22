@@ -103,9 +103,28 @@ vec_simd<T, O, N> &vec_simd<T, O, N>::operator|=(const vec_simd<T, O, N> &rhs) {
 }
 
 template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> &vec_simd<T, O, N>::operator^=(const vec_simd<T, O, N> &rhs) {
+    xmm = _mm_xor<typename simd_trait<T, O, N>::value_type, O, N>(xmm, rhs.xmm);
+    return *this;
+}
+
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> &vec_simd<T, O, N>::operator>>=(const vec_simd<T, O, N> &rhs) {
+    xmm = _mm_srl<typename simd_trait<T, O, N>::value_type, O, N>(xmm, rhs.xmm);
+    return *this;
+}
+
+template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> &vec_simd<T, O, N>::operator~() {
     xmm = _mm_andnot<typename simd_trait<T, O, N>::value_type, O, N>(xmm);
     return *this;
+}
+
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> &vec_simd<T, O, N>::operator-() {
+    vec_simd<T, O, N> s(-0.);
+    xmm = _mm_xor<typename simd_trait<T, O, N>::value_type, O, N>(xmm, s.xmm);
+    return (*this);
 }
 
 template <class T, cyme::simd O, int N>
@@ -140,9 +159,14 @@ vec_simd<T, O, N> &vec_simd<T, O, N>::neg() {
 }
 
 template <class T, cyme::simd O, int N>
-vec_simd<T, O, N> cast(const vec_simd<int, O, N> &rhs) {
+bool vec_simd<T, O, N>::is_empty() {
+    return _mm_is_empty<typename simd_trait<T, O, N>::value_type, O, N>(xmm);
+}
+
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> convert(const vec_simd<int, O, N> &rhs) {
     vec_simd<T, O, N> nrv;
-    nrv.xmm = _mm_cast<typename simd_trait<T, O, N>::value_type, O, N>(rhs.xmm);
+    nrv.xmm = _mm_convert<typename simd_trait<T, O, N>::value_type, O, N>(rhs.xmm);
     return nrv;
 }
 
@@ -182,6 +206,13 @@ vec_simd<T, O, N> fabs(const vec_simd<T, O, N> &rhs) {
 }
 
 template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> min(const vec_simd<T, O, N> &v1, const vec_simd<T, O, N> &v2) {
+    vec_simd<T, O, N> nrv;
+    nrv.xmm = _mm_min<typename simd_trait<T, O, N>::value_type, O, N>(v1.xmm, v2.xmm);
+    return nrv;
+}
+
+template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> select_poly(const vec_simd<int, O, N> &sel, const vec_simd<T, O, N> &lhs,
                               const vec_simd<T, O, N> &rhs) {
     vec_simd<T, O, N> nrv;
@@ -201,6 +232,14 @@ template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> select_sign_cos(const vec_simd<int, O, N> &swap, const vec_simd<T, O, N> &rhs) {
     vec_simd<T, O, N> nrv;
     nrv.xmm = _mm_select_sign_cos<typename simd_trait<T, O, N>::value_type, O, N>(swap.xmm, rhs.xmm);
+    return nrv;
+}
+
+template <class T2, class T1, cyme::simd O, int N>
+vec_simd<T2, O, N> cast(const vec_simd<T1, O, N> &v1) {
+    vec_simd<T2, O, N> nrv;
+    nrv.xmm =
+        _mm_cast<typename simd_trait<T1, O, N>::value_type, O, N, typename simd_trait<T2, O, N>::value_type>(v1.xmm);
     return nrv;
 }
 
