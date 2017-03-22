@@ -96,17 +96,29 @@ struct vec_simd {
     /** Operator &= bewteen two vectors */
     forceinline vec_simd &operator&=(const vec_simd &rhs);
 
+    /** Operator ^= bewteen two vectors */
+    forceinline vec_simd &operator^=(const vec_simd &rhs);
+
     /** Operator |= bewteen two vectors */
     forceinline vec_simd &operator|=(const vec_simd &rhs);
 
-    /** Operator negate bewteen two vectors, no DAG for this one */
+    /** Operator >>= bewteen two vectors (right shift) */
+    forceinline vec_simd &operator>>=(const vec_simd &rhs);
+
+    /** Operator negate bewteen two vectors */
     forceinline vec_simd &operator~();
+
+    /** Operator negate bewteen two vectors */
+    forceinline vec_simd &operator-();
 
     /** Save the value into the register into the cyme */
     forceinline void store(pointer a) const;
 
     /** Negate the value of the register */
     forceinline vec_simd &neg();
+
+    /** Check is the reister contains only 0 */
+    forceinline bool is_empty();
 
     /** Function for load only one value type, serial library */
     forceinline vec_simd &single(const value_type &b);
@@ -138,9 +150,9 @@ struct vec_simd {
 template <cyme::simd O, int N>
 forceinline vec_simd<int, O, N> round_up_even(const vec_simd<int, O, N> &rhs);
 
-/** Cast int to float */
+/** Convert int to float */
 template <class T, cyme::simd O, int N>
-forceinline vec_simd<T, O, N> cast(const vec_simd<int, O, N> &ths);
+forceinline vec_simd<T, O, N> convert(const vec_simd<int, O, N> &ths);
 
 /** Return the 2^k where k is a vector base on an integer */
 template <class T, cyme::simd O, int N>
@@ -212,6 +224,10 @@ forceinline vec_simd<T, O, N> neg(const vec_simd<T, O, N> &rhs);
 template <class T, cyme::simd O, int N, int M>
 forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &lhs);
 
+/** Free function for the powf */
+template <class T, cyme::simd O, int N, int M>
+forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &x, const vec_simd<T, O, N> &y);
+
 /** Free function for the exp */
 template <class T, cyme::simd O, int N>
 forceinline vec_simd<T, O, N> exp(const vec_simd<T, O, N> &rhs);
@@ -259,6 +275,14 @@ forceinline vec_simd<T, O, N> help_gather(const T *src, const int *ind, const in
 /** Free function for scatter */
 template <class T, cyme::simd O, int N, cyme::scatter_op P>
 void help_scatter(vec_simd<T, O, N> const &src, T *des, const int *ind, const int range);
+
+/** Free function min operator between two vectors, this function uses the return value optimization */
+template <class T, cyme::simd O, int N>
+forceinline vec_simd<T, O, N> min(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs);
+
+/** Free function "SIMD" sense of way static cast, from T1 to T2 */
+template <class T2, class T1, cyme::simd O, int N>
+forceinline vec_simd<T2, O, N> cast(const vec_simd<T1, O, N> &v1);
 
 #ifdef __FMA__
 /** Free function FMA between 3 vectors, a*b+c or c + a*B, + is commutative so no pb */

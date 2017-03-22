@@ -87,7 +87,7 @@ template <class T>
 struct f_init {
     void operator()(typename T::storage_type &S) {
         for (std::size_t i = 0; i < T::size_block(); ++i)
-            S[i] = 100 * drand48();
+            S[i] = 100. * drand48();
     }
 };
 

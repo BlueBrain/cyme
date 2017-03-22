@@ -89,6 +89,13 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_log(typename simd_tr
 template <class T, cyme::simd O, int N> // Vendor only - to check ?
 forceinline typename simd_trait<T, O, N>::register_type _mm_sqrt(typename simd_trait<T, O, N>::register_type xmm0);
 
+/** Free function (wrapper) for calculating pow of a vector
+ \warning this function is only works if the wrapper Helper_POW is setup to Vendor_sqrt
+ */
+template <class T, cyme::simd O, int N> // Vendor (IBM/Intel) only
+forceinline typename simd_trait<T, O, N>::register_type _mm_pow(typename simd_trait<T, O, N>::register_type xmm0,
+                                                                typename simd_trait<T, O, N>::register_type xmm1);
+
 /** Free function (wrapper) for calculating a light version of the inverse (reciprocal) */
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_rec(typename simd_trait<T, O, N>::register_type xmm0);
@@ -101,9 +108,13 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_rsqrt(typename simd_
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_neg(typename simd_trait<T, O, N>::register_type xmm0);
 
-/** Free function to cast in/to float for the exp */
+/** Free function (wrapper) to check is the register is full of 0 */
 template <class T, cyme::simd O, int N>
-forceinline typename simd_trait<T, O, N>::register_type _mm_cast(typename simd_trait<int, O, N>::register_type xmm0);
+forceinline bool _mm_is_empty(typename simd_trait<T, O, N>::register_type xmm0);
+
+/** Free function to cast int to float for the exp */
+template <class T, cyme::simd O, int N>
+forceinline typename simd_trait<T, O, N>::register_type _mm_convert(typename simd_trait<int, O, N>::register_type xmm0);
 
 /** Free function (wrapper) for calculating the floor */
 template <class T, cyme::simd O, int N>
@@ -124,6 +135,10 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_gf(typename simd_tra
 /** Free function to return the absolute value of a float */
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_fabs(typename simd_trait<T, O, N>::register_type xmm0);
+
+/** Free function that change the type of register */
+template <class T, cyme::simd O, int N, class T2>
+forceinline typename simd_trait<T2, O, N>::register_type _mm_cast(typename simd_trait<T, O, N>::register_type xmm0);
 
 /** Free function to return poly1 or poly2 depending on the value of sel */
 template <class T, cyme::simd O, int N>
@@ -176,9 +191,24 @@ template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_or(typename simd_trait<T, O, N>::register_type xmm0,
                                                                typename simd_trait<T, O, N>::register_type xmm1);
 
+/** Free function (wrapper) to bitwise xmm0 ^ xmm1 */
+template <class T, cyme::simd O, int N>
+forceinline typename simd_trait<T, O, N>::register_type _mm_xor(typename simd_trait<T, O, N>::register_type xmm0,
+                                                                typename simd_trait<T, O, N>::register_type xmm1);
+
 /** Free function (wrapper) to bitwise xmm0 &! xmm1 for negate only */
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_andnot(typename simd_trait<T, O, N>::register_type xmm0);
+
+/** Free function (wrapper) to bitwise xmm0 >> xmm1  */
+template <class T, cyme::simd O, int N>
+forceinline typename simd_trait<T, O, N>::register_type _mm_srl(typename simd_trait<T, O, N>::register_type xmm0,
+                                                                typename simd_trait<T, O, N>::register_type xmm1);
+
+/** Free function (wrapper) of the minimum function */
+template <class T, cyme::simd O, int N>
+forceinline typename simd_trait<T, O, N>::register_type _mm_min(typename simd_trait<T, O, N>::register_type xmm0,
+                                                                typename simd_trait<T, O, N>::register_type xmm1);
 
 #ifdef __FMA__ // This macro is a compiler one
 /** Free function (wrapper) for FMA between three registers, a*b+c */

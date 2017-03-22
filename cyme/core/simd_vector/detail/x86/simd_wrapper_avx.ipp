@@ -26,7 +26,10 @@
 
 #ifndef CYME_SIMD_WRAPPER_AVX_IPP
 #define CYME_SIMD_WRAPPER_AVX_IPP
+
 namespace cyme {
+
+#define _mm256_set_m128i(v0, v1) _mm256_insertf128_si256(_mm256_castsi128_si256(v1), (v0), 1)
 
 /**
   Rounds xmm0 up to the next even integer.
@@ -475,6 +478,39 @@ _mm_neg<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xm
 }
 
 /**
+ check if the register is full of 0, return a bool. Specialisation double,cyme::avx,1 regs
+ */
+template <>
+forceinline bool _mm_is_empty<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0) {
+    __m256i mask = _mm256_set1_epi64x(0xffffffffffffffff);
+    return _mm256_testz_si256(_mm256_castpd_si256(xmm0), mask);
+}
+
+/**
+ check if the register is full of 0, return a bool.
+ specialisation double,cyme::avx,2 regs
+ */
+template <>
+forceinline bool _mm_is_empty<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0) {
+    __m256i mask = _mm256_set1_epi64x(0xffffffffffffffff);
+    return (_mm256_testz_si256(_mm256_castpd_si256(xmm0.r0), mask) &
+            _mm256_testz_si256(_mm256_castpd_si256(xmm0.r1), mask));
+}
+
+/**
+ check if the register is full of 0, return a bool.
+ specialisation double,cyme::avx,4 regs
+ */
+template <>
+forceinline bool _mm_is_empty<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0) {
+    __m256i mask = _mm256_set1_epi64x(0xffffffffffffffff);
+    return (_mm256_testz_si256(_mm256_castpd_si256(xmm0.r0), mask) &
+            _mm256_testz_si256(_mm256_castpd_si256(xmm0.r1), mask) &
+            _mm256_testz_si256(_mm256_castpd_si256(xmm0.r2), mask) &
+            _mm256_testz_si256(_mm256_castpd_si256(xmm0.r3), mask));
+}
+
+/**
   Round the packed double-precision (64-bit) floating-point elements in xmm0 down to an integer value,
  and store the results as packed single-precision integer-point elements in dst.
   specialisation double,cyme::avx, 1 regs
@@ -514,26 +550,88 @@ _mm_floor<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type 
 }
 
 /**
-  Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
-  and store the results in dst.
-  specialisation double,cyme::avx, 1 regs
+ Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+ and store the results in dst.
+ specialisation double,cyme::avx, 1 regs
  */
 template <>
 forceinline simd_trait<double, cyme::avx, 1>::register_type
-_mm_cast<double, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
+_mm_convert<double, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
     return _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0));
+}
+
+/**
+ Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+ and store the results in dst.
+ specialisation double,cyme::avx, 2 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 2>::register_type
+_mm_convert<double, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
+    return simd_trait<double, cyme::avx, 2>::register_type(_mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)),
+                                                           _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)));
+}
+
+/**
+ Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+ and store the results in dst.
+ specialisation double,cyme::avx, 4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 4>::register_type
+_mm_convert<double, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
+    return simd_trait<double, cyme::avx, 4>::register_type(
+        _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)), _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)),
+        _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r2)), _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r3)));
 }
 
 /**
   Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
   and store the results in dst.
-  specialisation double,cyme::avx, 2 regs
+  specialisation double,cyme::avx, 1 regs
+  \warning the 4 last integer are lost definitively
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 1>::register_type
+_mm_cast<int, cyme::avx, 1, double>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
+    // xmm0 A B C D E F G H
+    __m128i lo = _mm256_castsi256_si128(xmm0);                                                         // A B C D
+    __m128i hi = _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_castsi256_si128(xmm0)), 78)); // C D A B
+    lo = _mm_cvtepi32_epi64(lo); // A "extension" B "extension"
+    hi = _mm_cvtepi32_epi64(hi); // C "extension" D "extension"
+    xmm0 = _mm256_insertf128_si256(xmm0, lo, 0);
+    xmm0 = _mm256_insertf128_si256(xmm0, hi, 1);
+    return _mm256_castsi256_pd(xmm0);
+}
+
+/**
+  Convert packed 64-bit integers in xmm0 to packed double-precision (64-bit) floating-point elements,
+  and store the results in dst.
+  specialisation double,cyme::avx, 1 regs
+  \warning the 8 last integer are lost definitively
  */
 template <>
 forceinline simd_trait<double, cyme::avx, 2>::register_type
-_mm_cast<double, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
-    return simd_trait<double, cyme::avx, 2>::register_type(_mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)),
-                                                           _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)));
+_mm_cast<int, cyme::avx, 2, double>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
+    // xmm0 A B C D E F G H
+    __m128i lo_0 = _mm256_castsi256_si128(xmm0.r0); // first 4 integer
+    __m128i hi_0 = _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_castsi256_si128(xmm0.r0)), 78)); // C D A B
+    __m128i lo_1 = _mm256_extractf128_si256(xmm0.r0, 1);                                                    // A B C D
+    __m128i hi_1 =
+        _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_extractf128_si256(xmm0.r0, 1)), 78)); // C D A B
+
+    lo_0 = _mm_cvtepi32_epi64(lo_0); // A "extension" B "extension"
+    hi_0 = _mm_cvtepi32_epi64(hi_0); // C "extension" D "extension"
+    lo_1 = _mm_cvtepi32_epi64(lo_1); // A "extension" B "extension"
+    hi_1 = _mm_cvtepi32_epi64(hi_1); // C "extension" D "extension"
+
+    xmm0.r0 = _mm256_insertf128_si256(xmm0.r0, lo_0, 0);
+    xmm0.r0 = _mm256_insertf128_si256(xmm0.r0, hi_0, 1);
+
+    xmm0.r1 = _mm256_insertf128_si256(xmm0.r1, lo_1, 0);
+    xmm0.r1 = _mm256_insertf128_si256(xmm0.r1, hi_1, 1);
+
+    return simd_trait<double, cyme::avx, 2>::register_type(_mm256_castsi256_pd(xmm0.r0), _mm256_castsi256_pd(xmm0.r1));
 }
 
 /**
@@ -543,10 +641,144 @@ _mm_cast<double, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0
  */
 template <>
 forceinline simd_trait<double, cyme::avx, 4>::register_type
-_mm_cast<double, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
-    return simd_trait<double, cyme::avx, 4>::register_type(
-        _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r0)), _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r1)),
-        _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r2)), _mm256_cvtepi32_pd(_mm256_castsi256_si128(xmm0.r3)));
+_mm_cast<int, cyme::avx, 4, double>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
+    // xmm0 A B C D E F G H
+    __m128i lo_0 = _mm256_castsi256_si128(xmm0.r0); // first 4 integer
+    __m128i hi_0 = _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_castsi256_si128(xmm0.r0)), 78)); // C D A B
+    __m128i lo_1 = _mm256_extractf128_si256(xmm0.r0, 1);                                                    // A B C D
+    __m128i hi_1 =
+        _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_extractf128_si256(xmm0.r0, 1)), 78)); // C D A B
+    __m128i lo_2 = _mm256_castsi256_si128(xmm0.r1);                                                   // first 4 integer
+    __m128i hi_2 = _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_castsi256_si128(xmm0.r1)), 78)); // C D A B
+    __m128i lo_3 = _mm256_extractf128_si256(xmm0.r1, 1);                                                    // A B C D
+    __m128i hi_3 =
+        _mm_castps_si128(_mm_permute_ps(_mm_castsi128_ps(_mm256_extractf128_si256(xmm0.r1, 1)), 78)); // C D A B
+
+    lo_0 = _mm_cvtepi32_epi64(lo_0); // A "extension" B "extension"
+    hi_0 = _mm_cvtepi32_epi64(hi_0); // C "extension" D "extension"
+    lo_1 = _mm_cvtepi32_epi64(lo_1); // A "extension" B "extension"
+    hi_1 = _mm_cvtepi32_epi64(hi_1); // C "extension" D "extension"
+    lo_2 = _mm_cvtepi32_epi64(lo_2); // A "extension" B "extension"
+    hi_2 = _mm_cvtepi32_epi64(hi_2); // C "extension" D "extension"
+    lo_3 = _mm_cvtepi32_epi64(lo_3); // A "extension" B "extension"
+    hi_3 = _mm_cvtepi32_epi64(hi_3); // C "extension" D "extension"
+
+    xmm0.r0 = _mm256_insertf128_si256(xmm0.r0, lo_0, 0);
+    xmm0.r0 = _mm256_insertf128_si256(xmm0.r0, hi_0, 1);
+
+    xmm0.r1 = _mm256_insertf128_si256(xmm0.r1, lo_1, 0);
+    xmm0.r1 = _mm256_insertf128_si256(xmm0.r1, hi_1, 1);
+
+    xmm0.r2 = _mm256_insertf128_si256(xmm0.r2, lo_2, 0);
+    xmm0.r2 = _mm256_insertf128_si256(xmm0.r2, hi_2, 1);
+
+    xmm0.r3 = _mm256_insertf128_si256(xmm0.r3, lo_3, 0);
+    xmm0.r3 = _mm256_insertf128_si256(xmm0.r3, hi_3, 1);
+
+    return simd_trait<double, cyme::avx, 4>::register_type(_mm256_castsi256_pd(xmm0.r0), _mm256_castsi256_pd(xmm0.r1),
+                                                           _mm256_castsi256_pd(xmm0.r2), _mm256_castsi256_pd(xmm0.r3));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::avx,1 regs, 50% value are lost (top)
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 1>::register_type
+_mm_cast<double, cyme::avx, 1, int>(simd_trait<double, cyme::avx, 1>::register_type xmm0) {
+    // xmm0 = A B C D
+    __m128i mask_low = _mm_set_epi32(0, -1, 0, -1);
+    __m128i mask_high = _mm_set_epi32(-1, 0, -1, 0);
+    __m128i low = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0));    // A B
+    __m128i high = _mm_castpd_si128(_mm256_extractf128_pd(xmm0, 1)); // C D
+    low = _mm_and_si128(mask_low, low);                              // A 0 B 0
+    high = _mm_and_si128(mask_high, high);                           // C 0 D 0
+    low = _mm_or_si128(low, high);                                   // A C B D
+    high = _mm_xor_si128(high, high);                                // 0 0 0 0
+    low = _mm_shuffle_epi32(low, 216);                               // A B C D
+    return _mm256_set_m128i(high, low);                              // A B C D 0 0 0 0
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 2>::register_type
+_mm_cast<double, cyme::avx, 2, int>(simd_trait<double, cyme::avx, 2>::register_type xmm0) {
+    // xmm0 = A B C D
+    __m128i mask_low = _mm_set_epi32(0, -1, 0, -1);
+    __m128i mask_high = _mm_set_epi32(-1, 0, -1, 0);
+
+    __m128i low0 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r0)); // A0 B0
+    __m128i low1 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r1)); // A1 B1
+
+    __m128i high0 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r0, 1)); // C0 D0
+    __m128i high1 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r1, 1)); // C1 D1
+
+    low0 = _mm_and_si128(mask_low, low0); // A0 0 B0 0
+    low1 = _mm_and_si128(mask_low, low1); // A1 0 B1 0
+
+    high0 = _mm_and_si128(mask_high, high0); // C0 0 D0 0
+    high1 = _mm_and_si128(mask_high, high1); // C1 0 D1 0
+
+    low0 = _mm_or_si128(low0, high0); // A0 C0 B0 D0
+    low1 = _mm_or_si128(low1, high1); // A1 C1 B1 D1
+
+    high0 = _mm_xor_si128(high0, high0); // 0 0 0 0
+
+    low0 = _mm_shuffle_epi32(low0, 216); // A0 B0 C0 D0
+    low1 = _mm_shuffle_epi32(low1, 216); // A1 B1 C1 D1
+    // A0 B0 C0 D0 A1 B1 C1 D1 0 0 0 0 0 0 0 0
+    return simd_trait<int, cyme::avx, 2>::register_type(_mm256_set_m128i(low1, low0), _mm256_set_m128i(high0, high0));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation double,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 4>::register_type
+_mm_cast<double, cyme::avx, 4, int>(simd_trait<double, cyme::avx, 4>::register_type xmm0) {
+    // xmm0 = A B C D
+    __m128i mask_low = _mm_set_epi32(0, -1, 0, -1);
+    __m128i mask_high = _mm_set_epi32(-1, 0, -1, 0);
+
+    __m128i low0 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r0)); // A0 B0
+    __m128i low1 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r1)); // A1 B1
+    __m128i low2 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r2)); // A2 B2
+    __m128i low3 = _mm_castpd_si128(_mm256_castpd256_pd128(xmm0.r3)); // A3 B3
+
+    __m128i high0 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r0, 1)); // C0 D0
+    __m128i high1 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r1, 1)); // C1 D1
+    __m128i high2 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r2, 1)); // C2 D2
+    __m128i high3 = _mm_castpd_si128(_mm256_extractf128_pd(xmm0.r3, 1)); // C3 D3
+
+    low0 = _mm_and_si128(mask_low, low0); // A0 0 B0 0
+    low1 = _mm_and_si128(mask_low, low1); // A1 0 B1 0
+    low2 = _mm_and_si128(mask_low, low2); // A2 0 B2 0
+    low3 = _mm_and_si128(mask_low, low3); // A3 0 B3 0
+
+    high0 = _mm_and_si128(mask_high, high0); // C0 0 D0 0
+    high1 = _mm_and_si128(mask_high, high1); // C1 0 D1 0
+    high2 = _mm_and_si128(mask_high, high2); // C2 0 D2 0
+    high3 = _mm_and_si128(mask_high, high3); // C3 0 D3 0
+
+    low0 = _mm_or_si128(low0, high0); // A0 C0 B0 D0
+    low1 = _mm_or_si128(low1, high1); // A1 C1 B1 D1
+    low2 = _mm_or_si128(low2, high2); // A2 C2 B2 D2
+    low3 = _mm_or_si128(low3, high3); // A3 C3 B3 D3
+
+    high0 = _mm_xor_si128(high0, high0); // 0 0 0 0
+
+    low0 = _mm_shuffle_epi32(low0, 216); // A0 B0 C0 D0
+    low1 = _mm_shuffle_epi32(low1, 216); // A1 B1 C1 D1
+    low2 = _mm_shuffle_epi32(low2, 216); // A2 B2 C2 D2
+    low3 = _mm_shuffle_epi32(low3, 216); // A3 B3 C3 D3
+
+    // A0 B0 C0 D0 A1 B1 C1 D1 A2 B2 C2 D2 A3 B3 C3 D3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    return simd_trait<int, cyme::avx, 4>::register_type(_mm256_set_m128i(low1, low0), _mm256_set_m128i(low3, low2),
+                                                        _mm256_set_m128i(high0, high0), _mm256_set_m128i(high0, high0));
 }
 
 /**
@@ -1525,6 +1757,42 @@ _mm_or<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm
 }
 
 /**
+ Evaluate the  ^ operator between two registers
+ specialisation double,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 1>::register_type
+_mm_xor<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 1>::register_type xmm1) {
+    return _mm256_xor_pd(xmm0, xmm1);
+}
+
+/**
+ Evaluate the  ^ operator between two registers
+ specialisation double,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 2>::register_type
+_mm_xor<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 2>::register_type(_mm256_xor_pd(xmm0.r0, xmm1.r0),
+                                                           _mm256_xor_pd(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the  ^ operator between two registers
+ specialisation double,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 4>::register_type
+_mm_xor<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 4>::register_type(
+        _mm256_xor_pd(xmm0.r0, xmm1.r0), _mm256_xor_pd(xmm0.r1, xmm1.r1), _mm256_xor_pd(xmm0.r2, xmm1.r2),
+        _mm256_xor_pd(xmm0.r3, xmm1.r3));
+}
+
+/**
  Evaluate the andnot operator between two registers
  specialisation double,cyme::avx,1 regs
  */
@@ -1558,6 +1826,42 @@ _mm_andnot<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type
     return simd_trait<double, cyme::avx, 4>::register_type(
         _mm256_andnot_pd(xmm0.r0, mask), _mm256_andnot_pd(xmm0.r1, mask), _mm256_andnot_pd(xmm0.r2, mask),
         _mm256_andnot_pd(xmm0.r3, mask));
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation double,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 1>::register_type
+_mm_min<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 1>::register_type xmm1) {
+    return _mm256_min_pd(xmm0, xmm1);
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation double,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 2>::register_type
+_mm_min<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 2>::register_type(_mm256_min_pd(xmm0.r0, xmm1.r0),
+                                                           _mm256_min_pd(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation double,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 4>::register_type
+_mm_min<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 4>::register_type(
+        _mm256_min_pd(xmm0.r0, xmm1.r0), _mm256_min_pd(xmm0.r1, xmm1.r1), _mm256_min_pd(xmm0.r2, xmm1.r2),
+        _mm256_min_pd(xmm0.r3, xmm1.r3));
 }
 
 #ifdef __INTEL_COMPILER
@@ -1627,6 +1931,45 @@ forceinline simd_trait<double, cyme::avx, 4>::register_type
 _mm_log<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0) {
     return simd_trait<double, cyme::avx, 4>::register_type(__svml_log4(xmm0.r0), __svml_log4(xmm0.r1),
                                                            __svml_log4(xmm0.r2), __svml_log4(xmm0.r3));
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation double,cyme::avx, 1 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 1>::register_type
+_mm_pow<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 1>::register_type xmm1) {
+    return __svml_pow4(xmm0, xmm1);
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation double,cyme::avx, 2 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 2>::register_type
+_mm_pow<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 2>::register_type(__svml_pow4(xmm0.r0, xmm1.r0),
+                                                           __svml_pow4(xmm0.r1, xmm0.r1));
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation double,cyme::avx, 4 regs
+ */
+template <>
+forceinline simd_trait<double, cyme::avx, 4>::register_type
+_mm_pow<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0,
+                              simd_trait<double, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<double, cyme::avx, 4>::register_type(__svml_pow4(xmm0.r0, xmm1.r0), __svml_pow4(xmm0.r1, xmm1.r1),
+                                                           __svml_pow4(xmm0.r2, xmm1.r2),
+                                                           __svml_pow4(xmm0.r3, xmm1.r3));
 }
 #endif
 
@@ -2160,6 +2503,40 @@ _mm_neg<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0
 }
 
 /**
+    check if the register is full of 0, return a bool. Specialisation float,cyme::avx,1 regs
+ */
+template <>
+forceinline bool _mm_is_empty<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0) {
+    __m256i mask = _mm256_set1_epi32(0xffffffff);
+    return _mm256_testz_si256(_mm256_castps_si256(xmm0), mask);
+    // return 0 means FALSE, something else meanse TRUE
+}
+
+/**
+    check if the register is full of 0, return a bool.
+   specialisation float,cyme::avx,2 regs
+ */
+template <>
+forceinline bool _mm_is_empty<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0) {
+    __m256i mask = _mm256_set1_epi32(0xffffffff);
+    return (_mm256_testz_si256(_mm256_castps_si256(xmm0.r0), mask) &
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r1), mask));
+}
+
+/**
+    check if the register is full of 0, return a bool.
+   specialisation float,cyme::avx,4 regs
+ */
+template <>
+forceinline bool _mm_is_empty<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0) {
+    __m256i mask = _mm256_set1_epi32(0xffffffff);
+    return (_mm256_testz_si256(_mm256_castps_si256(xmm0.r0), mask) &
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r1), mask) &
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r2), mask) &
+            _mm256_testz_si256(_mm256_castps_si256(xmm0.r3), mask));
+}
+
+/**
   Negate packed single-precision (32-bit) floating-point elements in xmm0 to packed double-precision (64-bit)
   floating-point elements, and store the results in dst.
   specialisation float,cyme::avx, 4 regs
@@ -2215,7 +2592,7 @@ _mm_floor<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xm
  */
 template <>
 forceinline simd_trait<float, cyme::avx, 1>::register_type
-_mm_cast<float, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
+_mm_convert<float, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
     return _mm256_cvtepi32_ps(xmm0);
 }
 
@@ -2226,7 +2603,7 @@ _mm_cast<float, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0)
  */
 template <>
 forceinline simd_trait<float, cyme::avx, 2>::register_type
-_mm_cast<float, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
+_mm_convert<float, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
     return simd_trait<float, cyme::avx, 2>::register_type(_mm256_cvtepi32_ps(xmm0.r0), _mm256_cvtepi32_ps(xmm0.r1));
 }
 
@@ -2237,7 +2614,7 @@ _mm_cast<float, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0)
  */
 template <>
 forceinline simd_trait<float, cyme::avx, 4>::register_type
-_mm_cast<float, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
+_mm_convert<float, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
     return simd_trait<float, cyme::avx, 4>::register_type(_mm256_cvtepi32_ps(xmm0.r0), _mm256_cvtepi32_ps(xmm0.r1),
                                                           _mm256_cvtepi32_ps(xmm0.r2), _mm256_cvtepi32_ps(xmm0.r3));
 }
@@ -3182,6 +3559,42 @@ _mm_or<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0,
 }
 
 /**
+ Evaluate the  ^ operator between two registers
+ specialisation float,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 1>::register_type
+_mm_xor<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 1>::register_type xmm1) {
+    return _mm256_xor_ps(xmm0, xmm1);
+}
+
+/**
+ Evaluate the  ^ operator between two registers
+ specialisation float,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 2>::register_type
+_mm_xor<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 2>::register_type(_mm256_xor_ps(xmm0.r0, xmm1.r0),
+                                                          _mm256_xor_ps(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the  ^ operator between two registers
+ specialisation float,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 4>::register_type
+_mm_xor<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 4>::register_type(
+        _mm256_xor_ps(xmm0.r0, xmm1.r0), _mm256_xor_ps(xmm0.r1, xmm1.r1), _mm256_xor_ps(xmm0.r2, xmm1.r2),
+        _mm256_xor_ps(xmm0.r3, xmm1.r3));
+}
+
+/**
  Evaluate the andnot  operator between two registers
  specialisation float,cyme::avx,1 regs
  */
@@ -3215,6 +3628,42 @@ _mm_andnot<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type x
     return simd_trait<float, cyme::avx, 4>::register_type(
         _mm256_andnot_ps(xmm0.r0, mask), _mm256_andnot_ps(xmm0.r1, mask), _mm256_andnot_ps(xmm0.r2, mask),
         _mm256_andnot_ps(xmm0.r3, mask));
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation float,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 1>::register_type
+_mm_min<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 1>::register_type xmm1) {
+    return _mm256_min_ps(xmm0, xmm1);
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation float,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 2>::register_type
+_mm_min<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 2>::register_type(_mm256_min_ps(xmm0.r0, xmm1.r0),
+                                                          _mm256_min_ps(xmm0.r1, xmm1.r1));
+}
+
+/**
+ Evaluate the  min operator between two registers
+ specialisation float,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 4>::register_type
+_mm_min<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 4>::register_type(
+        _mm256_min_ps(xmm0.r0, xmm1.r0), _mm256_min_ps(xmm0.r1, xmm1.r1), _mm256_min_ps(xmm0.r2, xmm1.r2),
+        _mm256_min_ps(xmm0.r3, xmm1.r3));
 }
 
 #ifdef __INTEL_COMPILER
@@ -3284,6 +3733,45 @@ forceinline simd_trait<float, cyme::avx, 4>::register_type
 _mm_log<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0) {
     return simd_trait<float, cyme::avx, 4>::register_type(__svml_logf8(xmm0.r0), __svml_logf8(xmm0.r1),
                                                           __svml_logf8(xmm0.r2), __svml_logf8(xmm0.r3));
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation float,cyme::avx, 1 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 1>::register_type
+_mm_pow<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 1>::register_type xmm1) {
+    return __svml_powf8(xmm0, xmm1);
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation float,cyme::avx, 2 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 2>::register_type
+_mm_pow<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 2>::register_type(__svml_powf8(xmm0.r0, xmm1.r0),
+                                                          __svml_powf8(xmm0.r1, xmm0.r1));
+}
+
+/**
+ Compute the pow(x,y) value of packed single-precision (32-bit)
+ floating-point elements in xmm0, and store the results in dst.
+ specialisation float,cyme::avx, 4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 4>::register_type
+_mm_pow<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0,
+                             simd_trait<float, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<float, cyme::avx, 4>::register_type(
+        __svml_powf8(xmm0.r0, xmm1.r0), __svml_powf8(xmm0.r1, xmm1.r1), __svml_powf8(xmm0.r2, xmm1.r2),
+        __svml_powf8(xmm0.r3, xmm1.r3));
 }
 #endif
 
@@ -3563,6 +4051,78 @@ forceinline void _mm_store<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::reg
 }
 
 /**
+ Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+ specialisation int,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 1>::register_type
+_mm_gt<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
+                          simd_trait<int, cyme::avx, 1>::register_type xmm1) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+    __m128i tmp0 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0, 0), _mm256_extractf128_si256(xmm1, 0));
+    __m128i tmp1 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0, 1), _mm256_extractf128_si256(xmm1, 1));
+    __m256i res = _mm256_insertf128_si256(res, tmp0, 0);
+    res = _mm256_insertf128_si256(res, tmp1, 1);
+#pragma GCC diagnostic pop
+    return res;
+}
+
+/**
+ Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+ specialisation float,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 2>::register_type
+_mm_gt<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
+                          simd_trait<int, cyme::avx, 2>::register_type xmm1) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+    __m128i tmp0 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm256_extractf128_si256(xmm1.r0, 0));
+    __m128i tmp1 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r0, 1), _mm256_extractf128_si256(xmm1.r0, 1));
+    __m128i tmp2 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r1, 0), _mm256_extractf128_si256(xmm1.r1, 0));
+    __m128i tmp3 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r1, 1), _mm256_extractf128_si256(xmm1.r1, 1));
+    __m256i res0 = _mm256_insertf128_si256(res0, tmp0, 0);
+    res0 = _mm256_insertf128_si256(res0, tmp1, 1);
+    __m256i res1 = _mm256_insertf128_si256(res1, tmp2, 0);
+    res1 = _mm256_insertf128_si256(res1, tmp3, 1);
+#pragma GCC diagnostic pop
+    return simd_trait<int, cyme::avx, 2>::register_type(res0, res1);
+}
+
+/**
+ Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
+ specialisation int,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 4>::register_type
+_mm_gt<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
+                          simd_trait<int, cyme::avx, 4>::register_type xmm1) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+    __m128i tmp0 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm256_extractf128_si256(xmm1.r0, 0));
+    __m128i tmp1 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r0, 1), _mm256_extractf128_si256(xmm1.r0, 1));
+    __m128i tmp2 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r1, 0), _mm256_extractf128_si256(xmm1.r1, 0));
+    __m128i tmp3 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r1, 1), _mm256_extractf128_si256(xmm1.r1, 1));
+    __m128i tmp4 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r2, 0), _mm256_extractf128_si256(xmm1.r2, 0));
+    __m128i tmp5 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r2, 1), _mm256_extractf128_si256(xmm1.r2, 1));
+    __m128i tmp6 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r3, 0), _mm256_extractf128_si256(xmm1.r3, 0));
+    __m128i tmp7 = _mm_cmpgt_epi32(_mm256_extractf128_si256(xmm0.r3, 1), _mm256_extractf128_si256(xmm1.r3, 1));
+
+    __m256i res0 = _mm256_insertf128_si256(res0, tmp0, 0);
+    res0 = _mm256_insertf128_si256(res0, tmp1, 1);
+    __m256i res1 = _mm256_insertf128_si256(res1, tmp2, 0);
+    res1 = _mm256_insertf128_si256(res1, tmp3, 1);
+    __m256i res2 = _mm256_insertf128_si256(res2, tmp4, 0);
+    res2 = _mm256_insertf128_si256(res2, tmp5, 1);
+    __m256i res3 = _mm256_insertf128_si256(res3, tmp6, 0);
+    res3 = _mm256_insertf128_si256(res3, tmp7, 1);
+
+#pragma GCC diagnostic pop
+    return simd_trait<int, cyme::avx, 4>::register_type(res0, res1, res2, res3);
+}
+
+/**
  Evaluate the the < operator, return if true return 0xffffffffffffffff (true) else 0 (false)
  specialisation int,cyme::avx,1 regs
 */
@@ -3747,6 +4307,159 @@ _mm_and<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
         _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0.r2), _mm256_castsi256_pd(xmm1.r2))),
         _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(xmm0.r3), _mm256_castsi256_pd(xmm1.r3))));
 }
+
+/**
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
+ specialisation int,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 1>::register_type
+_mm_srl<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
+                           simd_trait<int, cyme::avx, 1>::register_type xmm1) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+    __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
+    __m128i tmp0 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1, 0), mask));
+    __m128i tmp1 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1, 1), mask));
+    __m256i res = _mm256_insertf128_si256(res, tmp0, 0);
+    res = _mm256_insertf128_si256(res, tmp1, 1);
+#pragma GCC diagnostic pop
+    return res;
+}
+
+/**
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
+ specialisation int,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 2>::register_type
+_mm_srl<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
+                           simd_trait<int, cyme::avx, 2>::register_type xmm1) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+    __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
+    __m128i tmp0 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 0), mask));
+    __m128i tmp1 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 1), mask));
+    __m128i tmp2 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r1, 0), mask));
+    __m128i tmp3 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r1, 1), mask));
+    __m256i res0 = _mm256_insertf128_si256(res0, tmp0, 0);
+    res0 = _mm256_insertf128_si256(res0, tmp1, 1);
+    __m256i res1 = _mm256_insertf128_si256(res1, tmp2, 0);
+    res1 = _mm256_insertf128_si256(res1, tmp3, 1);
+#pragma GCC diagnostic pop
+    return simd_trait<int, cyme::avx, 2>::register_type(res0, res1);
+}
+
+/**
+ Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
+ specialisation int,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 4>::register_type
+_mm_srl<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
+                           simd_trait<int, cyme::avx, 4>::register_type xmm1) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+    __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
+    __m128i tmp0 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 0), mask));
+    __m128i tmp1 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r0, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 1), mask));
+    __m128i tmp2 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r1, 0), mask));
+    __m128i tmp3 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r1, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r1, 1), mask));
+    __m128i tmp4 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r2, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r2, 0), mask));
+    __m128i tmp5 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r2, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r2, 1), mask));
+    __m128i tmp6 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r3, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1.r3, 0), mask));
+    __m128i tmp7 =
+        _mm_srl_epi32(_mm256_extractf128_si256(xmm0.r3, 1), _mm_and_si128(_mm256_extractf128_si256(xmm1.r3, 1), mask));
+
+    __m256i res0 = _mm256_insertf128_si256(res0, tmp0, 0);
+    res0 = _mm256_insertf128_si256(res0, tmp1, 1);
+    __m256i res1 = _mm256_insertf128_si256(res1, tmp2, 0);
+    res1 = _mm256_insertf128_si256(res1, tmp3, 1);
+    __m256i res2 = _mm256_insertf128_si256(res2, tmp4, 0);
+    res2 = _mm256_insertf128_si256(res2, tmp5, 1);
+    __m256i res3 = _mm256_insertf128_si256(res3, tmp6, 0);
+    res3 = _mm256_insertf128_si256(res3, tmp7, 1);
+
+#pragma GCC diagnostic pop
+    return simd_trait<int, cyme::avx, 4>::register_type(res0, res1, res2, res3);
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 1>::register_type
+_mm_cast<float, cyme::avx, 1, int>(simd_trait<float, cyme::avx, 1>::register_type xmm0) {
+    return _mm256_castps_si256(xmm0);
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 2>::register_type
+_mm_cast<float, cyme::avx, 2, int>(simd_trait<float, cyme::avx, 2>::register_type xmm0) {
+    return simd_trait<int, cyme::avx, 2>::register_type(_mm256_castps_si256(xmm0.r0), _mm256_castps_si256(xmm0.r1));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 4>::register_type
+_mm_cast<float, cyme::avx, 4, int>(simd_trait<float, cyme::avx, 4>::register_type xmm0) {
+    return simd_trait<int, cyme::avx, 4>::register_type(_mm256_castps_si256(xmm0.r0), _mm256_castps_si256(xmm0.r1),
+                                                        _mm256_castps_si256(xmm0.r2), _mm256_castps_si256(xmm0.r3));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 1>::register_type
+_mm_cast<int, cyme::avx, 1, float>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
+    return _mm256_castsi256_ps(xmm0);
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 2>::register_type
+_mm_cast<int, cyme::avx, 2, float>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
+    return simd_trait<float, cyme::avx, 2>::register_type(_mm256_castsi256_ps(xmm0.r0), _mm256_castsi256_ps(xmm0.r1));
+}
+
+/**
+ change the interpretation of the SIMD register
+ specialisation float,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<float, cyme::avx, 4>::register_type
+_mm_cast<int, cyme::avx, 4, float>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
+    return simd_trait<float, cyme::avx, 4>::register_type(_mm256_castsi256_ps(xmm0.r0), _mm256_castsi256_ps(xmm0.r1),
+                                                          _mm256_castsi256_ps(xmm0.r2), _mm256_castsi256_ps(xmm0.r3));
+}
+
+#undef _mm256_set_m128i
 
 } // end namespace
 

@@ -19,7 +19,6 @@
  */
 
 #include <tests/unit/test_header.hpp>
-#include <limits>
 
 using namespace cyme::test;
 
@@ -162,6 +161,40 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_or_operations, T, generic_test_types) {
         BOOST_CHECK(r[i] == 0);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_xor_operations, T, generic_test_types) {
+    union helper {
+        TYPE d;
+        typename trait_integer<TYPE>::value_type n;
+    };
+    helper u, utest;
+    u.n = -1;
+    // for the test only
+
+    double tmp = drand48();
+    cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(tmp);
+    cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(0.);
+    cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> mask_1(u.d);
+    cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> mask_0(0.);
+    int n = cyme::unroll_factor::N * cyme::trait_register<TYPE, cyme::__GETSIMD__()>::size / sizeof(TYPE);
+    TYPE r[n] __attribute__((aligned(64)));
+
+    va = va ^ va;
+    va.store(r);
+
+    for (int i = 0; i < n; ++i) {
+        utest.d = r[i];
+        BOOST_CHECK(utest.n == 0);
+    }
+
+    va ^= mask_1;
+    va.store(r);
+
+    for (int i = 0; i < n; ++i) {
+        utest.d = r[i];
+        BOOST_CHECK(utest.n == -1);
+    }
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_andnot_operations, T, generic_test_types) {
     union helper {
         TYPE d;
@@ -181,6 +214,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_andnot_operations, T, generic_test_types)
 
     for (int i = 0; i < n; ++i)
         BOOST_CHECK(r[i] == 0);
+}
+
+BOOST_AUTO_TEST_CASE(vec_simd_shift_operations) {
+
+    double tmp = drand48();
+    cyme::vec_simd<int, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(3);
+    cyme::vec_simd<int, cyme::__GETSIMD__(), cyme::unroll_factor::N> mask(1);
+    int n = cyme::unroll_factor::N * cyme::trait_register<int, cyme::__GETSIMD__()>::size / sizeof(int);
+    int r[n] __attribute__((aligned(64)));
+
+    va = va >> mask;
+    va.store(r);
+
+    for (int i = 0; i < n; ++i) {
+        BOOST_CHECK(r[i] == 1);
+    }
 }
 
 #endif

@@ -86,8 +86,8 @@ struct cyme_exp {
         /* calculate k,  k = (int)floor(a); p = (float)k; */
         vec_simd<T, O, N> log2e(1.4426950408889634073599);
         vec_simd<T, O, N> y(x * log2e);
-        vec_simd<int, O, N> k = floor(y);   // k int
-        vec_simd<T, O, N> p(cast<T, O>(k)); // k float
+        vec_simd<int, O, N> k = floor(y);      // k int
+        vec_simd<T, O, N> p(convert<T, O>(k)); // k float
 
         /* x -= p * log2; */
         vec_simd<T, O, N> c1(6.93145751953125E-1);

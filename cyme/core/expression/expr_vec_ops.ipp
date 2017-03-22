@@ -168,6 +168,14 @@ vec<T, O, N, vec_pow<T, O, N, R1, M>>
 }
 
 /**
+* pow(a,e) function, float only x^y
+*/
+template <class T, cyme::simd O, int N, class R1, class R2>
+vec<T, O, N, vec_powf<T, O, N, R1, R2>> forceinline pow(vec<T, O, N, R1> const &x, vec<T, O, N, R2> const &y) {
+    return vec<T, O, N, vec_powf<T, O, N, R1, R2>>(vec_powf<T, O, N, R1, R2>(x.rep(), y.rep()));
+}
+
+/**
 * negate operator optimisation --a = a
 */
 template <class T, cyme::simd O, int N, class R1>
@@ -184,11 +192,53 @@ vec<T, O, N, vec_neg<T, O, N, R1>> forceinline operator-(vec<T, O, N, R1> const 
 }
 
 /**
+* negate operator ~a
+*/
+template <class T, cyme::simd O, int N, class R1>
+vec<T, O, N, vec_not<T, O, N, R1>> forceinline operator~(vec<T, O, N, R1> const &a) {
+    return vec<T, O, N, vec_not<T, O, N, R1>>(vec_not<T, O, N, R1>(a.rep()));
+}
+
+/**
 * bitwise logic operator and,  a & b
 */
 template <class T, cyme::simd O, int N, class R1, class R2>
 forceinline vec<T, O, N, vec_and<T, O, N, R1, R2>> operator&(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
     return vec<T, O, N, vec_and<T, O, N, R1, R2>>(vec_and<T, O, N, R1, R2>(a.rep(), b.rep()));
+}
+
+/**
+ * bitwise logic operator and,  a ^ b
+ */
+template <class T, cyme::simd O, int N, class R1, class R2>
+forceinline vec<T, O, N, vec_xor<T, O, N, R1, R2>> operator^(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+    return vec<T, O, N, vec_xor<T, O, N, R1, R2>>(vec_xor<T, O, N, R1, R2>(a.rep(), b.rep()));
+}
+
+/**
+* bitwise logic operator or,  a | b
+*/
+template <class T, cyme::simd O, int N, class R1, class R2>
+forceinline vec<T, O, N, vec_or<T, O, N, R1, R2>> operator|(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+    return vec<T, O, N, vec_or<T, O, N, R1, R2>>(vec_or<T, O, N, R1, R2>(a.rep(), b.rep()));
+}
+
+/**
+* right shift operator  a >> b
+*/
+template <class T, cyme::simd O, int N, class R1, class R2>
+forceinline vec<T, O, N, vec_rshift<T, O, N, R1, R2>> operator>>(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+    return vec<T, O, N, vec_rshift<T, O, N, R1, R2>>(vec_rshift<T, O, N, R1, R2>(a.rep(), b.rep()));
+}
+
+/**
+* right shift operator  a >> b s where b is a scalar
+*/
+template <class T, cyme::simd O, int N, class R1>
+forceinline vec<T, O, N, vec_rshift<T, O, N, R1, vec_scalar<T, O, N>>>
+operator>>(vec<T, O, N, R1> const &a, typename identity<T>::value_type const &s) {
+    return vec<T, O, N, vec_rshift<T, O, N, R1, vec_scalar<T, O, N>>>(
+        vec_rshift<T, O, N, R1, vec_scalar<T, O, N>>(a.rep(), vec_scalar<T, O, N>(static_cast<T>(s))));
 }
 
 /**
@@ -354,6 +404,14 @@ forceinline vec<T, O, N, vec_mul<T, O, N, R2, vec_scalar<T, O, N>>>
 operator/(vec<T, O, N, R2> const &b, typename identity<T>::value_type const &s) {
     return vec<T, O, N, vec_mul<T, O, N, R2, vec_scalar<T, O, N>>>(
         vec_mul<T, O, N, R2, vec_scalar<T, O, N>>(b.rep(), vec_scalar<T, O, N>(1. / static_cast<T>(s))));
+}
+
+/**
+* minimum operator a,b
+*/
+template <class T, cyme::simd O, int N, class R1, class R2>
+vec<T, O, N, vec_min<T, O, N, R1, R2>> forceinline min(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+    return vec<T, O, N, vec_min<T, O, N, R1, R2>>(vec_min<T, O, N, R1, R2>(a.rep(), b.rep()));
 }
 }
 

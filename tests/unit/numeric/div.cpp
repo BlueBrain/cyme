@@ -29,43 +29,39 @@ using namespace cyme::test;
 #define SIZE T::size
 #define MAX 1000
 
-#define NN cyme::unroll_factor::N*cyme::trait_register<TYPE,cyme::__GETSIMD__()>::size/sizeof(TYPE)
-
-
+#define NN cyme::unroll_factor::N *cyme::trait_register<TYPE, cyme::__GETSIMD__()>::size / sizeof(TYPE)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_div_comparison, T, generic_test_types) {
     TYPE a[NN] __attribute__((aligned(64)));
     TYPE b[NN] __attribute__((aligned(64)));
     TYPE c[NN] __attribute__((aligned(64)));
     TYPE res[NN] __attribute__((aligned(64)));
-    double max(0.),ulp(0.);
-    for(size_t k=0; k<1000; ++k){
-        for(size_t i=0; i<NN; ++i){
+    double max(0.), ulp(0.);
+    for (size_t k = 0; k < 1000; ++k) {
+        for (size_t i = 0; i < NN; ++i) {
             a[i] = GetRandom<TYPE>();
             b[i] = GetRandom<TYPE>();
         }
 
-        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> va(a);
-        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vb(b);
-        cyme::vec_simd<TYPE,cyme::__GETSIMD__(),cyme::unroll_factor::N> vc;
+        cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(a);
+        cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(b);
+        cyme::vec_simd<TYPE, cyme::__GETSIMD__(), cyme::unroll_factor::N> vc;
 
-        for(size_t i=0; i<NN; ++i)
-            c[i] = a[i]/b[i];
+        for (size_t i = 0; i < NN; ++i)
+            c[i] = a[i] / b[i];
 
-        vc = va/vb;
+        vc = va / vb;
         vc.store(res);
 
-        for(size_t i=0; i<NN; ++i){
-            ulp = boost::math::float_distance(c[i],res[i]);
-           // std::cout << ulp << " a / b " << a[i] << " " << b[i] << std::endl;
+        for (size_t i = 0; i < NN; ++i) {
+            ulp = boost::math::float_distance(c[i], res[i]);
+            // std::cout << ulp << " a / b " << a[i] << " " << b[i] << std::endl;
             std::cout << ulp << std::endl;
-       //   max = std::max(ulp,max);
+            //   max = std::max(ulp,max);
         }
     }
     std::cout << max << std::endl;
 }
-
-
 
 #undef NN
 #undef TYPE
