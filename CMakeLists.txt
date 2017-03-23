@@ -44,9 +44,9 @@ include_directories (${PROJECT_SOURCE_DIR})
 #
 ########################################################################
 
-option (CYME_MAIN "Build the main (sandbox)" ON)
+option (CYME_MAIN "Build the main (sandbox)" OFF)
 option (CYME_LIBRARY "Build a library for serial computation" ON)
-option (CYME_TESTS "Build the CYME regression tests" ON)
+option (CYME_TESTS "Build the CYME regression tests" OFF)
 option (CYME_MATH "support lmass lmass_simd from IBM" OFF)
 option (CYME_MIC_HOST "Check if MIC is install" OFF)
 option (CYME_TRIGO "Build trigo kernel" OFF)
