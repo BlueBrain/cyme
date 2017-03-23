@@ -51,7 +51,7 @@ RELEASE:
 The serial test unroll 4 fails, again for the division. It is very wierd
 as the operator /= call the system division and not Newton-Raphson
 
-Elease 1.6.0
+Release 1.6.0
 - More support of inequalities for SSE/AVX backend
 - Support masking for inequalities for SSE/aVX backend
 - Better compatibility with Intel compiler
