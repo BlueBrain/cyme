@@ -20,9 +20,9 @@
  */
 
 /**
-* @file cyme/memory/vector.hpp
-* Defines a vector class
-*/
+ * @file cyme/memory/vector.hpp
+ * Defines a vector class
+ */
 
 #ifndef CYME_VECTOR_HPP
 #define CYME_VECTOR_HPP
@@ -34,21 +34,21 @@
 namespace cyme {
 
 /** cyme::vector container based on the std::vector.
-*
-*
-*  The cyme::vector provides a dynamic container. The container must be
-*  declared with a structure under the following form
-*  \code{.cpp}
-*  template<class T> struct my_object{
-*    typedef T value_type; // the value_type float or double
-*    const int value_size = 8; // your object has 8 fields
-*  };
-*  \endcode
-*  The container supports two memory layout AoS and AoSoA. The
-*  containers of cyme are constructed over a basic vector named cyme::storage
-*  (or storage_type), the size of storage depends of the value_size and the
-*  requested SIMD technology.
-*/
+ *
+ *
+ *  The cyme::vector provides a dynamic container. The container must be
+ *  declared with a structure under the following form
+ *  \code{.cpp}
+ *  template<class T> struct my_object{
+ *    typedef T value_type; // the value_type float or double
+ *    const int value_size = 8; // your object has 8 fields
+ *  };
+ *  \endcode
+ *  The container supports two memory layout AoS and AoSoA. The
+ *  containers of cyme are constructed over a basic vector named cyme::storage
+ *  (or storage_type), the size of storage depends of the value_size and the
+ *  requested SIMD technology.
+ */
 template <class T, cyme::order O>
 class vector {};
 
@@ -181,6 +181,6 @@ class vector<T, cyme::AoSoA> {
     base_type data;
     size_type size_cyme;
 };
-}
+} // namespace cyme
 
 #endif

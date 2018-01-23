@@ -244,7 +244,7 @@ forceinline typename simd_trait<T, O, N>::register_type _mm_gather(const T *src,
 template <class T, cyme::simd O, int N>
 void _mm_scatter(typename simd_trait<T, O, N>::register_type xmm0, T *dst, const int *ind, const int range);
 
-} // end namespace
+} // namespace cyme
 
 #include "cyme/core/simd_vector/detail/x86/simd_svml.ipp" // mix GCC/clang and intel svml
 

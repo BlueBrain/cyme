@@ -189,5 +189,5 @@ forceinline vec_simd<T, O, N> tan(const vec_simd<T, O, N> &rhs) {
     // Select Sign
     return x / y;
 }
-}
+} // namespace cyme
 #endif

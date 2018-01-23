@@ -36,6 +36,6 @@ forceinline vec_simd<T, O, N> rec(vec_simd<T, O, N> const &rhs) {
     nrv.xmm = _mm_rec<T, O, N>(rhs.xmm);
     return nrv;
 }
-} // end namespace
+} // namespace cyme
 
 #endif

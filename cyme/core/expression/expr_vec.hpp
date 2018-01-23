@@ -673,7 +673,7 @@ forceinline vec<T2, O, N> cyme_cast(vec<T1, O, N> &v1) {
     v.rep() = cast<T2>(v1.rep());
     return v;
 };
-}
+} // namespace cyme
 
 #include "cyme/core/expression/expr_vec_ops.ipp"
 #ifdef __FMA__

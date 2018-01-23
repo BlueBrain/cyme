@@ -189,6 +189,6 @@ struct trait_integer<double> {
 };
 
 } // end namespace test
-} // end namespace CYME
+} // namespace cyme
 
 #endif // CYME_TEST_HEADER_HPP

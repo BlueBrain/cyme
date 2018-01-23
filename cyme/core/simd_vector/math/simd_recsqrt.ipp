@@ -36,6 +36,6 @@ forceinline vec_simd<T, O, N> recsqrt(vec_simd<T, O, N> const &rhs) {
     nrv.xmm = _mm_rsqrt<T, O, N>(rhs.xmm);
     return nrv;
 }
-} // end namespace
+} // namespace cyme
 
 #endif

@@ -82,5 +82,5 @@ template <class T, cyme::simd O, int N>
 forceinline vec_simd<T, O, N> operator/(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
     return Helper_div<T, O, N>::div(lhs, rhs);
 }
-} // end namespace
+} // namespace cyme
 #endif

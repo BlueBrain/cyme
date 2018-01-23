@@ -20,9 +20,9 @@
  */
 
 /**
-* @file cyme/memory/detail/storage.hpp
-* Defines Defines the basic subblock of a cyme container
-*/
+ * @file cyme/memory/detail/storage.hpp
+ * Defines Defines the basic subblock of a cyme container
+ */
 
 #ifndef CYME_STORAGE_HPP
 #define CYME_STORAGE_HPP
@@ -110,7 +110,7 @@ class storage<T, Size, AoSoA> {
     /**  storage type is basic array for AoSoA*/
     value_type data[Size];
 };
-} // end namespace
+} // namespace cyme
 
 #include "cyme/memory/detail/storage.ipp"
 

@@ -116,6 +116,6 @@ struct poly_order<T, coeff_remez_exp> {
     static const std::size_t value = 10;
 };
 
-} // end namespace
+} // namespace cyme
 
 #endif

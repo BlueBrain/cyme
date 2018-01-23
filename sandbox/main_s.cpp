@@ -101,7 +101,7 @@ template <class T>
 struct f_compute_2 {
     void operator()(T &S) { cnrn_cur(S); }
 };
-}
+} // namespace ProbAMPANMDA_EMS
 
 typedef cyme::vector<ProbAMPANMDA_EMS::synapse<float>, memory::AoS> Vec_f_AoS_ProbAMPANMDA_EMS;
 typedef cyme::vector<ProbAMPANMDA_EMS::synapse<float>, memory::AoSoA> Vec_f_AoSoA_ProbAMPANMDA_EMS;

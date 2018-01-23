@@ -36,5 +36,5 @@ forceinline vec_simd<T, O, N> neg(vec_simd<T, O, N> const &rhs) {
     nrv.neg();
     return nrv;
 }
-}
+} // namespace cyme
 #endif

@@ -134,13 +134,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_negate, T, floating_point_block_typ
     it_AoS = block_a.begin();
     it_AoSoA_w = block_b.begin();
     it_AoSoA_r = block_b.begin();
-
+    // clang-format off
     for (; it_AoS != block_a.end(); ++it_AoS)
         (*it_AoS)[0] = -(-(*it_AoS)[1] - - - - - -(*it_AoS)[2]);
 
     for (; it_AoSoA_r != block_b.end(); ++it_AoSoA_r, ++it_AoSoA_w)
         (*it_AoSoA_w)[0] = -(-(*it_AoSoA_r)[1] - - - - - -(*it_AoSoA_r)[2]);
-
+    // clang-format on
     check(block_a, block_b);
 }
 BOOST_AUTO_TEST_CASE_TEMPLATE(block_operator_equal_assign, T, floating_point_block_types) {

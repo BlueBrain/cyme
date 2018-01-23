@@ -36,5 +36,5 @@ forceinline vec_simd<T, O, N> operator-(const vec_simd<T, O, N> &lhs, const vec_
     nrv -= rhs;
     return nrv;
 }
-}
+} // namespace cyme
 #endif

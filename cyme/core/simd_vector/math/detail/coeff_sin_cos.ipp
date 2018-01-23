@@ -112,6 +112,6 @@ struct poly_order<T, coeff_cephes_cos> {
     static const std::size_t value = 3;
 };
 
-} // end namespace
+} // namespace cyme
 
 #endif

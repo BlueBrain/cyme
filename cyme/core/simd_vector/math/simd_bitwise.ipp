@@ -61,6 +61,6 @@ vec_simd<T, O, N> operator~(const vec_simd<T, O, N> &lhs) {
     vec_simd<T, O, N> nrv(lhs);
     return ~nrv;
 }
-}
+} // namespace cyme
 
 #endif

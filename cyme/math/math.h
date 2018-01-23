@@ -336,7 +336,7 @@ inline double stan(double a) {
     return res;
 }
 
-} // end namespace
+} // namespace cyme
 
 #endif
 

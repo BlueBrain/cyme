@@ -51,5 +51,5 @@ forceinline vec_simd<T, O, N> operator+(ZERO, const vec_simd<T, O, N> &rhs) {
 
 /** addition with 0+0, see vec_simd.hpp for explanation  */
 forceinline ZERO operator+(ZERO, ZERO) { return ZERO(); }
-}
+} // namespace cyme
 #endif

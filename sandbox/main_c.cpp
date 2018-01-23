@@ -65,7 +65,7 @@ template <class T>
 struct f_compute {
     void operator()(T &S) { cnrn_states(S); }
 };
-}
+} // namespace Na
 
 typedef cyme::vector<Na::channel<float>, cyme::AoS> Vec_f_AoS_Na;
 typedef cyme::vector<Na::channel<float>, cyme::AoSoA> Vec_f_AoSoA_Na;

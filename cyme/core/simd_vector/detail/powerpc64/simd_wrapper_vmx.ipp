@@ -1,30 +1,30 @@
 /*
-* Cyme - simd_wrapper_vmx.ipp, Copyright (c), 2014,
-* Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
-* timothee.ewart@epfl.ch,
-* Kai Langen,
-* kai.langen@usask.ca,
-* All rights reserved.
-* This file is part of Cyme <https://github.com/BlueBrain/cyme>
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 3.0 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library.
-*/
+ * Cyme - simd_wrapper_vmx.ipp, Copyright (c), 2014,
+ * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
+ * timothee.ewart@epfl.ch,
+ * Kai Langen,
+ * kai.langen@usask.ca,
+ * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
 
 /**
-* @file cyme/core/simd_vector/detail/powerpc64/simd_wrapper_vmx.ipp
-* Final specialisation for math functions and vmx technology
-*/
+ * @file cyme/core/simd_vector/detail/powerpc64/simd_wrapper_vmx.ipp
+ * Final specialisation for math functions and vmx technology
+ */
 #ifndef CYME_SIMD_WRAPPER_VMX_IPP
 #define CYME_SIMD_WRAPPER_VMX_IPP
 
@@ -2471,7 +2471,7 @@ forceinline simd_trait<int, cyme::vmx, 4>::register_type
 _mm_load1<int, cyme::vmx, 4>(const simd_trait<int, cyme::vmx, 4>::value_type &a) {
     return simd_trait<int, cyme::vmx, 4>::register_type(vec_splats(a), vec_splats(a), vec_splats(a), vec_splats(a));
 }
-} // end namespace
+} // namespace cyme
 
 #undef vec_ctd
 #undef vec_ctds

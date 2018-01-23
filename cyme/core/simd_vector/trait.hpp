@@ -100,7 +100,7 @@ struct div_recursion;
 /** Helper class for the Newton-Raphson square-root algorithm.  */
 template <typename T, cyme::simd O>
 struct sqrt_recursion;
-}
+} // namespace cyme
 
 #ifdef __x86_64__
 #include "cyme/core/simd_vector/detail/x86/trait_x86.ipp"

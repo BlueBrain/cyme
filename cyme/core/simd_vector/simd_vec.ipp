@@ -1,23 +1,23 @@
 /*
-* Cyme - simd_vec.ipp, Copyright (c), 2014,
-* Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
-* timothee.ewart@epfl.ch,
-* All rights reserved.
-* This file is part of Cyme <https://github.com/BlueBrain/cyme>
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 3.0 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library.
-*/
+ * Cyme - simd_vec.ipp, Copyright (c), 2014,
+ * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
+ * timothee.ewart@epfl.ch,
+ * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
 
 /**
  * @file cyme/core/simd_vector/simd_vec.ipp
@@ -264,7 +264,7 @@ void vec_simd<T, O, N>::nms(const vec_simd &lhs, const vec_simd &rhs) {
     xmm = _mm_nfms<typename simd_trait<T, O, N>::value_type, O, N>(xmm, lhs.xmm, rhs.xmm);
 }
 #endif
-} // end namespace
+} // namespace cyme
 
 template <class T, cyme::simd O, int N>
 std::ostream &operator<<(std::ostream &out, const cyme::vec_simd<T, O, N> &vec) {

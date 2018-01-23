@@ -20,9 +20,9 @@
  */
 
 /**
-* @file cyme/memory/detail/simd.hpp
-* Defines simd properties of target machine.
-*/
+ * @file cyme/memory/detail/simd.hpp
+ * Defines simd properties of target machine.
+ */
 
 #ifndef CYME_SIMD_HPP
 #define CYME_SIMD_HPP
@@ -39,53 +39,53 @@
 namespace cyme {
 
 /**  Number of simd registers contained in the composite vector.
-*
-*  This class is used to define the number of simd registers to be put in a
-*  composite vector. __CYME_UNROLL_VALUE__ is a macro passed to the compiler
-*  automatically by CMake.
-*
-*/
+ *
+ *  This class is used to define the number of simd registers to be put in a
+ *  composite vector. __CYME_UNROLL_VALUE__ is a macro passed to the compiler
+ *  automatically by CMake.
+ *
+ */
 struct unroll_factor {
     const static int N = __CYME_UNROLL_VALUE__;
 };
 
 /**   Scatter operations (core-neuron specific)
-*
-*     Coreneuron does scatter reduction with usual operators
-*/
+ *
+ *     Coreneuron does scatter reduction with usual operators
+ */
 enum scatter_op { eq, add, sub, mul, div };
 
 /**   Simd technology type.
-*
-*  cyme::simd defines the simd technology for which the cyme code will be
-*  compiled. This is automatically detected by CMake at compile time.
-*/
+ *
+ *  cyme::simd defines the simd technology for which the cyme code will be
+ *  compiled. This is automatically detected by CMake at compile time.
+ */
 enum simd { sse, avx, neon, vmx, qpx, mic };
 
 /**   Memory layout of composite vector.
-*
-*  cyme::order defines the memory layout for the data encapsulated by the
-*  composite vector. AoS (Array of Structures) corresponds to serial layout,
-*  whereas AoSoA (Array of Structures of Arrays) corresponds to packed simd
-*  layout.
-*/
+ *
+ *  cyme::order defines the memory layout for the data encapsulated by the
+ *  composite vector. AoS (Array of Structures) corresponds to serial layout,
+ *  whereas AoSoA (Array of Structures of Arrays) corresponds to packed simd
+ *  layout.
+ */
 enum order { AoS = 0, AoSoA = 1 };
 
 #define __GETSIMD__() __CYME_SIMD_VALUE__
 
 /** Size of simd registers and memory alignment.
-*
-*  cyme::trait_register::size defines the size (in bytes) of the simd registers
-*  of the target machine.
-*  cyme::trait_register::a defines the memory alignment boundary (in bytes).
-*
-*  \warning cyme::trait_register::a is not NECESSARILY equal to the size of
-*  the register.
-*
-*  For example, float variables on BG/q are aligned on 32 byte boundaries
-*  even though their registers are 16 byte wide.
-*
-*/
+ *
+ *  cyme::trait_register::size defines the size (in bytes) of the simd registers
+ *  of the target machine.
+ *  cyme::trait_register::a defines the memory alignment boundary (in bytes).
+ *
+ *  \warning cyme::trait_register::a is not NECESSARILY equal to the size of
+ *  the register.
+ *
+ *  For example, float variables on BG/q are aligned on 32 byte boundaries
+ *  even though their registers are 16 byte wide.
+ *
+ */
 template <class T, cyme::simd O>
 struct trait_register;
 
@@ -126,13 +126,13 @@ struct trait_register<T, cyme::mic> {
 };
 
 /**  Partial specialisation for qpx technology.
-*
-*  \warning cyme::trait_register::a is not NECESSARILY equal to the size of
-*  the register.
-*
-*  BG/Q does not support native 8 floats registers, so the memory must be
-*  aligned on 32 byte boundaries on even for floats
-*/
+ *
+ *  \warning cyme::trait_register::a is not NECESSARILY equal to the size of
+ *  the register.
+ *
+ *  BG/Q does not support native 8 floats registers, so the memory must be
+ *  aligned on 32 byte boundaries on even for floats
+ */
 template <>
 struct trait_register<float, cyme::qpx> {
     const static size_t size = 16;
@@ -147,10 +147,10 @@ struct trait_register<T, cyme::qpx> {
 };
 
 /** stride length for the asssociated iterator.
-*
-*   cyme::stride defines the length of the step to reach the next element of a
-*   structure inside a composite vector, as explained in the \ref tuto2 section.
-*/
+ *
+ *   cyme::stride defines the length of the step to reach the next element of a
+ *   structure inside a composite vector, as explained in the \ref tuto2 section.
+ */
 template <class T, order O>
 struct stride;
 
@@ -168,6 +168,6 @@ struct stride<T, cyme::AoSoA> {
     }
 };
 
-} // end namespace
+} // namespace cyme
 
 #endif

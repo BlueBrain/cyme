@@ -132,5 +132,5 @@ forceinline vec_simd<T, O, N> log10(const vec_simd<T, O, N> &rhs) {
     vec_simd<T, O, N> c(0.4342944819); // get const value 1/log(10)
     return log(rhs) * c;
 }
-}
+} // namespace cyme
 #endif

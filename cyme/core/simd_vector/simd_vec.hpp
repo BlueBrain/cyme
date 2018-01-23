@@ -306,7 +306,7 @@ forceinline vec_simd<T, O, N> negatemulsub(const vec_simd<T, O, N> &lhs, const v
                                            const vec_simd<T, O, N> &rhs);
 #endif
 
-} // end namespace
+} // namespace cyme
 
 /** Ostream operator */
 template <class T, cyme::simd O, int N>

@@ -20,9 +20,9 @@
  */
 
 /**
-* @file cyme/memory/allocator.hpp
-* Defines allocator class for memory alignment
-*/
+ * @file cyme/memory/allocator.hpp
+ * Defines allocator class for memory alignment
+ */
 
 #ifndef CYME_ALLOCATOR_HPP
 #define CYME_ALLOCATOR_HPP
@@ -36,10 +36,10 @@
 namespace cyme {
 
 /**  allocator to align the memory on a specific boundary 16, 32 or 64 byte
-*
-*      This class encapsulates the function allocate_policy and
-*      deallocate_policy for the cyme allocation using a policy pattern. The
-*      allocation is performed using the POSIX: posix_memalign
+ *
+ *      This class encapsulates the function allocate_policy and
+ *      deallocate_policy for the cyme allocation using a policy pattern. The
+ *      allocation is performed using the POSIX: posix_memalign
  */
 template <class T, cyme::simd O>
 class Align_POSIX {
@@ -48,8 +48,8 @@ class Align_POSIX {
 
   protected:
     /**   The allocate function used in the policy
-    *   \param size std::size_t the size of the buffer
-    */
+     *   \param size std::size_t the size of the buffer
+     */
     void *allocate_policy(size_type size) {
         assert((cyme::trait_register<T, cyme::__GETSIMD__()>::size) >= sizeof(void *));
         if (size == 0)
@@ -69,12 +69,12 @@ class Align_POSIX {
 };
 
 /**  This class is an allocator for STL container: std::vectorr.
-*
-*    I guarantee the allocated buffer is bound on 8-16 or 32 byte cyme. It
-*    is a copy paste from standard allocator, the only difference is the
-*    functions allocate and deallocate where I call my own function with
-*    the help of the policy pattern
-*/
+ *
+ *    I guarantee the allocated buffer is bound on 8-16 or 32 byte cyme. It
+ *    is a copy paste from standard allocator, the only difference is the
+ *    functions allocate and deallocate where I call my own function with
+ *    the help of the policy pattern
+ */
 template <class T, class Policy = Align_POSIX<T, __GETSIMD__()>>
 class Allocator : private Policy {
     using Policy::allocate_policy;
@@ -136,5 +136,5 @@ inline bool operator!=(Allocator<T, TPolicy> const &lhs, Allocator<U, UPolicy> c
     return operator!=(static_cast<TPolicy &>(lhs), static_cast<UPolicy &>(rhs));
 }
 
-} // end namespace
+} // namespace cyme
 #endif

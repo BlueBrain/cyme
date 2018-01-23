@@ -48,5 +48,5 @@ template <class T, cyme::simd O, int N>
 forceinline ZERO operator*(ZERO, const vec_simd<T, O, N> &) {
     return ZERO();
 }
-}
+} // namespace cyme
 #endif

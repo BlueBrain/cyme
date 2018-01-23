@@ -88,5 +88,5 @@ template <class T, cyme::simd O, int N, cyme::scatter_op P>
 void forceinline help_scatter(cyme::vec_simd<T, O, N> const &u, T *dst, const int *ind, const int range) {
     scatter_ops_helper<T, O, N, P>::scatter_ops(u, dst, ind, range);
 }
-}
+} // namespace cyme
 #endif

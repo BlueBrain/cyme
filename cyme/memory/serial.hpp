@@ -20,22 +20,22 @@
  */
 
 /**
-* @file cyme/memory/serial.hpp
-* Defines serial class for temporary object
-*/
+ * @file cyme/memory/serial.hpp
+ * Defines serial class for temporary object
+ */
 
 #ifndef CYME_SERIAL_HPP
 #define CYME_SERIAL_HPP
 
 namespace cyme {
 /**     The serial class provides a solution for temporary object.
-*
-*  if the order is AoS, it will provide a basic float/double, else it
-*  encapsulates a SIMD vector. Note for AoSoA version: is serial = ... , it
-*  will generates the tree but it will not save the data into cyme.
-*  Default cyme::AoSoA because I use this object in mod2cyme where
-*  the data layout AoSoA does not "exist"
-*/
+ *
+ *  if the order is AoS, it will provide a basic float/double, else it
+ *  encapsulates a SIMD vector. Note for AoSoA version: is serial = ... , it
+ *  will generates the tree but it will not save the data into cyme.
+ *  Default cyme::AoSoA because I use this object in mod2cyme where
+ *  the data layout AoSoA does not "exist"
+ */
 template <class T, cyme::order O = cyme::AoSoA, int N = cyme::unroll_factor::N>
 class serial {};
 
@@ -123,6 +123,6 @@ struct serial<T, cyme::AoSoA, N> : public vec<T, cyme::__GETSIMD__(), N> {
 
     forceinline bool operator==(bool b) { return this->rep()() == b; }
 };
-}
+} // namespace cyme
 
 #endif
