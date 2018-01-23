@@ -13,7 +13,6 @@ macro(CYME_TECH_TRUE arg0)
     IF (CYME_TRUE)
        set(CYME_${arg0}_FOUND true CACHE BOOL "${arg0} available on host")
     ELSE (CYME_TRUE)
-       set(CYME_${arg0}_FOUND false CACHE BOOL "${arg0} available on host")
        MESSAGE(STATUS "Could not find hardware support for ${arg0} on this machine.")
     ENDIF (CYME_TRUE)
 endmacro()
@@ -29,24 +28,27 @@ ENDIF(BLUEGENE)
 IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
    EXEC_PROGRAM(cat ARGS "/proc/cpuinfo" OUTPUT_VARIABLE CPUINFO)
 ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.features" OUTPUT_VARIABLE CPUINFO)
-   string(TOLOWER ${CPUINFO} CPUINFO) #cmake regex are case sensitive
+   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.features" OUTPUT_VARIABLE CPUINFO1)
+   string(TOLOWER ${CPUINFO1} CPUINFO1) #cmake regex are case sensitive
+   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.leaf7_features" OUTPUT_VARIABLE CPUINFO2)
+   string(TOLOWER ${CPUINFO2} CPUINFO2) #cmake regex are case sensitive
+   set(CPUINFO "${CPUINFO1}" " " "${CPUINFO2}")
 ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
-
-CYME_TECH_MATCH("sse4[._]1" ${CPUINFO})
+#need quote for CPUINFO else the list is cut in two ... cmake mysteries
+CYME_TECH_MATCH("sse4[._]1" "${CPUINFO}")
 CYME_TECH_TRUE(SSE)
 
-CYME_TECH_MATCH("avx" ${CPUINFO})
+CYME_TECH_MATCH("avx" "${CPUINFO}")
 CYME_TECH_TRUE(AVX)
 
-CYME_TECH_MATCH("avx2" ${CPUINFO})
+CYME_TECH_MATCH("avx2" "${CPUINFO}")
 CYME_TECH_TRUE(AVX2)
 
-CYME_TECH_MATCH(asimd ${CPUINFO})
+CYME_TECH_MATCH("asimd" "${CPUINFO}")
 CYME_TECH_TRUE(NEON)
 
 IF(CYME_POWER_VMX)
-    CYME_TECH_MATCH(altivec ${CPUINFO})
+    CYME_TECH_MATCH(altivec "${CPUINFO}")
     CYME_TECH_TRUE(VMX)
 ELSE(CYME_POWER_VMX)
     CYME_TECH_MATCH(altivec ${CPUINFO})
