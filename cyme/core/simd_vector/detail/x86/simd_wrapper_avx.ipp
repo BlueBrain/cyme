@@ -934,6 +934,7 @@ _mm_twok<double, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0
 template <>
 forceinline simd_trait<double, cyme::avx, 1>::register_type
 _mm_ge<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0) {
+
     __m128d lo = _mm256_extractf128_pd(xmm0, 0);
     __m128d hi = _mm256_extractf128_pd(xmm0, 1);
     hi = _mm_ge<double, cyme::sse, 1>(hi);
@@ -1027,6 +1028,10 @@ template <>
 forceinline simd_trait<double, cyme::avx, 1>::register_type
 _mm_gf<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0) {
     __m256i TMP = _mm256_castpd_si256(xmm0);
+#ifdef __AVX2__
+    TMP = _mm256_and_si256(TMP, _mm256_set1_epi64x(0xfffffffffffff));
+    TMP = _mm256_add_epi64(TMP, _mm256_set1_epi64x(0x3ff0000000000000));
+#else
     __m128i tmp0 = _mm256_extractf128_si256(TMP, 0);
     tmp0 = _mm_and_si128(tmp0, _mm_set1_epi64x(0xfffffffffffff));
     tmp0 = _mm_add_epi64(tmp0, _mm_set1_epi64x(0x3ff0000000000000));
@@ -1035,6 +1040,7 @@ _mm_gf<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm
     tmp1 = _mm_add_epi64(tmp1, _mm_set1_epi64x(0x3ff0000000000000));
     TMP = _mm256_insertf128_si256(TMP, tmp0, 0);
     TMP = _mm256_insertf128_si256(TMP, tmp1, 1);
+#endif
     return _mm256_castsi256_pd(TMP);
 }
 
@@ -1047,7 +1053,12 @@ forceinline simd_trait<double, cyme::avx, 2>::register_type
 _mm_gf<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0) {
     __m256i TMP0 = _mm256_castpd_si256(xmm0.r0);
     __m256i TMP1 = _mm256_castpd_si256(xmm0.r1);
-
+#ifdef __AVX2__
+    TMP0 = _mm256_and_si256(TMP0, _mm256_set1_epi64x(0xfffffffffffff));
+    TMP1 = _mm256_and_si256(TMP1, _mm256_set1_epi64x(0xfffffffffffff));
+    TMP0 = _mm256_add_epi64(TMP0, _mm256_set1_epi64x(0x3ff0000000000000));
+    TMP1 = _mm256_add_epi64(TMP1, _mm256_set1_epi64x(0x3ff0000000000000));
+#else
     __m128i tmp0 = _mm256_extractf128_si256(TMP0, 0);
     __m128i tmp1 = _mm256_extractf128_si256(TMP1, 0);
 
@@ -1071,7 +1082,7 @@ _mm_gf<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm
 
     TMP1 = _mm256_insertf128_si256(TMP1, tmp1, 0);
     TMP1 = _mm256_insertf128_si256(TMP1, tmp11, 1);
-
+#endif
     return simd_trait<double, cyme::avx, 2>::register_type(_mm256_castsi256_pd(TMP0), _mm256_castsi256_pd(TMP1));
 }
 
@@ -1087,6 +1098,16 @@ _mm_gf<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm
     __m256i TMP2 = _mm256_castpd_si256(xmm0.r2);
     __m256i TMP3 = _mm256_castpd_si256(xmm0.r3);
 
+#ifdef __AVX2__
+    TMP0 = _mm256_and_si256(TMP0, _mm256_set1_epi64x(0xfffffffffffff));
+    TMP1 = _mm256_and_si256(TMP1, _mm256_set1_epi64x(0xfffffffffffff));
+    TMP2 = _mm256_and_si256(TMP2, _mm256_set1_epi64x(0xfffffffffffff));
+    TMP3 = _mm256_and_si256(TMP3, _mm256_set1_epi64x(0xfffffffffffff));
+    TMP0 = _mm256_add_epi64(TMP0, _mm256_set1_epi64x(0x3ff0000000000000));
+    TMP1 = _mm256_add_epi64(TMP1, _mm256_set1_epi64x(0x3ff0000000000000));
+    TMP2 = _mm256_add_epi64(TMP2, _mm256_set1_epi64x(0x3ff0000000000000));
+    TMP3 = _mm256_add_epi64(TMP3, _mm256_set1_epi64x(0x3ff0000000000000));
+#else
     __m128i tmp0 = _mm256_extractf128_si256(TMP0, 0);
     __m128i tmp1 = _mm256_extractf128_si256(TMP1, 0);
     __m128i tmp2 = _mm256_extractf128_si256(TMP2, 0);
@@ -1128,7 +1149,7 @@ _mm_gf<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm
 
     TMP3 = _mm256_insertf128_si256(TMP3, tmp3, 0);
     TMP3 = _mm256_insertf128_si256(TMP3, tmp31, 1);
-
+#endif
     return simd_trait<double, cyme::avx, 4>::register_type(_mm256_castsi256_pd(TMP0), _mm256_castsi256_pd(TMP1),
                                                            _mm256_castsi256_pd(TMP2), _mm256_castsi256_pd(TMP3));
 }
@@ -2783,6 +2804,10 @@ template <>
 forceinline simd_trait<float, cyme::avx, 1>::register_type
 _mm_gf<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0) {
     __m256i TMP = _mm256_castps_si256(xmm0);
+#ifdef __AVX2__
+    TMP = _mm256_and_si256(TMP, _mm256_set1_epi32(0x7fffff));
+    TMP = _mm256_add_epi32(TMP, _mm256_set1_epi32(0x3f800000));
+#else
     __m128i tmp0 = _mm256_extractf128_si256(TMP, 0);
     tmp0 = _mm_and_si128(tmp0, _mm_set1_epi32(0x7fffff));
     tmp0 = _mm_add_epi32(tmp0, _mm_set1_epi32(0x3f800000));
@@ -2791,6 +2816,7 @@ _mm_gf<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0)
     tmp1 = _mm_add_epi32(tmp1, _mm_set1_epi32(0x3f800000));
     TMP = _mm256_insertf128_si256(TMP, tmp0, 0);
     TMP = _mm256_insertf128_si256(TMP, tmp1, 1);
+#endif
     return _mm256_castsi256_ps(TMP);
 }
 
@@ -2803,7 +2829,12 @@ forceinline simd_trait<float, cyme::avx, 2>::register_type
 _mm_gf<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0) {
     __m256i TMP0 = _mm256_castps_si256(xmm0.r0);
     __m256i TMP1 = _mm256_castps_si256(xmm0.r1);
-
+#ifdef __AVX2__
+    TMP0 = _mm256_and_si256(TMP0, _mm256_set1_epi32(0x7fffff));
+    TMP1 = _mm256_and_si256(TMP1, _mm256_set1_epi32(0x7fffff));
+    TMP0 = _mm256_add_epi32(TMP0, _mm256_set1_epi32(0x3f800000));
+    TMP1 = _mm256_add_epi32(TMP1, _mm256_set1_epi32(0x3f800000));
+#else
     __m128i tmp0 = _mm256_extractf128_si256(TMP0, 0);
     __m128i tmp1 = _mm256_extractf128_si256(TMP1, 0);
 
@@ -2827,6 +2858,7 @@ _mm_gf<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0)
 
     TMP1 = _mm256_insertf128_si256(TMP1, tmp1, 0);
     TMP1 = _mm256_insertf128_si256(TMP1, tmp11, 1);
+#endif
 
     return simd_trait<float, cyme::avx, 2>::register_type(_mm256_castsi256_ps(TMP0), _mm256_castsi256_ps(TMP1));
 }
@@ -2843,6 +2875,16 @@ _mm_gf<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0)
     __m256i TMP2 = _mm256_castps_si256(xmm0.r2);
     __m256i TMP3 = _mm256_castps_si256(xmm0.r3);
 
+#ifdef __AVX2__
+    TMP0 = _mm256_and_si256(TMP0, _mm256_set1_epi32(0x7fffff));
+    TMP1 = _mm256_and_si256(TMP1, _mm256_set1_epi32(0x7fffff));
+    TMP2 = _mm256_and_si256(TMP2, _mm256_set1_epi32(0x7fffff));
+    TMP3 = _mm256_and_si256(TMP3, _mm256_set1_epi32(0x7fffff));
+    TMP0 = _mm256_add_epi32(TMP0, _mm256_set1_epi32(0x3f800000));
+    TMP1 = _mm256_add_epi32(TMP1, _mm256_set1_epi32(0x3f800000));
+    TMP2 = _mm256_add_epi32(TMP2, _mm256_set1_epi32(0x3f800000));
+    TMP3 = _mm256_add_epi32(TMP3, _mm256_set1_epi32(0x3f800000));
+#else
     __m128i tmp0 = _mm256_extractf128_si256(TMP0, 0);
     __m128i tmp1 = _mm256_extractf128_si256(TMP1, 0);
     __m128i tmp2 = _mm256_extractf128_si256(TMP2, 0);
@@ -2884,7 +2926,7 @@ _mm_gf<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0)
 
     TMP3 = _mm256_insertf128_si256(TMP3, tmp3, 0);
     TMP3 = _mm256_insertf128_si256(TMP3, tmp31, 1);
-
+#endif
     return simd_trait<float, cyme::avx, 4>::register_type(_mm256_castsi256_ps(TMP0), _mm256_castsi256_ps(TMP1),
                                                           _mm256_castsi256_ps(TMP2), _mm256_castsi256_ps(TMP3));
 }
