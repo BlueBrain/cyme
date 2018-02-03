@@ -30,6 +30,9 @@
 namespace cyme {
 
 #define _mm256_set_m128i(v0, v1) _mm256_insertf128_si256(_mm256_castsi128_si256(v1), (v0), 1)
+#ifdef __AVX2__
+__m256i _mm256_cmplt_epi32(__m256i a, __m256i b) { return _mm256_cmpgt_epi32(b, a); } // a < b <=> b > a
+#endif
 
 /**
   Rounds xmm0 up to the next even integer.
@@ -4286,6 +4289,9 @@ template <>
 forceinline simd_trait<int, cyme::avx, 1>::register_type
 _mm_lt<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
                           simd_trait<int, cyme::avx, 1>::register_type xmm1) {
+#ifdef __AVX2__
+    __m256i res = _mm256_cmplt_epi32(xmm0, xmm1);
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     __m128i tmp0 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0, 0), _mm256_extractf128_si256(xmm1, 0));
@@ -4293,6 +4299,7 @@ _mm_lt<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
     __m256i res = _mm256_insertf128_si256(res, tmp0, 0);
     res = _mm256_insertf128_si256(res, tmp1, 1);
 #pragma GCC diagnostic pop
+#endif
     return res;
 }
 
@@ -4304,6 +4311,10 @@ template <>
 forceinline simd_trait<int, cyme::avx, 2>::register_type
 _mm_lt<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
                           simd_trait<int, cyme::avx, 2>::register_type xmm1) {
+#ifdef __AVX2__
+    __m256i res0 = _mm256_cmplt_epi32(xmm0.r0, xmm1.r0);
+    __m256i res1 = _mm256_cmplt_epi32(xmm0.r1, xmm1.r1);
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     __m128i tmp0 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm256_extractf128_si256(xmm1.r0, 0));
@@ -4315,6 +4326,7 @@ _mm_lt<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
     __m256i res1 = _mm256_insertf128_si256(res1, tmp2, 0);
     res1 = _mm256_insertf128_si256(res1, tmp3, 1);
 #pragma GCC diagnostic pop
+#endif
     return simd_trait<int, cyme::avx, 2>::register_type(res0, res1);
 }
 
@@ -4326,6 +4338,12 @@ template <>
 forceinline simd_trait<int, cyme::avx, 4>::register_type
 _mm_lt<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
                           simd_trait<int, cyme::avx, 4>::register_type xmm1) {
+#ifdef __AVX2__
+    __m256i res0 = _mm256_cmplt_epi32(xmm0.r0, xmm1.r0);
+    __m256i res1 = _mm256_cmplt_epi32(xmm0.r1, xmm1.r1);
+    __m256i res2 = _mm256_cmplt_epi32(xmm0.r2, xmm1.r2);
+    __m256i res3 = _mm256_cmplt_epi32(xmm0.r3, xmm1.r3);
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     __m128i tmp0 = _mm_cmplt_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm256_extractf128_si256(xmm1.r0, 0));
@@ -4347,6 +4365,7 @@ _mm_lt<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
     res3 = _mm256_insertf128_si256(res3, tmp7, 1);
 
 #pragma GCC diagnostic pop
+#endif
     return simd_trait<int, cyme::avx, 4>::register_type(res0, res1, res2, res3);
 }
 

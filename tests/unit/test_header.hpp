@@ -148,6 +148,8 @@ struct data_block {
 
 typedef boost::mpl::list<float, double> full_test_types;
 
+typedef boost::mpl::list<int, float, double> full_test_inequality_types;
+
 typedef boost::mpl::list<data<float, 2, cyme::AoS>, data<float, 2, cyme::AoSoA>, data<int, 2, cyme::AoS>,
                          data<int, 2, cyme::AoSoA>>
     mandelbroat_test_types;
@@ -177,6 +179,11 @@ typedef boost::mpl::list<data_block<float, 6, 15, cyme::AoS>, data_block<float, 
 
 template <class T>
 struct trait_integer;
+
+template <>
+struct trait_integer<int> { // ugly for integer test of inequalities
+    typedef int value_type;
+};
 
 template <>
 struct trait_integer<float> {
