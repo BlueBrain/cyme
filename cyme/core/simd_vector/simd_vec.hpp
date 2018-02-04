@@ -142,7 +142,7 @@ struct vec_simd {
     /** FMS operator, 2nd case of the operator - */
     forceinline void nms(const vec_simd &lhs, const vec_simd &rhs);
 #endif
-    /** 1,2 or 4 Hardware Registers (SSE, AVXR ...) */
+    /** 1,2 or 4 Hardware Registers (SSE, AVX ...) */
     register_type xmm;
 };
 

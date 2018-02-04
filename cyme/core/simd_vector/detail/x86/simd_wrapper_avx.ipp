@@ -1740,7 +1740,11 @@ template <>
 forceinline simd_trait<double, cyme::avx, 1>::register_type
 _mm_eq<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm0,
                              simd_trait<double, cyme::avx, 1>::register_type xmm1) {
+#ifdef __AVX2__ // latency 1 cycle, throughput 0.5 and cast ops cost nothing
+    return _mm256_castsi256_pd(_mm256_cmpeq_epi64(_mm256_castpd_si256(xmm0), _mm256_castpd_si256(xmm1)));
+#else // latency 4 cycle, throughput 0.5
     return (_mm256_cmp_pd(xmm0, xmm1, _CMP_EQ_OS));
+#endif
 }
 
 /**
@@ -1751,8 +1755,14 @@ template <>
 forceinline simd_trait<double, cyme::avx, 2>::register_type
 _mm_eq<double, cyme::avx, 2>(simd_trait<double, cyme::avx, 2>::register_type xmm0,
                              simd_trait<double, cyme::avx, 2>::register_type xmm1) {
+#ifdef __AVX2__
+    return simd_trait<double, cyme::avx, 2>::register_type(
+        _mm256_castsi256_pd(_mm256_cmpeq_epi64(_mm256_castpd_si256(xmm0.r0), _mm256_castpd_si256(xmm1.r0))),
+        _mm256_castsi256_pd(_mm256_cmpeq_epi64(_mm256_castpd_si256(xmm0.r1), _mm256_castpd_si256(xmm1.r1))));
+#else
     return simd_trait<double, cyme::avx, 2>::register_type(_mm256_cmp_pd(xmm0.r0, xmm1.r0, _CMP_EQ_OS),
                                                            _mm256_cmp_pd(xmm0.r1, xmm1.r1, _CMP_EQ_OS));
+#endif
 }
 
 /**
@@ -1763,9 +1773,18 @@ template <>
 forceinline simd_trait<double, cyme::avx, 4>::register_type
 _mm_eq<double, cyme::avx, 4>(simd_trait<double, cyme::avx, 4>::register_type xmm0,
                              simd_trait<double, cyme::avx, 4>::register_type xmm1) {
+#ifdef __AVX2__
+    return simd_trait<double, cyme::avx, 4>::register_type(
+        _mm256_castsi256_pd(_mm256_cmpeq_epi64(_mm256_castpd_si256(xmm0.r0), _mm256_castpd_si256(xmm1.r0))),
+        _mm256_castsi256_pd(_mm256_cmpeq_epi64(_mm256_castpd_si256(xmm0.r1), _mm256_castpd_si256(xmm1.r1))),
+        _mm256_castsi256_pd(_mm256_cmpeq_epi64(_mm256_castpd_si256(xmm0.r2), _mm256_castpd_si256(xmm1.r2))),
+        _mm256_castsi256_pd(_mm256_cmpeq_epi64(_mm256_castpd_si256(xmm0.r3), _mm256_castpd_si256(xmm1.r3))));
+
+#else
     return simd_trait<double, cyme::avx, 4>::register_type(
         _mm256_cmp_pd(xmm0.r0, xmm1.r0, _CMP_EQ_OS), _mm256_cmp_pd(xmm0.r1, xmm1.r1, _CMP_EQ_OS),
         _mm256_cmp_pd(xmm0.r2, xmm1.r2, _CMP_EQ_OS), _mm256_cmp_pd(xmm0.r3, xmm1.r3, _CMP_EQ_OS));
+#endif
 }
 
 /**
@@ -3601,7 +3620,11 @@ template <>
 forceinline simd_trait<float, cyme::avx, 1>::register_type
 _mm_eq<float, cyme::avx, 1>(simd_trait<float, cyme::avx, 1>::register_type xmm0,
                             simd_trait<float, cyme::avx, 1>::register_type xmm1) {
+#ifdef __AVX2__ // latency 1 cycle, throughput 0.5 and cast ops cost nothing
+    return _mm256_castsi256_ps(_mm256_cmpeq_epi32(_mm256_castps_si256(xmm0), _mm256_castps_si256(xmm1)));
+#else // latency 4 cycle, throughput 0.5
     return _mm256_cmp_ps(xmm0, xmm1, _CMP_EQ_OS);
+#endif
 }
 
 /**
@@ -3612,8 +3635,14 @@ template <>
 forceinline simd_trait<float, cyme::avx, 2>::register_type
 _mm_eq<float, cyme::avx, 2>(simd_trait<float, cyme::avx, 2>::register_type xmm0,
                             simd_trait<float, cyme::avx, 2>::register_type xmm1) {
+#ifdef __AVX2__
+    return simd_trait<float, cyme::avx, 2>::register_type(
+        _mm256_castsi256_ps(_mm256_cmpeq_epi32(_mm256_castps_si256(xmm0.r0), _mm256_castps_si256(xmm1.r0))),
+        _mm256_castsi256_ps(_mm256_cmpeq_epi32(_mm256_castps_si256(xmm0.r1), _mm256_castps_si256(xmm1.r1))));
+#else
     return simd_trait<float, cyme::avx, 2>::register_type(_mm256_cmp_ps(xmm0.r0, xmm1.r0, _CMP_EQ_OS),
                                                           _mm256_cmp_ps(xmm0.r1, xmm1.r1, _CMP_EQ_OS));
+#endif
 }
 
 /**
@@ -3624,9 +3653,17 @@ template <>
 forceinline simd_trait<float, cyme::avx, 4>::register_type
 _mm_eq<float, cyme::avx, 4>(simd_trait<float, cyme::avx, 4>::register_type xmm0,
                             simd_trait<float, cyme::avx, 4>::register_type xmm1) {
+#ifdef __AVX2__
+    return simd_trait<float, cyme::avx, 4>::register_type(
+        _mm256_castsi256_ps(_mm256_cmpeq_epi32(_mm256_castps_si256(xmm0.r0), _mm256_castps_si256(xmm1.r0))),
+        _mm256_castsi256_ps(_mm256_cmpeq_epi32(_mm256_castps_si256(xmm0.r1), _mm256_castps_si256(xmm1.r1))),
+        _mm256_castsi256_ps(_mm256_cmpeq_epi32(_mm256_castps_si256(xmm0.r2), _mm256_castps_si256(xmm1.r2))),
+        _mm256_castsi256_ps(_mm256_cmpeq_epi32(_mm256_castps_si256(xmm0.r3), _mm256_castps_si256(xmm1.r3))));
+#else
     return simd_trait<float, cyme::avx, 4>::register_type(
         _mm256_cmp_ps(xmm0.r0, xmm1.r0, _CMP_EQ_OS), _mm256_cmp_ps(xmm0.r1, xmm1.r1, _CMP_EQ_OS),
         _mm256_cmp_ps(xmm0.r2, xmm1.r2, _CMP_EQ_OS), _mm256_cmp_ps(xmm0.r3, xmm1.r3, _CMP_EQ_OS));
+#endif
 }
 
 /**
