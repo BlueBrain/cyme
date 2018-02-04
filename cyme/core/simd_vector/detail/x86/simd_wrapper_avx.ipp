@@ -31,7 +31,7 @@ namespace cyme {
 
 #define _mm256_set_m128i(v0, v1) _mm256_insertf128_si256(_mm256_castsi128_si256(v1), (v0), 1)
 #ifdef __AVX2__
-__m256i _mm256_cmplt_epi32(__m256i a, __m256i b) { return _mm256_cmpgt_epi32(b, a); } // a < b <=> b > a
+__m256i forceinline _mm256_cmplt_epi32(__m256i a, __m256i b) { return _mm256_cmpgt_epi32(b, a); } // a < b <=> b > a
 #endif
 
 /**
