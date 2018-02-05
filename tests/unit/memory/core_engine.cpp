@@ -154,6 +154,60 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(core_operator_mul, T, floating_point_block_types) 
     check(block_a, block_b);
 }
 
+BOOST_AUTO_TEST_CASE(core_operator_and) {
+    cyme::vector<synapse<int, 4>, cyme::AoS> block_a(1024);
+    cyme::vector<synapse<int, 4>, cyme::AoSoA> block_b(1024);
+
+    init(block_a, block_b);
+
+    typename cyme::vector<synapse<int, 4>, cyme::AoS>::iterator it_AoS = block_a.begin();
+    for (; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = (*it_AoS)[1] & (*it_AoS)[1];
+
+    typename cyme::vector<synapse<int, 4>, cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::vector<synapse<int, 4>, cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    for (; it_AoSoA_r != block_b.end(); ++it_AoSoA_w, ++it_AoSoA_r)
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1] & (*it_AoSoA_r)[1];
+
+    check_int(block_a, block_b);
+}
+
+BOOST_AUTO_TEST_CASE(core_operator_or) {
+    cyme::vector<synapse<int, 4>, cyme::AoS> block_a(1024);
+    cyme::vector<synapse<int, 4>, cyme::AoSoA> block_b(1024);
+
+    init(block_a, block_b);
+
+    typename cyme::vector<synapse<int, 4>, cyme::AoS>::iterator it_AoS = block_a.begin();
+    for (; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = (*it_AoS)[1] | (*it_AoS)[1];
+
+    typename cyme::vector<synapse<int, 4>, cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::vector<synapse<int, 4>, cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    for (; it_AoSoA_r != block_b.end(); ++it_AoSoA_w, ++it_AoSoA_r)
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1] | (*it_AoSoA_r)[1];
+
+    check_int(block_a, block_b);
+}
+
+BOOST_AUTO_TEST_CASE(core_operator_xor) {
+    cyme::vector<synapse<int, 4>, cyme::AoS> block_a(1024);
+    cyme::vector<synapse<int, 4>, cyme::AoSoA> block_b(1024);
+
+    init(block_a, block_b);
+
+    typename cyme::vector<synapse<int, 4>, cyme::AoS>::iterator it_AoS = block_a.begin();
+    for (; it_AoS != block_a.end(); ++it_AoS)
+        (*it_AoS)[0] = (*it_AoS)[1] ^ (*it_AoS)[1];
+
+    typename cyme::vector<synapse<int, 4>, cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::vector<synapse<int, 4>, cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    for (; it_AoSoA_r != block_b.end(); ++it_AoSoA_w, ++it_AoSoA_r)
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1] ^ (*it_AoSoA_r)[1];
+
+    check_int(block_a, block_b);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(core_operator_add_scalar, T, floating_point_block_types) {
     cyme::vector<synapse<TYPE, N>, cyme::AoS> block_a(1024);
     cyme::vector<synapse<TYPE, N>, cyme::AoSoA> block_b(1024);

@@ -4415,6 +4415,9 @@ template <>
 forceinline simd_trait<int, cyme::avx, 1>::register_type
 _mm_add<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
                            simd_trait<int, cyme::avx, 1>::register_type xmm1) {
+#ifdef __AVX2__
+    __m256i res = _mm256_add_epi32(xmm0, xmm1);
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     __m128i tmp0 = _mm_add_epi32(_mm256_extractf128_si256(xmm0, 0), _mm256_extractf128_si256(xmm1, 0));
@@ -4422,6 +4425,7 @@ _mm_add<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
     __m256i res = _mm256_insertf128_si256(res, tmp0, 0);
     res = _mm256_insertf128_si256(res, tmp1, 1);
 #pragma GCC diagnostic pop
+#endif
     return res;
 }
 
@@ -4434,6 +4438,10 @@ template <>
 forceinline simd_trait<int, cyme::avx, 2>::register_type
 _mm_add<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
                            simd_trait<int, cyme::avx, 2>::register_type xmm1) {
+#ifdef __AVX2__
+    __m256i res0 = _mm256_add_epi32(xmm0.r0, xmm1.r0);
+    __m256i res1 = _mm256_add_epi32(xmm0.r1, xmm1.r1);
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     __m128i tmp0 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm256_extractf128_si256(xmm1.r0, 0));
@@ -4445,6 +4453,7 @@ _mm_add<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
     __m256i res1 = _mm256_insertf128_si256(res1, tmp2, 0);
     res1 = _mm256_insertf128_si256(res1, tmp3, 1);
 #pragma GCC diagnostic pop
+#endif
     return simd_trait<int, cyme::avx, 2>::register_type(res0, res1);
 }
 
@@ -4457,6 +4466,12 @@ template <>
 forceinline simd_trait<int, cyme::avx, 4>::register_type
 _mm_add<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
                            simd_trait<int, cyme::avx, 4>::register_type xmm1) {
+#ifdef __AVX2__
+    __m256i res0 = _mm256_add_epi32(xmm0.r0, xmm1.r0);
+    __m256i res1 = _mm256_add_epi32(xmm0.r1, xmm1.r1);
+    __m256i res2 = _mm256_add_epi32(xmm0.r2, xmm1.r2);
+    __m256i res3 = _mm256_add_epi32(xmm0.r3, xmm1.r3);
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     __m128i tmp0 = _mm_add_epi32(_mm256_extractf128_si256(xmm0.r0, 0), _mm256_extractf128_si256(xmm1.r0, 0));
@@ -4476,13 +4491,13 @@ _mm_add<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
     res2 = _mm256_insertf128_si256(res2, tmp5, 1);
     __m256i res3 = _mm256_insertf128_si256(res3, tmp6, 0);
     res3 = _mm256_insertf128_si256(res3, tmp7, 1);
-
 #pragma GCC diagnostic pop
+#endif
     return simd_trait<int, cyme::avx, 4>::register_type(res0, res1, res2, res3);
 }
 
 /**
- Evaluate the the & operator between two registers
+ Evaluate the  & operator between two registers
  specialisation int,cyme::avx,1 regs
  */
 template <>
@@ -4493,7 +4508,7 @@ _mm_and<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
 }
 
 /**
- Evaluate the the & operator between two registers
+ Evaluate the  & operator between two registers
  specialisation int,cyme::avx,2 regs
  */
 template <>
@@ -4506,7 +4521,7 @@ _mm_and<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
 }
 
 /**
- Evaluate the the & operator between two registers
+ Evaluate the  & operator between two registers
  specialisation int,cyme::avx,4 regs
  */
 template <>
@@ -4521,6 +4536,84 @@ _mm_and<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
 }
 
 /**
+ Evaluate the  | operator between two registers
+ specialisation int,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 1>::register_type
+_mm_or<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
+                          simd_trait<int, cyme::avx, 1>::register_type xmm1) {
+    return _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(xmm0), _mm256_castsi256_pd(xmm1)));
+}
+
+/**
+ Evaluate the  | operator between two registers
+ specialisation int,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 2>::register_type
+_mm_or<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
+                          simd_trait<int, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<int, cyme::avx, 2>::register_type(
+        _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(xmm0.r0), _mm256_castsi256_pd(xmm1.r0))),
+        _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(xmm0.r1), _mm256_castsi256_pd(xmm1.r1))));
+}
+
+/**
+ Evaluate the  | operator between two registers
+ specialisation int,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 4>::register_type
+_mm_or<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
+                          simd_trait<int, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<int, cyme::avx, 4>::register_type(
+        _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(xmm0.r0), _mm256_castsi256_pd(xmm1.r0))),
+        _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(xmm0.r1), _mm256_castsi256_pd(xmm1.r1))),
+        _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(xmm0.r2), _mm256_castsi256_pd(xmm1.r2))),
+        _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(xmm0.r3), _mm256_castsi256_pd(xmm1.r3))));
+}
+
+/**
+ Evaluate the ^ operator between two registers
+ specialisation int,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 1>::register_type
+_mm_xor<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
+                           simd_trait<int, cyme::avx, 1>::register_type xmm1) {
+    return _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(xmm0), _mm256_castsi256_pd(xmm1)));
+}
+
+/**
+ Evaluate the the ^ operator between two registers
+ specialisation int,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 2>::register_type
+_mm_xor<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
+                           simd_trait<int, cyme::avx, 2>::register_type xmm1) {
+    return simd_trait<int, cyme::avx, 2>::register_type(
+        _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(xmm0.r0), _mm256_castsi256_pd(xmm1.r0))),
+        _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(xmm0.r1), _mm256_castsi256_pd(xmm1.r1))));
+}
+
+/**
+ Evaluate the ^ operator between two registers
+ specialisation int,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 4>::register_type
+_mm_xor<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
+                           simd_trait<int, cyme::avx, 4>::register_type xmm1) {
+    return simd_trait<int, cyme::avx, 4>::register_type(
+        _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(xmm0.r0), _mm256_castsi256_pd(xmm1.r0))),
+        _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(xmm0.r1), _mm256_castsi256_pd(xmm1.r1))),
+        _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(xmm0.r2), _mm256_castsi256_pd(xmm1.r2))),
+        _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(xmm0.r3), _mm256_castsi256_pd(xmm1.r3))));
+}
+
+/**
  Evaluate the >> operator between two registers, warning only the first 32 of xmm1 are used
  specialisation int,cyme::avx,1 regs
  */
@@ -4528,8 +4621,15 @@ template <>
 forceinline simd_trait<int, cyme::avx, 1>::register_type
 _mm_srl<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
                            simd_trait<int, cyme::avx, 1>::register_type xmm1) {
+#ifdef __AVX2__
+    // xmm1 should be uniform so we extract only one value
+    __m128i mask = _mm_and_si128(_mm256_extractf128_si256(xmm1, 0),
+                                 _mm_set_epi32(0, 0, 0, 0xffffffff)); // the shift is done only with the first 32 bits
+    __m256i res = _mm256_srl_epi32(xmm0, mask);
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
+    // hypothesis xmm1 have the same value for every entry
     __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
     __m128i tmp0 =
         _mm_srl_epi32(_mm256_extractf128_si256(xmm0, 0), _mm_and_si128(_mm256_extractf128_si256(xmm1, 0), mask));
@@ -4538,6 +4638,7 @@ _mm_srl<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0,
     __m256i res = _mm256_insertf128_si256(res, tmp0, 0);
     res = _mm256_insertf128_si256(res, tmp1, 1);
 #pragma GCC diagnostic pop
+#endif
     return res;
 }
 
@@ -4549,6 +4650,13 @@ template <>
 forceinline simd_trait<int, cyme::avx, 2>::register_type
 _mm_srl<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
                            simd_trait<int, cyme::avx, 2>::register_type xmm1) {
+#ifdef __AVX2__
+    // xmm1 should be uniform so we extract only one value
+    __m128i mask = _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 0),
+                                 _mm_set_epi32(0, 0, 0, 0xffffffff)); // the shift is done only with the first 32 bits
+    __m256i res0 = _mm256_srl_epi32(xmm0.r0, mask);
+    __m256i res1 = _mm256_srl_epi32(xmm0.r1, mask);
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
@@ -4565,6 +4673,7 @@ _mm_srl<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0,
     __m256i res1 = _mm256_insertf128_si256(res1, tmp2, 0);
     res1 = _mm256_insertf128_si256(res1, tmp3, 1);
 #pragma GCC diagnostic pop
+#endif
     return simd_trait<int, cyme::avx, 2>::register_type(res0, res1);
 }
 
@@ -4576,6 +4685,16 @@ template <>
 forceinline simd_trait<int, cyme::avx, 4>::register_type
 _mm_srl<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
                            simd_trait<int, cyme::avx, 4>::register_type xmm1) {
+#ifdef __AVX2__
+    // xmm1 should be uniform so we extract only one value
+    __m128i mask = _mm_and_si128(_mm256_extractf128_si256(xmm1.r0, 0),
+                                 _mm_set_epi32(0, 0, 0, 0xffffffff)); // the shift is done only with the first 32 bits
+    __m256i res0 = _mm256_srl_epi32(xmm0.r0, mask);
+    __m256i res1 = _mm256_srl_epi32(xmm0.r1, mask);
+    __m256i res2 = _mm256_srl_epi32(xmm0.r2, mask);
+    __m256i res3 = _mm256_srl_epi32(xmm0.r3, mask);
+
+#else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     __m128i mask = _mm_set_epi32(0, 0, 0, 0xffffffff); // the shift is done only with the first 32 bits
@@ -4606,6 +4725,7 @@ _mm_srl<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
     res3 = _mm256_insertf128_si256(res3, tmp7, 1);
 
 #pragma GCC diagnostic pop
+#endif
     return simd_trait<int, cyme::avx, 4>::register_type(res0, res1, res2, res3);
 }
 

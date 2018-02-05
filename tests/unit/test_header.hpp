@@ -130,6 +130,15 @@ void check(Ba &block_a, Bb &block_b) {
         }
 }
 
+// I am lazy
+template <class Ba, class Bb>
+void check_int(Ba &block_a, Bb &block_b) {
+    for (std::size_t i = 0; i < block_a.size(); ++i)
+        for (std::size_t j = 0; j < block_a.size_block(); ++j) {
+            BOOST_CHECK(block_a(i, j) == block_b(i, j));
+        }
+}
+
 template <class T, std::size_t m, cyme::order o>
 struct data {
     typedef T value_type;

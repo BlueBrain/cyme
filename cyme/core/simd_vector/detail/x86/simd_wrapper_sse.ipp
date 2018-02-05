@@ -3553,6 +3553,82 @@ _mm_add<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
 }
 
 /**
+ or packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_or<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 1>::register_type xmm1) {
+    return _mm_or_si128(xmm0, xmm1);
+}
+
+/**
+ or packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_or<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 2>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_or_si128(xmm0.r0, xmm1.r0), _mm_or_si128(xmm0.r1, xmm1.r1));
+}
+
+/**
+ or packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_or<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 4>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 4>::register_type(_mm_or_si128(xmm0.r0, xmm1.r0), _mm_or_si128(xmm0.r1, xmm1.r1),
+                                                        _mm_or_si128(xmm0.r2, xmm1.r2), _mm_or_si128(xmm0.r3, xmm1.r3));
+}
+
+/**
+ xor packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_xor<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 1>::register_type xmm1) {
+    return _mm_xor_si128(xmm0, xmm1);
+}
+
+/**
+ xor packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_xor<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 2>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_xor_si128(xmm0.r0, xmm1.r0),
+                                                        _mm_xor_si128(xmm0.r1, xmm1.r1));
+}
+
+/**
+ xor packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_xor<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 4>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 4>::register_type(
+        _mm_xor_si128(xmm0.r0, xmm1.r0), _mm_xor_si128(xmm0.r1, xmm1.r1), _mm_xor_si128(xmm0.r2, xmm1.r2),
+        _mm_xor_si128(xmm0.r3, xmm1.r3));
+}
+
+/**
  Evaluate the  min operator between two registers
  specialisation float,cyme::sse,1 regs
  */
