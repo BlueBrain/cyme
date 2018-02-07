@@ -74,7 +74,7 @@ forceinline void scatter(vec<T, O, N> const &v, T *dst, const int *ind, const in
  * fabs(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_fabs<T, O, N, R1>> forceinline fabs(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_fabs<T, O, N, R1>> fabs(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_fabs<T, O, N, R1>>(vec_fabs<T, O, N, R1>(a.rep()));
 }
 
@@ -82,7 +82,7 @@ vec<T, O, N, vec_fabs<T, O, N, R1>> forceinline fabs(vec<T, O, N, R1> const &a) 
  * sin(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_sin<T, O, N, R1>> forceinline sin(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_sin<T, O, N, R1>> sin(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_sin<T, O, N, R1>>(vec_sin<T, O, N, R1>(a.rep()));
 }
 
@@ -90,7 +90,7 @@ vec<T, O, N, vec_sin<T, O, N, R1>> forceinline sin(vec<T, O, N, R1> const &a) {
  * cos(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_cos<T, O, N, R1>> forceinline cos(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_cos<T, O, N, R1>> cos(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_cos<T, O, N, R1>>(vec_cos<T, O, N, R1>(a.rep()));
 }
 
@@ -98,7 +98,7 @@ vec<T, O, N, vec_cos<T, O, N, R1>> forceinline cos(vec<T, O, N, R1> const &a) {
  * tan(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_tan<T, O, N, R1>> forceinline tan(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_tan<T, O, N, R1>> tan(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_tan<T, O, N, R1>>(vec_tan<T, O, N, R1>(a.rep()));
 }
 
@@ -106,7 +106,7 @@ vec<T, O, N, vec_tan<T, O, N, R1>> forceinline tan(vec<T, O, N, R1> const &a) {
  * sqrt(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_sqrt<T, O, N, R1>> forceinline sqrt(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_sqrt<T, O, N, R1>> sqrt(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_sqrt<T, O, N, R1>>(vec_sqrt<T, O, N, R1>(a.rep()));
 }
 
@@ -114,7 +114,7 @@ vec<T, O, N, vec_sqrt<T, O, N, R1>> forceinline sqrt(vec<T, O, N, R1> const &a) 
  * exp(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_exp<T, O, N, R1>> forceinline exp(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_exp<T, O, N, R1>> exp(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_exp<T, O, N, R1>>(vec_exp<T, O, N, R1>(a.rep()));
 }
 
@@ -122,7 +122,7 @@ vec<T, O, N, vec_exp<T, O, N, R1>> forceinline exp(vec<T, O, N, R1> const &a) {
  * exp2(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_exp2<T, O, N, R1>> forceinline exp2(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_exp2<T, O, N, R1>> exp2(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_exp2<T, O, N, R1>>(vec_exp2<T, O, N, R1>(a.rep()));
 }
 
@@ -130,7 +130,7 @@ vec<T, O, N, vec_exp2<T, O, N, R1>> forceinline exp2(vec<T, O, N, R1> const &a) 
  * exp10(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_exp10<T, O, N, R1>> forceinline exp10(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_exp10<T, O, N, R1>> exp10(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_exp10<T, O, N, R1>>(vec_exp10<T, O, N, R1>(a.rep()));
 }
 
@@ -138,7 +138,7 @@ vec<T, O, N, vec_exp10<T, O, N, R1>> forceinline exp10(vec<T, O, N, R1> const &a
  * log(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_log<T, O, N, R1>> forceinline log(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_log<T, O, N, R1>> log(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_log<T, O, N, R1>>(vec_log<T, O, N, R1>(a.rep()));
 }
 
@@ -146,7 +146,7 @@ vec<T, O, N, vec_log<T, O, N, R1>> forceinline log(vec<T, O, N, R1> const &a) {
  * log2(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_log2<T, O, N, R1>> forceinline log2(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_log2<T, O, N, R1>> log2(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_log2<T, O, N, R1>>(vec_log2<T, O, N, R1>(a.rep()));
 }
 
@@ -154,7 +154,7 @@ vec<T, O, N, vec_log2<T, O, N, R1>> forceinline log2(vec<T, O, N, R1> const &a) 
  * log10(a) function
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_log10<T, O, N, R1>> forceinline log10(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_log10<T, O, N, R1>> log10(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_log10<T, O, N, R1>>(vec_log10<T, O, N, R1>(a.rep()));
 }
 
@@ -162,8 +162,8 @@ vec<T, O, N, vec_log10<T, O, N, R1>> forceinline log10(vec<T, O, N, R1> const &a
  * pow(a,e) function, integer only
  */
 template <class T, cyme::simd O, int N, class R1, int M>
-vec<T, O, N, vec_pow<T, O, N, R1, M>>
-    forceinline pow(vec<T, O, N, R1> const &a, exponent<M> const &__attribute__((unused)) e) { // fake for compiler
+forceinline vec<T, O, N, vec_pow<T, O, N, R1, M>>
+pow(vec<T, O, N, R1> const &a, exponent<M> const &__attribute__((unused)) e) { // fake for compiler
     return vec<T, O, N, vec_pow<T, O, N, R1, M>>(vec_pow<T, O, N, R1, M>(a.rep()));
 }
 
@@ -171,7 +171,7 @@ vec<T, O, N, vec_pow<T, O, N, R1, M>>
  * pow(a,e) function, float only x^y
  */
 template <class T, cyme::simd O, int N, class R1, class R2>
-vec<T, O, N, vec_powf<T, O, N, R1, R2>> forceinline pow(vec<T, O, N, R1> const &x, vec<T, O, N, R2> const &y) {
+forceinline vec<T, O, N, vec_powf<T, O, N, R1, R2>> pow(vec<T, O, N, R1> const &x, vec<T, O, N, R2> const &y) {
     return vec<T, O, N, vec_powf<T, O, N, R1, R2>>(vec_powf<T, O, N, R1, R2>(x.rep(), y.rep()));
 }
 
@@ -179,7 +179,7 @@ vec<T, O, N, vec_powf<T, O, N, R1, R2>> forceinline pow(vec<T, O, N, R1> const &
  * negate operator optimisation --a = a
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, R1> forceinline operator-(vec<T, O, N, vec_neg<T, O, N, R1>> const &a) {
+forceinline vec<T, O, N, R1> operator-(vec<T, O, N, vec_neg<T, O, N, R1>> const &a) {
     return vec<T, O, N, R1>(a.rep().op1());
 }
 
@@ -187,7 +187,7 @@ vec<T, O, N, R1> forceinline operator-(vec<T, O, N, vec_neg<T, O, N, R1>> const 
  * negate operator -a
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_neg<T, O, N, R1>> forceinline operator-(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_neg<T, O, N, R1>> operator-(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_neg<T, O, N, R1>>(vec_neg<T, O, N, R1>(a.rep()));
 }
 
@@ -195,7 +195,7 @@ vec<T, O, N, vec_neg<T, O, N, R1>> forceinline operator-(vec<T, O, N, R1> const 
  * negate operator ~a
  */
 template <class T, cyme::simd O, int N, class R1>
-vec<T, O, N, vec_not<T, O, N, R1>> forceinline operator~(vec<T, O, N, R1> const &a) {
+forceinline vec<T, O, N, vec_not<T, O, N, R1>> operator~(vec<T, O, N, R1> const &a) {
     return vec<T, O, N, vec_not<T, O, N, R1>>(vec_not<T, O, N, R1>(a.rep()));
 }
 
@@ -377,7 +377,7 @@ operator==(vec<T, O, N, R1> const &a, typename identity<T>::value_type const &s)
  * addition operator a+b
  */
 template <class T, cyme::simd O, int N, class R1, class R2>
-vec<T, O, N, vec_add<T, O, N, R1, R2>> forceinline operator+(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+forceinline vec<T, O, N, vec_add<T, O, N, R1, R2>> operator+(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
     return vec<T, O, N, vec_add<T, O, N, R1, R2>>(vec_add<T, O, N, R1, R2>(a.rep(), b.rep()));
 }
 
@@ -385,7 +385,7 @@ vec<T, O, N, vec_add<T, O, N, R1, R2>> forceinline operator+(vec<T, O, N, R1> co
  * substraction operator a-b, warning substraction is not commutative
  */
 template <class T, cyme::simd O, int N, class R1, class R2>
-vec<T, O, N, vec_sub<T, O, N, R1, R2>> forceinline operator-(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+forceinline vec<T, O, N, vec_sub<T, O, N, R1, R2>> operator-(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
     return vec<T, O, N, vec_sub<T, O, N, R1, R2>>(vec_sub<T, O, N, R1, R2>(a.rep(), b.rep()));
 }
 
@@ -393,7 +393,7 @@ vec<T, O, N, vec_sub<T, O, N, R1, R2>> forceinline operator-(vec<T, O, N, R1> co
  * division operator a/b, warning division is not commutative
  */
 template <class T, cyme::simd O, int N, class R1, class R2>
-vec<T, O, N, vec_div<T, O, N, R1, R2>> forceinline operator/(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+forceinline vec<T, O, N, vec_div<T, O, N, R1, R2>> operator/(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
     return vec<T, O, N, vec_div<T, O, N, R1, R2>>(vec_div<T, O, N, R1, R2>(a.rep(), b.rep()));
 }
 
@@ -401,7 +401,7 @@ vec<T, O, N, vec_div<T, O, N, R1, R2>> forceinline operator/(vec<T, O, N, R1> co
  * multiplication operator a*b
  */
 template <class T, cyme::simd O, int N, class R1, class R2>
-vec<T, O, N, vec_mul<T, O, N, R1, R2>> forceinline operator*(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+forceinline vec<T, O, N, vec_mul<T, O, N, R1, R2>> operator*(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
     return vec<T, O, N, vec_mul<T, O, N, R1, R2>>(vec_mul<T, O, N, R1, R2>(a.rep(), b.rep()));
 }
 
@@ -488,7 +488,7 @@ operator/(vec<T, O, N, R2> const &b, typename identity<T>::value_type const &s) 
  * minimum operator a,b
  */
 template <class T, cyme::simd O, int N, class R1, class R2>
-vec<T, O, N, vec_min<T, O, N, R1, R2>> forceinline min(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
+forceinline vec<T, O, N, vec_min<T, O, N, R1, R2>> min(vec<T, O, N, R1> const &a, vec<T, O, N, R2> const &b) {
     return vec<T, O, N, vec_min<T, O, N, R1, R2>>(vec_min<T, O, N, R1, R2>(a.rep(), b.rep()));
 }
 } // namespace cyme
