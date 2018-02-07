@@ -45,7 +45,7 @@ T relative_error();
 
 template <>
 float relative_error() {
-    return 0.1;
+    return 1;
 }
 
 template <>

@@ -154,6 +154,118 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(core_operator_mul, T, floating_point_block_types) 
     check(block_a, block_b);
 }
 
+BOOST_AUTO_TEST_CASE(core_operator_inequalities_less) {
+    cyme::vector<synapse<int, 16>, cyme::AoS> block_a(128);
+    cyme::vector<synapse<int, 16>, cyme::AoSoA> block_b(128);
+
+    init(block_a, block_b);
+
+    typename cyme::vector<synapse<int, 16>, cyme::AoS>::iterator it_AoS = block_a.begin();
+    for (; it_AoS != block_a.end(); ++it_AoS) {
+        (*it_AoS)[0] = -((*it_AoS)[1] < (*it_AoS)[2]);
+        (*it_AoS)[6] = -((*it_AoS)[7] < 0);
+        (*it_AoS)[9] = -(0 < (*it_AoS)[10]);
+    }
+    // NOTE in C/C++ true is 1 (or more) but in SIMD (x86) it is -1
+    // so I negate the number to git with the AoSoA version
+
+    typename cyme::vector<synapse<int, 16>, cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::vector<synapse<int, 16>, cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    for (; it_AoSoA_r != block_b.end(); ++it_AoSoA_w, ++it_AoSoA_r) {
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1] < (*it_AoSoA_r)[2];
+        (*it_AoSoA_w)[6] = (*it_AoSoA_r)[7] < 0;
+        (*it_AoSoA_w)[9] = 0 < (*it_AoSoA_r)[10];
+    }
+
+    check_int(block_a, block_b);
+}
+
+BOOST_AUTO_TEST_CASE(core_operator_inequalities_greater) {
+    cyme::vector<synapse<int, 16>, cyme::AoS> block_a(128);
+    cyme::vector<synapse<int, 16>, cyme::AoSoA> block_b(128);
+
+    init(block_a, block_b);
+
+    typename cyme::vector<synapse<int, 16>, cyme::AoS>::iterator it_AoS = block_a.begin();
+    for (; it_AoS != block_a.end(); ++it_AoS) {
+        (*it_AoS)[0] = -((*it_AoS)[1] > (*it_AoS)[2]);
+        (*it_AoS)[6] = -((*it_AoS)[7] > 0);
+        (*it_AoS)[9] = -(0 > (*it_AoS)[10]);
+    }
+    // NOTE in C/C++ true is 1 (or more) but in SIMD (x86) it is -1
+    // so I negate the number to git with the AoSoA version
+
+    typename cyme::vector<synapse<int, 16>, cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::vector<synapse<int, 16>, cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    for (; it_AoSoA_r != block_b.end(); ++it_AoSoA_w, ++it_AoSoA_r) {
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1] > (*it_AoSoA_r)[2];
+        (*it_AoSoA_w)[6] = (*it_AoSoA_r)[7] > 0;
+        (*it_AoSoA_w)[9] = 0 > (*it_AoSoA_r)[10];
+    }
+
+    check_int(block_a, block_b);
+}
+
+BOOST_AUTO_TEST_CASE(core_operator_inequalities_greater_equal) {
+    cyme::vector<synapse<int, 16>, cyme::AoS> block_a(128);
+    cyme::vector<synapse<int, 16>, cyme::AoSoA> block_b(128);
+
+    init(block_a, block_b);
+
+    typename cyme::vector<synapse<int, 16>, cyme::AoS>::iterator it_AoS = block_a.begin();
+    for (; it_AoS != block_a.end(); ++it_AoS) {
+        (*it_AoS)[0] = -((*it_AoS)[1] >= (*it_AoS)[2]);
+        (*it_AoS)[3] = -((*it_AoS)[4] >= (*it_AoS)[4]);
+        (*it_AoS)[6] = -((*it_AoS)[7] >= 0);
+        (*it_AoS)[9] = -(0 >= (*it_AoS)[10]);
+        (*it_AoS)[11] = -((*it_AoS)[12] >= 0);
+    }
+    // NOTE in C/C++ true is 1 (or more) but in SIMD (x86) it is -1
+    // so I negate the number to git with the AoSoA version
+
+    typename cyme::vector<synapse<int, 16>, cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::vector<synapse<int, 16>, cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    for (; it_AoSoA_r != block_b.end(); ++it_AoSoA_w, ++it_AoSoA_r) {
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1] >= (*it_AoSoA_r)[2];
+        (*it_AoSoA_w)[3] = (*it_AoSoA_r)[4] >= (*it_AoSoA_r)[4];
+        (*it_AoSoA_w)[6] = (*it_AoSoA_r)[7] >= 0;
+        (*it_AoSoA_w)[9] = 0 >= (*it_AoSoA_r)[10];
+        (*it_AoSoA_w)[11] = (*it_AoSoA_r)[12] >= 0;
+    }
+
+    check_int(block_a, block_b);
+}
+
+BOOST_AUTO_TEST_CASE(core_operator_inequalitiesless_equal) {
+    cyme::vector<synapse<int, 16>, cyme::AoS> block_a(128);
+    cyme::vector<synapse<int, 16>, cyme::AoSoA> block_b(128);
+
+    init(block_a, block_b);
+
+    typename cyme::vector<synapse<int, 16>, cyme::AoS>::iterator it_AoS = block_a.begin();
+    for (; it_AoS != block_a.end(); ++it_AoS) {
+        (*it_AoS)[0] = -((*it_AoS)[1] <= (*it_AoS)[2]);
+        (*it_AoS)[3] = -((*it_AoS)[4] <= (*it_AoS)[4]);
+        (*it_AoS)[6] = -((*it_AoS)[7] <= 0);
+        (*it_AoS)[9] = -(0 <= (*it_AoS)[10]);
+        (*it_AoS)[11] = -((*it_AoS)[12] <= 0);
+    }
+    // NOTE in C/C++ true is 1 (or more) but in SIMD (x86) it is -1
+    // so I negate the number to git with the AoSoA version
+
+    typename cyme::vector<synapse<int, 16>, cyme::AoSoA>::iterator it_AoSoA_w = block_b.begin();
+    typename cyme::vector<synapse<int, 16>, cyme::AoSoA>::const_iterator it_AoSoA_r = block_b.begin();
+    for (; it_AoSoA_r != block_b.end(); ++it_AoSoA_w, ++it_AoSoA_r) {
+        (*it_AoSoA_w)[0] = (*it_AoSoA_r)[1] <= (*it_AoSoA_r)[2];
+        (*it_AoSoA_w)[3] = (*it_AoSoA_r)[4] <= (*it_AoSoA_r)[4];
+        (*it_AoSoA_w)[6] = (*it_AoSoA_r)[7] <= 0;
+        (*it_AoSoA_w)[9] = 0 <= (*it_AoSoA_r)[10];
+        (*it_AoSoA_w)[11] = (*it_AoSoA_r)[12] <= 0;
+    }
+
+    check_int(block_a, block_b);
+}
+
 BOOST_AUTO_TEST_CASE(core_operator_and) {
     cyme::vector<synapse<int, 4>, cyme::AoS> block_a(1024);
     cyme::vector<synapse<int, 4>, cyme::AoSoA> block_b(1024);

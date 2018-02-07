@@ -4730,6 +4730,45 @@ _mm_srl<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0,
 }
 
 /**
+ Evaluate the andnot operator between two registers
+ specialisation int,cyme::avx,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 1>::register_type
+_mm_andnot<int, cyme::avx, 1>(simd_trait<int, cyme::avx, 1>::register_type xmm0) {
+    __m256 mask = _mm256_castsi256_pd(_mm256_set1_epi64x(0xffffffffffffffff));
+    return _mm256_castpd_si256(_mm256_andnot_pd(_mm256_castsi256_pd(xmm0), mask));
+}
+
+/**
+ Evaluate the andnot operator between two registers
+ specialisation double,cyme::avx,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 2>::register_type
+_mm_andnot<int, cyme::avx, 2>(simd_trait<int, cyme::avx, 2>::register_type xmm0) {
+    __m256d mask = _mm256_castsi256_pd(_mm256_set1_epi64x(0xffffffffffffffff));
+    return simd_trait<int, cyme::avx, 2>::register_type(
+        _mm256_castpd_si256(_mm256_andnot_pd(_mm256_castsi256_pd(xmm0.r0), mask)),
+        _mm256_castpd_si256(_mm256_andnot_pd(_mm256_castsi256_pd(xmm0.r1), mask)));
+}
+
+/**
+ Evaluate the andnot operator between two registers
+ specialisation double,cyme::avx,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::avx, 4>::register_type
+_mm_andnot<int, cyme::avx, 4>(simd_trait<int, cyme::avx, 4>::register_type xmm0) {
+    __m256d mask = _mm256_castsi256_pd(_mm256_set1_epi64x(0xffffffffffffffff));
+    return simd_trait<int, cyme::avx, 4>::register_type(
+        _mm256_castpd_si256(_mm256_andnot_pd(_mm256_castsi256_pd(xmm0.r0), mask)),
+        _mm256_castpd_si256(_mm256_andnot_pd(_mm256_castsi256_pd(xmm0.r1), mask)),
+        _mm256_castpd_si256(_mm256_andnot_pd(_mm256_castsi256_pd(xmm0.r2), mask)),
+        _mm256_castpd_si256(_mm256_andnot_pd(_mm256_castsi256_pd(xmm0.r3), mask)));
+}
+
+/**
  change the interpretation of the SIMD register
  specialisation float,cyme::avx,1 regs
  */

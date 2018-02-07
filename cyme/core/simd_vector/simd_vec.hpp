@@ -105,7 +105,7 @@ struct vec_simd {
     /** Operator >>= bewteen two vectors (right shift) */
     forceinline vec_simd &operator>>=(const vec_simd &rhs);
 
-    /** Operator negate bewteen two vectors */
+    /** Operator bitwize not operator */
     forceinline vec_simd &operator~();
 
     /** Operator negate bewteen two vectors */

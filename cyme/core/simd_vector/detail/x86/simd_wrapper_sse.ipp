@@ -3514,6 +3514,45 @@ _mm_srl<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
 }
 
 /**
+ Evaluate the andnot operator between two registers
+ specialisation double,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_andnot<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0) {
+    __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+    return _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0), mask));
+}
+
+/**
+ Evaluate the andnot operator between two registers
+ specialisation double,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_andnot<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0) {
+    __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+    return simd_trait<int, cyme::sse, 2>::register_type(
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r0), mask)),
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r1), mask)));
+}
+
+/**
+ Evaluate the andnot operator between two registers
+ specialisation double,cyme::sse,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_andnot<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0) {
+    __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+    return simd_trait<int, cyme::sse, 4>::register_type(
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r0), mask)),
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r1), mask)),
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r2), mask)),
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r3), mask)));
+}
+
+/**
  add packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
  and store the results in dst.
  specialisation double,cyme::sse, 1 regs
