@@ -45,6 +45,58 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_lt, T, full_test_inequality_types) {
     }
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_lte, T, full_test_inequality_types) {
+    union helper {
+        T d;
+        typename trait_integer<T>::value_type n;
+    };
+    helper u;
+    {
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(T(0));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(T(1));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vc;
+        int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+        T r[n] __attribute__((aligned(64)));
+        vc = va <= vb;
+        vc.store(r);
+
+        for (int i = 0; i < n; ++i) {
+            u.d = r[i];
+            BOOST_CHECK(u.n == -1);
+        }
+    }
+
+    {
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(T(1));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(T(0));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vc;
+        int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+        T r[n] __attribute__((aligned(64)));
+        vc = va <= vb;
+        vc.store(r);
+
+        for (int i = 0; i < n; ++i) {
+            u.d = r[i];
+            BOOST_CHECK(u.n == 0);
+        }
+    }
+
+    {
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(T(0));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(T(0));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vc;
+        int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+        T r[n] __attribute__((aligned(64)));
+        vc = va <= vb;
+        vc.store(r);
+
+        for (int i = 0; i < n; ++i) {
+            u.d = r[i];
+            BOOST_CHECK(u.n == -1);
+        }
+    }
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_gt, T, full_test_inequality_types) {
     union helper {
         T d;
@@ -63,5 +115,58 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_gt, T, full_test_inequality_types) {
     for (int i = 0; i < n; ++i) {
         u.d = r[i];
         BOOST_CHECK(u.n == -1);
+    }
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(vec_simd_gte, T, full_test_inequality_types) {
+    union helper {
+        T d;
+        typename trait_integer<T>::value_type n;
+    };
+    helper u;
+
+    {
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(T(1));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(T(0));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vc;
+        int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+        T r[n] __attribute__((aligned(64)));
+        vc = va >= vb;
+        vc.store(r);
+
+        for (int i = 0; i < n; ++i) {
+            u.d = r[i];
+            BOOST_CHECK(u.n == -1);
+        }
+    }
+
+    {
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(T(0));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(T(1));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vc;
+        int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+        T r[n] __attribute__((aligned(64)));
+        vc = va >= vb;
+        vc.store(r);
+
+        for (int i = 0; i < n; ++i) {
+            u.d = r[i];
+            BOOST_CHECK(u.n == 0);
+        }
+    }
+
+    {
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> va(T(1));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vb(T(1));
+        cyme::vec_simd<T, cyme::__GETSIMD__(), cyme::unroll_factor::N> vc;
+        int n = cyme::unroll_factor::N * cyme::trait_register<T, cyme::__GETSIMD__()>::size / sizeof(T);
+        T r[n] __attribute__((aligned(64)));
+        vc = va >= vb;
+        vc.store(r);
+
+        for (int i = 0; i < n; ++i) {
+            u.d = r[i];
+            BOOST_CHECK(u.n == -1);
+        }
     }
 }
