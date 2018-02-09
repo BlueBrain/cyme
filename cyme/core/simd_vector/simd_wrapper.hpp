@@ -171,11 +171,6 @@ template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_lt(typename simd_trait<T, O, N>::register_type xmm0,
                                                                typename simd_trait<T, O, N>::register_type xmm1);
 
-/** Free function (wrapper) to compare two register xmm0 more than xmm1 */
-template <class T, cyme::simd O, int N>
-forceinline typename simd_trait<T, O, N>::register_type _mm_gt(typename simd_trait<T, O, N>::register_type xmm0,
-                                                               typename simd_trait<T, O, N>::register_type xmm1);
-
 /** Free function (wrapper) to compare two register xmm0 equal to xmm1 */
 template <class T, cyme::simd O, int N>
 forceinline typename simd_trait<T, O, N>::register_type _mm_eq(typename simd_trait<T, O, N>::register_type xmm0,
