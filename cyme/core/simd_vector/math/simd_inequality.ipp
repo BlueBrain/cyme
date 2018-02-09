@@ -44,12 +44,27 @@ vec_simd<T, O, N> operator<(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N
     return nrv;
 }
 
+/* create a new vector that contains the results of the inequality <= */
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> operator<=(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(_mm_lt<T, O, N>(rhs.xmm, lhs.xmm));
+    return ~nrv;
+}
+
 /* create a new vector that contains the results of the inequality > */
 template <class T, cyme::simd O, int N>
 vec_simd<T, O, N> operator>(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
-    vec_simd<T, O, N> nrv(_mm_gt<T, O, N>(lhs.xmm, rhs.xmm));
+    vec_simd<T, O, N> nrv(_mm_lt<T, O, N>(rhs.xmm, lhs.xmm));
     return nrv;
 }
+
+/* create a new vector that contains the results of the inequality >= */
+template <class T, cyme::simd O, int N>
+vec_simd<T, O, N> operator>=(const vec_simd<T, O, N> &lhs, const vec_simd<T, O, N> &rhs) {
+    vec_simd<T, O, N> nrv(_mm_lt<T, O, N>(lhs.xmm, rhs.xmm));
+    return ~nrv;
 }
+
+} // namespace cyme
 
 #endif

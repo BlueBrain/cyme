@@ -11,7 +11,7 @@ cmake_minimum_required (VERSION 3.1)
 #
 ########################################################################
 
-project (cyme VERSION 1.6.0)
+project (cyme VERSION 1.7.0)
 set(cyme_VERSION_ABI 1)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake

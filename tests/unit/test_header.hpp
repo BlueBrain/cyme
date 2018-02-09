@@ -32,43 +32,35 @@
 #include <cyme/cyme.h>
 #include <boost/mpl/list.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
-#include <boost/test/floating_point_comparison.hpp>
+#include <random>
 
 template <class T>
 T relative_error();
 
 template <>
 float relative_error() {
-    return 0.1;
+    return 0.5;
 }
 
 template <>
 double relative_error() {
-    return 0.001;
+    return 0.05;
 }
 
 namespace cyme {
 namespace test {
 
-static boost::random::uniform_int_distribution<int> Randomint = boost::random::uniform_int_distribution<int>(-100, 100);
-static boost::random::uniform_real_distribution<float> Randomfloat =
-    boost::random::uniform_real_distribution<float>(-70, 70);
-static boost::random::uniform_real_distribution<double> Randomdouble =
-    boost::random::uniform_real_distribution<double>(-700, 700);
-static boost::random::uniform_real_distribution<float> Randomfloatexp10 =
-    boost::random::uniform_real_distribution<float>(-35, 35);
-static boost::random::uniform_real_distribution<double> Randomdoubleexp10 =
-    boost::random::uniform_real_distribution<double>(-305, 305);
-static boost::random::uniform_real_distribution<float> Randomfloatpow =
-    boost::random::uniform_real_distribution<float>(0, 10);
+static std::uniform_int_distribution<int> Randomint = std::uniform_int_distribution<int>(-100, 100);
+static std::uniform_real_distribution<float> Randomfloat = std::uniform_real_distribution<float>(-70, 70);
+static std::uniform_real_distribution<double> Randomdouble = std::uniform_real_distribution<double>(-700, 700);
+static std::uniform_real_distribution<float> Randomfloatexp10 = std::uniform_real_distribution<float>(-35, 35);
+static std::uniform_real_distribution<double> Randomdoubleexp10 = std::uniform_real_distribution<double>(-305, 305);
+static std::uniform_real_distribution<float> Randomfloatpow = std::uniform_real_distribution<float>(0, 10);
 
-static boost::random::mt19937 rng;
+static std::mt19937 rng;
 
 template <class T>
 T GetRandom();
@@ -130,6 +122,15 @@ void check(Ba &block_a, Bb &block_b) {
         }
 }
 
+// I am lazy
+template <class Ba, class Bb>
+void check_int(Ba &block_a, Bb &block_b) {
+    for (std::size_t i = 0; i < block_a.size(); ++i)
+        for (std::size_t j = 0; j < block_a.size_block(); ++j) {
+            BOOST_CHECK(block_a(i, j) == block_b(i, j));
+        }
+}
+
 template <class T, std::size_t m, cyme::order o>
 struct data {
     typedef T value_type;
@@ -147,6 +148,8 @@ struct data_block {
 };
 
 typedef boost::mpl::list<float, double> full_test_types;
+
+typedef boost::mpl::list<int, float, double> full_test_inequality_types;
 
 typedef boost::mpl::list<data<float, 2, cyme::AoS>, data<float, 2, cyme::AoSoA>, data<int, 2, cyme::AoS>,
                          data<int, 2, cyme::AoSoA>>
@@ -179,6 +182,11 @@ template <class T>
 struct trait_integer;
 
 template <>
+struct trait_integer<int> { // ugly for integer test of inequalities
+    typedef int value_type;
+};
+
+template <>
 struct trait_integer<float> {
     typedef int value_type;
 };
@@ -189,6 +197,6 @@ struct trait_integer<double> {
 };
 
 } // end namespace test
-} // end namespace CYME
+} // namespace cyme
 
 #endif // CYME_TEST_HEADER_HPP

@@ -103,5 +103,5 @@ template <class T, cyme::simd O, int N>
 forceinline vec_simd<T, O, N> sqrt(const vec_simd<T, O, N> &rhs) {
     return Selector_sqrt<T, O, N>::sqrt(rhs);
 }
-}
+} // namespace cyme
 #endif

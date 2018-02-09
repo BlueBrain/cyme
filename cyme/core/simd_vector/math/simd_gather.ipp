@@ -76,6 +76,6 @@ template <class T, cyme::simd O, int N>
 forceinline vec_simd<T, O, N> help_gather(const T *src, const int *ind, const int range) {
     return Selector_gather<T, O, N>::gather(src, ind, range); // range is useless
 }
-}
+} // namespace cyme
 
 #endif

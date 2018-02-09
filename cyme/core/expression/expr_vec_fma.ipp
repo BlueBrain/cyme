@@ -29,8 +29,8 @@
 
 namespace cyme {
 /**
-* FMA from operator a*b+c
-*/
+ * FMA from operator a*b+c
+ */
 template <class T, cyme::simd O, int N, class R1, class R2, class R3>
 vec<T, O, N, vec_muladd<T, O, N, R1, R2, R3>> forceinline operator+(vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a,
                                                                     vec<T, O, N, R3> const &b) {
@@ -38,8 +38,8 @@ vec<T, O, N, vec_muladd<T, O, N, R1, R2, R3>> forceinline operator+(vec<T, O, N,
 }
 
 /**
-* FMA from operator a*b+c where c is a scalar
-*/
+ * FMA from operator a*b+c where c is a scalar
+ */
 template <class T, cyme::simd O, int N, class R1, class R2>
 vec<T, O, N, vec_muladd<T, O, N, R1, R2, vec_scalar<T, O, N>>>
     forceinline operator+(vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a, typename identity<T>::value_type const &b) {
@@ -48,8 +48,8 @@ vec<T, O, N, vec_muladd<T, O, N, R1, R2, vec_scalar<T, O, N>>>
 }
 
 /**
-* FMA from operator a+b*c
-*/
+ * FMA from operator a+b*c
+ */
 template <class T, cyme::simd O, int N, class R1, class R2, class R3>
 vec<T, O, N, vec_muladd<T, O, N, R1, R2, R3>> forceinline operator+(vec<T, O, N, R3> const &b,
                                                                     vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a) {
@@ -57,8 +57,8 @@ vec<T, O, N, vec_muladd<T, O, N, R1, R2, R3>> forceinline operator+(vec<T, O, N,
 }
 
 /**
-* FMA from operator a+b*c where c is a scalar
-*/
+ * FMA from operator a+b*c where c is a scalar
+ */
 template <class T, cyme::simd O, int N, class R1, class R2>
 vec<T, O, N, vec_muladd<T, O, N, R1, R2, vec_scalar<T, O, N>>>
     forceinline operator+(typename identity<T>::value_type const &b, vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a) {
@@ -66,9 +66,9 @@ vec<T, O, N, vec_muladd<T, O, N, R1, R2, vec_scalar<T, O, N>>>
 }
 
 /**
-* FMA from operator a*b+c*d, I introduce this new case, because the compiler can't distinguish a*b + c*d
-* (ambiguous fma(a,b,c*d) or fma(c,d,a*b), with the two previous wrappers)
-*/
+ * FMA from operator a*b+c*d, I introduce this new case, because the compiler can't distinguish a*b + c*d
+ * (ambiguous fma(a,b,c*d) or fma(c,d,a*b), with the two previous wrappers)
+ */
 template <class T, cyme::simd O, int N, class R1, class R2, class R3, class R4>
 vec<T, O, N, vec_mul_add_mul<T, O, N, R1, R2, R3, R4>> forceinline
 operator+(vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a, vec<T, O, N, vec_mul<T, O, N, R3, R4>> const &b) {
@@ -77,8 +77,8 @@ operator+(vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a, vec<T, O, N, vec_mul<
 }
 
 /**
-* FMS from operator a*b-c
-*/
+ * FMS from operator a*b-c
+ */
 template <class T, cyme::simd O, int N, class R1, class R2, class R3>
 vec<T, O, N, vec_mulsub<T, O, N, R1, R2, R3>> forceinline operator-(vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a,
                                                                     vec<T, O, N, R3> const &b) {
@@ -86,8 +86,8 @@ vec<T, O, N, vec_mulsub<T, O, N, R1, R2, R3>> forceinline operator-(vec<T, O, N,
 }
 
 /**
-* FMS from operator a*b-c where c is a scalar
-*/
+ * FMS from operator a*b-c where c is a scalar
+ */
 template <class T, cyme::simd O, int N, class R1, class R2>
 vec<T, O, N, vec_mulsub<T, O, N, R1, R2, vec_scalar<T, O, N>>>
     forceinline operator-(vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a, typename identity<T>::value_type const &b) {
@@ -96,8 +96,8 @@ vec<T, O, N, vec_mulsub<T, O, N, R1, R2, vec_scalar<T, O, N>>>
 }
 
 /**
-* FMS from operator a-b*c
-*/
+ * FMS from operator a-b*c
+ */
 template <class T, cyme::simd O, int N, class R1, class R2, class R3>
 vec<T, O, N, vec_negate_muladd<T, O, N, R1, R2, R3>>
     forceinline operator-(vec<T, O, N, R3> const &a, vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &b) {
@@ -106,8 +106,8 @@ vec<T, O, N, vec_negate_muladd<T, O, N, R1, R2, R3>>
 }
 
 /**
-* FMS from operator a-b*c where c is a scalar
-*/
+ * FMS from operator a-b*c where c is a scalar
+ */
 template <class T, cyme::simd O, int N, class R1, class R2>
 vec<T, O, N, vec_mulsub<T, O, N, R1, R2, vec_scalar<T, O, N>>>
     forceinline operator-(typename identity<T>::value_type const &a, vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &b) {
@@ -116,14 +116,14 @@ vec<T, O, N, vec_mulsub<T, O, N, R1, R2, vec_scalar<T, O, N>>>
 }
 
 /**
-* FMS from operator a*b-c*d I introduce this new case, because the compiler can't distinguish
-* a*b - c*d (ambiguous fms(a,b,c*d) or fms(c,d,a*b)), with the two previous wrappers
-*/
+ * FMS from operator a*b-c*d I introduce this new case, because the compiler can't distinguish
+ * a*b - c*d (ambiguous fms(a,b,c*d) or fms(c,d,a*b)), with the two previous wrappers
+ */
 template <class T, cyme::simd O, int N, class R1, class R2, class R3, class R4>
 vec<T, O, N, vec_mul_sub_mul<T, O, N, R1, R2, R3, R4>> forceinline
 operator-(vec<T, O, N, vec_mul<T, O, N, R1, R2>> const &a, vec<T, O, N, vec_mul<T, O, N, R3, R4>> const &b) {
     return vec<T, O, N, vec_mul_sub_mul<T, O, N, R1, R2, R3, R4>>(
         vec_mul_sub_mul<T, O, N, R1, R2, R3, R4>(a.rep(), b.rep()));
 }
-}
+} // namespace cyme
 #endif

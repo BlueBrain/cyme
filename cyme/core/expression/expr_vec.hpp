@@ -272,7 +272,13 @@ class vec_xor {
 };
 
 /** less than vertex in the DAG from a < b
-    /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
+ * how to implement all operators using only one
+ * inline bool operator< (const X& lhs, const X& rhs){ do actual comparison }
+ * inline bool operator> (const X& lhs, const X& rhs){ return rhs < lhs; }
+ * inline bool operator<=(const X& lhs, const X& rhs){ return !(lhs > rhs); } // ~(lhs > rhs) for SIMD du to INTEL
+ convention of true = -1
+ * inline bool operator>=(const X& lhs, const X& rhs){ return !(lhs < rhs); } // ~(lhs < rhs) for SIMD du to INTEL
+ convention of true = -1 /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
 */
 template <class T, cyme::simd O, int N, class OP1, class OP2>
 class vec_lt {
@@ -283,20 +289,6 @@ class vec_lt {
     forceinline vec_lt(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
     /* always return int */
     forceinline vec_simd<T, O, N> operator()() const { return op1() < op2(); }
-};
-
-/** less than vertex in the DAG from a < b
- /note the inequality in SIMD are like usual operation it return a register 0 false -1 true
- */
-template <class T, cyme::simd O, int N, class OP1, class OP2>
-class vec_gt {
-    typename vec_traits<OP1, O, N>::value_type op1;
-    typename vec_traits<OP2, O, N>::value_type op2;
-
-  public:
-    forceinline vec_gt(OP1 const &a, OP2 const &b) : op1(a), op2(b) {}
-    /* always return int */
-    forceinline vec_simd<T, O, N> operator()() const { return op1() > op2(); }
 };
 
 /** right shift vertex in the DAG from a >> b
@@ -673,7 +665,7 @@ forceinline vec<T2, O, N> cyme_cast(vec<T1, O, N> &v1) {
     v.rep() = cast<T2>(v1.rep());
     return v;
 };
-}
+} // namespace cyme
 
 #include "cyme/core/expression/expr_vec_ops.ipp"
 #ifdef __FMA__

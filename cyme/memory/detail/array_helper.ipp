@@ -30,9 +30,9 @@
  */
 
 /**
-* @file cyme/memory/detail/array_helper.ipp
-* Modify boost::array
-*/
+ * @file cyme/memory/detail/array_helper.ipp
+ * Modify boost::array
+ */
 
 #ifndef BOOST_ARRAY_CYME_IPP
 #define BOOST_ARRAY_CYME_IPP
@@ -193,6 +193,6 @@ std::size_t hash_value(const array_helper<T, N> &arr) {
     return boost::hash_range(arr.begin(), arr.end());
 }
 /** \endcond */
-} /* namespace boost */
+} // namespace cyme
 
 #endif /*BOOST_ARRAY_HPP*/

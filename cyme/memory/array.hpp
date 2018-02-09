@@ -20,9 +20,9 @@
  */
 
 /**
-* @file cyme/memory/array.hpp
-* Defines array class based on boost::array
-*/
+ * @file cyme/memory/array.hpp
+ * Defines array class based on boost::array
+ */
 
 #ifndef CYME_ARRAY_HPP
 #define CYME_ARRAY_HPP
@@ -33,20 +33,20 @@
 namespace cyme {
 
 /** cyme::array container based on the boost::array.
-*
-*
-*  The cyme::array provides a static container. The container must be
-*  declared with a structure under the following form
-*  \code{.cpp}
-*  template<class T> struct
-*  my_object{ typedef T value_type; // the value_type float or double static
-*  const int value_size = 8; // your object has 8 fields };
-*  \endcode
-*  The container supports
-*  two memory layout AoS and AoSoA. The containers of cyme are constructed over
-*  a basic array named cyme::storage (or storage_type), the size of storage
-*  depends of the value_size and the requested SIMD technology.
-*/
+ *
+ *
+ *  The cyme::array provides a static container. The container must be
+ *  declared with a structure under the following form
+ *  \code{.cpp}
+ *  template<class T> struct
+ *  my_object{ typedef T value_type; // the value_type float or double static
+ *  const int value_size = 8; // your object has 8 fields };
+ *  \endcode
+ *  The container supports
+ *  two memory layout AoS and AoSoA. The containers of cyme are constructed over
+ *  a basic array named cyme::storage (or storage_type), the size of storage
+ *  depends of the value_size and the requested SIMD technology.
+ */
 template <class T, std::size_t N, cyme::order O>
 class array {};
 
@@ -177,6 +177,6 @@ class array<T, N, cyme::AoSoA> {
     base_type data;
     size_type size_cyme;
 };
-}
+} // namespace cyme
 
 #endif

@@ -1,28 +1,28 @@
 /*
-* Cyme - simd_wrapper_mic.ipp, Copyright (c), 2014,
-* Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
-* timothee.ewart@epfl.ch,
-* All rights reserved.
-* This file is part of Cyme <https://github.com/BlueBrain/cyme>
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 3.0 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library.
-*/
+ * Cyme - simd_wrapper_mic.ipp, Copyright (c), 2014,
+ * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
+ * timothee.ewart@epfl.ch,
+ * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
 
 /**
-* @file cyme/core/simd_vector/detail/mic/simd_wrapper_mic.ipp
-* Final specialisation for math functions and mic technology
-*/
+ * @file cyme/core/simd_vector/detail/mic/simd_wrapper_mic.ipp
+ * Final specialisation for math functions and mic technology
+ */
 #ifndef CYME_SIMD_WRAPPER_MIC_IPP
 #define CYME_SIMD_WRAPPER_MIC_IPP
 
@@ -1452,6 +1452,6 @@ _mm_nfma<float, memory::mic, 4>(simd_trait<float, memory::mic, 4>::register_type
         _mm512_fnmadd_ps(xmm0.r0, xmm1.r0, xmm2.r0), _mm512_fnmadd_ps(xmm0.r1, xmm1.r1, xmm2.r1),
         _mm512_fnmadd_ps(xmm0.r2, xmm1.r2, xmm2.r2), _mm512_fnmadd_ps(xmm0.r3, xmm1.r3, xmm2.r3));
 }
-} // end namespace
+} // namespace cyme
 
 #endif

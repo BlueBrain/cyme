@@ -24,7 +24,7 @@
        CHECK_CXX_SOURCE_RUNS("#include <immintrin.h> \n int main () {__m256 xmm=_mm256_set1_ps(0.0); _mm256_ceil_ps(xmm);};" AVX_RUN)
        if(AVX_FLAG AND AVX_COMPILATION AND AVX_RUN)
           set(CYME_SIMD_FLAGS "-mavx")
-          set(SIMD_LIST_TEST ${SIMD_LIST_TEST} "avx")
+          set(SIMD_LIST_TEST  "sse;avx")
           set(SIMD_LIST_TESTING ${SIMD_LIST_TEST} CACHE STRING "SIMD technology for testing" )
        endif(AVX_FLAG AND AVX_COMPILATION AND AVX_RUN)
 

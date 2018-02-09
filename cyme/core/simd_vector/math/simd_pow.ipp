@@ -118,5 +118,5 @@ template <class T, cyme::simd O, int N>
 forceinline vec_simd<T, O, N> pow(const vec_simd<T, O, N> &x, const vec_simd<T, O, N> &y) {
     return Selector_pow<T, O, N>::pow(x, y);
 }
-}
+} // namespace cyme
 #endif

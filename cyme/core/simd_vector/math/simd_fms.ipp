@@ -46,6 +46,6 @@ forceinline vec_simd<T, O, N> negatemulsub(const vec_simd<T, O, N> &lhs, const v
     nrv.nms(mhs, rhs);
     return nrv;
 }
-} // end namespace
+} // namespace cyme
 
 #endif

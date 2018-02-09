@@ -51,6 +51,14 @@ RELEASE:
 The serial test unroll 4 fails, again for the division. It is very wierd
 as the operator /= call the system division and not Newton-Raphson
 
+Release 1.7.0
+- Optimize the backend AVX to AVX2 if the processor supports it
+- Tune log(x) and exp(x) solver using AVX2
+- Complete and Optimize all inequalities <, >, <=, >= for the DAG and SSE/AVX backend, with corresponding tests
+- Add support for bitwise operator for 32 bits integer SSE/AVX only, with corresponding tests
+- Optimize operator ==
+- Clang format and typos
+
 Release 1.6.0
 - More support of inequalities for SSE/AVX backend
 - Support masking for inequalities for SSE/aVX backend

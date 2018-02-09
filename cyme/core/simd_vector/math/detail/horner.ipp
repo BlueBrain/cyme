@@ -62,6 +62,6 @@ struct helper_horner<T, O, N, C, 0> {
     }
 };
 
-} // end namespace
+} // namespace cyme
 
 #endif

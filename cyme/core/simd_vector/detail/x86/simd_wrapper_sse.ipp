@@ -1,28 +1,28 @@
 /*
-* Cyme - simd_wrapper_sse.ipp, Copyright (c), 2014,
-* Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
-* timothee.ewart@epfl.ch,
-* All rights reserved.
-* This file is part of Cyme <https://github.com/BlueBrain/cyme>
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 3.0 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library.
-*/
+ * Cyme - simd_wrapper_sse.ipp, Copyright (c), 2014,
+ * Timothee Ewart - Swiss Federal Institute of technology in Lausanne,
+ * timothee.ewart@epfl.ch,
+ * All rights reserved.
+ * This file is part of Cyme <https://github.com/BlueBrain/cyme>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
 
 /**
-* @file cyme/core/simd_vector/detail/x86/simd_wrapper_sse.ipp
-* Final specialisation for math functions and sse technology
-*/
+ * @file cyme/core/simd_vector/detail/x86/simd_wrapper_sse.ipp
+ * Final specialisation for math functions and sse technology
+ */
 #ifndef CYME_SIMD_WRAPPER_SSE_IPP
 #define CYME_SIMD_WRAPPER_SSE_IPP
 #include <assert.h>
@@ -1138,42 +1138,6 @@ _mm_lt<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type xmm
     return simd_trait<double, cyme::sse, 4>::register_type(
         _mm_cmplt_pd(xmm0.r0, xmm1.r0), _mm_cmplt_pd(xmm0.r1, xmm1.r1), _mm_cmplt_pd(xmm0.r2, xmm1.r2),
         _mm_cmplt_pd(xmm0.r3, xmm1.r3));
-}
-
-/**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation double,cyme::sse,1 regs
- */
-template <>
-forceinline simd_trait<double, cyme::sse, 1>::register_type
-_mm_gt<double, cyme::sse, 1>(simd_trait<double, cyme::sse, 1>::register_type xmm0,
-                             simd_trait<double, cyme::sse, 1>::register_type xmm1) {
-    return _mm_cmpgt_pd(xmm0, xmm1);
-}
-
-/**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation double,cyme::sse,2 regs
- */
-template <>
-forceinline simd_trait<double, cyme::sse, 2>::register_type
-_mm_gt<double, cyme::sse, 2>(simd_trait<double, cyme::sse, 2>::register_type xmm0,
-                             simd_trait<double, cyme::sse, 2>::register_type xmm1) {
-    return simd_trait<double, cyme::sse, 2>::register_type(_mm_cmpgt_pd(xmm0.r0, xmm1.r0),
-                                                           _mm_cmpgt_pd(xmm0.r1, xmm1.r1));
-}
-
-/**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation double,cyme::sse,1 regs
- */
-template <>
-forceinline simd_trait<double, cyme::sse, 4>::register_type
-_mm_gt<double, cyme::sse, 4>(simd_trait<double, cyme::sse, 4>::register_type xmm0,
-                             simd_trait<double, cyme::sse, 4>::register_type xmm1) {
-    return simd_trait<double, cyme::sse, 4>::register_type(
-        _mm_cmpgt_pd(xmm0.r0, xmm1.r0), _mm_cmpgt_pd(xmm0.r1, xmm1.r1), _mm_cmpgt_pd(xmm0.r2, xmm1.r2),
-        _mm_cmpgt_pd(xmm0.r3, xmm1.r3));
 }
 
 /**
@@ -2809,42 +2773,6 @@ _mm_lt<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0,
 }
 
 /**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation float,cyme::sse,1 regs
- */
-template <>
-forceinline simd_trait<float, cyme::sse, 1>::register_type
-_mm_gt<float, cyme::sse, 1>(simd_trait<float, cyme::sse, 1>::register_type xmm0,
-                            simd_trait<float, cyme::sse, 1>::register_type xmm1) {
-    return _mm_cmpgt_ps(xmm0, xmm1);
-}
-
-/**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation float,cyme::sse,2 regs
- */
-template <>
-forceinline simd_trait<float, cyme::sse, 2>::register_type
-_mm_gt<float, cyme::sse, 2>(simd_trait<float, cyme::sse, 2>::register_type xmm0,
-                            simd_trait<float, cyme::sse, 2>::register_type xmm1) {
-    return simd_trait<float, cyme::sse, 2>::register_type(_mm_cmpgt_ps(xmm0.r0, xmm1.r0),
-                                                          _mm_cmpgt_ps(xmm0.r1, xmm1.r1));
-}
-
-/**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation float,cyme::sse,1 regs
- */
-template <>
-forceinline simd_trait<float, cyme::sse, 4>::register_type
-_mm_gt<float, cyme::sse, 4>(simd_trait<float, cyme::sse, 4>::register_type xmm0,
-                            simd_trait<float, cyme::sse, 4>::register_type xmm1) {
-    return simd_trait<float, cyme::sse, 4>::register_type(
-        _mm_cmpgt_ps(xmm0.r0, xmm1.r0), _mm_cmpgt_ps(xmm0.r1, xmm1.r1), _mm_cmpgt_ps(xmm0.r2, xmm1.r2),
-        _mm_cmpgt_ps(xmm0.r3, xmm1.r3));
-}
-
-/**
  Evaluate the the == operator, bit to bit equality, return if true return 0xffffffffffffffff (true) else 0 (false)
  specialisation float,cyme::sse,1 regs
  */
@@ -3514,6 +3442,45 @@ _mm_srl<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
 }
 
 /**
+ Evaluate the andnot operator between two registers
+ specialisation double,cyme::sse,1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_andnot<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0) {
+    __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+    return _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0), mask));
+}
+
+/**
+ Evaluate the andnot operator between two registers
+ specialisation double,cyme::sse,2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_andnot<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0) {
+    __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+    return simd_trait<int, cyme::sse, 2>::register_type(
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r0), mask)),
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r1), mask)));
+}
+
+/**
+ Evaluate the andnot operator between two registers
+ specialisation double,cyme::sse,4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_andnot<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0) {
+    __m128d mask = _mm_castsi128_pd(_mm_set1_epi32(0xffffffff));
+    return simd_trait<int, cyme::sse, 4>::register_type(
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r0), mask)),
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r1), mask)),
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r2), mask)),
+        _mm_castpd_si128(_mm_andnot_pd(_mm_castsi128_pd(xmm0.r3), mask)));
+}
+
+/**
  add packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
  and store the results in dst.
  specialisation double,cyme::sse, 1 regs
@@ -3550,6 +3517,82 @@ _mm_add<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
     return simd_trait<int, cyme::sse, 4>::register_type(
         _mm_add_epi32(xmm0.r0, xmm1.r0), _mm_add_epi32(xmm0.r1, xmm1.r1), _mm_add_epi32(xmm0.r2, xmm1.r2),
         _mm_add_epi32(xmm0.r3, xmm1.r3));
+}
+
+/**
+ or packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_or<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 1>::register_type xmm1) {
+    return _mm_or_si128(xmm0, xmm1);
+}
+
+/**
+ or packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_or<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 2>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_or_si128(xmm0.r0, xmm1.r0), _mm_or_si128(xmm0.r1, xmm1.r1));
+}
+
+/**
+ or packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_or<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
+                          simd_trait<int, cyme::sse, 4>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 4>::register_type(_mm_or_si128(xmm0.r0, xmm1.r0), _mm_or_si128(xmm0.r1, xmm1.r1),
+                                                        _mm_or_si128(xmm0.r2, xmm1.r2), _mm_or_si128(xmm0.r3, xmm1.r3));
+}
+
+/**
+ xor packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 1 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 1>::register_type
+_mm_xor<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 1>::register_type xmm1) {
+    return _mm_xor_si128(xmm0, xmm1);
+}
+
+/**
+ xor packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 2 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 2>::register_type
+_mm_xor<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 2>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 2>::register_type(_mm_xor_si128(xmm0.r0, xmm1.r0),
+                                                        _mm_xor_si128(xmm0.r1, xmm1.r1));
+}
+
+/**
+ xor packed 32 bit integer (32-bit)  elements in xmm0 and xmm1,
+ and store the results in dst.
+ specialisation double,cyme::sse, 4 regs
+ */
+template <>
+forceinline simd_trait<int, cyme::sse, 4>::register_type
+_mm_xor<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
+                           simd_trait<int, cyme::sse, 4>::register_type xmm1) {
+    return simd_trait<int, cyme::sse, 4>::register_type(
+        _mm_xor_si128(xmm0.r0, xmm1.r0), _mm_xor_si128(xmm0.r1, xmm1.r1), _mm_xor_si128(xmm0.r2, xmm1.r2),
+        _mm_xor_si128(xmm0.r3, xmm1.r3));
 }
 
 /**
@@ -3648,42 +3691,6 @@ _mm_cast<int, cyme::sse, 4, float>(simd_trait<int, cyme::sse, 4>::register_type 
                                                           _mm_castsi128_ps(xmm0.r2), _mm_castsi128_ps(xmm0.r3));
 }
 
-/**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation float,cyme::sse,1 regs
- */
-template <>
-forceinline simd_trait<int, cyme::sse, 1>::register_type
-_mm_gt<int, cyme::sse, 1>(simd_trait<int, cyme::sse, 1>::register_type xmm0,
-                          simd_trait<int, cyme::sse, 1>::register_type xmm1) {
-    return _mm_cmpgt_epi32(xmm0, xmm1);
-}
-
-/**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation float,cyme::sse,2 regs
- */
-template <>
-forceinline simd_trait<int, cyme::sse, 2>::register_type
-_mm_gt<int, cyme::sse, 2>(simd_trait<int, cyme::sse, 2>::register_type xmm0,
-                          simd_trait<int, cyme::sse, 2>::register_type xmm1) {
-    return simd_trait<int, cyme::sse, 2>::register_type(_mm_cmpgt_epi32(xmm0.r0, xmm1.r0),
-                                                        _mm_cmpgt_epi32(xmm0.r1, xmm1.r1));
-}
-
-/**
- Evaluate the the > operator, return if true return 0xffffffffffffffff (true) else 0 (false)
- specialisation float,cyme::sse,1 regs
- */
-template <>
-forceinline simd_trait<int, cyme::sse, 4>::register_type
-_mm_gt<int, cyme::sse, 4>(simd_trait<int, cyme::sse, 4>::register_type xmm0,
-                          simd_trait<int, cyme::sse, 4>::register_type xmm1) {
-    return simd_trait<int, cyme::sse, 4>::register_type(
-        _mm_cmpgt_epi32(xmm0.r0, xmm1.r0), _mm_cmpgt_epi32(xmm0.r1, xmm1.r1), _mm_cmpgt_epi32(xmm0.r2, xmm1.r2),
-        _mm_cmpgt_epi32(xmm0.r3, xmm1.r3));
-}
-
-} // end namespace
+} // namespace cyme
 
 #endif

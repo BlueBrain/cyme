@@ -105,7 +105,7 @@ struct vec_simd {
     /** Operator >>= bewteen two vectors (right shift) */
     forceinline vec_simd &operator>>=(const vec_simd &rhs);
 
-    /** Operator negate bewteen two vectors */
+    /** Operator bitwize not operator */
     forceinline vec_simd &operator~();
 
     /** Operator negate bewteen two vectors */
@@ -142,7 +142,7 @@ struct vec_simd {
     /** FMS operator, 2nd case of the operator - */
     forceinline void nms(const vec_simd &lhs, const vec_simd &rhs);
 #endif
-    /** 1,2 or 4 Hardware Registers (SSE, AVXR ...) */
+    /** 1,2 or 4 Hardware Registers (SSE, AVX ...) */
     register_type xmm;
 };
 
@@ -306,7 +306,7 @@ forceinline vec_simd<T, O, N> negatemulsub(const vec_simd<T, O, N> &lhs, const v
                                            const vec_simd<T, O, N> &rhs);
 #endif
 
-} // end namespace
+} // namespace cyme
 
 /** Ostream operator */
 template <class T, cyme::simd O, int N>
