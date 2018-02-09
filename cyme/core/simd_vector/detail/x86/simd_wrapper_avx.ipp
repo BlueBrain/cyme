@@ -945,7 +945,7 @@ _mm_ge<double, cyme::avx, 1>(simd_trait<double, cyme::avx, 1>::register_type xmm
     // AVX2 does not support _mm256_cvtepi32_pd >_<
     // so tmp = A 0 B 0 C 0 D 0
     __m256i tmp2 = _mm256_permutevar8x32_epi32(tmp, permutation); // A B C D 0 0 0 0
-    __m128i e = _mm256_extractf128_si256(tmp2, 0);                //  A B C D in integer 128 bits register
+    __m128i e = _mm256_extractf128_si256(tmp2, 0);                // A B C D in integer 128 bits register
     __m256 r = _mm256_cvtepi32_pd(e);                             // A B C D in double 256 bits register
 #else
     __m128d lo = _mm256_extractf128_pd(xmm0, 0);
