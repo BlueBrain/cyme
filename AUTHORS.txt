@@ -7,5 +7,5 @@ Kai Langen
 Mike Gevaert
 Sam Yates
 Stefan Eilemann
-Tim Ewart
+Tim Ewart (maintainer)
 
