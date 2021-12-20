@@ -1,0 +1,11 @@
+Aleksandr Ovcharenko
+Ben Cumming
+Daniel Nachbaur
+Fabien Delalondre
+Francesco Cremonesi
+Kai Langen
+Mike Gevaert
+Sam Yates
+Stefan Eilemann
+Tim Ewart (maintainer)
+
